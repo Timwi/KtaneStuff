@@ -1,0 +1,368 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using RT.Util;
+using RT.Util.ExtensionMethods;
+using RT.Util.Geometry;
+
+namespace KtaneStuff.Modeling
+{
+    public static partial class Md
+    {
+        /// <summary>
+        ///     Generates a cylinder oriented along the Z axis.</summary>
+        /// <param name="startZ">
+        ///     Z-coordinate of the “bottom” of the cylinder. This must be less than <paramref name="endZ"/>.</param>
+        /// <param name="endZ">
+        ///     Z-coordinate of the “top” of the cylinder. This must be greater than <paramref name="startZ"/>.</param>
+        public static Pt[][] Cylinder(double startZ, double endZ, double radius, int numVertices = 20)
+        {
+            // Create a circle in X/Y space
+            var circle = Enumerable.Range(0, numVertices)
+                .Select(i => new PointD(radius * cos(360.0 * i / numVertices), radius * sin(360.0 * i / numVertices)));
+
+            return Ut.NewArray(
+                // Side wall
+                circle.SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.X, p1.Y, startZ), pt(p2.X, p2.Y, startZ), pt(p2.X, p2.Y, endZ), pt(p1.X, p1.Y, endZ) }),
+                // Caps
+                new[] { circle.Reverse().Select(c => pt(c.X, c.Y, startZ)).ToArray() },
+                new[] { circle.Select(c => pt(c.X, c.Y, endZ)).ToArray() }
+            ).SelectMany(x => x).ToArray();
+        }
+
+        public static IEnumerable<VertexInfo[]> Torus(double outerRadius, double innerRadius, int steps, double startAngle = 0, double endAngle = 360)
+        {
+            return CreateMesh(true, true,
+                Enumerable.Range(0, steps).Select(i => i * (endAngle - startAngle) / steps + startAngle).Select(angle1 =>
+                    Enumerable.Range(0, steps).Select(i => i * 360 / steps).Select(angle2 =>
+                        p(outerRadius + innerRadius * cos(angle2), innerRadius * sin(angle2))
+                            .Apply(p => pt(p.X * cos(angle1), p.Y, p.X * sin(angle1), Normal.Average, Normal.Average, Normal.Average, Normal.Average)))
+                        .ToArray())
+                .Reverse()
+                .ToArray());
+        }
+
+        public static Pt[][] Disc(int numVertices = 20, bool reverse = false)
+        {
+            return Enumerable.Range(0, numVertices)
+                .Select(i => new PointD(cos(360.0 * i / numVertices), sin(360.0 * i / numVertices)))
+                .SelectConsecutivePairs(true, (p1, p2) => reverse ? new[] { pt(p1.X, 0, p1.Y), pt(p2.X, 0, p2.Y), pt(0, 0, 0) } : new[] { pt(p1.X, 0, p1.Y), pt(0, 0, 0), pt(p2.X, 0, p2.Y) })
+                .ToArray();
+        }
+
+        public static Pt[][] Square(bool reverse = false)
+        {
+            var arr = new[] { pt(-1, 0, -1), pt(-1, 0, 1), pt(1, 0, 1), pt(1, 0, -1) };
+            return new[] { reverse ? arr.Reverse().ToArray() : arr };
+        }
+
+        public static string GenerateObjFile(IEnumerable<Pt[]> faces, string objectName = null)
+        {
+            return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, null, null)).ToArray()).ToArray(), objectName);
+        }
+
+        public static string GenerateObjFile(IEnumerable<VertexInfo[]> faces, string objectName = null)
+        {
+            var facesArr = faces.ToArray();
+            var vertices = facesArr.SelectMany(f => f).Select(f => f.Location).Distinct().ToArray();
+            var verticesLookup = vertices.Select((v, i) => Ut.KeyValuePair(v, i + 1)).ToDictionary();
+            var normals = facesArr.SelectMany(f => f).Where(f => f.Normal != null).Select(f => f.Normal.Value).Distinct().ToArray();
+            var normalsLookup = normals.Select((n, i) => Ut.KeyValuePair(n, i + 1)).ToDictionary();
+            var textures = facesArr.SelectMany(f => f).Where(f => f.Texture != null).Select(f => f.Texture.Value).Distinct().ToArray();
+            var s = new StringBuilder();
+            if (objectName != null)
+                s.AppendLine($"o {objectName}");
+            foreach (var v in vertices)
+                s.AppendLine($"v {v.X:R} {v.Y:R} {v.Z:R}");
+            foreach (var n in normals)
+                s.AppendLine($"vn {n.X:R} {n.Y:R} {n.Z:R}");
+            foreach (var t in textures)
+                s.AppendLine($"vt {t.X:R} {t.Y:R}");
+            if (objectName != null)
+                s.AppendLine($"g {objectName}");
+            foreach (var f in facesArr)
+                s.AppendLine($@"f {f.Select(vi =>
+                    verticesLookup[vi.Location].Apply(v =>
+                    vi.Texture.NullOr(t => textures.IndexOf(t) + 1).Apply(t =>
+                    vi.Normal.NullOr(n => normalsLookup[n]).Apply(n =>
+                    n == null ? t == null ? v.ToString() : $"{v}/{t}" : $"{v}/{t}/{n}")))).JoinString(" ")}");
+            return s.ToString();
+        }
+
+        public static IEnumerable<Pt> Bézier(Pt start, Pt control1, Pt control2, Pt end, int steps)
+        {
+            return Enumerable.Range(0, steps)
+                .Select(i => (double) i / (steps - 1))
+                .Select(t => pow(1 - t, 3) * start + 3 * pow(1 - t, 2) * t * control1 + 3 * (1 - t) * t * t * control2 + pow(t, 3) * end);
+        }
+
+        public static IEnumerable<PointD> Bézier(PointD start, PointD control1, PointD control2, PointD end, int steps)
+        {
+            return Enumerable.Range(0, steps)
+                .Select(i => (double) i / (steps - 1))
+                .Select(t => pow(1 - t, 3) * start + 3 * pow(1 - t, 2) * t * control1 + 3 * (1 - t) * t * t * control2 + pow(t, 3) * end);
+        }
+
+        public static Pt[][] BézierPatch(Pt[][] controlPoints, int steps)
+        {
+            return Ut.NewArray(steps, steps, (a, b) => ((double) a / (steps - 1)).Apply(u => ((double) b / (steps - 1)).Apply(v =>
+                bé(
+                    bé(controlPoints[0][0], controlPoints[1][0], controlPoints[2][0], controlPoints[3][0], u),
+                    bé(controlPoints[0][1], controlPoints[1][1], controlPoints[2][1], controlPoints[3][1], u),
+                    bé(controlPoints[0][2], controlPoints[1][2], controlPoints[2][2], controlPoints[3][2], u),
+                    bé(controlPoints[0][3], controlPoints[1][3], controlPoints[2][3], controlPoints[3][3], u),
+                    v))));
+        }
+
+        private static Pt bé(Pt start, Pt c1, Pt c2, Pt end, double t) => Math.Pow((1 - t), 3) * start + 3 * (1 - t) * (1 - t) * t * c1 + 3 * (1 - t) * t * t * c2 + Math.Pow(t, 3) * end;
+        private static PointD bé(PointD start, PointD c1, PointD c2, PointD end, double t) => Math.Pow((1 - t), 3) * start + 3 * (1 - t) * (1 - t) * t * c1 + 3 * (1 - t) * t * t * c2 + Math.Pow(t, 3) * end;
+
+        public static IEnumerable<PointD> SmoothBézier(PointD start, PointD c1, PointD c2, PointD end, double smoothness)
+        {
+            yield return start;
+
+            var stack = new Stack<Tuple<double, double>>();
+            stack.Push(Tuple.Create(0d, 1d));
+
+            while (stack.Count > 0)
+            {
+                var elem = stack.Pop();
+                var p1 = bé(start, c1, c2, end, elem.Item1);
+                var p2 = bé(start, c1, c2, end, elem.Item2);
+                var midT = (elem.Item1 + elem.Item2) / 2;
+                var midCurve = bé(start, c1, c2, end, midT);
+                var dist = new EdgeD(p1, p2).Distance(midCurve);
+                if (dist <= smoothness)
+                    yield return p2;
+                else
+                {
+                    stack.Push(Tuple.Create(midT, elem.Item2));
+                    stack.Push(Tuple.Create(elem.Item1, midT));
+                }
+            }
+        }
+
+        public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, Pt[][] pts)
+        {
+            return CreateMesh(closedX, closedY, pts
+                .Select((arr, xFirst, xLast) => arr
+                    .Select((p, yFirst, yLast) => pt(p.X, p.Y, p.Z, xLast && !closedX ? Normal.Mine : Normal.Average, xFirst && !closedX ? Normal.Mine : Normal.Average, yLast && !closedY ? Normal.Mine : Normal.Average, yFirst && !closedY ? Normal.Mine : Normal.Average))
+                    .ToArray())
+                .ToArray());
+        }
+
+        static Pt getPt(MeshVertexInfo[][] pts, int x, int y) => pts[(x + pts.Length) % pts.Length][(y + pts[0].Length) % pts[0].Length].Location;
+        static Pt ifZero(this Pt pt, Pt alt) { return Math.Abs(pt.X) <= double.Epsilon && Math.Abs(pt.Y) <= double.Epsilon && Math.Abs(pt.Z) <= double.Epsilon ? alt : pt; }
+
+        public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, MeshVertexInfo[][] pts)
+        {
+            var normals = Ut.NewArray(pts.Length, pts[0].Length, (x, y) =>
+            {
+                if (pts[x][y].NormalOverride != null)
+                    return Ut.NewArray(9, _ => pts[x][y].NormalOverride.Value);
+
+                var nrmls = new Pt[9];
+                nrmls[0] = (getPt(pts, x, y) - getPt(pts, x - 1, y)).ifZero(getPt(pts, x, y) - getPt(pts, x - 1, y - 1)) * (getPt(pts, x, y) - getPt(pts, x, y - 1)).ifZero(getPt(pts, x, y) - getPt(pts, x - 1, y - 1));
+                nrmls[2] = (getPt(pts, x + 1, y) - getPt(pts, x, y)).ifZero(getPt(pts, x + 1, y + 1) - getPt(pts, x, y)) * (getPt(pts, x, y) - getPt(pts, x, y - 1)).ifZero(getPt(pts, x, y) - getPt(pts, x - 1, y - 1));
+                nrmls[6] = (getPt(pts, x, y) - getPt(pts, x - 1, y)).ifZero(getPt(pts, x, y) - getPt(pts, x - 1, y - 1)) * (getPt(pts, x, y + 1) - getPt(pts, x, y)).ifZero(getPt(pts, x + 1, y + 1) - getPt(pts, x, y));
+                nrmls[8] = (getPt(pts, x + 1, y) - getPt(pts, x, y)).ifZero(getPt(pts, x + 1, y + 1) - getPt(pts, x, y)) * (getPt(pts, x, y + 1) - getPt(pts, x, y)).ifZero(getPt(pts, x + 1, y + 1) - getPt(pts, x, y));
+
+                nrmls[1] = nrmls[0] + nrmls[2];
+                nrmls[3] = nrmls[0] + nrmls[6];
+                nrmls[5] = nrmls[2] + nrmls[8];
+                nrmls[7] = nrmls[6] + nrmls[8];
+                nrmls[4] = nrmls[3] + nrmls[5];
+                return nrmls;
+            });
+
+            return Enumerable.Range(0, pts.Length)
+                .SelectManyConsecutivePairs(closedX, (i1, i2) => Enumerable.Range(0, pts[0].Length)
+                    .SelectConsecutivePairs(closedY, (j1, j2) => Ut.NewArray(
+                        new VertexInfo(pts[i1][j1].Location, normals[i1][j1][(int) pts[i1][j1].NormalAfterX + 3 * (int) pts[i1][j1].NormalAfterY].Normalize()),
+                        new VertexInfo(pts[i2][j1].Location, normals[i2][j1][(2 - (int) pts[i2][j1].NormalBeforeX) + 3 * (int) pts[i2][j1].NormalAfterY].Normalize()),
+                        new VertexInfo(pts[i2][j2].Location, normals[i2][j2][(2 - (int) pts[i2][j2].NormalBeforeX) + 3 * (2 - (int) pts[i2][j2].NormalBeforeY)].Normalize()),
+                        new VertexInfo(pts[i1][j2].Location, normals[i1][j2][(int) pts[i1][j2].NormalAfterX + 3 * (2 - (int) pts[i1][j2].NormalBeforeY)].Normalize()))
+                        .SelectConsecutivePairs(true, (vi1, vi2) => vi1.Location == vi2.Location ? null : vi1.Nullable())
+                        .Where(vi => vi != null)
+                        .Select(vi => vi.Value)
+                        .ToArray()
+                    ));
+        }
+
+        public static IEnumerable<VertexInfo[]> BevelFromCurve(Pt[] pts, double radius, int revSteps)
+        {
+            return CreateMesh(true, false, pts
+                .Select((p, ix) => new
+                {
+                    AxisStart = p,
+                    AxisEnd = p + (pts[(ix + 1) % pts.Length] - p) + (p - pts[(ix - 1 + pts.Length) % pts.Length]),
+                    Perpendicular = pts[ix].Add(y: radius)
+                })
+                .Select(inf => Enumerable.Range(0, revSteps)
+                    .Select(i => -90 * i / (revSteps - 1))
+                    .Select(angle => inf.Perpendicular.Rotate(inf.AxisStart, inf.AxisEnd, angle).Add(y: -radius))
+                    .Select((p, isFirst, isLast) => isFirst ? new MeshVertexInfo(pt(p.X, p.Y, p.Z), pt(0, 1, 0)) : pt(p.X, p.Y, p.Z, Normal.Average, Normal.Average, isLast ? Normal.Mine : Normal.Average, Normal.Average))
+                    .ToArray())
+                .ToArray());
+        }
+
+        public static double pi = Math.PI;
+        public static double sin(double x) => Math.Sin(x * pi / 180);
+        public static double cos(double x) => Math.Cos(x * pi / 180);
+        public static double tan(double x) => Math.Tan(x * pi / 180);
+        public static double pow(double x, double y) => Math.Pow(x, y);
+        public static Pt pt(double x, double y, double z) => new Pt(x, y, z);
+        public static MeshVertexInfo pt(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) => new MeshVertexInfo(new Pt(x, y, z), befX, afX, befY, afY);
+        public static PointD p(double x, double y) => new PointD(x, y);
+
+        public static Pt[] MoveX(this Pt[] face, double x) { return face.Select(p => p.Add(x: x)).ToArray(); }
+        public static Pt[] MoveY(this Pt[] face, double y) { return face.Select(p => p.Add(y: y)).ToArray(); }
+        public static Pt[] MoveZ(this Pt[] face, double z) { return face.Select(p => p.Add(z: z)).ToArray(); }
+        public static Pt[] Move(this Pt[] face, Pt by) { return face.Select(p => p + by).ToArray(); }
+
+        public static IEnumerable<Pt> MoveX(this IEnumerable<Pt> face, double x) { return face.Select(p => p.Add(x: x)); }
+        public static IEnumerable<Pt> MoveY(this IEnumerable<Pt> face, double y) { return face.Select(p => p.Add(y: y)); }
+        public static IEnumerable<Pt> MoveZ(this IEnumerable<Pt> face, double z) { return face.Select(p => p.Add(z: z)); }
+        public static IEnumerable<Pt> Move(this IEnumerable<Pt> face, Pt by) { return face.Select(p => p + by); }
+
+        public static Pt[][] MoveX(this Pt[][] faces, double x) { return faces.Select(face => MoveX(face, x)).ToArray(); }
+        public static Pt[][] MoveY(this Pt[][] faces, double y) { return faces.Select(face => MoveY(face, y)).ToArray(); }
+        public static Pt[][] MoveZ(this Pt[][] faces, double z) { return faces.Select(face => MoveZ(face, z)).ToArray(); }
+        public static Pt[][] Move(this Pt[][] faces, Pt by) { return faces.Select(face => Move(face, by)).ToArray(); }
+
+        public static IEnumerable<Pt[]> MoveX(this IEnumerable<Pt[]> faces, double x) { return faces.Select(face => MoveX(face, x)); }
+        public static IEnumerable<Pt[]> MoveY(this IEnumerable<Pt[]> faces, double y) { return faces.Select(face => MoveY(face, y)); }
+        public static IEnumerable<Pt[]> MoveZ(this IEnumerable<Pt[]> faces, double z) { return faces.Select(face => MoveZ(face, z)); }
+        public static IEnumerable<Pt[]> Move(this IEnumerable<Pt[]> faces, Pt by) { return faces.Select(face => Move(face, by)); }
+
+        public static Pt RotateX(this Pt p, double angle) { return pt(p.X, p.Y * cos(angle) - p.Z * sin(angle), p.Y * sin(angle) + p.Z * cos(angle)); }
+        public static Pt RotateY(this Pt p, double angle) { return pt(p.X * cos(angle) - p.Z * sin(angle), p.Y, p.X * sin(angle) + p.Z * cos(angle)); }
+        public static Pt RotateZ(this Pt p, double angle) { return pt(p.X * cos(angle) - p.Y * sin(angle), p.X * sin(angle) + p.Y * cos(angle), p.Z); }
+
+        public static Pt[] RotateX(this Pt[] face, double angle) { return face.Select(p => RotateX(p, angle)).ToArray(); }
+        public static Pt[] RotateY(this Pt[] face, double angle) { return face.Select(p => RotateY(p, angle)).ToArray(); }
+        public static Pt[] RotateZ(this Pt[] face, double angle) { return face.Select(p => RotateZ(p, angle)).ToArray(); }
+
+        public static IEnumerable<Pt> RotateX(this IEnumerable<Pt> face, double angle) { return face.Select(p => RotateX(p, angle)); }
+        public static IEnumerable<Pt> RotateY(this IEnumerable<Pt> face, double angle) { return face.Select(p => RotateY(p, angle)); }
+        public static IEnumerable<Pt> RotateZ(this IEnumerable<Pt> face, double angle) { return face.Select(p => RotateZ(p, angle)); }
+
+        public static Pt[][] RotateX(this Pt[][] faces, double angle) { return faces.Select(face => RotateX(face, angle)).ToArray(); }
+        public static Pt[][] RotateY(this Pt[][] faces, double angle) { return faces.Select(face => RotateY(face, angle)).ToArray(); }
+        public static Pt[][] RotateZ(this Pt[][] faces, double angle) { return faces.Select(face => RotateZ(face, angle)).ToArray(); }
+
+        public static IEnumerable<Pt[]> RotateX(this IEnumerable<Pt[]> faces, double angle) { return faces.Select(face => RotateX(face, angle)); }
+        public static IEnumerable<Pt[]> RotateY(this IEnumerable<Pt[]> faces, double angle) { return faces.Select(face => RotateY(face, angle)); }
+        public static IEnumerable<Pt[]> RotateZ(this IEnumerable<Pt[]> faces, double angle) { return faces.Select(face => RotateZ(face, angle)); }
+
+        public static IEnumerable<TResult> SelectManyConsecutivePairs<T, TResult>(this IEnumerable<T> source, bool closed, Func<T, T, IEnumerable<TResult>> selector) => source.SelectConsecutivePairs(closed, selector).SelectMany(x => x);
+        public static IEnumerable<T> RemoveConsecutiveDuplicates<T>(this IEnumerable<T> source, bool closed) where T : IEquatable<T>
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            return removeConsecutiveDuplicatesImpl(closed, source);
+        }
+        private static IEnumerable<T> removeConsecutiveDuplicatesImpl<T>(bool closed, IEnumerable<T> source) where T : IEquatable<T>
+        {
+            using (var e = source.GetEnumerator())
+            {
+                if (!e.MoveNext())
+                    yield break;
+                T first = e.Current;
+                if (!closed)
+                    yield return first;
+                T last = first;
+                while (e.MoveNext())
+                {
+                    if (!e.Current.Equals(last))
+                        yield return e.Current;
+                    last = e.Current;
+                }
+                if (closed && !first.Equals(last))
+                    yield return first;
+            }
+        }
+
+        public static IEnumerable<TResult> Select<T, TResult>(this IEnumerable<T> source, Func<T, bool, bool, TResult> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+            return selectIterator(source, selector);
+        }
+
+        private static IEnumerable<TResult> selectIterator<T, TResult>(IEnumerable<T> source, Func<T, bool, bool, TResult> selector)
+        {
+            var isFirst = true;
+            T elem;
+            using (var e = source.GetEnumerator())
+            {
+                if (!e.MoveNext())
+                    yield break;
+                elem = e.Current;
+                while (e.MoveNext())
+                {
+                    yield return selector(elem, isFirst, false);
+                    isFirst = false;
+                    elem = e.Current;
+                }
+                yield return selector(elem, isFirst, true);
+            }
+        }
+
+        public static IEnumerable<PointD[]> Triangulate(IEnumerable<PointD> face)
+        {
+            var pgon = face.RemoveConsecutiveDuplicates(true).ToList();
+
+            while (pgon.Count > 3)
+            {
+                // Find an ear
+                int bi = pgon.Count - 1;
+                PointD a, b, c;
+                while (true)
+                {
+                    a = pgon[(bi + pgon.Count - 1) % pgon.Count];
+                    b = pgon[bi];
+                    c = pgon[(bi + 1) % pgon.Count];
+
+                    // If the angle ABC is concave, the triangle is not an ear.
+                    if ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X) < 0)
+                    {
+                        // If any other point lies inside the triangle ABC, it is not an ear.
+                        var isEar = true;
+                        var triangle = new PolygonD(a, b, c);
+                        for (int i = 0; i < pgon.Count - 3 && isEar; i++)
+                            if (!triangle.Vertices.Contains(pgon[(bi + 2 + i) % pgon.Count]) && triangle.ContainsPoint(pgon[(bi + 2 + i) % pgon.Count]))
+                                isEar = false;
+                        if (isEar)
+                            break;
+                    }
+                    bi--;
+                    if (bi < 0)
+                        throw new InvalidOperationException();
+                }
+
+                yield return new[] { a, b, c };
+                pgon.RemoveAt(bi);
+            }
+
+            yield return pgon.ToArray();
+        }
+
+        public static string PathToSvg(IEnumerable<PointD> ptsArr)
+        {
+            var minX = ptsArr.Min(p => p.X);
+            var maxX = ptsArr.Max(p => p.X);
+            var minY = ptsArr.Min(p => p.Y);
+            var maxY = ptsArr.Max(p => p.Y);
+            return $@"
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='{minX} {minY} {maxX - minX} {maxY - minY}'>
+                    <path d='{ptsArr.Select((p, i) => $"{(i == 0 ? "M" : i == 1 ? "L" : "")}{p.X},{p.Y}").JoinString(" ")} z' stroke='#000' stroke-width='.01' fill='none' />
+                </svg>
+            ";
+        }
+    }
+}

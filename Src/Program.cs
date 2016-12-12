@@ -21,7 +21,9 @@ namespace KtaneStuff
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Foo");
+            Ktane.ClockDiagram();
+            Console.WriteLine("Done.");
+            Console.ReadLine();
         }
     }
 }

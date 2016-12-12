@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,12 +43,49 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="3DMazeManual.cs" />
+    <Compile Include="BombInfo.cs" />
+    <Compile Include="Chess.cs" />
+    <Compile Include="Hex.cs" />
+    <Compile Include="HexamazeManual.cs" />
+    <Compile Include="LaundryCheatSheet.cs" />
+    <Compile Include="Modeling\AdjacentLetters.cs" />
+    <Compile Include="Modeling\BevelPoint.cs" />
+    <Compile Include="Modeling\Bitmaps.cs" />
+    <Compile Include="Modeling\ColoredSquares.cs" />
+    <Compile Include="Modeling\FollowTheLeader.cs" />
+    <Compile Include="Modeling\Friendship.cs" />
+    <Compile Include="Modeling\Hexamaze.cs" />
+    <Compile Include="Modeling\Md.cs" />
+    <Compile Include="Modeling\MeshVertexInfo.cs" />
+    <Compile Include="Modeling\Normal.cs" />
+    <Compile Include="Modeling\Pt.cs" />
+    <Compile Include="Modeling\RockPaperScissorsLizardSpock.cs" />
+    <Compile Include="Modeling\Souvenir.cs" />
+    <Compile Include="Modeling\TheBulb.cs" />
+    <Compile Include="Modeling\TicTacToe.cs" />
+    <Compile Include="Modeling\VertexInfo.cs" />
+    <Compile Include="Modeling\WordSearch.cs" />
+    <Compile Include="MouseInTheMazeManual.cs" />
+    <Compile Include="MurderCheatSheet.cs" />
+    <Compile Include="ClockDiagram.cs" />
+    <Compile Include="WordSearchManual.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Simulations.cs" />
+    <Compile Include="WiresDawg.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\OnlineDawg\OnlineDAWG.csproj">
+      <Project>{469867e6-db70-4b6b-9351-a37c61da4ea3}</Project>
+      <Name>OnlineDAWG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\RT.TagSoup\Src\RT.TagSoup.csproj">
       <Project>{8f80d916-8999-45d8-acb2-ffa7e2698fd6}</Project>
       <Name>RT.TagSoup</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RT.Util\Src\RT.KitchenSink.csproj">
+      <Project>{7edb80b5-ca44-4ad9-bf23-18a9470feb69}</Project>
+      <Name>RT.KitchenSink</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\RT.Util\Src\RT.Util.csproj">
       <Project>{8d0fe79c-ad8d-475c-9e6f-9cae85365b5d}</Project>
