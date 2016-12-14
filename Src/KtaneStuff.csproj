@@ -62,6 +62,7 @@
     <Compile Include="Modeling\Pt.cs" />
     <Compile Include="Modeling\RockPaperScissorsLizardSpock.cs" />
     <Compile Include="Modeling\Souvenir.cs" />
+    <Compile Include="Modeling\TheClock.cs" />
     <Compile Include="Modeling\TheBulb.cs" />
     <Compile Include="Modeling\TicTacToe.cs" />
     <Compile Include="Modeling\VertexInfo.cs" />

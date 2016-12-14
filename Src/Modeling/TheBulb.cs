@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;

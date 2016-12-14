@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -191,8 +192,9 @@ namespace KtaneStuff.Modeling
                     ));
         }
 
-        public static IEnumerable<VertexInfo[]> BevelFromCurve(Pt[] pts, double radius, int revSteps)
+        public static IEnumerable<VertexInfo[]> BevelFromCurve(IEnumerable<Pt> points, double radius, int revSteps)
         {
+            var pts = points.RemoveConsecutiveDuplicates(true).ToArray();
             return CreateMesh(true, false, pts
                 .Select((p, ix) => new
                 {
@@ -350,6 +352,85 @@ namespace KtaneStuff.Modeling
             }
 
             yield return pgon.ToArray();
+        }
+
+        public static IEnumerable<PointD[]> Triangulate(IEnumerable<IEnumerable<PointD>> polygons)
+        {
+            var remaining = polygons.Select(p => new PolygonD(p.RemoveConsecutiveDuplicates(true))).ToList();
+            while (remaining.Count > 0)
+            {
+                var polyIx = remaining.IndexOf(poly => poly.Area() > 0);
+                if (polyIx == -1)
+                    throw new InvalidOperationException("There are only negative polygons left.");
+
+                var polygon = remaining[polyIx];
+                remaining.RemoveAt(polyIx);
+                int holeIx;
+                while ((holeIx = remaining.IndexOf(poly => poly.Area() < 0 && poly.Vertices.Any(polygon.ContainsPoint))) != -1)
+                {
+                    // This polygon has a hole in the shape of another polygon.
+                    var hole = remaining[holeIx];
+                    remaining.RemoveAt(holeIx);
+
+                    // Find a pair of adjacent points on the hole and a closeby pair of adjacent points on the polygon where we can “cut through”
+                    var candidate = hole.Vertices
+                        .SelectMany((v, i) => polygon.Vertices.Select((v2, i2) => new { Vertex = v, Index = i, Nearest = new { Vertex = v2, Index = i2 } }))
+                        .Where(inf => !new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count])))
+
+                        .Where(inf => !hole.ToEdges().Any(new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith))
+                        .Where(inf => !polygon.ToEdges().Any(new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith))
+                        .Where(inf => remaining.All(rem => !rem.ToEdges().Any(new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith)))
+
+                        .Where(inf => !hole.ToEdges().Any(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith))
+                        .Where(inf => !polygon.ToEdges().Any(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith))
+                        .Where(inf => remaining.All(rem => !rem.ToEdges().Any(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith)))
+
+                        .MinElement(inf => inf.Vertex.Distance(inf.Nearest.Vertex));
+
+                    // Create the quadrilateral that “cuts through”
+                    yield return new[] { candidate.Vertex, hole.Vertices[(candidate.Index + 1) % hole.Vertices.Count], polygon.Vertices[(candidate.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count] };
+                    yield return new[] { candidate.Vertex, polygon.Vertices[(candidate.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count], candidate.Nearest.Vertex };
+
+                    // Fix up the current polygon
+                    polygon.Vertices.InsertRange(candidate.Nearest.Index, hole.Vertices.Skip(candidate.Index + 1).Concat(hole.Vertices.Take(candidate.Index + 1)));
+                }
+
+                // We should have a holeless polygon — triangulate that
+                var pgon = polygon.Vertices;
+                while (pgon.Count > 3)
+                {
+                    // Find an ear
+                    int bi = pgon.Count - 1;
+                    PointD a, b, c;
+                    while (true)
+                    {
+                        a = pgon[(bi + pgon.Count - 1) % pgon.Count];
+                        b = pgon[bi];
+                        c = pgon[(bi + 1) % pgon.Count];
+
+                        // If the angle ABC is concave, the triangle is not an ear.
+                        if ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X) > 0)
+                        {
+                            // If any other point lies inside the triangle ABC, it is not an ear.
+                            var isEar = true;
+                            var triangle = new PolygonD(a, b, c);
+                            for (int i = 0; i < pgon.Count - 3 && isEar; i++)
+                                if (!triangle.Vertices.Contains(pgon[(bi + 2 + i) % pgon.Count]) && triangle.ContainsPoint(pgon[(bi + 2 + i) % pgon.Count]))
+                                    isEar = false;
+                            if (isEar)
+                                break;
+                        }
+                        bi--;
+                        if (bi < 0)
+                            throw new InvalidOperationException();
+                    }
+
+                    yield return new[] { a, b, c };
+                    pgon.RemoveAt(bi);
+                }
+
+                yield return pgon.ToArray();
+            }
         }
 
         public static string PathToSvg(IEnumerable<PointD> ptsArr)
