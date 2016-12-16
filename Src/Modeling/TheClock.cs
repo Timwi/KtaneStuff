@@ -17,12 +17,103 @@ namespace KtaneStuff.Modeling
 
     static class TheClock
     {
+        enum HandStyle
+        {
+            Line,
+            Arrow,
+            Spade
+        }
+
         public static void Do()
         {
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockFrame.obj", GenerateObjFile(ClockFrame(), "ClockFrame"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\Clockface.obj", GenerateObjFile(Clockface(), "Clockface"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockfaceBackground.obj", GenerateObjFile(Disc(90), "ClockfaceBackground"));
+            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\SecondHand.obj", GenerateObjFile(Cylinder(-.9 / 6, .9, .01), "SecondHand"));
 
+            GenerateNumerals();
+            GenerateHands();
+        }
+
+        private static void GenerateHands()
+        {
+            foreach (var minute in new[] { false, true })
+            {
+                foreach (var style in new[] { HandStyle.Line, HandStyle.Arrow, HandStyle.Spade })
+                {
+                    for (int design = 0; design < 2; design++)
+                    {
+                        double thickness = minute ? .01 : .015;
+                        double length = minute ? .8 : .6;
+                        double depth = .01;
+                        double elevation = minute ? depth : 0;
+
+                        var objName = $"{(minute ? "Minute" : "Hour")}Hand{style}{design}";
+
+                        File.WriteAllText(
+                            $@"D:\c\KTANE\TheClock\Assets\Models\{objName}.obj",
+                            GenerateObjFile(Hand(style, design, thickness, length, depth, elevation), objName));
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<VertexInfo[]> Hand(HandStyle style, int design, double thickness, double length, double depth, double elevation)
+        {
+            const double bevelRadius = .01;
+            const int revSteps = 3;
+            double backLength = length / 6;
+            const double bézierSmoothness = .001;
+
+            PointD[] curve = null;
+            switch (style)
+            {
+                case HandStyle.Line:
+                    curve = Ut.NewArray(
+                        new[] { p(-thickness / 2, -backLength), p(thickness / 2, -backLength), p(thickness / 2, length), p(-thickness / 2, length) },
+                        new[] { p(-thickness * 3 / 2, -backLength), p(thickness * 3 / 2, -backLength), p(-thickness / 100, length), p(thickness / 100, length) }
+                    )[design];
+                    break;
+
+                case HandStyle.Arrow:
+                    curve = Ut.NewArray(
+                        new[] { p(-thickness * 2, -backLength), p(0, -backLength * 4 / 5), p(thickness * 2, -backLength), p(thickness / 5, length * .85), p(thickness * 4, length * .77), p(0, length), p(-thickness * 4, length * .77), p(-thickness / 5, length * .85) },
+                        new[] { p(-thickness / 2, -backLength), p(thickness / 2, -backLength), p(thickness / 2, length * .85), p(thickness * 3, length * .85), p(0, length), p(-thickness * 3, length * .85), p(-thickness / 2, length * .85) }
+                    )[design];
+                    break;
+
+                case HandStyle.Spade:
+                    double spadeWidth = thickness * 3 / 2;
+                    double spadeHeightF = 4;
+                    curve = Ut.NewArray(
+                        Enumerable.Range(0, 72).Select(i => i * (360 - 30) / 72 + 90 + 15).Select(angle => p(thickness * 3 * cos(angle), thickness * 3 * sin(angle) - backLength))
+                            .Concat(SmoothBézier(p(spadeWidth, length * (1 - spadeHeightF * (1 - .91))), p(spadeWidth * 3, length * (1 - spadeHeightF * (1 - .9))), p(spadeWidth * 4, length * (1 - spadeHeightF * (1 - .91))), p(spadeWidth * 4, length * (1 - spadeHeightF * (1 - .93))), bézierSmoothness))
+                            .Concat(SmoothBézier(p(spadeWidth * 4, length * (1 - spadeHeightF * (1 - .93))), p(spadeWidth * 4, length * (1 - spadeHeightF * (1 - .96))), p(spadeWidth, length * (1 - spadeHeightF * (1 - .96))), p(0, length), bézierSmoothness).Skip(1))
+                            .Concat(SmoothBézier(p(0, length), p(-spadeWidth, length * (1 - spadeHeightF * (1 - .96))), p(-spadeWidth * 4, length * (1 - spadeHeightF * (1 - .96))), p(-spadeWidth * 4, length * (1 - spadeHeightF * (1 - .93))), bézierSmoothness).Skip(1))
+                            .Concat(SmoothBézier(p(-spadeWidth * 4, length * (1 - spadeHeightF * (1 - .93))), p(-spadeWidth * 4, length * (1 - spadeHeightF * (1 - .91))), p(-spadeWidth * 3, length * (1 - spadeHeightF * (1 - .9))), p(-spadeWidth, length * (1 - spadeHeightF * (1 - .91))), bézierSmoothness).Skip(1))
+                            .ToArray(),
+                        SmoothBézier(p(spadeWidth * 2, -backLength * 1.5), p(spadeWidth / 2, backLength), p(spadeWidth / 2, 0), p(spadeWidth / 2, length * (1 - spadeHeightF * (1 - .91))), bézierSmoothness)
+                            .Concat(SmoothBézier(p(spadeWidth / 2, length * (1 - spadeHeightF * (1 - .91))), p(spadeWidth * 3, length * (1 - spadeHeightF * (1 - .91))), p(spadeWidth * 3, length * (1 - spadeHeightF * (1 - .92))), p(spadeWidth * 3, length * (1 - spadeHeightF * (1 - .93))), bézierSmoothness).Skip(1))
+                            .Concat(SmoothBézier(p(spadeWidth * 3, length * (1 - spadeHeightF * (1 - .93))), p(spadeWidth * 3, length * (1 - spadeHeightF * (1 - .95))), p(spadeWidth, length * (1 - spadeHeightF * (1 - .94))), p(0, length), bézierSmoothness).Skip(1))
+                            .Concat(SmoothBézier(p(0, length), p(-spadeWidth, length * (1 - spadeHeightF * (1 - .94))), p(-spadeWidth * 3, length * (1 - spadeHeightF * (1 - .95))), p(-spadeWidth * 3, length * (1 - spadeHeightF * (1 - .93))), bézierSmoothness).Skip(1))
+                            .Concat(SmoothBézier(p(-spadeWidth * 3, length * (1 - spadeHeightF * (1 - .93))), p(-spadeWidth * 3, length * (1 - spadeHeightF * (1 - .92))), p(-spadeWidth * 3, length * (1 - spadeHeightF * (1 - .91))), p(-spadeWidth / 2, length * (1 - spadeHeightF * (1 - .91))), bézierSmoothness).Skip(1))
+                            .Concat(SmoothBézier(p(-spadeWidth / 2, length * (1 - spadeHeightF * (1 - .91))), p(-spadeWidth / 2, 0), p(-spadeWidth / 2, backLength), p(-spadeWidth * 2, -backLength * 1.5), bézierSmoothness))
+                            .ToArray()
+                    )[1 - design];
+                    break;
+            }
+
+            if (curve == null)
+                throw new InvalidOperationException();
+
+            foreach (var t in Triangulate(new[] { curve }).Select(arr => arr.Select(p => pt(p.X, depth + elevation, p.Y)).ToArray()))
+                yield return t.Select(p => p.WithNormal(0, 1, 0)).Reverse().ToArray();
+            foreach (var b in BevelFromCurve(curve.Select(p => pt(p.X, depth, p.Y)), bevelRadius, revSteps))
+                yield return b.Select(vi => new VertexInfo(vi.Location.Add(y: elevation), vi.Normal)).ToArray();
+        }
+
+        private static void GenerateNumerals()
+        {
             var oldNumberData = new Dictionary<string, double>();
             try { oldNumberData = ClassifyJson.DeserializeFile<Dictionary<string, double>>(@"D:\temp\TheClockNumberData.json"); } catch { }
 
@@ -59,7 +150,6 @@ namespace KtaneStuff.Modeling
                 { "AP22 Johnston Underground|.08|.05", 1.5 },
                 { "RP22 Johnston Underground", 0.9 },
                 { "AParchment", 2.75 },
-                { "RPerg", 0.9 },
                 { "APoor Richard", 1.184 },
                 { "RPoor Richard", 0.85 },
                 { "AProxima Nova ExCn Th|.06|.05", 1.6 },

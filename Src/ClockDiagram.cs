@@ -18,7 +18,7 @@ namespace KtaneStuff
         {
             var multipliers = new[] { 3, 5, 2, 2 };
             var factor = 1;
-            var startAngle = 0.0;
+            var startAngle = 3.0;
             var svg = new StringBuilder();
             var text = new StringBuilder();
             var circ = 0;
@@ -74,9 +74,9 @@ namespace KtaneStuff
                             {
                                 var lbls = new[] { "Ma", "Un", "Ab" };
                                 if (angle < 90 || angle >= 270)
-                                    text.Append($"<text x='{circ + .5 + innerCirc}' y='.0' transform='rotate({angle + 1 - 3})' fill='#000' font-size='.3' text-anchor='middle' font-family='Special Elite'>{lbls[i % lbls.Length]}</text>");
+                                    text.Append($"<text x='{circ + .5 + innerCirc}' y='.0' transform='rotate({angle + 1 + 3})' fill='#000' font-size='.3' text-anchor='middle' font-family='Special Elite'>{lbls[i % lbls.Length]}</text>");
                                 else
-                                    text.Append($"<text x='{-circ - .5 - innerCirc}' y='.0' transform='rotate({angle - 1 + 180 - 3})' fill='#000' font-size='.3' text-anchor='middle' font-family='Special Elite'>{lbls[i % lbls.Length]}</text>");
+                                    text.Append($"<text x='{-circ - .5 - innerCirc}' y='.0' transform='rotate({angle - 1 + 180 + 3})' fill='#000' font-size='.3' text-anchor='middle' font-family='Special Elite'>{lbls[i % lbls.Length]}</text>");
                             }
                             break;
                     }
@@ -94,7 +94,7 @@ namespace KtaneStuff
 
             svg.Append(mkCircle(0, 0, .1));
 
-            File.WriteAllText(@"D:\c\KTANE\HTML\img\The Clock\Wheel Chart.svg", $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='{-circ - innerCirc - .2} {-circ - innerCirc - .2} {2 * (circ + innerCirc) + .4} {2 * (circ + innerCirc) + .4}'>{svg}<g>{text}</g></svg>");
+            File.WriteAllText(@"D:\c\KTANE\TheClock\Manual\img\The Clock\Wheel Chart.svg", $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='{-circ - innerCirc - .2} {-circ - innerCirc - .2} {2 * (circ + innerCirc) + .4} {2 * (circ + innerCirc) + .4}'>{svg}<g>{text}</g></svg>");
         }
 
         private static string mkCircle(double cx, double cy, double r, string fill = null, string stroke = null, double? strokeWidth = null)
