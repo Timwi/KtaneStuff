@@ -70,6 +70,7 @@
     <Compile Include="MouseInTheMazeManual.cs" />
     <Compile Include="MurderCheatSheet.cs" />
     <Compile Include="ClockDiagram.cs" />
+    <Compile Include="SimonScreams.cs" />
     <Compile Include="WordSearchManual.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Simulations.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 [assembly: AssemblyTitle("KtaneStuff")]
 [assembly: AssemblyDescription("Contains some ancillary code used in the creation of some Keep Talking and Nobody Explodes mods.")]
@@ -21,8 +22,12 @@ namespace KtaneStuff
     {
         static void Main(string[] args)
         {
-            Modeling.TheClock.Do();
-            
+            try { Console.OutputEncoding = Encoding.UTF8; }
+            catch { }
+
+            Ktane.SimonScreamsGenerateSmallTable();
+            //Modeling.TheClock.Do();
+
             Console.WriteLine("Done.");
             Console.ReadLine();
         }
