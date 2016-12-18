@@ -80,7 +80,6 @@ namespace WordSearch {{
             const double bevelWidth = .2;
             const double xf = bevelWidth * .25;
             const double bevelHeight = 0;
-            const double yf = bevelHeight * .4;
             const double grooveHeight = .02;
             const double ghf = grooveHeight * .4;
             const int bézierSteps = 10;
