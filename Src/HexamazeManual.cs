@@ -360,28 +360,33 @@ namespace KtaneStuff
 
         private static bool areMarkingsUnique(HexamazeInfo maze)
         {
+            var ambig = 1;
             var size = maze.Size;
             var smallSize = maze.SubmazeSize;
-            var unique = new Dictionary<string, Tuple<Hex, int>>();
+            var unique = new Dictionary<string, List<Tuple<Hex, int>>>();
             foreach (var centerHex in Hex.LargeHexagon(size - smallSize + 1))
             {
                 for (int rotation = 0; rotation < 6; rotation++)
                 {
-                    Tuple<Hex, int> uniq;
                     var markingsStr = Hex.LargeHexagon(smallSize).Select(h => h.Rotate(rotation) + centerHex).Select(h => maze.Markings.Get(h, Marking.None).Rotate(-rotation)).ToMarkingString();
-                    if (unique.TryGetValue(markingsStr, out uniq))
+                    List<Tuple<Hex, int>> uniqs;
+                    if (unique.TryGetValue(markingsStr, out uniqs) && uniqs.Count > 0)
                     {
-                        var fills1 = Tuple.Create(Hex.LargeHexagon(smallSize).Select(h => h.Rotate(uniq.Item2) + uniq.Item1), "fed");
+                        var fills1 = Tuple.Create(Hex.LargeHexagon(smallSize).Select(h => h.Rotate(uniqs[0].Item2) + uniqs[0].Item1), "fed");
                         var fills2 = Tuple.Create(Hex.LargeHexagon(smallSize).Select(h => h.Rotate(rotation) + centerHex), "def");
-                        File.WriteAllText(@"D:\c\KTANE\HTML\Hexamaze2.html", Regex.Replace(File.ReadAllText(@"D:\c\KTANE\HTML\Hexamaze.html"), @"\A(.*<!--##-->\s*).*?(?=\s*<!--###-->)", options: RegexOptions.Singleline, evaluator: m => m.Groups[1].Value + maze.CreateSvg(new[] { fills1, fills2 })));
-                        return false;
+                        ambig++;
+                        File.WriteAllText($@"D:\c\KTANE\HTML\Hexamaze{ambig}.html", Regex.Replace(File.ReadAllText(@"D:\c\KTANE\HTML\Hexamaze.html"), @"\A(.*<!--##-->\s*).*?(?=\s*<!--###-->)", options: RegexOptions.Singleline, evaluator: m => m.Groups[1].Value + maze.CreateSvg(new[] { fills1, fills2 })));
+                        //return false;
                     }
-                    unique[markingsStr] = Tuple.Create(centerHex, rotation);
+                    unique.AddSafe(markingsStr, Tuple.Create(centerHex, rotation));
                 }
             }
 
             //File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"\A(.*<!--##-->\s*).*?(?=\s*<!--###-->)", options: RegexOptions.Singleline, evaluator: m => m.Groups[1].Value + maze.CreateSvg()));
-            return true;
+
+            foreach (var nonUnique in unique.Where(k => k.Value.Count > 1))
+                Console.WriteLine($"{nonUnique.Key} = {nonUnique.Value.Select(tup => $"{tup.Item1}/{(6 - tup.Item2) % 6}").JoinString(", ")}");
+            return unique.All(kvp => kvp.Value.Count <= 1);
         }
 
         private static bool reallocateMarkings(string jsonFile, HexamazeInfo maze)
@@ -454,10 +459,12 @@ namespace Hexamaze {{
 
         public static void DoHexamazeStuff()
         {
-            var jsonFile = @"D:\c\KTANE\Hexamaze.json";
+            var jsonFile = @"D:\c\KTANE\KtaneStuff\Hexamaze.json";
             var maze = ClassifyJson.DeserializeFile<HexamazeInfo>(jsonFile);
             const double hexWidth = 72;
-            
+
+            Console.WriteLine(areMarkingsUnique(maze));
+
             //// Create the PNG for the Paint.NET layer
             //var lhw = Hex.LargeWidth(4) * hexWidth;
             //var lhh = Hex.LargeHeight(4) * hexWidth * Hex.WidthToHeight;

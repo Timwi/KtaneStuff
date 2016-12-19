@@ -1,0 +1,5018 @@
+﻿{
+  "Markings": [
+    [
+      {
+        "Q": -1,
+        "R": 8
+      },
+      "SquareNeSw"
+    ],
+    [
+      {
+        "Q": -6,
+        "R": -2
+      },
+      "Circle"
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 0
+      },
+      "SquareNS"
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 0
+      },
+      "TriangleDown"
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -9
+      },
+      "SquareNS"
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -7
+      },
+      "TriangleLeft"
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 3
+      },
+      "Circle"
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -7
+      },
+      "SquareNeSw"
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -3
+      },
+      "Circle"
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -6
+      },
+      "SquareNwSe"
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 6
+      },
+      "TriangleLeft"
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 5
+      },
+      "TriangleDown"
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -3
+      },
+      "TriangleUp"
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 5
+      },
+      "TriangleRight"
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -6
+      },
+      "Circle"
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 2
+      },
+      "SquareNwSe"
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 5
+      },
+      "TriangleUp"
+    ],
+    [
+      {
+        "Q": -6,
+        "R": -1
+      },
+      "TriangleRight"
+    ]
+  ],
+  "Size": 12,
+  "SubmazeSize": 4,
+  "Walls": [
+    [
+      {
+        "Q": 0,
+        "R": 0
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -1
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -1
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -1
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -1
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -2
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -3
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -2
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -1
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 1
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": 1
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": 0
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -1
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -3
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -3
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -2
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -2
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -1
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -1
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": 0
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": 1
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": 2
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": 2
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": 4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": 4
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": 5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 6
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 8
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 9
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 10
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 10
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 9
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 8
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 6
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 6
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 8
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 9
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 10
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 11
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 10
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 9
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 8
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 8
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 10
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 11
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 11
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 11
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 11
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 10
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 9
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 9
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 8
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 8
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 8
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 6
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 6
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 8
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 6
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 7
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 8
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 8
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 9
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 10
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 10
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 10
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 9
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 8
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 6
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 8
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 6
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 3
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 5
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 2
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 3
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 3
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 4
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 5
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 5
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 5
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 4
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 6
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 5
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": 2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": 1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": 1
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": 0
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 1
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 2
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 1
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 2
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 3
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 5
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 5
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 3
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 2
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 3
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 4
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 5
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 5
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 6
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 6
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 7
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 8
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 9
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 10
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 11
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 10
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 9
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 11
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 11
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 3
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 2
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 1
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 0
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": -1
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": -2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": -3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": -3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": -3
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": -4
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -4
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": -3
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": -2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": -1
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": -2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -3
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -3
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -2
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -2
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": -1
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -1
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 0
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 1
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 1
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 1
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 1
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": -1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": -1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": -1
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": -2
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": -2
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": -1
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 0
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 1
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 4
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 2
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -2
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -3
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -4
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -4
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -3
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -2
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -3
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -4
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -3
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -4
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -6
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -8
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -6
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -5
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -6
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -7
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -6
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -7
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -8
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -8
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -9
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -9
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -9
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -9
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -10
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -10
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -10
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -10
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -11
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -10
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -10
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -11
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -10
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -10
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -9
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -9
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -8
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -7
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -8
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -6
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -5
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -5
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -6
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -8
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -9
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -7
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -6
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -4
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -5
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -5
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -5
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -5
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -6
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -8
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -9
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -9
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -10
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -11
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -10
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -9
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -9
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -8
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -6
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": -5
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": -5
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": -5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": -4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": -4
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": -6
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": -7
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -8
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -8
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": -6
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -5
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -8
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -6
+      },
+      [
+        false,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -6
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -3
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -11
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -8
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -6
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -4
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 1
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 5
+      },
+      [
+        false,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 5
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 5
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 1
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": -2
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 0
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 1
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 5
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 5
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 6
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 6
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 7
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 6
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 8
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 9
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 9
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 6
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 7
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 9
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": 12
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 9
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 10
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": -4
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -8,
+        "R": -3
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -3
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": -2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 6
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 6
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -6
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -8
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -2
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -6
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -5
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": -4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 0
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -4,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -5,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 12
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 0
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 3
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 8
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -11
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -10
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": -11
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -2,
+        "R": -9
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -6
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 1,
+        "R": 11
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 0,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 10
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 9
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 3,
+        "R": 9
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 8
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -8
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -9
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": -10
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": -2
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -1
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 4
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 4,
+        "R": 6
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -9
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -2
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": 2
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -10
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": 1
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": 0
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -1
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": -8
+      },
+      [
+        false,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -10
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -9
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": -11
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -8
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -11
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -7
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -6
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -5
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": -4
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -5
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -4
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -3
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -2
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": -1
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": 0
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 5
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 10
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -7,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 5,
+        "R": 7
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 8,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": 5
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 6,
+        "R": 6
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 9,
+        "R": 3
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 10,
+        "R": 2
+      },
+      [
+        false,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 11,
+        "R": 1
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 3
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 4
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 1
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 2
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 10
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -10,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -11,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 12
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": -12,
+        "R": 11
+      },
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    [
+      {
+        "Q": 7,
+        "R": -11
+      },
+      [
+        true,
+        false,
+        true
+      ]
+    ],
+    [
+      {
+        "Q": 12,
+        "R": 0
+      },
+      [
+        true,
+        true,
+        true
+      ]
+    ]
+  ]
+}
