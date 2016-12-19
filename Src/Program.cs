@@ -26,7 +26,8 @@ namespace KtaneStuff
             try { Console.OutputEncoding = Encoding.UTF8; }
             catch { }
 
-            Modeling.SimonScreams.Do();
+            //Modeling.SimonScreams.Do();
+            Ktane.SimonScreamsSimulation();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

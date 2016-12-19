@@ -77,18 +77,18 @@ namespace KtaneStuff
         {
             var criteria1 = Ut.NewArray(
                 new { Name = "If three adjacent colors flashed in counter clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix + 1] == (seq[ix] + 5) % 6 && seq[ix + 2] == (seq[ix] + 4) % 6)) },
-                new { Name = "If orange flashed more than twice", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq.Count(n => n == orange) > 2) },
-                new { Name = "If two adjacent colors didn’t flash", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, 6).Any(color => !seq.Contains(color) && !seq.Contains((color + 1) % 6))) },
-                new { Name = "If exactly two colors flashed exactly twice", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq.GroupBy(n => n).Where(g => g.Count() == 2).Count() == 2) },
-                new { Name = "If the number of colors that flashed is even", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq.Distinct().Count() % 2 == 0) },
+                new { Name = "Otherwise, if orange flashed more than twice", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq.Count(n => n == orange) > 2) },
+                new { Name = "Otherwise, if two adjacent colors didn’t flash", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, 6).Any(color => !seq.Contains(color) && !seq.Contains((color + 1) % 6))) },
+                new { Name = "Otherwise, if exactly two colors flashed exactly twice", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq.GroupBy(n => n).Where(g => g.Count() == 2).Count() == 2) },
+                new { Name = "Otherwise, if the number of colors that flashed is even", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq.Distinct().Count() % 2 == 0) },
                 new { Name = "Otherwise", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => true) }
             );
             var criteria2 = Ut.NewArray(
-                new { Name = "If two opposite colors didn’t flash", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => twoOppositeColorsDidntFlash(seq)) },
-                new { Name = "If at most one of red, green and blue flashed", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => rgb.Count(color => seq.Contains(color)) <= 1) },
-                new { Name = "If three adjacent colors flashed in clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix + 1] == (seq[ix] + 1) % 6 && seq[ix + 2] == (seq[ix] + 2) % 6)) },
-                new { Name = "If any color flashed, then an adjacent color, then the first color again", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix + 2] == seq[ix] && (seq[ix + 1] == (seq[ix] + 1) % 6 || seq[ix + 1] == (seq[ix] + 5) % 6))) },
-                new { Name = "If two adjacent colors flashed in clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 1).Any(ix => seq[ix + 1] == (seq[ix] + 1) % 6)) },
+                new { Name = "If two opposite colors didn’t flash", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, 3).Any(col => !seq.Contains(col) && !seq.Contains(col + 3))) },
+                new { Name = "Otherwise, if at most one of red, green and blue flashed", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => rgb.Count(color => seq.Contains(color)) <= 1) },
+                new { Name = "Otherwise, if three adjacent colors flashed in clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix + 1] == (seq[ix] + 1) % 6 && seq[ix + 2] == (seq[ix] + 2) % 6)) },
+                new { Name = "Otherwise, if a color flashed, then an adjacent color, then the first again", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix + 2] == seq[ix] && (seq[ix + 1] == (seq[ix] + 1) % 6 || seq[ix + 1] == (seq[ix] + 5) % 6))) },
+                new { Name = "Otherwise, if two adjacent colors flashed in clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 1).Any(ix => seq[ix + 1] == (seq[ix] + 1) % 6)) },
                 new { Name = "Otherwise", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => true) }
             );
 
@@ -168,11 +168,6 @@ namespace KtaneStuff
                 return (dic[key1][key2] = amount);
             else
                 return (dic[key1][key2] = dic[key1][key2] + amount);
-        }
-
-        private static bool twoOppositeColorsDidntFlash(int[] seq)
-        {
-            return Enumerable.Range(0, 3).Any(col => !seq.Contains(col) && !seq.Contains(col + 3));
         }
 
         private static int[][] generateSequences()

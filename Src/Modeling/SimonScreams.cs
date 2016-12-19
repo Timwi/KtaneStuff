@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using RT.Util;
+using RT.Util.Geometry;
 
 namespace KtaneStuff.Modeling
 {
-    using RT.Util.Geometry;
     using static Md;
 
     static class SimonScreams
@@ -15,6 +15,7 @@ namespace KtaneStuff.Modeling
         {
             File.WriteAllText(@"D:\c\KTANE\SimonScreams\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
             File.WriteAllText(@"D:\c\KTANE\SimonScreams\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
+            File.WriteAllText(@"D:\c\KTANE\SimonScreams\Assets\Models\ButtonCollider.obj", GenerateObjFile(ButtonCollider(), "ButtonCollider"));
         }
 
         private static IEnumerable<VertexInfo[]> Button()
@@ -59,6 +60,17 @@ namespace KtaneStuff.Modeling
                     new[] { p(0, 0), p(holeInnerRadius * cos(holeAngle), holeInnerRadius * sin(holeAngle)), p(holeOuterRadius, 0), p(holeInnerRadius * cos(-holeAngle), holeInnerRadius * sin(-holeAngle)) }.Select(p => p + new PointD(.03, 0))
                 ))
                     .Select(poly => poly.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray());
+        }
+
+        private static IEnumerable<VertexInfo[]> ButtonCollider()
+        {
+            var innerRadius = .44;
+            var outerRadius = 1.1;
+            var angle = 30.0;
+
+            yield return
+                new[] { p(0, 0), p(innerRadius * cos(angle), innerRadius * sin(angle)), p(outerRadius, 0), p(innerRadius * cos(-angle), innerRadius * sin(-angle)) }
+                    .Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray();
         }
     }
 }
