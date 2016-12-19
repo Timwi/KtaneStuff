@@ -106,6 +106,15 @@ namespace KtaneStuff.Modeling
                 .Select(t => pow(1 - t, 3) * start + 3 * pow(1 - t, 2) * t * control1 + 3 * (1 - t) * t * t * control2 + pow(t, 3) * end);
         }
 
+        public static Pt[][] BézierPatch(Pt p00, Pt p10, Pt p20, Pt p30, Pt p01, Pt p11, Pt p21, Pt p31, Pt p02, Pt p12, Pt p22, Pt p32, Pt p03, Pt p13, Pt p23, Pt p33, int steps)
+        {
+            return Ut.NewArray(steps, steps, (a, b) =>
+            {
+                var u = (double) a / (steps - 1);
+                return bé(bé(p00, p01, p02, p03, u), bé(p10, p11, p12, p13, u), bé(p20, p21, p22, p23, u), bé(p30, p31, p32, p33, u), (double) b / (steps - 1));
+            });
+        }
+
         public static Pt[][] BézierPatch(Pt[][] controlPoints, int steps)
         {
             return Ut.NewArray(steps, steps, (a, b) => ((double) a / (steps - 1)).Apply(u => ((double) b / (steps - 1)).Apply(v =>
