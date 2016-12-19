@@ -52,6 +52,7 @@
     <Compile Include="Modeling\AdjacentLetters.cs" />
     <Compile Include="Modeling\BevelPoint.cs" />
     <Compile Include="Modeling\Bitmaps.cs" />
+    <Compile Include="Modeling\SimonScreams.cs" />
     <Compile Include="Modeling\ColoredSquares.cs" />
     <Compile Include="Modeling\FollowTheLeader.cs" />
     <Compile Include="Modeling\Friendship.cs" />

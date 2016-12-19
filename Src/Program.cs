@@ -20,13 +20,13 @@ namespace KtaneStuff
 {
     class Program
     {
+        [STAThread()]
         static void Main(string[] args)
         {
             try { Console.OutputEncoding = Encoding.UTF8; }
             catch { }
 
-            Ktane.SimonScreamsGenerateSmallTable();
-            //Modeling.TheClock.Do();
+            Modeling.SimonScreams.Do();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

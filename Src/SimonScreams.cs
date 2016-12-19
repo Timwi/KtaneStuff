@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 
 namespace KtaneStuff
 {
+    using static Modeling.Md;
+
     static partial class Ktane
     {
         public static void SimonScreamsGenerateLargeTable()
@@ -27,6 +31,18 @@ namespace KtaneStuff
             var grid = Ut.NewArray(6, 6, (_, __) => Rnd.Next(6));
             fill(grid, 0, 0);
             Console.WriteLine(Enumerable.Range(0, 6).Select(row => Enumerable.Range(0, 6).Select(col => $"<td>{"ROYGBP"[grid[col][row]]}").JoinString()).JoinString(Environment.NewLine));
+        }
+
+        public static void SimonScreamsSvg()
+        {
+            var path = @"D:\c\KTANE\HTML\img\Component\Simon Screams.svg";
+            File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<=<!--##-->).*(?=<!--###-->)",
+                $@"<g transform='translate(174,174) scale(50)' fill='none' stroke='#000' stroke-width='.04' stroke-linejoin='round'>{
+                    Enumerable.Range(0, 6).Select(i => i * 360 / 6).Select(angle =>
+                        $"<path d='M0,0 L{1.25 * cos(30)},{1.25 * sin(30)} 3,0 {1.25 * cos(-30)},{1.25 * sin(-30)} z' transform='rotate({angle})' />"
+                    ).JoinString()
+                }</g>",
+                RegexOptions.Singleline));
         }
 
         private static bool fill(int[][] grid, int x, int y)
