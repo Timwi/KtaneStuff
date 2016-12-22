@@ -23,7 +23,6 @@ namespace KtaneStuff.Modeling
             public string Filename = null;
             public string Name = null;
             public string Color = null;
-            public string NewFilename = null;
         }
 
         sealed class SymbolInfo
@@ -51,7 +50,7 @@ namespace KtaneStuff.Modeling
 namespace Friendship {{
     static class FriendshipSymbols {{
         public static byte[][] RawBytes = new byte[][] {{
-            {Enumerable.Range(0, 56).Select(i => $@"new byte[] {{{File.ReadAllBytes($@"D:\c\KTANE\Friendship\Manual\img\Friendship Symbol {i:00}.png").JoinString(",")}}}").JoinString(",\r\n            ")}
+            {Enumerable.Range(0, 56).Select(i => $@"new byte[] {{{File.ReadAllBytes($@"D:\c\KTANE\Friendship\Manual\img\Friendship\Friendship Symbol {i:00}.png").JoinString(",")}}}").JoinString(",\r\n            ")}
         }};
     }}
 }}");
@@ -59,7 +58,15 @@ namespace Friendship {{
 
         public static void SimulateFriendship()
         {
-            var ponyNames = new[] { "Aloe Blossom", "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh", "Bulk Biceps", "Cadance", "Carrot Top", "Celestia", "Cheerilee", "Cheese Sandwich", "Cherry Jubilee", "Coco Pommel", "Coloratura", "Daisy", "Daring Do", "Derpy", "Diamond Tiara", "Double Diamond", "Filthy Rich", "Granny Smith", "Hoity Toity", "Lightning Dust", "Lily", "Lotus Blossom", "Luna", "Lyra", "Maud Pie", "Mayor Mare", "Moon Dancer", "Night Light", "Nurse Redheart", "Octavia Melody", "Rose", "Screwball", "Shining Armor", "Silver Shill", "Silver Spoon", "Silverstar", "Spoiled Rich", "Starlight Glimmer", "Sunburst", "Sunset Shimmer", "Suri Polomare", "Thunderlane", "Time Turner", "Toe Tapper", "Tree Hugger", "Trenderhoof", "Trixie", "Trouble Shoes", "Twilight Velvet", "Twist", "Vinyl Scratch" };
+            var ponyNames = new[] {
+                "Amethyst Star", "Apple Cinnamon", "Apple Fritter", "Babs Seed", "Berry Punch", "Big McIntosh", "Bulk Biceps",
+                "Cadance", "Carrot Top", "Celestia", "Cheerilee", "Cheese Sandwich", "Cherry Jubilee", "Coco Pommel",
+                "Coloratura", "Daisy", "Daring Do", "Derpy", "Diamond Tiara", "Double Diamond", "Filthy Rich",
+                "Granny Smith", "Hoity Toity", "Lightning Dust", "Lily", "Luna", "Lyra Heartstrings", "Maud Pie",
+                "Mayor Mare", "Moon Dancer", "Ms. Harshwhinny", "Night Light", "Nurse Redheart", "Octavia Melody", "Rose",
+                "Screwball", "Shining Armor", "Silver Shill", "Silver Spoon", "Silverstar", "Spoiled Rich", "Starlight Glimmer",
+                "Sunburst", "Sunset Shimmer", "Suri Polomare", "Sweetie Drops", "Thunderlane", "Time Turner", "Toe Tapper",
+                "Tree Hugger", "Trenderhoof", "Trixie", "Trouble Shoes", "Twilight Velvet", "Twist", "Vinyl Scratch" };
 
             var attempts = 0;
             var colHits = 0;
@@ -153,14 +160,16 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             Console.WriteLine($"Probability that the special rule applies to the row symbols: {(double) rowHits / attempts * 100:0.#}%");
         }
 
+        private static string _poniesJson = @"D:\c\KTANE\KtaneStuff\DataFiles\Friendship\Ponies.json";
+
         public static void RenderFriendshipSymbols()
         {
-            var ponies = ClassifyJson.DeserializeFile<PonyInfo[]>(@"D:\temp\ponies.json");
-
+            var ponies = ClassifyJson.DeserializeFile<PonyInfo[]>(_poniesJson);
+            
             Enumerable.Range(0, ponies.Length).ParallelForEach(4, i =>
             {
                 var pony = ponies[i];
-                pony.NewFilename = $"Friendship Symbol {i:00}.png";
+                var newFilename = $"Friendship Symbol {i:00}.png";
                 var color = Color.FromArgb(Convert.ToInt32(pony.Color.Substring(0, 2), 16), Convert.ToInt32(pony.Color.Substring(2, 2), 16), Convert.ToInt32(pony.Color.Substring(4, 2), 16));
                 var newCutieMark = GraphicsUtil.MakeSemitransparentImage(200, 200, g => { g.SetHighQuality(); }, g =>
                 {
@@ -172,46 +181,14 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                     g.Clear(Color.Transparent);
                     g.FillEllipse(Brushes.Black, 1, 1, 197, 197);
                 });
-                var tmp = $@"D:\c\KTANE\Friendship\Manual\img\tmp_{pony.NewFilename}";
-                var final = $@"D:\c\KTANE\Friendship\Manual\img\{pony.NewFilename}";
+                var tmp = $@"D:\c\KTANE\Friendship\Manual\img\Friendship\tmp_{newFilename}";
+                var final = $@"D:\c\KTANE\Friendship\Manual\img\Friendship\{newFilename}";
                 newCutieMark.Save(tmp, ImageFormat.Png);
                 CommandRunner.Run("pngcr", tmp, final).OutputNothing().Go();
                 File.Delete(tmp);
                 lock (ponies)
-                    Console.WriteLine("Saved " + pony.NewFilename);
+                    Console.WriteLine("Saved " + newFilename);
             });
-        }
-
-        public static void RenderHtmlTable()
-        {
-            var ponies = ClassifyJson.DeserializeFile<PonyInfo[]>(@"D:\temp\ponies.json");
-            Clipboard.SetText(ponies.Select(pony => $@"""{pony.Name.CLiteralEscape()}""").JoinString(", "));
-
-            Ut.Assert(ponies.Length % 4 == 0);
-            var top = ponies.Subarray(0, ponies.Length / 4);
-            var right = ponies.Subarray(ponies.Length / 4, ponies.Length / 4);
-            var bottom = ponies.Subarray(ponies.Length / 4 * 2, ponies.Length / 4).Reverse().ToArray();
-            var left = ponies.Subarray(ponies.Length / 4 * 3, ponies.Length / 4).Reverse().ToArray();
-
-            var imgCell = Ut.Lambda((PonyInfo[] arr, int i) => $@"<th><img class='fs' src='img/{arr[i].NewFilename}'>");
-
-            var numCols = ponies.Length / 4;
-            var table = $@"
-            <table class='friendship'>
-                <tr><th>{Enumerable.Range(0, ponies.Length / 4).Select(i => imgCell(top, i)).JoinString()}<th></tr>
-                {Enumerable.Range(0, ponies.Length / 4).Select(i => $@"<tr>{imgCell(left, i)}[[]]{imgCell(right, i)}</tr>").JoinString()}
-                <tr><th>{Enumerable.Range(0, ponies.Length / 4).Select(i => imgCell(bottom, i)).JoinString()}<th></tr>
-            </table>
-            ";
-            var pos = table.IndexOf("[[]]");
-            var tableStart = table.Substring(0, pos) + $"<td colspan='{numCols}' rowspan='{numCols}'>";
-            var tableEnd = table.Substring(pos + "[[]]".Length).Replace("[[]]", "");
-
-            var htmlFile = @"D:\c\KTANE\Friendship\Manual\Friendship.html";
-            var html = File.ReadAllText(htmlFile);
-            html = Regex.Replace(html, @"(?<=<!--##\{-->).*(?=<!--##\}-->)", tableStart, RegexOptions.Singleline);
-            html = Regex.Replace(html, @"(?<=<!--###\{-->).*(?=<!--###\}-->)", tableEnd, RegexOptions.Singleline);
-            File.WriteAllText(htmlFile, html);
         }
 
         private static MeshVertexInfo[] bpa(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) { return new[] { pt(x, y, z, befX, afX, befY, afY) }; }
