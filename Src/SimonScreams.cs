@@ -38,7 +38,7 @@ namespace KtaneStuff
             var path = @"D:\c\KTANE\HTML\img\Component\Simon Screams.svg";
             File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<=<!--##-->).*(?=<!--###-->)",
                 $@"<g transform='translate(174,174) scale(50)' fill='none' stroke='#000' stroke-width='.04' stroke-linejoin='round'>{
-                    Enumerable.Range(0, 6).Select(i => i * 360 / 6).Select(angle =>
+                    Enumerable.Range(0, 6).Select(i => i * 360 / 6 - 15).Select(angle =>
                         $"<path d='M0,0 L{1.25 * cos(30)},{1.25 * sin(30)} 3,0 {1.25 * cos(-30)},{1.25 * sin(-30)} z' transform='rotate({angle})' />"
                     ).JoinString()
                 }</g>",
@@ -150,7 +150,7 @@ namespace KtaneStuff
                     tt.SetCell(col++, row, $"{(criteria2.Sum(cri2 => dic.Get($"{cri1.Name}×{cri2.Name}", stage, 0)) / (double) numIterations) * 100:0.000}%", alignment: HorizontalTextAlignment.Right);
 
                 tt.WriteToConsole();
-                Console.WriteLine(new string('─', 125));
+                Console.WriteLine(new string('═', 125));
             }
         }
 
