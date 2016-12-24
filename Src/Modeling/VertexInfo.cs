@@ -21,5 +21,8 @@ namespace KtaneStuff.Modeling
                 return Texture == null ? Location.ToString() : $"{Location}/{Texture.Value}";
             return $"{Location}/{Texture}/{Normal.Value}";
         }
+
+        public VertexInfo WithTexture(PointD texture) { return new VertexInfo(Location, Normal, texture); }
+        public VertexInfo WithTexture(double x, double y) { return new VertexInfo(Location, Normal, new PointD(x, y)); }
     }
 }
