@@ -23,16 +23,13 @@ namespace KtaneStuff
         {
             None,
             Circle,
-            SquareNS,
-            SquareNeSw,
-            SquareNwSe,
             TriangleUp,
             TriangleDown,
             TriangleLeft,
-            TriangleRight
+            TriangleRight,
+            Hexagon
         }
 
-        private static Marking[] _markingsSquare = new[] { Marking.SquareNeSw, Marking.SquareNS, Marking.SquareNwSe };
         private static Marking[] _markingsTriangle1 = new[] { Marking.TriangleUp, Marking.TriangleDown };
         private static Marking[] _markingsTriangle2 = new[] { Marking.TriangleLeft, Marking.TriangleRight };
         public static Marking Rotate(this Marking marking, int rotation)
@@ -41,11 +38,7 @@ namespace KtaneStuff
             {
                 case Marking.None: return Marking.None;
                 case Marking.Circle: return Marking.Circle;
-
-                case Marking.SquareNeSw:
-                case Marking.SquareNwSe:
-                case Marking.SquareNS:
-                    return _markingsSquare[(_markingsSquare.IndexOf(marking) + (rotation % 6 + 6) % 6) % 3];
+                case Marking.Hexagon: return Marking.Hexagon;
 
                 case Marking.TriangleUp:
                 case Marking.TriangleDown:
@@ -65,14 +58,12 @@ namespace KtaneStuff
                 return marking;
             switch (marking)
             {
-                case Marking.SquareNeSw: return Marking.SquareNwSe;
-                case Marking.SquareNwSe: return Marking.SquareNeSw;
                 case Marking.TriangleUp: return Marking.TriangleDown;
                 case Marking.TriangleDown: return Marking.TriangleUp;
                 default: return marking;
             }
         }
-        public static string ToMarkingString(this IEnumerable<Marking> markings) => markings.Select(m => m == Marking.None ? "•" : ((int) m).ToString()).JoinString();
+        public static string ToMarkingString(this IEnumerable<Marking> markings) => markings.Select(m => m == Marking.None ? "•" : /*((int) m).ToString()*/ m.ToString().Substring(0, 1)).JoinString();
 
         public sealed class HexamazeInfo : ICloneable
         {
@@ -140,20 +131,16 @@ namespace KtaneStuff
             {
                 case Marking.Circle:
                     return $"{dot}<circle{attr}{(useCssClass ? " class='marking circle'" : null)} cx='{x}' cy='{y}' r='{hexWidth / 4}' />";
-                case Marking.SquareNS:
-                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking square-ns'" : null)} points='{Enumerable.Range(0, 4).Select(i => (i + .5) * Math.PI / 2).Select(angle => $"{x + hexWidth * .3 * Math.Cos(angle)},{y + hexWidth * .3 * Math.Sin(angle)}").JoinString(" ")}' />";
-                case Marking.SquareNeSw:
-                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking square-ne-sw'" : null)} points='{Enumerable.Range(0, 4).Select(i => (i - 1.0 / 6) * Math.PI / 2).Select(angle => $"{x + hexWidth * .3 * Math.Cos(angle)},{y + hexWidth * .3 * Math.Sin(angle)}").JoinString(" ")}' />";
-                case Marking.SquareNwSe:
-                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking square-nw-se'" : null)} points='{Enumerable.Range(0, 4).Select(i => (i + 1.0 / 6) * Math.PI / 2).Select(angle => $"{x + hexWidth * .3 * Math.Cos(angle)},{y + hexWidth * .3 * Math.Sin(angle)}").JoinString(" ")}' />";
                 case Marking.TriangleUp:
-                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking square-nw-se'" : null)} points='{Enumerable.Range(0, 3).Select(i => (i + .25) * 2 * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
+                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking triangle-up'" : null)} points='{Enumerable.Range(0, 3).Select(i => (i + .25) * 2 * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
                 case Marking.TriangleDown:
-                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking square-nw-se'" : null)} points='{Enumerable.Range(0, 3).Select(i => (i + .75) * 2 * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
+                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking triangle-down'" : null)} points='{Enumerable.Range(0, 3).Select(i => (i + .75) * 2 * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
                 case Marking.TriangleLeft:
-                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking square-nw-se'" : null)} points='{Enumerable.Range(0, 3).Select(i => (i + .5) * 2 * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
+                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking triangle-left'" : null)} points='{Enumerable.Range(0, 3).Select(i => (i + .5) * 2 * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
                 case Marking.TriangleRight:
-                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking square-nw-se'" : null)} points='{Enumerable.Range(0, 3).Select(i => i * 2 * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
+                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking triangle-right'" : null)} points='{Enumerable.Range(0, 3).Select(i => i * 2 * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
+                case Marking.Hexagon:
+                    return $"{dot}<polygon{attr}{(useCssClass ? " class='marking hexagon'" : null)} points='{Enumerable.Range(0, 6).Select(i => i * Math.PI / 3).Select(angle => $"{x + hexWidth * .325 * Math.Cos(angle)},{y + hexWidth * .325 * Math.Sin(angle)}").JoinString(" ")}' />";
             }
             return dot;
         }
@@ -322,22 +309,36 @@ namespace KtaneStuff
             };
         }
 
-        public static HexamazeInfo GenerateHexamazeMarkings(HexamazeInfo maze)
+        public static HexamazeInfo GenerateHexamazeMarkings(HexamazeInfo origMaze)
         {
-            var rnd = new Random(192);  // This seed gives the fewest markings (18)
+            var obj = new object();
+            var lowestMarkings = int.MaxValue;
+            HexamazeInfo bestMaze = null;
 
-            maze = maze.Clone();
+            var seed = 146;     // 19 markings with initial hexagon in the center
+            //Enumerable.Range(0, 300).ParallelForEach(4, seed =>
+            //{
+            var rnd = new Random(seed);
+
+            var maze = origMaze.Clone();
             var size = maze.Size;
             var smallSize = maze.SubmazeSize;
 
             maze.Markings = new Dictionary<Hex, Marking>();
+            // List Circle and Hexagon twice so that triangles don’t completely dominate the distribution
+            var allowedMarkings = new[] { Marking.Circle, Marking.Circle, Marking.Hexagon, Marking.Hexagon, Marking.TriangleDown, Marking.TriangleLeft, Marking.TriangleRight, Marking.TriangleUp };
+
+            // Put a hexagon in the center
+            maze.Markings.Add(new Hex(0, 0), Marking.Hexagon);
 
             // Step 1: Put random markings in until there are no more ambiguities
             while (!areMarkingsUnique(maze))
             {
-                var availableHexes = Hex.LargeHexagon(size).Where(h => !maze.Markings.ContainsKey(h)).ToArray();
+                var availableHexes = Hex.LargeHexagon(size).Where(h => !maze.Markings.ContainsKey(h) && !h.Neighbors.SelectMany(n => n.Neighbors).Any(maze.Markings.ContainsKey)).ToArray();
+                if (availableHexes.Length == 0)
+                    goto impossiburu;
                 var randomHex = availableHexes[rnd.Next(availableHexes.Length)];
-                maze.Markings[randomHex] = (Marking) (rnd.Next(6) + 1);
+                maze.Markings[randomHex] = allowedMarkings.PickRandom(rnd);
             }
 
             // Step 2: Find markings to remove again
@@ -355,10 +356,24 @@ namespace KtaneStuff
                 }
             }
 
-            return maze;
+            lock (obj)
+            {
+                var msg = "{0/White} = {1/Green}{2/Magenta}".Color(null).Fmt(seed, maze.Markings.Count, maze.Markings.Count < lowestMarkings ? " — NEW BEST" : maze.Markings.Count == lowestMarkings ? " — TIED" : "");
+                if (maze.Markings.Count <= lowestMarkings)
+                {
+                    lowestMarkings = maze.Markings.Count;
+                    bestMaze = maze;
+                    WriteMazeInManual(bestMaze);
+                }
+                ConsoleUtil.WriteLine(msg);
+            }
+
+            impossiburu:;
+            //});
+            return bestMaze;
         }
 
-        private static bool areMarkingsUnique(HexamazeInfo maze)
+        private static bool areMarkingsUnique(HexamazeInfo maze, bool saveFiles = false)
         {
             var ambig = 1;
             var size = maze.Size;
@@ -372,45 +387,26 @@ namespace KtaneStuff
                     List<Tuple<Hex, int>> uniqs;
                     if (unique.TryGetValue(markingsStr, out uniqs) && uniqs.Count > 0)
                     {
-                        var fills1 = Tuple.Create(Hex.LargeHexagon(smallSize).Select(h => h.Rotate(uniqs[0].Item2) + uniqs[0].Item1), "fed");
-                        var fills2 = Tuple.Create(Hex.LargeHexagon(smallSize).Select(h => h.Rotate(rotation) + centerHex), "def");
-                        ambig++;
-                        File.WriteAllText($@"D:\c\KTANE\HTML\Hexamaze{ambig}.html", Regex.Replace(File.ReadAllText(@"D:\c\KTANE\HTML\Hexamaze.html"), @"\A(.*<!--##-->\s*).*?(?=\s*<!--###-->)", options: RegexOptions.Singleline, evaluator: m => m.Groups[1].Value + maze.CreateSvg(new[] { fills1, fills2 })));
-                        //return false;
+                        if (saveFiles)
+                        {
+                            var fills1 = Tuple.Create(Hex.LargeHexagon(smallSize).Select(h => h.Rotate(uniqs[0].Item2) + uniqs[0].Item1), "fed");
+                            var fills2 = Tuple.Create(Hex.LargeHexagon(smallSize).Select(h => h.Rotate(rotation) + centerHex), "def");
+                            ambig++;
+                            File.WriteAllText($@"D:\c\KTANE\HTML\Hexamaze{ambig}.html", Regex.Replace(File.ReadAllText(@"D:\c\KTANE\HTML\Hexamaze.html"), @"\A(.*<!--##-->\s*).*?(?=\s*<!--###-->)", options: RegexOptions.Singleline, evaluator: m => m.Groups[1].Value + maze.CreateSvg(new[] { fills1, fills2 })));
+                        }
+                        else
+                            return false;
                     }
                     unique.AddSafe(markingsStr, Tuple.Create(centerHex, rotation));
                 }
             }
 
-            //File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"\A(.*<!--##-->\s*).*?(?=\s*<!--###-->)", options: RegexOptions.Singleline, evaluator: m => m.Groups[1].Value + maze.CreateSvg()));
+            if (!saveFiles)
+                return true;
 
             foreach (var nonUnique in unique.Where(k => k.Value.Count > 1))
                 Console.WriteLine($"{nonUnique.Key} = {nonUnique.Value.Select(tup => $"{tup.Item1}/{(6 - tup.Item2) % 6}").JoinString(", ")}");
             return unique.All(kvp => kvp.Value.Count <= 1);
-        }
-
-        private static bool reallocateMarkings(string jsonFile, HexamazeInfo maze)
-        {
-            // Seed 808 gives my favourite arrangement so far
-            for (int seed = 808; seed < 1000; seed++)
-            {
-                if (seed % 10 == 0)
-                    Console.WriteLine($"Seed {seed}");
-                var rnd = new Random(seed);
-                var alloc = new[] {
-                    Marking.Circle, Marking.Circle, Marking.Circle, Marking.Circle,
-                    Marking.SquareNeSw, Marking.SquareNeSw, Marking.SquareNS, Marking.SquareNS,
-                    Marking.SquareNwSe, Marking.SquareNwSe,
-                    Marking.TriangleDown, Marking.TriangleDown, Marking.TriangleLeft, Marking.TriangleLeft,
-                    Marking.TriangleRight, Marking.TriangleRight, Marking.TriangleUp, Marking.TriangleUp
-                }.Shuffle(rnd);
-                var markings = maze.Markings.Keys.ToArray();
-                for (int i = 0; i < markings.Length; i++)
-                    maze.Markings[markings[i]] = alloc[i];
-                if (areMarkingsUnique(maze))
-                    return true;
-            }
-            return false;
         }
 
         public static void GenerateMarkingsSvg()
@@ -418,7 +414,7 @@ namespace KtaneStuff
             var declarations = new List<string>();
             string lineDeclaration = null;
             var pngcrs = new List<Thread>();
-            foreach (var obj in EnumStrong.GetValues<Marking>().Cast<object>().Concat("Line"))
+            foreach (var obj in new object[] { "Line", Marking.None, Marking.Circle, Marking.Hexagon, Marking.TriangleDown, Marking.TriangleLeft, Marking.TriangleRight, Marking.TriangleUp })
             {
                 var marking = obj as Marking?;
                 var name = obj.ToString();
@@ -459,13 +455,28 @@ namespace Hexamaze {{
 
         public static void DoHexamazeStuff()
         {
-            var jsonFile = @"D:\c\KTANE\KtaneStuff\Hexamaze.json";
+            var jsonFile = @"D:\c\KTANE\KtaneStuff\DataFiles\Hexamaze\Hexamaze.json";
             var maze = ClassifyJson.DeserializeFile<HexamazeInfo>(jsonFile);
-            const double hexWidth = 72;
 
-            Console.WriteLine(areMarkingsUnique(maze));
+            Console.WriteLine(areMarkingsUnique(maze, saveFiles: true));
+
+            //var dic = new Dictionary<string, int>();
+            //var triangles = new[] { Marking.TriangleDown, Marking.TriangleLeft, Marking.TriangleRight, Marking.TriangleUp };
+            //var trianglesV = new[] { Marking.TriangleLeft, Marking.TriangleRight };
+            //var trianglesE = new[] { Marking.TriangleDown, Marking.TriangleUp };
+            //foreach (var center in Hex.LargeHexagon(9))
+            //{
+            //    var countC = Hex.LargeHexagon(4).Select(h => maze.Markings.Get(center + h, Marking.None)).Count(m => m == Marking.Circle);
+            //    var countH = Hex.LargeHexagon(4).Select(h => maze.Markings.Get(center + h, Marking.None)).Count(m => m == Marking.Hexagon);
+            //    var countTV = Hex.LargeHexagon(4).Select(h => maze.Markings.Get(center + h, Marking.None)).Count(m => trianglesV.Contains(m));
+            //    var countTE = Hex.LargeHexagon(4).Select(h => maze.Markings.Get(center + h, Marking.None)).Count(m => trianglesE.Contains(m));
+            //    dic.IncSafe(new[] { countC != 0 ? countC + " circles" : null, countH != 0 ? countH + " hexagons" : null, countTV != 0 ? countTV + " vertex triangles" : null, countTE != 0 ? countTE + " edge triangles" : null }.Where(x => x != null).JoinString(", "));
+            //}
+            //foreach (var kvp in dic.OrderBy(k => k.Value))
+            //    Console.WriteLine($"{kvp.Key} = {kvp.Value} times ({kvp.Value / (double) 217 * 100:0.00}%)");
 
             //// Create the PNG for the Paint.NET layer
+            //const double hexWidth = 72;
             //var lhw = Hex.LargeWidth(4) * hexWidth;
             //var lhh = Hex.LargeHeight(4) * hexWidth * Hex.WidthToHeight;
             //GraphicsUtil.DrawBitmap((int) lhw, (int) lhh, g =>
@@ -474,6 +485,16 @@ namespace Hexamaze {{
             //    g.FillPolygon(new SolidBrush(Color.FromArgb(10, 104, 255)), Hex.LargeHexagonOutline(4, hexWidth).Select(p => new PointD(p.X + lhw / 2, p.Y + lhh / 2).ToPointF()).ToArray());
             //}).Save(@"D:\temp\temp.png");
 
+            maze = GenerateHexamazeMarkings(maze);
+            WriteMazeInManual(maze);
+
+            // Save the JSON
+            //ClassifyJson.SerializeToFile(maze, jsonFile);
+        }
+
+        private static void WriteMazeInManual(HexamazeInfo maze)
+        {
+            const double hexWidth = 72;
             foreach (var path in new[] { @"D:\c\KTANE\HTML\Hexamaze.html", @"D:\c\KTANE\Hexamaze\Manual\Hexamaze.html" })
             {
                 // Create the color chart (top-left of the manual page)
@@ -487,9 +508,6 @@ namespace Hexamaze {{
                 // Create the main maze in the manual page
                 File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<=<!--##-->).*(?=<!--###-->)", maze.CreateSvg(), RegexOptions.Singleline));
             }
-
-            //// Save the JSON
-            //ClassifyJson.SerializeToFile(maze, jsonFile);
         }
 
         public static void DoHexamazeComponentSvg()

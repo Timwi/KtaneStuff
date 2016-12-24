@@ -2,127 +2,134 @@
   "Markings": [
     [
       {
-        "Q": -1,
-        "R": 8
-      },
-      "SquareNeSw"
-    ],
-    [
-      {
-        "Q": -6,
-        "R": -2
-      },
-      "Circle"
-    ],
-    [
-      {
-        "Q": 5,
-        "R": 0
-      },
-      "SquareNS"
-    ],
-    [
-      {
         "Q": 0,
         "R": 0
       },
-      "TriangleDown"
+      "Hexagon"
     ],
     [
       {
-        "Q": 3,
-        "R": -9
-      },
-      "SquareNS"
-    ],
-    [
-      {
-        "Q": -3,
-        "R": -7
-      },
-      "TriangleLeft"
-    ],
-    [
-      {
-        "Q": -4,
-        "R": 3
-      },
-      "Circle"
-    ],
-    [
-      {
-        "Q": 5,
-        "R": -7
-      },
-      "SquareNeSw"
-    ],
-    [
-      {
-        "Q": 1,
-        "R": -3
-      },
-      "Circle"
-    ],
-    [
-      {
-        "Q": 0,
-        "R": -6
-      },
-      "SquareNwSe"
-    ],
-    [
-      {
-        "Q": -1,
-        "R": 6
+        "Q": -8,
+        "R": 7
       },
       "TriangleLeft"
     ],
     [
       {
         "Q": -5,
-        "R": 5
+        "R": 8
       },
-      "TriangleDown"
+      "Hexagon"
     ],
     [
       {
-        "Q": 7,
-        "R": -3
-      },
-      "TriangleUp"
-    ],
-    [
-      {
-        "Q": -9,
-        "R": 5
-      },
-      "TriangleRight"
-    ],
-    [
-      {
-        "Q": 7,
-        "R": -6
+        "Q": 5,
+        "R": -5
       },
       "Circle"
     ],
     [
       {
-        "Q": 3,
-        "R": 2
+        "Q": -3,
+        "R": -3
       },
-      "SquareNwSe"
+      "TriangleDown"
     ],
     [
       {
         "Q": 5,
-        "R": 5
+        "R": 3
+      },
+      "TriangleRight"
+    ],
+    [
+      {
+        "Q": -6,
+        "R": 1
+      },
+      "Circle"
+    ],
+    [
+      {
+        "Q": 2,
+        "R": -7
       },
       "TriangleUp"
     ],
     [
       {
         "Q": -6,
+        "R": 4
+      },
+      "Circle"
+    ],
+    [
+      {
+        "Q": -9,
+        "R": 4
+      },
+      "Hexagon"
+    ],
+    [
+      {
+        "Q": -1,
+        "R": 5
+      },
+      "TriangleRight"
+    ],
+    [
+      {
+        "Q": 6,
+        "R": -8
+      },
+      "TriangleLeft"
+    ],
+    [
+      {
+        "Q": 5,
         "R": -1
+      },
+      "TriangleDown"
+    ],
+    [
+      {
+        "Q": 2,
+        "R": 4
+      },
+      "Circle"
+    ],
+    [
+      {
+        "Q": 3,
+        "R": -2
+      },
+      "Hexagon"
+    ],
+    [
+      {
+        "Q": -2,
+        "R": 8
+      },
+      "Circle"
+    ],
+    [
+      {
+        "Q": 8,
+        "R": -4
+      },
+      "Hexagon"
+    ],
+    [
+      {
+        "Q": -3,
+        "R": 1
+      },
+      "TriangleUp"
+    ],
+    [
+      {
+        "Q": -1,
+        "R": -6
       },
       "TriangleRight"
     ]
