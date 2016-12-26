@@ -25,8 +25,12 @@ namespace KtaneStuff
         {
             try { Console.OutputEncoding = Encoding.UTF8; }
             catch { }
-            
-            Ktane.DoHexamazeStuff();
+
+            //Modeling.SimonScreams.Do();
+            Ktane.SimonScreamsSimulation();
+            //Ktane.SimonScreamsGenerateLargeTable();
+            //Console.WriteLine();
+            //Ktane.SimonScreamsGenerateSmallTable();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

@@ -42,13 +42,28 @@ namespace KtaneStuff.Modeling
             var frox = outerRadius - (outerRadius - innerRadius * cos(angle)) / d * fr;
             var froy = innerRadius * sin(angle) / d * fr;
 
-            var patchPiece = BézierPatch(
-                pt(0, 0, 0), pt(fr * cos(-angle), fh, fr * sin(-angle)), pt((innerRadius - fr) * cos(-angle), fh, (innerRadius - fr) * sin(-angle)), pt(innerRadius * cos(-angle), 0, innerRadius * sin(-angle)),
-                pt(fr * cos(angle), fh, fr * sin(angle)), pt(innerRadius / 2, height, 0), pt(innerRadius * cos(angle / 2), height, innerRadius * sin(angle / 2)), pt(frix, fh, -friy),
-                pt((innerRadius - fr) * cos(angle), fh, (innerRadius - fr) * sin(angle)), pt(innerRadius * cos(angle / 2), height, innerRadius * sin(angle / 2)), pt((innerRadius + outerRadius) / 2, height, 0), pt(frox, fh, -froy),
-                pt(innerRadius * cos(angle), 0, innerRadius * sin(angle)), pt(frix, fh, friy), pt(frox, fh, froy), pt(outerRadius, 0, 0),
-                bézierSteps);
-            return CreateMesh(false, false, Ut.NewArray(bézierSteps, bézierSteps, (x, y) => new MeshVertexInfo(patchPiece[x][y].Add(x: .03), x == bézierSteps - 1 ? Normal.Mine : Normal.Average, x == 0 ? Normal.Mine : Normal.Average, y == bézierSteps - 1 ? Normal.Mine : Normal.Average, y == 0 ? Normal.Mine : Normal.Average)));
+            var patchCoords = Ut.NewArray(
+                new[] { pt(0, 0, 0), pt(fr * cos(-angle), fh, fr * sin(-angle)), pt((innerRadius - fr) * cos(-angle), fh, (innerRadius - fr) * sin(-angle)), pt(innerRadius * cos(-angle), 0, innerRadius * sin(-angle)) },
+                new[] { pt(fr * cos(angle), fh, fr * sin(angle)), pt(innerRadius / 2, height, 0), pt(innerRadius * cos(angle / 2), height, innerRadius * sin(angle / 2)), pt(frix, fh, -friy) },
+                new[] { pt((innerRadius - fr) * cos(angle), fh, (innerRadius - fr) * sin(angle)), pt(innerRadius * cos(angle / 2), height, innerRadius * sin(angle / 2)), pt((innerRadius + outerRadius) / 2, height, 0), pt(frox, fh, -froy) },
+                new[] { pt(innerRadius * cos(angle), 0, innerRadius * sin(angle)), pt(frix, fh, friy), pt(frox, fh, froy), pt(outerRadius, 0, 0) }
+            )
+                .Select(arr => arr.Select(p => p.Add(x: .03)).ToArray())
+                .ToArray();
+            var patch = BézierPatch(patchCoords, bézierSteps);
+
+            var extendedPatch = Ut.NewArray(bézierSteps + 2, bézierSteps + 2, (i, j) =>
+            {
+                var ii = i == 0 ? 1 : i == bézierSteps + 1 ? bézierSteps - 1 : i - 1;
+                var jj = j == 0 ? 1 : j == bézierSteps + 1 ? bézierSteps - 1 : j - 1;
+                return new MeshVertexInfo(
+                    patch[ii][jj].Set(y: i == 0 || i == bézierSteps + 1 || j == 0 || j == bézierSteps + 1 ? -.03 : (double?) null),
+                    i == bézierSteps + 1 ? Normal.Mine : Normal.Average, i == 0 ? Normal.Mine : Normal.Average,
+                    j == bézierSteps + 1 ? Normal.Mine : Normal.Average, j == 0 ? Normal.Mine : Normal.Average
+                );
+            });
+
+            return CreateMesh(false, false, extendedPatch);
         }
 
         private static IEnumerable<VertexInfo[]> ButtonHighlight()
@@ -80,7 +95,7 @@ namespace KtaneStuff.Modeling
                 new[] { p(0, 0), p(innerRadius * cos(angle), innerRadius * sin(angle)), p(outerRadius, 0), p(innerRadius * cos(-angle), innerRadius * sin(-angle)) }
                     .Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray();
         }
-        
+
         private static IEnumerable<IEnumerable<VertexInfo[]>> Flaps()
         {
             var innerRadius = 0.4;

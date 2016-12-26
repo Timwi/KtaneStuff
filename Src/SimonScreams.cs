@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using RT.Util;
+using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 
@@ -75,6 +76,7 @@ namespace KtaneStuff
 
         public static void SimonScreamsSimulation()
         {
+            /* Version 1 (too hard)
             var criteria1 = Ut.NewArray(
                 new { Name = "If three adjacent colors flashed in counter clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix + 1] == (seq[ix] + 5) % 6 && seq[ix + 2] == (seq[ix] + 4) % 6)) },
                 new { Name = "Otherwise, if orange flashed more than twice", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq.Count(n => n == orange) > 2) },
@@ -91,19 +93,39 @@ namespace KtaneStuff
                 new { Name = "Otherwise, if two adjacent colors flashed in clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 1).Any(ix => seq[ix + 1] == (seq[ix] + 1) % 6)) },
                 new { Name = "Otherwise", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => true) }
             );
+            int numStages=3,minFirstStageLength=6,maxFirstStageLength=6,minStageExtra=1,maxStageExtra=3;
+            bool allowSameConsecutive = false;
+            // Version 2 /*/
+            var criteria1 = Ut.NewArray(
+                new { Name = "If the nth color is red", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq[0] == 0) },
+                new { Name = "If the nth color is orange", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq[0] == 1) },
+                new { Name = "If the nth color is yellow", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq[0] == 2) },
+                new { Name = "If the nth color is green", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq[0] == 3) },
+                new { Name = "If the nth color is blue", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq[0] == 4) },
+                new { Name = "If the nth color is purple", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => seq[0] == 5) }
+            );
+            var criteria2 = Ut.NewArray(
+                new { Name = "Otherwise, if three adjacent colors flashed in clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix + 1] == (seq[ix] + 1) % 6 && seq[ix + 2] == (seq[ix] + 2) % 6)) },
+                new { Name = "Otherwise, if a color flashed, then an adjacent color, then the first again", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix + 2] == seq[ix] && (seq[ix + 1] == (seq[ix] + 1) % 6 || seq[ix + 1] == (seq[ix] + 5) % 6))) },
+                new { Name = "Otherwise, if at least two of red, yellow, and blue didn’t flash", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => rgb.Count(color => seq.Contains(color)) <= 1) },
+                new { Name = "Otherwise, if there are two colors opposite each other that didn’t flash", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, 3).Any(col => !seq.Contains(col) && !seq.Contains(col + 3))) },
+                new { Name = "Otherwise, if two adjacent colors flashed in clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 1).Any(ix => seq[ix + 1] == (seq[ix] + 1) % 6)) },
+                new { Name = "Otherwise", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => true) }
+            );
+            int numStages = 3, minFirstStageLength = 3, maxFirstStageLength = 5, minStageExtra = 1, maxStageExtra = 2;
+            bool allowSameConsecutive = false;
+            /**/
 
-            const int numIterations = 1000000;
+            const int numIterations = 100000;
 
             var dic = new Dictionary<string, Dictionary<int, int>>();
-            int numStages = 0;
             for (int i = 0; i < numIterations; i++)
             {
                 var colors = Enumerable.Range(0, 6).ToList().Shuffle();
                 var rgb = colors.Take(3).ToArray();
                 var orange = colors[3];
                 var purple = colors[4];
-                var seqs = generateSequences();
-                numStages = seqs.Length;
+                var seqs = generateSequences(numStages, minFirstStageLength, maxFirstStageLength, minStageExtra, maxStageExtra, allowSameConsecutive);
                 for (int seqIx = 0; seqIx < seqs.Length; seqIx++)
                 {
                     var seq = seqs[seqIx];
@@ -114,6 +136,8 @@ namespace KtaneStuff
                             c1 = cr.Name;
                             break;
                         }
+
+                    //*
                     string c2 = "Otherwise";
                     foreach (var cr in criteria2)
                         if (cr.Criterion(seq, rgb, orange, purple))
@@ -122,35 +146,41 @@ namespace KtaneStuff
                             break;
                         }
                     dic.IncSafe($"{c1}×{c2}", seqIx);
+                    /*/
+                    foreach (var cr in criteria2)
+                        if (cr.Criterion(seq, rgb, orange, purple))
+                            dic.IncSafe($"{c1}×{cr.Name}", seqIx);
+                    /**/
                 }
             }
 
             for (int stage = 0; stage < numStages; stage++)
             {
                 var tt = new TextTable { ColumnSpacing = 3, RowSpacing = 1, HorizontalRules = true, VerticalRules = true, MaxWidth = 125 };
+                tt.SetCell(0, 0, $"STAGE {stage + 1}".Color(ConsoleColor.White));
                 var col = 1;
                 foreach (var cri1 in criteria1)
-                    tt.SetCell(col++, 0, cri1.Name);
-                tt.SetCell(col++, 0, "Total");
+                    tt.SetCell(col++, 0, cri1.Name.Color(ConsoleColor.Cyan));
+                tt.SetCell(col++, 0, "Total".Color(ConsoleColor.White));
 
                 var row = 1;
                 foreach (var cri2 in criteria2)
                 {
-                    tt.SetCell(0, row, cri2.Name);
+                    tt.SetCell(0, row, cri2.Name.Color(ConsoleColor.Cyan));
                     col = 1;
                     foreach (var cri1 in criteria1)
-                        tt.SetCell(col++, row, $"{(dic.Get($"{cri1.Name}×{cri2.Name}", stage, 0) / (double) numIterations) * 100:0.000}%", alignment: HorizontalTextAlignment.Right);
-                    tt.SetCell(col, row, $"{(criteria1.Sum(cri1 => dic.Get($"{cri1.Name}×{cri2.Name}", stage, 0)) / (double) numIterations) * 100:0.000}%", alignment: HorizontalTextAlignment.Right);
+                        tt.SetCell(col++, row, dic.Get($"{cri1.Name}×{cri2.Name}", stage, 0).Apply(num => $"{(num / (double) numIterations) * 100:0.00}%".Color(num == 0 ? ConsoleColor.Red : ConsoleColor.Green)), alignment: HorizontalTextAlignment.Right);
+                    tt.SetCell(col, row, criteria1.Sum(cri1 => dic.Get($"{cri1.Name}×{cri2.Name}", stage, 0)).Apply(num => $"{(num / (double) numIterations) * 100:0.00}%".Color(num == 0 ? ConsoleColor.Magenta : ConsoleColor.Yellow)), alignment: HorizontalTextAlignment.Right);
                     row++;
                 }
 
-                tt.SetCell(0, row, "Total");
+                tt.SetCell(0, row, "Total".Color(ConsoleColor.Yellow));
                 col = 1;
                 foreach (var cri1 in criteria1)
-                    tt.SetCell(col++, row, $"{(criteria2.Sum(cri2 => dic.Get($"{cri1.Name}×{cri2.Name}", stage, 0)) / (double) numIterations) * 100:0.000}%", alignment: HorizontalTextAlignment.Right);
+                    tt.SetCell(col++, row, criteria2.Sum(cri2 => dic.Get($"{cri1.Name}×{cri2.Name}", stage, 0)).Apply(num => $"{(num / (double) numIterations) * 100:0.00}%".Color(num == 0 ? ConsoleColor.Magenta : ConsoleColor.Yellow)), alignment: HorizontalTextAlignment.Right);
 
                 tt.WriteToConsole();
-                Console.WriteLine(new string('═', 125));
+                ConsoleUtil.WriteLine(new string('═', 125).Color(ConsoleColor.White));
             }
         }
 
@@ -170,29 +200,35 @@ namespace KtaneStuff
                 return (dic[key1][key2] = dic[key1][key2] + amount);
         }
 
-        private static int[][] generateSequences()
+        private static int[][] generateSequences(int numStages, int minFirstStageLength, int maxFirstStageLength, int minStageExtra, int maxStageExtra, bool allowSameConsecutive)
         {
-            var seq = generateSequence().ToArray();
-            var arr = new int[3][];
-            var len = 6;
-            for (int stage = 0; stage < 3; stage++)
+            var firstStageLength = Rnd.Next(minFirstStageLength, maxFirstStageLength + 1);
+            var seq = generateSequence(firstStageLength + numStages * maxStageExtra, allowSameConsecutive).ToArray();
+            var arr = new int[numStages][];
+            var len = firstStageLength;
+            for (int stage = 0; stage < numStages; stage++)
             {
                 arr[stage] = seq.Subarray(0, len);
-                len += Rnd.Next(3) + 1;
+                len += Rnd.Next(minStageExtra, maxStageExtra + 1);
             }
             return arr;
         }
 
-        private static IEnumerable<int> generateSequence()
+        private static IEnumerable<int> generateSequence(int num, bool allowSameConsecutive)
         {
             var last = Rnd.Next(6);
             yield return last;
-            var num = 12;
             for (int i = 1; i < num; i++)
             {
-                var next = Rnd.Next(5);
-                if (next >= last)
-                    next++;
+                int next;
+                if (allowSameConsecutive)
+                    next = Rnd.Next(6);
+                else
+                {
+                    next = Rnd.Next(5);
+                    if (next >= last)
+                        next++;
+                }
                 yield return next;
                 last = next;
             }
