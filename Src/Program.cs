@@ -26,11 +26,7 @@ namespace KtaneStuff
             try { Console.OutputEncoding = Encoding.UTF8; }
             catch { }
 
-            //Modeling.SimonScreams.Do();
-            Ktane.SimonScreamsSimulation();
-            //Ktane.SimonScreamsGenerateLargeTable();
-            //Console.WriteLine();
-            //Ktane.SimonScreamsGenerateSmallTable();
+            MorseTable.Do();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

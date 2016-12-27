@@ -68,6 +68,7 @@
     <Compile Include="Modeling\TicTacToe.cs" />
     <Compile Include="Modeling\VertexInfo.cs" />
     <Compile Include="Modeling\WordSearch.cs" />
+    <Compile Include="MorseTable.cs" />
     <Compile Include="MouseInTheMazeManual.cs" />
     <Compile Include="MurderCheatSheet.cs" />
     <Compile Include="ClockDiagram.cs" />
