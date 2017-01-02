@@ -26,7 +26,7 @@ namespace KtaneStuff
             try { Console.OutputEncoding = Encoding.UTF8; }
             catch { }
 
-            MorseTable.Do();
+            Modeling.Battleship.Do();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

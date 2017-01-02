@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3DMazeManual.cs" />
+    <Compile Include="Battleships.cs" />
     <Compile Include="BombInfo.cs" />
     <Compile Include="Chess.cs" />
     <Compile Include="Hex.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Modeling\AdjacentLetters.cs" />
     <Compile Include="Modeling\BevelPoint.cs" />
     <Compile Include="Modeling\Bitmaps.cs" />
+    <Compile Include="Modeling\Battleship.cs" />
     <Compile Include="Modeling\SimonScreams.cs" />
     <Compile Include="Modeling\ColoredSquares.cs" />
     <Compile Include="Modeling\FollowTheLeader.cs" />
