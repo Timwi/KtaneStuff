@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using RT.Util;
+using RT.Util.ExtensionMethods;
 
 [assembly: AssemblyTitle("KtaneStuff")]
 [assembly: AssemblyDescription("Contains some ancillary code used in the creation of some Keep Talking and Nobody Explodes mods.")]
@@ -21,15 +23,19 @@ namespace KtaneStuff
     class Program
     {
         [STAThread()]
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             try { Console.OutputEncoding = Encoding.UTF8; }
             catch { }
+
+            if (args.Length == 2 && args[0] == "--post-build-check")
+                return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
             Modeling.Battleship.Do();
 
             Console.WriteLine("Done.");
             Console.ReadLine();
+            return 0;
         }
     }
 }
