@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using RT.KitchenSink;
 using RT.Util;
 using RT.Util.ExtensionMethods;
+using RT.Util.Geometry;
 
 namespace KtaneStuff.Modeling
 {
-    using RT.Util.Geometry;
     using static Md;
 
     static class Battleship
@@ -18,6 +20,10 @@ namespace KtaneStuff.Modeling
             File.WriteAllText(@"D:\c\KTANE\Battleship\Assets\Models\SquareHighlight.obj", GenerateObjFile(SquareHighlight(), "SquareHighlight"));
             File.WriteAllText(@"D:\c\KTANE\Battleship\Assets\Models\WaterHighlight.obj", GenerateObjFile(WaterHighlight(), "WaterHighlight"));
             File.WriteAllText(@"D:\c\KTANE\Battleship\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
+            File.WriteAllText(@"D:\c\KTANE\Battleship\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
+
+            foreach (var name in new string[] { "SqShipL", "SqShipF", "SqShipA" })
+                File.WriteAllText($@"D:\c\KTANE\Battleship\Assets\Models\{name}.obj", GenerateObjFile(ShipPart(name), name));
 
             var path = @"D:\c\KTANE\Battleship\Assets\Misc\Radar.svg";
             File.WriteAllText(path, Regex.Replace(File.ReadAllText(path),
@@ -25,6 +31,24 @@ namespace KtaneStuff.Modeling
                 Enumerable.Range(0, 50).Select((i, f, l) => new { Angle = i * 2 + 140, Style = l ? "style='fill:rgb(42, 255, 0)'" : $"style='fill:rgb(32, 192, 0);fill-opacity:{i / 50.0}'" }).Select(inf => $"<path d='M50,50 L{50 + 40 * cos(inf.Angle)},{50 + 40 * sin(inf.Angle)} {50 + 40 * cos(inf.Angle + 2)},{50 + 40 * sin(inf.Angle + 2)}' {inf.Style} />").JoinString() +
                 Enumerable.Range(0, 360 / 5).Select(i => i * 5).Select(i => $"<circle cx='{50 + 42.25 * cos(i)}' cy='{50 + 42.25 * sin(i)}' r='.5' fill='rgb(32, 192, 0)' stroke='none' />").JoinString(),
                 RegexOptions.Singleline));
+        }
+
+        private static IEnumerable<Pt[]> ShipPart(string name)
+        {
+            const double depth1 = 3;
+            const double depth2 = 3.5;
+
+            var xml = XDocument.Parse(File.ReadAllText($@"D:\c\KTANE\Battleship\Assets\Misc\{name}.svg"));
+            var pathElem = xml.Root.Elements().FirstOrDefault(el => el.Name.LocalName == "path");
+            var path = pathElem.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "d").Value;
+            foreach (var polyOrig in DecodeSvgPath.Do(path, .25))
+            {
+                var poly = polyOrig.Select(p => (p - new PointD(50, 50)) / 50);
+                foreach (var piece in poly.SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.X, depth1, p1.Y), pt(p2.X, depth1, p2.Y), pt(p2.X, depth2, p2.Y), pt(p1.X, depth2, p1.Y) }))
+                    yield return piece.Reverse().ToArray();
+                foreach (var tri in Triangulate(new[] { poly }))
+                    yield return tri.Select(p => pt(p.X, depth2, p.Y)).Reverse().ToArray();
+            }
         }
 
         private static IEnumerable<Pt[]> SquareHighlight()
@@ -93,6 +117,18 @@ namespace KtaneStuff.Modeling
                         .ToArray())
                     .ToArray())
                 .Select(face => face.Select(vi => new VertexInfo(vi.Location, vi.Normal, new PointD((-vi.Location.X + bottomRadius) / (2 * bottomRadius), (vi.Location.Z + bottomRadius) / (2 * bottomRadius)))).ToArray());
+        }
+
+        private static IEnumerable<Pt[]> ButtonHighlight()
+        {
+            const int numVertices = 24;
+            const double innerRadius = .8;
+            const double outerRadius = 1;
+
+            return Enumerable.Range(0, numVertices)
+                .Select(i => new PointD(cos(360.0 * i / numVertices), sin(360.0 * i / numVertices)))
+                .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.X, 0, p1.Y) * outerRadius, pt(p2.X, 0, p2.Y) * outerRadius, pt(p2.X, 0, p2.Y) * innerRadius, pt(p1.X, 0, p1.Y) * innerRadius })
+                .ToArray();
         }
     }
 }

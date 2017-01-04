@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
@@ -10,6 +11,37 @@ namespace KtaneStuff
 {
     static partial class Ktane
     {
+        public static void BattleshipGraphics()
+        {
+            var declarations = new List<string>();
+            var threads = new List<Thread>();
+            foreach (var name in new string[] { "SqWater", "SqShip", "SqShipL", "SqShipR", "SqShipT", "SqShipB", "SqShipF", "SqShipA" })
+            {
+                var thr = new Thread(() =>
+                {
+                    File.WriteAllBytes($@"D:\temp\temp-{name}.png", File.ReadAllBytes($@"D:\c\KTANE\Battleship\Assets\Misc\{name}.svg.png"));
+                    CommandRunner.RunRaw($@"pngcr D:\c\KTANE\Battleship\Assets\Misc\{name}.svg.png D:\c\KTANE\Battleship\Assets\Misc\{name}.png").Go();
+                    lock (declarations)
+                        declarations.Add($@"{{ ""{name}"", new byte[] {{ {File.ReadAllBytes($@"D:\c\KTANE\Battleship\Assets\Misc\{name}.png").JoinString(", ")} }} }}");
+                });
+                thr.Start();
+                threads.Add(thr);
+            }
+            foreach (var th in threads)
+                th.Join();
+
+            if (declarations.Count > 0)
+                File.WriteAllText(@"D:\c\KTANE\Battleship\Assets\RawPngs.cs", $@"
+using System.Collections.Generic;
+namespace Battleship {{
+    public static class RawPngs {{
+        public static Dictionary<string, byte[]> RawBytes = new Dictionary<string, byte[]> {{
+            {declarations.JoinString(",\r\n            ")}
+        }};
+    }}
+}}");
+        }
+
         public static void GenerateBattleshipPuzzle()
         {
             var theLog = new List<string>();
@@ -21,13 +53,13 @@ namespace KtaneStuff
             });
 
             var size = 6;
-            var rnd = new Random(4);
+            var rnd = new Random(49);
             var nonUnique = 0;
+            var hints = Enumerable.Range(0, size * size).ToList().Shuffle(rnd).Take(rnd.Next(2, 3)).ToArray();
+            log($"There are {hints.Length} hints.");
 
             retry:
             var ships = new[] { rnd.Next(3, 5), rnd.Next(2, 4), rnd.Next(2, 4), rnd.Next(1, 4), rnd.Next(1, 3), 1 }.OrderByDescending(x => x).ToArray();
-            var hints = Enumerable.Range(0, size * size).ToList().Shuffle(rnd).Take(rnd.Next(2, 5)).ToArray();
-            log($"There are {hints.Length} hints.");
             log("Ships: " + ships.JoinString(", "));
             var anyHypothesis = false;
 

@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3DMazeManual.cs" />
-    <Compile Include="Battleships.cs" />
+    <Compile Include="Battleship.cs" />
     <Compile Include="BombInfo.cs" />
     <Compile Include="Chess.cs" />
     <Compile Include="Hex.cs" />
