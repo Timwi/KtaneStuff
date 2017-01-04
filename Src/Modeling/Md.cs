@@ -363,14 +363,23 @@ namespace KtaneStuff.Modeling
             yield return pgon.ToArray();
         }
 
-        public static IEnumerable<PointD[]> Triangulate(IEnumerable<IEnumerable<PointD>> polygons)
+        public static IEnumerable<PointD[]> Triangulate(IEnumerable<IEnumerable<PointD>> polygons, bool failNegative = false)
         {
             var remaining = polygons.Select(p => new PolygonD(p.RemoveConsecutiveDuplicates(true))).ToList();
             while (remaining.Count > 0)
             {
                 var polyIx = remaining.IndexOf(poly => poly.Area() > 0);
                 if (polyIx == -1)
+                {
+                    if (!failNegative)
+                    {
+                        foreach (var tri in Triangulate(polygons.Select(poly => poly.Reverse()), failNegative: true))
+                            yield return tri;
+                        yield break;
+                    }
                     throw new InvalidOperationException("There are only negative polygons left.");
+                }
+                failNegative = true;
 
                 var polygon = remaining[polyIx];
                 remaining.RemoveAt(polyIx);
