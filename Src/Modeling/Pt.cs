@@ -26,6 +26,10 @@ namespace KtaneStuff.Modeling
         public VertexInfo WithNormal(Pt normal) => new VertexInfo(this, normal);
         public VertexInfo WithNormal(double x, double y, double z) => new VertexInfo(this, new Pt(x, y, z));
 
+        public MeshVertexInfo WithMeshInfo(Pt normal) => new MeshVertexInfo(this, normal);
+        public MeshVertexInfo WithMeshInfo(double normalX, double normalY, double normalZ) => new MeshVertexInfo(this, new Pt(normalX, normalY, normalZ));
+        public MeshVertexInfo WithMeshInfo(Normal befX, Normal afX, Normal befY, Normal afY) => new MeshVertexInfo(this, befX, afX, befY, afY);
+
         // Vector cross product
         public static Pt operator *(Pt a, Pt b) { return new Pt(a.Y * b.Z - a.Z * b.Y, a.Z * b.X - a.X * b.Z, a.X * b.Y - a.Y * b.X); }
 

@@ -50,6 +50,7 @@
     <Compile Include="Hex.cs" />
     <Compile Include="HexamazeManual.cs" />
     <Compile Include="LaundryCheatSheet.cs" />
+    <Compile Include="Modeling\WirePlacement.cs" />
     <Compile Include="Modeling\AdjacentLetters.cs" />
     <Compile Include="Modeling\BevelPoint.cs" />
     <Compile Include="Modeling\Bitmaps.cs" />
