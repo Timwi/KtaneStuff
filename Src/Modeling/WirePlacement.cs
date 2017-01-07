@@ -84,8 +84,8 @@ namespace KtaneStuff.Modeling
             var depth = .5;
             var width = 1;
             var dip = .2;
-            var holeI = .1;
-            var holeO = .12;
+            var holeI = .16;
+            var holeO = .2;
             var holeDepth = .5;
             var xf = width * .4;
             var bevelWidth = .1;
@@ -93,7 +93,7 @@ namespace KtaneStuff.Modeling
             var bézierSteps = 10;
             var roundSteps = 72;
 
-            var curve = new[] { p(holeI, 0), p(holeI, holeDepth), p(holeO, holeDepth), p(holeO, depth - dip) }
+            var curve = new[] { p(0, 0), p(holeI, holeDepth), p(holeO, holeDepth), p(holeO, depth - dip) }
                     .Concat(Bézier(p(holeO, depth - dip), p(xf, depth - dip), p(width - bevelWidth - xf, depth), p(width - bevelWidth, depth), bézierSteps))
                     .Concat(Bézier(p(width - bevelWidth, depth), p(width - bevelWidth + bevelF, depth), p(width, depth - bevelWidth + bevelF), p(width, depth - bevelWidth), bézierSteps))
                     .Concat(p(width, 0))
