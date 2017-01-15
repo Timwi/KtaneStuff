@@ -190,10 +190,10 @@ namespace KtaneStuff.Modeling
             return Enumerable.Range(0, pts.Length)
                 .SelectManyConsecutivePairs(closedX, (i1, i2) => Enumerable.Range(0, pts[0].Length)
                     .SelectConsecutivePairs(closedY, (j1, j2) => Ut.NewArray(
-                        new VertexInfo(pts[i1][j1].Location, normals[i1][j1][(int) pts[i1][j1].NormalAfterX + 3 * (int) pts[i1][j1].NormalAfterY].Normalize()),
-                        new VertexInfo(pts[i2][j1].Location, normals[i2][j1][(2 - (int) pts[i2][j1].NormalBeforeX) + 3 * (int) pts[i2][j1].NormalAfterY].Normalize()),
-                        new VertexInfo(pts[i2][j2].Location, normals[i2][j2][(2 - (int) pts[i2][j2].NormalBeforeX) + 3 * (2 - (int) pts[i2][j2].NormalBeforeY)].Normalize()),
-                        new VertexInfo(pts[i1][j2].Location, normals[i1][j2][(int) pts[i1][j2].NormalAfterX + 3 * (2 - (int) pts[i1][j2].NormalBeforeY)].Normalize()))
+                        new VertexInfo(pts[i1][j1].Location, normals[i1][j1][(int) pts[i1][j1].NormalAfterX + 3 * (int) pts[i1][j1].NormalAfterY].Normalize(), pts[i1][j1].Texture),
+                        new VertexInfo(pts[i2][j1].Location, normals[i2][j1][(2 - (int) pts[i2][j1].NormalBeforeX) + 3 * (int) pts[i2][j1].NormalAfterY].Normalize(), pts[i2][j1].Texture),
+                        new VertexInfo(pts[i2][j2].Location, normals[i2][j2][(2 - (int) pts[i2][j2].NormalBeforeX) + 3 * (2 - (int) pts[i2][j2].NormalBeforeY)].Normalize(), pts[i2][j2].Texture),
+                        new VertexInfo(pts[i1][j2].Location, normals[i1][j2][(int) pts[i1][j2].NormalAfterX + 3 * (2 - (int) pts[i1][j2].NormalBeforeY)].Normalize(), pts[i1][j2].Texture))
                         .SelectConsecutivePairs(true, (vi1, vi2) => vi1.Location == vi2.Location ? null : vi1.Nullable())
                         .Where(vi => vi != null)
                         .Select(vi => vi.Value)
@@ -201,20 +201,20 @@ namespace KtaneStuff.Modeling
                     ));
         }
 
-        public static IEnumerable<VertexInfo[]> BevelFromCurve(IEnumerable<Pt> points, double radius, int revSteps)
+        public static IEnumerable<VertexInfo[]> BevelFromCurve(IEnumerable<Pt> points, double radius, int revSteps, Normal normal = Normal.Average)
         {
             var pts = points.RemoveConsecutiveDuplicates(true).ToArray();
             return CreateMesh(true, false, pts
                 .Select((p, ix) => new
                 {
                     AxisStart = p,
-                    AxisEnd = p + (pts[(ix + 1) % pts.Length] - p) + (p - pts[(ix - 1 + pts.Length) % pts.Length]),
+                    AxisEnd = p + (pts[(ix + 1) % pts.Length] - p).Normalize() + (p - pts[(ix - 1 + pts.Length) % pts.Length]).Normalize(),
                     Perpendicular = pts[ix].Add(y: radius)
                 })
                 .Select(inf => Enumerable.Range(0, revSteps)
                     .Select(i => -90 * i / (revSteps - 1))
                     .Select(angle => inf.Perpendicular.Rotate(inf.AxisStart, inf.AxisEnd, angle).Add(y: -radius))
-                    .Select((p, isFirst, isLast) => isFirst ? new MeshVertexInfo(pt(p.X, p.Y, p.Z), pt(0, 1, 0)) : pt(p.X, p.Y, p.Z, Normal.Average, Normal.Average, isLast ? Normal.Mine : Normal.Average, Normal.Average))
+                    .Select((p, isFirst, isLast) => isFirst ? new MeshVertexInfo(pt(p.X, p.Y, p.Z), pt(0, 1, 0)) : pt(p.X, p.Y, p.Z, normal, normal, isLast ? Normal.Mine : Normal.Average, Normal.Average))
                     .ToArray())
                 .ToArray());
         }
@@ -251,6 +251,10 @@ namespace KtaneStuff.Modeling
         public static Pt RotateX(this Pt p, double angle) { return pt(p.X, p.Y * cos(angle) - p.Z * sin(angle), p.Y * sin(angle) + p.Z * cos(angle)); }
         public static Pt RotateY(this Pt p, double angle) { return pt(p.X * cos(angle) - p.Z * sin(angle), p.Y, p.X * sin(angle) + p.Z * cos(angle)); }
         public static Pt RotateZ(this Pt p, double angle) { return pt(p.X * cos(angle) - p.Y * sin(angle), p.X * sin(angle) + p.Y * cos(angle), p.Z); }
+
+        public static VertexInfo RotateX(this VertexInfo vi, double angle) { return new VertexInfo(vi.Location.RotateX(angle), vi.Normal?.RotateX(angle), vi.Texture); }
+        public static VertexInfo RotateY(this VertexInfo vi, double angle) { return new VertexInfo(vi.Location.RotateY(angle), vi.Normal?.RotateY(angle), vi.Texture); }
+        public static VertexInfo RotateZ(this VertexInfo vi, double angle) { return new VertexInfo(vi.Location.RotateZ(angle), vi.Normal?.RotateZ(angle), vi.Texture); }
 
         public static Pt[] RotateX(this Pt[] face, double angle) { return face.Select(p => RotateX(p, angle)).ToArray(); }
         public static Pt[] RotateY(this Pt[] face, double angle) { return face.Select(p => RotateY(p, angle)).ToArray(); }
@@ -363,8 +367,9 @@ namespace KtaneStuff.Modeling
             yield return pgon.ToArray();
         }
 
-        public static IEnumerable<PointD[]> Triangulate(IEnumerable<IEnumerable<PointD>> polygons, bool failNegative = false)
+        public static PointD[][] Triangulate(IEnumerable<IEnumerable<PointD>> polygons, bool failNegative = false)
         {
+            var result = new List<PointD[]>();
             var remaining = polygons.Select(p => new PolygonD(p.RemoveConsecutiveDuplicates(true))).ToList();
             while (remaining.Count > 0)
             {
@@ -372,14 +377,9 @@ namespace KtaneStuff.Modeling
                 if (polyIx == -1)
                 {
                     if (!failNegative)
-                    {
-                        foreach (var tri in Triangulate(polygons.Select(poly => poly.Reverse()), failNegative: true))
-                            yield return tri;
-                        yield break;
-                    }
+                        return Triangulate(polygons.Select(poly => poly.Reverse()), failNegative: true);
                     throw new InvalidOperationException("There are only negative polygons left.");
                 }
-                failNegative = true;
 
                 var polygon = remaining[polyIx];
                 remaining.RemoveAt(polyIx);
@@ -393,21 +393,21 @@ namespace KtaneStuff.Modeling
                     // Find a pair of adjacent points on the hole and a closeby pair of adjacent points on the polygon where we can “cut through”
                     var candidate = hole.Vertices
                         .SelectMany((v, i) => polygon.Vertices.Select((v2, i2) => new { Vertex = v, Index = i, Nearest = new { Vertex = v2, Index = i2 } }))
-                        .Where(inf => !new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count])))
+                        .Where(inf => !new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]), true))
 
-                        .Where(inf => !hole.ToEdges().Any(new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith))
-                        .Where(inf => !polygon.ToEdges().Any(new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith))
-                        .Where(inf => remaining.All(rem => !rem.ToEdges().Any(new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith)))
+                        .Where(inf => !hole.ToEdges().Any(e => new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith(e, true)))
+                        .Where(inf => !polygon.ToEdges().Any(e => new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith(e, true)))
+                        .Where(inf => remaining.All(rem => !rem.ToEdges().Any(e => new EdgeD(inf.Vertex, inf.Nearest.Vertex).IntersectsWith(e, true))))
 
-                        .Where(inf => !hole.ToEdges().Any(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith))
-                        .Where(inf => !polygon.ToEdges().Any(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith))
-                        .Where(inf => remaining.All(rem => !rem.ToEdges().Any(new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith)))
+                        .Where(inf => !hole.ToEdges().Any(e => new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith(e, true)))
+                        .Where(inf => !polygon.ToEdges().Any(e => new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith(e, true)))
+                        .Where(inf => remaining.All(rem => !rem.ToEdges().Any(e => new EdgeD(hole.Vertices[(inf.Index + 1) % hole.Vertices.Count], polygon.Vertices[(inf.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count]).IntersectsWith(e, true))))
 
                         .MinElement(inf => inf.Vertex.Distance(inf.Nearest.Vertex));
 
                     // Create the quadrilateral that “cuts through”
-                    yield return new[] { candidate.Vertex, hole.Vertices[(candidate.Index + 1) % hole.Vertices.Count], polygon.Vertices[(candidate.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count] };
-                    yield return new[] { candidate.Vertex, polygon.Vertices[(candidate.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count], candidate.Nearest.Vertex };
+                    result.Add(new[] { candidate.Vertex, hole.Vertices[(candidate.Index + 1) % hole.Vertices.Count], polygon.Vertices[(candidate.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count] });
+                    result.Add(new[] { candidate.Vertex, polygon.Vertices[(candidate.Nearest.Index + polygon.Vertices.Count - 1) % polygon.Vertices.Count], candidate.Nearest.Vertex });
 
                     // Fix up the current polygon
                     polygon.Vertices.InsertRange(candidate.Nearest.Index, hole.Vertices.Skip(candidate.Index + 1).Concat(hole.Vertices.Take(candidate.Index + 1)));
@@ -443,12 +443,13 @@ namespace KtaneStuff.Modeling
                             throw new InvalidOperationException();
                     }
 
-                    yield return new[] { a, b, c };
+                    result.Add(new[] { a, b, c });
                     pgon.RemoveAt(bi);
                 }
 
-                yield return pgon.ToArray();
+                result.Add(pgon.ToArray());
             }
+            return result.ToArray();
         }
 
         public static string PathToSvg(IEnumerable<PointD> ptsArr)
