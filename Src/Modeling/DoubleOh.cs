@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using RT.KitchenSink;
 using RT.Util;
 using RT.Util.ExtensionMethods;
+using RT.Util.Geometry;
 
 namespace KtaneStuff.Modeling
 {
-    using System.Drawing;
-    using RT.KitchenSink;
-    using RT.Util.Drawing;
-    using RT.Util.Geometry;
     using static Md;
 
     static class DoubleOh
@@ -19,54 +17,58 @@ namespace KtaneStuff.Modeling
         {
             foreach (var inf in new[] { SvgInfo.SingleArrow, SvgInfo.DoubleArrow, SvgInfo.Submit })
                 File.WriteAllText($@"D:\c\KTANE\DoubleOh\Assets\Models\Button{inf.Name}.obj", GenerateObjFile(Button(inf.Svg), $"Button{inf.Name}"));
-            File.WriteAllText($@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonTop.obj", GenerateObjFile(Button(null), $"ButtonTop"));
+            File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonTop.obj", GenerateObjFile(Button(null), "ButtonTop"));
+            File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonHighlight.obj", GenerateObjFile(Button("Highlight"), "ButtonHighlight"));
+            File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonCollider.obj", GenerateObjFile(Box().Select(face => face.Select(p => new Pt(p.X * .85, p.Y * .65, p.Z * .85).RotateY(45)).ToArray()), "ButtonCollider"));
+            File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\Frame.obj", GenerateObjFile(Frame(), "Frame"));
 
-            const double f = .3;
-            const int size = 800;
-            GraphicsUtil.DrawBitmap(size, size, g =>
-            {
-                g.Clear(Color.White);
-                for (int i = 0; i < 10; i++)
-                {
-                    var u = i / 10.0;
-                    for (int j = 0; j <= 10; j++)
-                    {
-                        var v = j / 10.0;
-                        g.DrawString($"a{i}{j}", new Font("Calibri", 12f, FontStyle.Regular), Brushes.Black, (new PointD((v + (1 - 2 * f) * (1 - v)) * u + ((1 - v) * f), (1 - v) * f) * size).ToPointF());
-                    }
-                }
+            //var g = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\DoubleOh\Assets\Sources\Segments.svg")).Root.Elements().FirstOrDefault(e => e.Name.LocalName == "g");
+            //foreach (var path in g.Elements().Where(e => e.Name.LocalName == "path"))
+            //{
+            //    // -982.36218
+            //    var svg = DecodeSvgPath.DecodePieces(path.Attributes().FirstOrDefault(a => a.Name.LocalName == "d").Value).Select(piece => piece.Select(p => p + new PointD(0, -982.36218)));
+            //    Console.WriteLine(svg.JoinString(" "));
+            //}
 
-                for (int i = 0; i < 10; i++)
-                {
-                    var u = i / 10.0;
-                    for (int j = 0; j <= 10; j++)
-                    {
-                        var v = j / 10.0;
-                        g.DrawString($"b{i}{j}", new Font("Calibri", 12f, FontStyle.Regular), Brushes.Black, (new PointD(1 - (1 - v) * f, (v + (1 - 2 * f) * (1 - v)) * u + ((1 - v) * f)) * size).ToPointF());
-                    }
-                }
+            var segments = Ut.NewArray(
+                @"M2.5, 3.1875 0.5, 5.1875 0.5, 29.78122 5, 34.28122 9.5, 29.78122 9.5, 10.18746 z",
+                @"M37.5, 3.1875 30.5, 10.18746 30.5, 29.78122 35, 34.28122 39.5, 29.78122 39.5, 5.1875 z",
+                @"M5.1875, 0.5 3.1875, 2.5 10.21875, 9.5 29.78125, 9.5 36.8125, 2.5 34.8125, 0.5 z",
+                @"M5, 35.68752 0.5, 40.18752 0.5, 64.78122 2.5, 66.78122 9.5, 59.78122 9.5, 40.18752 z",
+                @"M35, 35.68752 30.5, 40.18752 30.5, 59.78122 37.5, 66.78122 39.5, 64.78122 39.5, 40.18752 z",
+                @"M10.1875, 30.5 5.6875, 35 10.21875, 39.5 29.78125, 39.5 34.3125, 35 29.8125, 30.5 z",
+                @"M10.1875, 60.5 3.1875, 67.5 5.21875, 69.5 34.78125, 69.5 36.8125, 67.5 29.8125, 60.5 z"
+            );
+            for (int i = 0; i < segments.Length; i++)
+                File.WriteAllText($@"D:\c\KTANE\DoubleOh\Assets\Models\Segment{i}.obj", GenerateObjFile(Triangulate(DecodeSvgPath.Do(segments[i], 1)).Select(arr => arr.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray()), $"Segment{i}"));
+        }
 
-                for (int i = 0; i < 10; i++)
-                {
-                    var u = i / 10.0;
-                    for (int j = 0; j <= 10; j++)
-                    {
-                        var v = j / 10.0;
-                        g.DrawString($"c{i}{j}", new Font("Calibri", 12f, FontStyle.Regular), Brushes.Black, (new PointD(1 - (v + (1 - 2 * f) * (1 - v)) * u - ((1 - v) * f), 1 - (1 - v) * f) * size).ToPointF());
-                    }
-                }
+        private static MeshVertexInfo[] bpa(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) { return new[] { pt(x, y, z, befX, afX, befY, afY).WithTexture((x + 1) / 2, (z + 1) / 2) }; }
+        private static IEnumerable<VertexInfo[]> Frame()
+        {
+            var depth = .06;
+            var béFac = depth * .55;
+            var ratio = .6;
+            var th = .2;
 
-                for (int i = 0; i < 10; i++)
-                {
-                    var u = i / 10.0;
-                    for (int j = 0; j <= 10; j++)
-                    {
-                        var v = j / 10.0;
-                        g.DrawString($"d{i}{j}", new Font("Calibri", 12f, FontStyle.Regular), Brushes.Black, (new PointD((1 - v) * f, 1 - (v + (1 - 2 * f) * (1 - v)) * u - ((1 - v) * f)) * size).ToPointF());
-                    }
-                }
+            return CreateMesh(true, true,
+                Bézier(p(th, 0), p(th, béFac), p(th - depth + béFac, depth), p(th - depth, depth), 20).Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)).Concat(
+                Bézier(p(depth, depth), p(depth - béFac, depth), p(0, béFac), p(0, -.2), 20).Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)))
+                .Select(bi => Ut.NewArray(
+                    // Bottom right
+                    bpa(-1 + bi.Into, bi.Y, -ratio + bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
-            }).Save(@"D:\daten\upload\scr.png");
+                    // Top right
+                    bpa(-1 + bi.Into, bi.Y, ratio - bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+
+                    // Top left
+                    bpa(1 - bi.Into, bi.Y, ratio - bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+
+                    // Bottom left
+                    bpa(1 - bi.Into, bi.Y, -ratio + bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+
+                    null
+                ).Where(x => x != null).SelectMany(x => x).ToArray()).ToArray());
         }
 
         sealed class SvgInfo
@@ -140,15 +142,27 @@ namespace KtaneStuff.Modeling
                 return Triangulate(outlineRaw.Select(inf => inf.Point))
                     .Select(f => f.Select(p => pt(p.X, h - bevelRadius, p.Y).WithNormal(0, 1, 0).WithTexture(new PointD(p.X + 1, p.Y + 1) / 2)).ToArray());
 
+            if (svg == "Highlight")
+            {
+                const double f = 1.1;
+                return patch2.Last()
+                    .Select(p => new { Point1 = pt(p.Vertex.X, y4, p.Vertex.Z), Point2 = pt(p.Vertex.X * f, y1, p.Vertex.Z * f) })
+                    .SelectManyConsecutivePairs(true, (i1, i2) => new[] { new[] { i1.Point1, i1.Point2, i2.Point2, i2.Point1 }, new[] { i1.Point2, i1.Point1, i2.Point1, i2.Point2 } })
+                    .Select(arr => arr.Select(p => new VertexInfo(p, null)).ToArray());
+            }
+
+            if (svg == "Collider")
+            {
+                throw new NotImplementedException();
+            }
+
             var svgPolygons = DecodeSvgPath.Do(svg, bézierSmoothness).Select(poly => poly.Select(pt => (pt - p(5, 5)) * .11).ToArray()).ToArray();
             var outline = Triangulate(outlineRaw.Select(inf => inf.Point).ToArray().Concat(svgPolygons))
                 .Select(f => f.Select(p => pt(p.X, patch2[0][0].Vertex.Y, p.Y).WithNormal(0, 1, 0).WithTexture(texturize(p))).Reverse().ToArray());
 
             return CreateMesh(false, true, patch3)
                 .Concat(outline)
-                .Concat(svgPolygons.SelectMany(poly => BevelFromCurve(poly.Reverse().Select(p => pt(p.X, h, p.Y)), bevelRadius, roundSteps, Normal.Mine)).Select(face => face.Select(vi => vi.WithTexture(texturize(p(vi.Location.X, vi.Location.Z)))).ToArray()))
-            //    .Select(arr => arr.Select(vi => vi.WithTexture(p(vi.Location.X + 1, vi.Location.Z + 1) / 2)).ToArray())
-            ;
+                .Concat(svgPolygons.SelectMany(poly => BevelFromCurve(poly.Reverse().Select(p => pt(p.X, h, p.Y)), bevelRadius, roundSteps, Normal.Mine)).Select(face => face.Select(vi => vi.WithTexture(texturize(p(vi.Location.X, vi.Location.Z)))).ToArray()));
         }
 
         private static VertexInfo round(VertexInfo p) { return new VertexInfo(round(p.Location), p.Normal?.Apply(n => round(n)), p.Texture); }

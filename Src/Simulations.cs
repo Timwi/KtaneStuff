@@ -345,7 +345,7 @@ namespace KtaneStuff
                 },
                 new Simulatable
                 {
-                    Active = true,
+                    Active = false,
                     Name = "Chess",
                     GetResult = (ws, serial) =>
                     {
@@ -353,6 +353,25 @@ namespace KtaneStuff
                         var chessSolution = Chess.GetSolution(serial.Last() % 2 != 0, out numAttempts);
                         return new[] { chessSolution[6] };
                         //return new[] { numAttempts.ToString() };
+                    }
+                },
+                new Simulatable
+                {
+                    Active = true,
+                    Name = "Sequential Discharge",
+                    GetResult = (ws, serial) =>
+                    {
+                        //1. If you have a DVI-D port, look at the 3rd light
+                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.DVI)))
+                            return new[] { "at least one DVI" };
+                        //2. Otherwise, if you have an RJ-45 port, look at the 1st light
+                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45)))
+                            return new[] { "RJ-45 and no DVI" };
+                        //3. Otherwise, if you have a Sterio RCA port, look at the 4th light
+                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.StereoRCA)))
+                            return new[] { "Stereo RCA and no RJ-45 or DVI" };
+                        //4. Otherwise, look at the 2nd light                    
+                        return new[] { "no Stereo RCA, RJ-45 or DVI" };
                     }
                 }
             ).Where(s => s.Active).ToArray();

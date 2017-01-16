@@ -59,6 +59,19 @@ namespace KtaneStuff.Modeling
             return new[] { reverse ? arr.Reverse().ToArray() : arr };
         }
 
+        public static Pt[][] Box(bool reverse = false)
+        {
+            var arrs = Ut.NewArray(
+                new[] { pt(-1, 1, -1), pt(-1, 1, 1), pt(1, 1, 1), pt(1, 1, -1) },
+                new[] { pt(-1, -1, -1), pt(-1, -1, 1), pt(1, -1, 1), pt(1, -1, -1) }.Reverse().ToArray(),
+                new[] { pt(-1, -1, 1), pt(-1, 1, 1), pt(1, 1, 1), pt(1, -1, 1) }.Reverse().ToArray(),
+                new[] { pt(-1, -1, -1), pt(-1, 1, -1), pt(1, 1, -1), pt(1, -1, -1) },
+                new[] { pt(1, -1, -1), pt(1, -1, 1), pt(1, 1, 1), pt(1, 1, -1) }.Reverse().ToArray(),
+                new[] { pt(-1, -1, -1), pt(-1, -1, 1), pt(-1, 1, 1), pt(-1, 1, -1) }
+            );
+            return reverse ? arrs.Select(arr => arr.Reverse().ToArray()).ToArray() : arrs;
+        }
+
         public static string GenerateObjFile(IEnumerable<Pt[]> faces, string objectName = null)
         {
             return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, null, null)).ToArray()).ToArray(), objectName);
