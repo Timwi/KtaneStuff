@@ -30,8 +30,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            var value = double.Parse("20");
-            Console.WriteLine(string.Format("{0:R}", (1.0 / value) * 100));
+            Modeling.WirePlacement.CheatSheet();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

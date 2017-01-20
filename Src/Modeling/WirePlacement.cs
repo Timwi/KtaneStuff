@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
@@ -55,6 +56,42 @@ namespace KtaneStuff.Modeling
                 .Select(p => pt(-p.X, p.Y, p.Z))
                 .ToArray();
             return CreateMesh(false, true, tubeFromCurve(points, thickness, tubeRevSteps));
+        }
+
+        enum WireColor
+        {
+            Black,
+            Blue,
+            Red,
+            White,
+            Yellow
+        }
+
+        public static void CheatSheet()
+        {
+            var solutions = Ut.NewArray(
+                new { Color = WireColor.Black, Locations = "B1,D4,A4,D2,B4" },
+                new { Color = WireColor.Blue, Locations = "A2,C4,A1,C4,D4" },
+                new { Color = WireColor.Blue, Locations = "C3,C2,C1,D3,B1" },
+                new { Color = WireColor.Red, Locations = "A1,B3,C4,B2,B3" },
+                new { Color = WireColor.Red, Locations = "C4,D3,B1,C1,C2" },
+                new { Color = WireColor.White, Locations = "B2,C1,B4,A1,C1" },
+                new { Color = WireColor.White, Locations = "D3,D2,D4,B3,B2" },
+                new { Color = WireColor.Yellow, Locations = "A3,C3,A2,A4,A3" },
+                new { Color = WireColor.Yellow, Locations = "D1,A1,B2,B4,A4" },
+                new { Color = WireColor.Yellow, Locations = "D2,D1,D2,A2,D1" }
+            );
+            var colors = new[] { WireColor.Black, WireColor.Blue, WireColor.Red, WireColor.White, WireColor.Yellow };
+
+            var s = "";
+            foreach (var c3color in colors)
+            {
+                s += $@"<table class='wire-placement-embellish {c3color.ToString().ToLowerInvariant()}'><tr><th>A<th>B<th>C<th>D<td class='corner'></tr>{
+                    Enumerable.Range(0, 4).Select(row => $"<tr>{Enumerable.Range(0, 4).Select(col => $"<td class='{solutions.FirstOrDefault(sol => sol.Locations.Split(',')[(int) c3color] == $"{(char) ('A' + col)}{(char) ('1' + row)}")?.Color.ToString().ToLowerInvariant() ?? "none"}'>").JoinString()}<th>{row + 1}</tr>").JoinString()
+                }</table>";
+            }
+            var path = @"D:\c\KTANE\HTML\Wire Placement embellished (Timwi).html";
+            File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<=<!--##-->).*(?=<!--###-->)", s, RegexOptions.Singleline));
         }
 
         private static MeshVertexInfo[][] tubeFromCurve(Pt[] pts, double radius, int revSteps)
