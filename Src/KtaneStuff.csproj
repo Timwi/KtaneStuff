@@ -53,6 +53,7 @@
     <Compile Include="Hex.cs" />
     <Compile Include="HexamazeManual.cs" />
     <Compile Include="LaundryCheatSheet.cs" />
+    <Compile Include="Modeling\Coordinates.cs" />
     <Compile Include="Modeling\DoubleOh.cs" />
     <Compile Include="Modeling\WirePlacement.cs" />
     <Compile Include="Modeling\AdjacentLetters.cs" />
