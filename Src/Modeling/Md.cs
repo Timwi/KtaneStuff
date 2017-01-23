@@ -18,18 +18,28 @@ namespace KtaneStuff.Modeling
         ///     Z-coordinate of the “bottom” of the cylinder. This must be less than <paramref name="endZ"/>.</param>
         /// <param name="endZ">
         ///     Z-coordinate of the “top” of the cylinder. This must be greater than <paramref name="startZ"/>.</param>
-        public static Pt[][] Cylinder(double startZ, double endZ, double radius, int numVertices = 20)
+        public static VertexInfo[][] Cylinder(double startZ, double endZ, double radius, int numVertices = 20)
         {
+            if (startZ > endZ)
+            {
+                var t = startZ;
+                startZ = endZ;
+                endZ = t;
+            }
+
             // Create a circle in X/Y space
             var circle = Enumerable.Range(0, numVertices)
                 .Select(i => new PointD(radius * cos(360.0 * i / numVertices), radius * sin(360.0 * i / numVertices)));
 
             return Ut.NewArray(
                 // Side wall
-                circle.SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.X, p1.Y, startZ), pt(p2.X, p2.Y, startZ), pt(p2.X, p2.Y, endZ), pt(p1.X, p1.Y, endZ) }),
+                Enumerable.Range(0, numVertices)
+                    .Select(i => 360.0 * i / numVertices)
+                    .Select(angle => new PointD(radius * cos(angle), radius * sin(angle)))
+                    .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.X, p1.Y, startZ).WithNormal(p1.X, p1.Y, 0), pt(p2.X, p2.Y, startZ).WithNormal(p2.X, p2.Y, 0), pt(p2.X, p2.Y, endZ).WithNormal(p2.X, p2.Y, 0), pt(p1.X, p1.Y, endZ).WithNormal(p1.X, p1.Y, 0) }),
                 // Caps
-                new[] { circle.Reverse().Select(c => pt(c.X, c.Y, startZ)).ToArray() },
-                new[] { circle.Select(c => pt(c.X, c.Y, endZ)).ToArray() }
+                new[] { circle.Reverse().Select(c => pt(c.X, c.Y, startZ).WithNormal(0, 0, -1)).ToArray() },
+                new[] { circle.Select(c => pt(c.X, c.Y, endZ).WithNormal(0, 0, 1)).ToArray() }
             ).SelectMany(x => x).ToArray();
         }
 
