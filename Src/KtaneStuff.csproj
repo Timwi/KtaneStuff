@@ -81,6 +81,7 @@
     <Compile Include="MouseInTheMazeManual.cs" />
     <Compile Include="MurderCheatSheet.cs" />
     <Compile Include="ClockDiagram.cs" />
+    <Compile Include="PerspectivePegs.cs" />
     <Compile Include="SillySlotsCheatSheet.cs" />
     <Compile Include="SimonScreams.cs" />
     <Compile Include="TextFieldCheatSheet.cs" />

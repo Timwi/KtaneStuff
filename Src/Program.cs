@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using RT.Util;
 
 [assembly: AssemblyTitle("KtaneStuff")]
@@ -31,7 +30,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            Ktane.DoSillySlotsCheatSheet();
+            PerspectivePegs.Svg();
 
             Console.WriteLine("Done.");
             Console.ReadLine();
