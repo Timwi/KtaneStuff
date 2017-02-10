@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RT.Util.Geometry;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
@@ -17,18 +13,12 @@ namespace KtaneStuff.Modeling
         public static void Do()
         {
             File.WriteAllText(@"D:\c\KTANE\LightCycle\Assets\Misc\Button.obj", GenerateObjFile(Button(), "Button"));
-            //File.WriteAllText(@"D:\c\KTANE\LightCycle\Assets\Misc\Led.obj", GenerateObjFile(Led(), "Led"));
             File.WriteAllText(@"D:\c\KTANE\LightCycle\Assets\Misc\LedSocket.obj", GenerateObjFile(LedSocket(), "LedSocket"));
         }
 
         private static IEnumerable<VertexInfo[]> LedSocket()
         {
             return Cylinder(.01, .1, .1, 32);
-        }
-
-        private static IEnumerable<VertexInfo[]> Led()
-        {
-            throw new NotImplementedException();
         }
 
         private static IEnumerable<VertexInfo[]> Button()

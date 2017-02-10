@@ -180,8 +180,12 @@ namespace KtaneStuff.Modeling
         public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, Pt[][] pts)
         {
             return CreateMesh(closedX, closedY, pts
-                .Select((arr, xFirst, xLast) => arr
-                    .Select((p, yFirst, yLast) => pt(p.X, p.Y, p.Z, xLast && !closedX ? Normal.Mine : Normal.Average, xFirst && !closedX ? Normal.Mine : Normal.Average, yLast && !closedY ? Normal.Mine : Normal.Average, yFirst && !closedY ? Normal.Mine : Normal.Average))
+                .Select((arr, x, xFirst, xLast) => arr
+                    .Select((p, y, yFirst, yLast) => pt(p.X, p.Y, p.Z,
+                        xLast && !closedX ? Normal.Mine : Normal.Average,
+                        xFirst && !closedX ? Normal.Mine : Normal.Average,
+                        yLast && !closedY ? Normal.Mine : Normal.Average,
+                        yFirst && !closedY ? Normal.Mine : Normal.Average).WithTexture((arr.Length - 1 - y) / (double) (arr.Length - 1), x / (double) (pts.Length - 1)))
                     .ToArray())
                 .ToArray());
         }
@@ -348,6 +352,36 @@ namespace KtaneStuff.Modeling
                     elem = e.Current;
                 }
                 yield return selector(elem, isFirst, true);
+            }
+        }
+
+        public static IEnumerable<TResult> Select<T, TResult>(this IEnumerable<T> source, Func<T, int, bool, bool, TResult> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+            return selectIterator(source, selector);
+        }
+
+        private static IEnumerable<TResult> selectIterator<T, TResult>(IEnumerable<T> source, Func<T, int, bool, bool, TResult> selector)
+        {
+            var index = 0;
+            var isFirst = true;
+            T elem;
+            using (var e = source.GetEnumerator())
+            {
+                if (!e.MoveNext())
+                    yield break;
+                elem = e.Current;
+                while (e.MoveNext())
+                {
+                    yield return selector(elem, index, isFirst, false);
+                    isFirst = false;
+                    elem = e.Current;
+                    index++;
+                }
+                yield return selector(elem, index, isFirst, true);
             }
         }
 

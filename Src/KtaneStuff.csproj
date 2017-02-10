@@ -56,6 +56,7 @@
     <Compile Include="Modeling\Coordinates.cs" />
     <Compile Include="Modeling\DoubleOh.cs" />
     <Compile Include="Modeling\LightCycle.cs" />
+    <Compile Include="Modeling\OnlyConnect.cs" />
     <Compile Include="Modeling\WirePlacement.cs" />
     <Compile Include="Modeling\AdjacentLetters.cs" />
     <Compile Include="Modeling\BevelPoint.cs" />
