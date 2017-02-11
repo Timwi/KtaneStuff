@@ -38,7 +38,7 @@ namespace KtaneStuff
 
         public static void Simulations()
         {
-            const int numIterations = 100000;
+            const int numIterations = 1000000;
 
             var astrologyElements = new[] { "Fire", "Water", "Earth", "Air" };
             var astrologyPlanets = new[] { "Sun", "Jupiter", "Moon", "Saturn", "Mercury", "Uranus", "Venus", "Neptune", "Mars", "Pluto" };
@@ -47,6 +47,7 @@ namespace KtaneStuff
             var yes = new[] { "Yes" };
             var batteryCount = Ut.Lambda((Widget[] ws) => ws.Sum(w => w.BatteryType == null ? 0 : w.BatteryType == BatteryType.BatteryAA ? 2 : 1));
             var batteryHolderCount = Ut.Lambda((Widget[] ws) => ws.Count(w => w.BatteryType != null));
+            var portTypeCount = Ut.Lambda((Widget[] ws) => ws.Where(w => w.Type == WidgetType.PortPlate).SelectMany(w => w.PortTypes).Distinct().Count());
 
             var simulatables = Ut.NewArray(
                 new Simulatable
@@ -373,7 +374,34 @@ namespace KtaneStuff
                         //4. Otherwise, look at the 2nd light                    
                         return new[] { "no Stereo RCA, RJ-45 or DVI" };
                     }
-                }
+                },
+                new Simulatable { Active = true, Name = "Logic A", GetResult = (ws, serial) => { return new[] { batteryCount(ws) > 2 ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic B", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic C", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel)) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic D", GetResult = (ws, serial) => { return new[] { "AEIOU".Any(serial.Contains) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic E", GetResult = (ws, serial) => { return new[] { !"AEIOU".Any(serial.Contains) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic F", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.StereoRCA)) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic G", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.CLR && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic H", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.IND && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic I", GetResult = (ws, serial) => { return new[] { batteryCount(ws) < 1 ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic J", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.MSA && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic K", GetResult = (ws, serial) => { return new[] { "13579".Contains(serial.Last()) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic L", GetResult = (ws, serial) => { return new[] { "02468".Contains(serial.Last()) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic M", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.FRK && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
+
+                new Simulatable { Active = true, Name = "Logic N", GetResult = (ws, serial) => { return new[] { batteryCount(ws) == 1 ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic O", GetResult = (ws, serial) => { return new[] { batteryCount(ws) == 0 ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic P", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45)) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic Q", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.DVI)) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic R", GetResult = (ws, serial) => { return new[] { batteryCount(ws) > 5 ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic S", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.SIG && w.IndicatorType == IndicatorType.Lit) && ws.Any(w => w.Indicator == Indicator.CAR && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic T", GetResult = (ws, serial) => { return new[] { batteryCount(ws) >= 2 && ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.PS2)) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic U", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) && ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel)) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic V", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.BOB && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic W", GetResult = (ws, serial) => { return new[] { false ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic X", GetResult = (ws, serial) => { return new[] { portTypeCount(ws) >= 4 ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic Y", GetResult = (ws, serial) => { return new[] { !ws.Any(w => w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
+                new Simulatable { Active = true, Name = "Logic Z", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45)) && ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) ? "Y" : "N" }; } }
             ).Where(s => s.Active).ToArray();
 
             var results = new AutoDictionary<string, SimulatedResult>(str => new SimulatedResult());
