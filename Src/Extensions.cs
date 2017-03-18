@@ -1,5 +1,8 @@
-﻿using System.Numerics;
+﻿using System.IO;
+using System.Numerics;
 using System.Text;
+using System.Text.RegularExpressions;
+using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
@@ -30,6 +33,11 @@ namespace KtaneStuff
             for (int i = 0; i < str.Length; i++)
                 arr[str.Length - 1 - i] = str[i];
             return new string(arr);
+        }
+
+        public static void ReplaceInFile(this string path, string startMarker, string endMarker, string newText)
+        {
+            File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<={0})(\r?\n)?( *).*?(?=\r?\n *{1})".Fmt(Regex.Escape(startMarker), Regex.Escape(endMarker)), m => m.Groups[1].Value + newText.Indent(m.Groups[2].Length), RegexOptions.Singleline));
         }
     }
 }
