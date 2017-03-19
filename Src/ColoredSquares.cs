@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using KtaneStuff.Modeling;
 using RT.Util;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
     static class ColoredSquares
     {
-        public static void Do()
+        public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\ColoredSquares\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
             File.WriteAllText(@"D:\c\KTANE\ColoredSquares\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));

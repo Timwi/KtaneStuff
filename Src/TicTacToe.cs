@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
     static class TicTacToe
     {
-        public static void Do()
+        public static void DoModels()
         {
             // Tic-Tac-Toe Keycap
             File.WriteAllText(@"D:\c\KTANE\TicTacToe\Assets\Assets\Keycap.obj", Keycap("Keycap", slope: -3, keyWidth: 1, keyHeight: .7, bumpWidth: .2, bumpHeight: .05, keyDepth: .3));

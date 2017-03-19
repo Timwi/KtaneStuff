@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
     static class WirePlacement
     {
-        public static void Do()
+        public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\WirePlacement\Assets\Models\Base.obj", GenerateObjFile(Base(), "Base"));
             File.WriteAllText(@"D:\c\KTANE\WirePlacement\Assets\Models\WireCollider.obj", GenerateObjFile(WireCollider(), "WireCollider"));

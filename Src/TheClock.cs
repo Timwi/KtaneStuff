@@ -10,8 +10,9 @@ using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
 using RT.Util.Serialization;
+using KtaneStuff.Modeling;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
@@ -24,7 +25,7 @@ namespace KtaneStuff.Modeling
             Spade
         }
 
-        public static void Do()
+        public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockFrame.obj", GenerateObjFile(ClockFrame(), "ClockFrame"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\Clockface.obj", GenerateObjFile(Clockface(), "Clockface"));

@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using KtaneStuff.Modeling;
 using RT.KitchenSink;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
     static class DoubleOh
     {
-        public static void Do()
+        public static void DoModels()
         {
             foreach (var inf in new[] { SvgInfo.SingleArrow, SvgInfo.DoubleArrow, SvgInfo.Submit })
                 File.WriteAllText($@"D:\c\KTANE\DoubleOh\Assets\Models\Button{inf.Name}.obj", GenerateObjFile(Button(inf.Svg), $"Button{inf.Name}"));

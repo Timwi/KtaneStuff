@@ -3,18 +3,134 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
+using RT.Util.Geometry;
 using RT.Util.Text;
 
 namespace KtaneStuff
 {
-    using static Modeling.Md;
+    using static Md;
 
-    static partial class Ktane
+    static class SimonScreams
     {
-        public static void SimonScreamsGenerateLargeTable()
+        public static void DoModels()
+        {
+            File.WriteAllText(@"D:\c\KTANE\SimonScreams\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
+            File.WriteAllText(@"D:\c\KTANE\SimonScreams\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
+            File.WriteAllText(@"D:\c\KTANE\SimonScreams\Assets\Models\ButtonCollider.obj", GenerateObjFile(ButtonCollider(), "ButtonCollider"));
+
+            var flapIx = 0;
+            foreach (var flap in Flaps())
+            {
+                File.WriteAllText($@"D:\c\KTANE\SimonScreams\Assets\Models\Flap{flapIx}.obj", GenerateObjFile(flap, $"Flap{flapIx}"));
+                flapIx++;
+            }
+        }
+
+        private static IEnumerable<VertexInfo[]> Button()
+        {
+            var height = .2;
+            var fh = height * .4;
+            var innerRadius = 0.4;
+            var outerRadius = 1.0;
+            var fr = innerRadius * .1;
+            var angle = 30.0;
+
+            var bézierSteps = 20;
+            var d = Math.Sqrt(innerRadius * innerRadius + outerRadius * outerRadius - 2 * innerRadius * outerRadius * cos(angle));
+            var frix = outerRadius - (outerRadius - innerRadius * cos(angle)) / d * (d - fr);
+            var friy = innerRadius * sin(angle) / d * (d - fr);
+            var frox = outerRadius - (outerRadius - innerRadius * cos(angle)) / d * fr;
+            var froy = innerRadius * sin(angle) / d * fr;
+
+            var patchCoords = Ut.NewArray(
+                new[] { pt(0, 0, 0), pt(fr * cos(-angle), fh, fr * sin(-angle)), pt((innerRadius - fr) * cos(-angle), fh, (innerRadius - fr) * sin(-angle)), pt(innerRadius * cos(-angle), 0, innerRadius * sin(-angle)) },
+                new[] { pt(fr * cos(angle), fh, fr * sin(angle)), pt(innerRadius / 2, height, 0), pt(innerRadius * cos(angle / 2), height, innerRadius * sin(angle / 2)), pt(frix, fh, -friy) },
+                new[] { pt((innerRadius - fr) * cos(angle), fh, (innerRadius - fr) * sin(angle)), pt(innerRadius * cos(angle / 2), height, innerRadius * sin(angle / 2)), pt((innerRadius + outerRadius) / 2, height, 0), pt(frox, fh, -froy) },
+                new[] { pt(innerRadius * cos(angle), 0, innerRadius * sin(angle)), pt(frix, fh, friy), pt(frox, fh, froy), pt(outerRadius, 0, 0) }
+            )
+                .Select(arr => arr.Select(p => p.Add(x: .03)).ToArray())
+                .ToArray();
+            var patch = BézierPatch(patchCoords, bézierSteps);
+
+            var extendedPatch = Ut.NewArray(bézierSteps + 2, bézierSteps + 2, (i, j) =>
+            {
+                var ii = i == 0 ? 1 : i == bézierSteps + 1 ? bézierSteps - 1 : i - 1;
+                var jj = j == 0 ? 1 : j == bézierSteps + 1 ? bézierSteps - 1 : j - 1;
+                return new MeshVertexInfo(
+                    patch[ii][jj].Set(y: i == 0 || i == bézierSteps + 1 || j == 0 || j == bézierSteps + 1 ? -.03 : (double?) null),
+                    i == bézierSteps + 1 ? Normal.Mine : Normal.Average, i == 0 ? Normal.Mine : Normal.Average,
+                    j == bézierSteps + 1 ? Normal.Mine : Normal.Average, j == 0 ? Normal.Mine : Normal.Average
+                );
+            });
+
+            return CreateMesh(false, false, extendedPatch);
+        }
+
+        private static IEnumerable<VertexInfo[]> ButtonHighlight()
+        {
+            var preRadius = .03;
+            var innerRadius = .44;
+            var outerRadius = 1.15;
+            var angle = 32.0;
+
+            var holeInnerRadius = .4;
+            var holeOuterRadius = 1.0;
+            var holeAngle = 30.0;
+
+            return
+                Triangulate(Ut.NewArray<IEnumerable<PointD>>(
+                    new[] { p(-preRadius, 0), p(innerRadius * cos(-angle), innerRadius * sin(-angle)), p(outerRadius, 0), p(innerRadius * cos(angle), innerRadius * sin(angle)) },
+                    new[] { p(0, 0), p(holeInnerRadius * cos(holeAngle), holeInnerRadius * sin(holeAngle)), p(holeOuterRadius, 0), p(holeInnerRadius * cos(-holeAngle), holeInnerRadius * sin(-holeAngle)) }.Select(p => p + new PointD(.03, 0))
+                ))
+                    .Select(poly => poly.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray());
+        }
+
+        private static IEnumerable<VertexInfo[]> ButtonCollider()
+        {
+            var innerRadius = .44;
+            var outerRadius = 1.1;
+            var angle = 30.0;
+
+            yield return
+                new[] { p(0, 0), p(innerRadius * cos(angle), innerRadius * sin(angle)), p(outerRadius, 0), p(innerRadius * cos(-angle), innerRadius * sin(-angle)) }
+                    .Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray();
+        }
+
+        private static IEnumerable<IEnumerable<VertexInfo[]>> Flaps()
+        {
+            var innerRadius = 0.4;
+            var outerRadius = 1.02;
+            var angle = 30.0;
+            var depth = .01;
+            var offset = .025;
+
+            var outline = new[] { p(0, 0), p(innerRadius * cos(angle), innerRadius * sin(angle)), p(outerRadius, 0), p(innerRadius * cos(-angle), innerRadius * sin(-angle)) };
+            var midPoint = Intersect.LineWithLine(new EdgeD(outline[0], outline[2]), new EdgeD(outline[1], outline[3]));
+
+            for (int i = 0; i < 6; i++)
+            {
+                foreach (var face in outline.SelectConsecutivePairs(true, (p1, p2) => new[] { .96 * midPoint + .02 * (p1 + p2), p1, p2 }.Select(p => pt(p.X + offset, 0, p.Y).RotateY(60 * i - 15))))
+                {
+                    var flap = new List<VertexInfo[]>();
+
+                    // Front face
+                    var frontFace = face.Select(p => p.WithNormal(0, 1, 0).WithTexture(new PointD(.4771284794 * (-p.X * .8) + .46155, -.4771284794 * (-p.Z * .8) + .5337373145))).ToArray();
+                    flap.Add(frontFace);
+                    // Back face
+                    flap.Add(frontFace.Select(p => p.Location.Add(y: -depth).WithNormal(0, -1, 0).WithTexture(p.Texture.Value)).Reverse().ToArray());
+
+                    // Side faces
+                    flap.AddRange(face.SelectConsecutivePairs(true, (p1, p2) => new[] { p2, p1, p1.Add(y: -depth), p2.Add(y: -depth) }.Select(p => p.WithNormal((p2 - p1) * (p1 - p1.Add(y: -depth)))).ToArray()));
+                    yield return flap;
+                }
+            }
+        }
+
+        public static void GenerateLargeTable()
         {
             var grids = new List<int[][]>();
             for (int i = 0; i < 3; i++)
@@ -27,14 +143,14 @@ namespace KtaneStuff
             Console.WriteLine(Enumerable.Range(0, 6).Select(row => Enumerable.Range(0, 6).Select(col => $"<td>{grids.Select(g => "ACDEFH"[g[col][row]]).JoinString()}").JoinString()).JoinString(Environment.NewLine));
         }
 
-        public static void SimonScreamsGenerateSmallTable()
+        public static void GenerateSmallTable()
         {
             var grid = Ut.NewArray(6, 6, (_, __) => Rnd.Next(6));
             fill(grid, 0, 0);
             Console.WriteLine(Enumerable.Range(0, 6).Select(row => Enumerable.Range(0, 6).Select(col => $"<td>{"ROYGBP"[grid[col][row]]}").JoinString()).JoinString(Environment.NewLine));
         }
 
-        public static void SimonScreamsSvg()
+        public static void DoSvg()
         {
             var path = @"D:\c\KTANE\HTML\img\Component\Simon Screams.svg";
             File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<=<!--##-->).*(?=<!--###-->)",
@@ -74,7 +190,7 @@ namespace KtaneStuff
             return false;
         }
 
-        public static void SimonScreamsSimulation()
+        public static void Simulation()
         {
             /* Version 1 (too hard)
             var criteria1 = Ut.NewArray(
@@ -182,22 +298,6 @@ namespace KtaneStuff
                 tt.WriteToConsole();
                 ConsoleUtil.WriteLine(new string('═', 125).Color(ConsoleColor.White));
             }
-        }
-
-        private static int IncSafe<K1, K2>(this IDictionary<K1, Dictionary<K2, int>> dic, K1 key1, K2 key2, int amount = 1)
-        {
-            if (dic == null)
-                throw new ArgumentNullException("dic");
-            if (key1 == null)
-                throw new ArgumentNullException(nameof(key1), "Null values cannot be used for keys in dictionaries.");
-            if (key2 == null)
-                throw new ArgumentNullException(nameof(key2), "Null values cannot be used for keys in dictionaries.");
-            if (!dic.ContainsKey(key1))
-                dic[key1] = new Dictionary<K2, int>();
-            if (!dic[key1].ContainsKey(key2))
-                return (dic[key1][key2] = amount);
-            else
-                return (dic[key1][key2] = dic[key1][key2] + amount);
         }
 
         private static int[][] generateSequences(int numStages, int minFirstStageLength, int maxFirstStageLength, int minStageExtra, int maxStageExtra, bool allowSameConsecutive)

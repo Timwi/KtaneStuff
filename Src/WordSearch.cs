@@ -1,28 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using KtaneStuff.Modeling;
 using RT.Util;
+using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
-    using System;
-    using System.Drawing;
-    using System.Threading;
-    using RT.Util.Drawing;
     using static Md;
 
     static class WordSearch
     {
-        public static void Do()
+        public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Screen.obj", GenerateObjFile(Screen(), "Screen"));
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\ScreenFrame.obj", GenerateObjFile(ScreenFrame(), "ScreenFrame"));
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Highlight.obj", GenerateObjFile(Highlight(), "Highlight"));
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Torus.obj", GenerateObjFile(Torus(.2, .03, 36), "Torus"));
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Decoration.obj", GenerateObjFile(Decoration(), "Decoration"));
+        }
 
-            // Highlight PNGs
+        public static void DoPngs()
+        {
             const int padding = 10;
             var threads = new List<Thread>();
             var declarations = new List<string>();

@@ -100,7 +100,6 @@ namespace KtaneStuff
 
         private static string GetCell(Dictionary<string, string> items)
         {
-            string str = null;
             if (items.Values.Distinct().Count() == 1)
                 return items.Values.First();
 

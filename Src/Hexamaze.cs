@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using KtaneStuff.Modeling;
+using RT.KitchenSink;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
-    using RT.KitchenSink;
     using static Md;
 
     static class Hexamaze
     {
-        public static void Do()
+        public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\Hexamaze\Assets\Models\Screen.obj", GenerateObjFile(Screen(), "Screen"));
             File.WriteAllText(@"D:\c\KTANE\Hexamaze\Assets\Models\ScreenFrame.obj", GenerateObjFile(ScreenFrame(), "ScreenFrame"));

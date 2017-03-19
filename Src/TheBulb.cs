@@ -1,17 +1,19 @@
 ﻿using System.IO;
 using System.Linq;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
     static class TheBulb
     {
-        public static void Do()
+        public static void DoModels()
         {
+            // Bézier control points for the shape of the I/O buttons
             var points = Ut.NewArray(
                 new PointD(0, 0),
                 new PointD(0, 1),

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
-    using static Modeling.Md;
+    using static Md;
 
     public struct Hex : IEquatable<Hex>
     {

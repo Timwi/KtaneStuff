@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
@@ -20,7 +21,7 @@ namespace KtaneStuff.Modeling
             public PointD[] Outline;
         }
 
-        public static void Do()
+        public static void DoModels()
         {
             var buttonStuff = Button();
             File.WriteAllText(@"D:\c\KTANE\AdjacentLetters\Assets\Models\Button.obj", GenerateObjFile(buttonStuff.Button, "Button"));

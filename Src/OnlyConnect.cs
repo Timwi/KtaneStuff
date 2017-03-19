@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using KtaneStuff.Modeling;
 using RT.TagSoup;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
     static class OnlyConnect
     {
-        public static void Do()
+        public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\OnlyConnect\Assets\Misc\Button.obj", GenerateObjFile(Button(), "Button"));
             File.WriteAllText(@"D:\c\KTANE\OnlyConnect\Assets\Misc\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
@@ -96,18 +95,6 @@ Welsh=parciais fy jac codi baw hud llawn dŵr ger tŷ mabon.
                 .JoinString("\r\n"));
             @"D:\c\KTANE\OnlyConnect\Assets\OnlyConnectModule.cs".ReplaceInFile("//!!", "//@@", alphabets.Select(kvp => $@"""{kvp.Value.Order().JoinString()}"", // {kvp.Key}").JoinString("\r\n"));
             @"D:\c\KTANE\OnlyConnect\Assets\OnlyConnectModule.cs".ReplaceInFile("//##", "//$$", alphabets.Select(kvp => $@"""{kvp.Key.CLiteralEscape()}"",").JoinString("\r\n"));
-
-            //// Big table with separate columns for all letters
-            //var allLettersHash = alphabets.SelectMany(kvp => kvp.Value).Distinct().ToHashSet();
-            //allLettersHash.RemoveWhere(ch => alphabets.All(a => a.Value.Contains(ch)));
-            //var allLetters = allLettersHash.OrderBy(ch => ch.ToString().Normalize(NormalizationForm.FormD)).ToArray();
-            //@"D:\c\KTANE\HTML\Only Connect.html".ReplaceInFile("<!--##-->", "<!--###-->", new TABLE { class_ = "only-connect-wall" }._(
-            //    // Header row
-            //    new TR(new TH("Language"), allLetters.Select((ch, f, l) => new TH { class_ = "letter" + (f ? " first" : "") + (l ? " last" : "") }._(ch))),
-            //    alphabets.OrderBy(l => l.Key).Select(kvp => new TR(
-            //        new TH(kvp.Key), allLetters.Select((ch, f, l) => new TD { class_ = "letter" + (f ? " first" : "") + (l ? " last" : "") }._(kvp.Value.Contains(ch) ? ch.ToString() : null))
-            //    ))
-            //).ToString());
         }
     }
 }

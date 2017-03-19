@@ -2,15 +2,16 @@
 using System.IO;
 using System.Linq;
 using RT.Util;
+using System;
+using KtaneStuff.Modeling;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
-    using System;
     using static Md;
 
     static class Coordinates
     {
-        public static void Do()
+        public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\Coordinates\Assets\Misc\Button.obj", GenerateObjFile(Button(Enumerable.Range(0, 3).Select(i => i * 120 + 60).ToArray()), "Button"));
             File.WriteAllText(@"D:\c\KTANE\Coordinates\Assets\Misc\SubmitButton.obj", GenerateObjFile(Button(Enumerable.Range(0, 4).Select(i => i * 90 + 45).ToArray()), "SubmitButton"));

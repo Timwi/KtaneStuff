@@ -5,14 +5,15 @@ using System.Linq;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
+using KtaneStuff.Modeling;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
     static class FollowTheLeader
     {
-        public static void Do()
+        public static void DoModels()
         {
             // HexFrame
             File.WriteAllText(@"D:\c\KTANE\FollowTheLeader\Assets\Assets\HexFrame.obj", GenerateObjFile(HexFrames(_outerHexFrame, _innerHexFrame), "Hexagonal frame"));

@@ -10,7 +10,7 @@ namespace KtaneStuff
 {
     static class MorseTable
     {
-        public static void Do()
+        public static void Generate()
         {
             var path = @"D:\c\KTANE\HTML\Morsematics cheat sheet (Rexkix).html";
             File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<=<!--##-->).*(?=<!--###-->)",

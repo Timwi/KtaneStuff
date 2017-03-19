@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     using static Md;
 
     static class LightCycle
     {
-        public static void Do()
+        public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\LightCycle\Assets\Misc\Button.obj", GenerateObjFile(Button(), "Button"));
             File.WriteAllText(@"D:\c\KTANE\LightCycle\Assets\Misc\LedSocket.obj", GenerateObjFile(LedSocket(), "LedSocket"));
