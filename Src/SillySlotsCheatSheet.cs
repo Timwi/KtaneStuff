@@ -10,9 +10,9 @@ using RT.Util.Text;
 
 namespace KtaneStuff
 {
-    static partial class Ktane
+    static class SillySlots
     {
-        public static void DoSillySlotsCheatSheet()
+        public static void DoCheatSheet()
         {
             var tt = new TextTable { ColumnSpacing = 2 };
 
@@ -20,7 +20,7 @@ namespace KtaneStuff
             for (int s1s = 0; s1s < 4; s1s++)
                 for (int s2s = 0; s2s < 4; s2s++)
                 {
-                    cells[s2s + 4 * s1s + 1, 0] = "ABCD"[s1s] + "" + "ABCD"[s2s];
+                    cells[s2s + 4 * s1s + 1, 0] = "ASDF"[s1s] + "" + "ASDF"[s2s];
                     for (int s1c = 0; s1c < 3; s1c++)
                         for (int s2c = 0; s2c < 3; s2c++)
                             for (int s3c = 0; s3c < 3; s3c++)
@@ -28,7 +28,7 @@ namespace KtaneStuff
                                 cells[0, s3c + 3 * (s2c + 3 * s1c) + 1] = "123"[s1c] + "" + "123"[s2c] + "123"[s3c];
                                 var items = new Dictionary<string, string>();
                                 for (int s3s = 0; s3s < 4; s3s++)
-                                    AddPullInfo("123"[s1c] + "" + "ABCD"[s1s], "123"[s2c] + "" + "ABCD"[s2s], "123"[s3c] + "" + "ABCD"[s3s], items);
+                                    AddPullInfo("123"[s1c] + "" + "ASDF"[s1s], "123"[s2c] + "" + "ASDF"[s2s], "123"[s3c] + "" + "ASDF"[s3s], items);
                                 cells[s2s + 4 * s1s + 1, s3c + 3 * (s2c + 3 * s1c) + 1] = GetCell(items);
                             }
                 }
@@ -58,7 +58,7 @@ namespace KtaneStuff
                 for (char n = '1'; n <= '3'; n++)
                 {
                     var tItems = items.Where(p => p.Key.StartsWith(n)).ToArray();
-                    if ("ABCD".All(ch => items.ContainsKey(n.ToString() + ch)))
+                    if ("ASDF".All(ch => items.ContainsKey(n.ToString() + ch)))
                     {
                         var biggestGroup = tItems.GroupBy(p => p.Value).MaxElement(g => g.Count());
                         if (biggestGroup.Count() == 1)
@@ -75,7 +75,7 @@ namespace KtaneStuff
 
                 // Try letters
                 var strs2 = new List<string>();
-                for (char l = 'A'; l <= 'D'; l++)
+                foreach (char l in "ASDF")
                 {
                     var tItems = items.Where(p => p.Key.EndsWith(l)).ToArray();
                     if ("123".All(ch => items.ContainsKey(ch + l.ToString())))
@@ -132,32 +132,32 @@ namespace KtaneStuff
                     pullCondition = condition;
                 }
             });
-            if (ss.Count(x => x == "2C") == 1)
+            if (ss.Count(x => x == "2D") == 1)
                 pull = true;
             if (ss.Count(x => x == "1A") == 1)
                 setCond($"{ss.IndexOf("1A") + 1}^3");
-            if (ss.Count(x => x == "3D") >= 2)
+            if (ss.Count(x => x == "3F") >= 2)
                 pull = true;
-            if (ss.Count(x => x.EndsWith("B")) == 3 && !ss.Contains("1B"))
+            if (ss.Count(x => x.EndsWith("S")) == 3 && !ss.Contains("1S"))
                 pull = true;
-            if (s1.EndsWith("C") && new[] { "1A", "2A" }.Contains(s2))
+            if (s1.EndsWith("D") && new[] { "1A", "2A" }.Contains(s2))
                 pull = true;
-            if (s2.EndsWith("C") && new[] { "1A", "2A" }.Contains(s1))
+            if (s2.EndsWith("D") && new[] { "1A", "2A" }.Contains(s1))
                 pull = true;
-            if (s2.EndsWith("C") && new[] { "1A", "2A" }.Contains(s3))
+            if (s2.EndsWith("D") && new[] { "1A", "2A" }.Contains(s3))
                 pull = true;
-            if (s3.EndsWith("C") && new[] { "1A", "2A" }.Contains(s2))
+            if (s3.EndsWith("D") && new[] { "1A", "2A" }.Contains(s2))
                 pull = true;
-            if (ss.Count(x => x.StartsWith("2")) == 2 && ss.Count(x => x == "2D") < 2)
+            if (ss.Count(x => x.StartsWith("2")) == 2 && ss.Count(x => x == "2F") < 2)
                 pull = true;
             if (ss.Count(x => x.StartsWith("3")) == 1)
-                setCond($"<C");
+                setCond($"<D");
             if (s2[0] == s1[0] && s3[0] == s1[0] && !ss.Any(x => x.EndsWith("A")))
-                setCond($"<2D");
-            if (ss.Contains("2B"))
-                setCond($"«1C");
+                setCond($"<2F");
+            if (ss.Contains("2S"))
+                setCond($"«1D");
             if (s2 == s1 && s3 == s1)
-                setCond($"«3D");
+                setCond($"«3F");
 
             items[s3] = pull == true ? "P" : pull == false ? "K" : pullCondition;
         }
