@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Text.RegularExpressions;
 using RT.Util;
-using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
-    static partial class Ktane
+    static partial class MouseInTheMaze
     {
-        public static void DoMouseInTheMazeManual()
+        public static void DoManual()
         {
             var path = @"D:\c\KTANE\MouseInTheMaze\Manual\Mouse In The Maze.html";
 
@@ -25,7 +19,7 @@ namespace KtaneStuff
                 File.WriteAllText(path, Regex.Replace(
                     File.ReadAllText(path),
                     $@"(?<=<!--##{i}-->).*(?=<!--###{i}-->)",
-                    create2DMazeSvg(maze.HoriWalls, maze.VertWalls, labels, frame: true, omitAxes: true, extra: $"<circle cx='127.5' cy='127.5' r='10' fill='#ccc' /><circle cx='127.5' cy='127.5' r='7' fill='#fff' />"),
+                    Utils.Create2DMazeSvg(maze.HoriWalls, maze.VertWalls, labels, frame: true, omitAxes: true, extra: $"<circle cx='127.5' cy='127.5' r='10' fill='#ccc' /><circle cx='127.5' cy='127.5' r='7' fill='#fff' />"),
                     RegexOptions.Singleline));
             }
         }

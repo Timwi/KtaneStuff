@@ -11,9 +11,9 @@ using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
-    static partial class Ktane
+    static class TextField
     {
-        public static void DoTextFieldCheatSheet()
+        public static void DoCheatSheet()
         {
             var dic = new Dictionary<char, Tuple<string, string>[]> {
                 { 'A', Ut.NewArray(

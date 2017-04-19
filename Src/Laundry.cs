@@ -7,9 +7,9 @@ using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
-    static partial class Ktane
+    static partial class Laundry
     {
-        public static void LaundryCheatSheet()
+        public static void DoCheatSheet()
         {
             var abbrevs = @"1|110°C
 2|200°C

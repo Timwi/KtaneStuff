@@ -5,9 +5,9 @@ using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
-    static partial class Ktane
+    static partial class Murder
     {
-        public static void DoMurderCheatSheet()
+        public static void DoCheatSheet()
         {
             var suspectNames = "SPKGMW";
             var weaponNames = "CDPVRS";
