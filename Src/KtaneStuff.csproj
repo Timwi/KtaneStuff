@@ -47,6 +47,7 @@
     <Compile Include="3DMazeManual.cs" />
     <Compile Include="BombInfo.cs" />
     <Compile Include="Chess.cs" />
+    <Compile Include="TheGamepad.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="GridGenerator.cs" />
     <Compile Include="Hex.cs" />
