@@ -132,8 +132,8 @@ namespace KtaneStuff
             var roundSteps = 72;
 
             var curve = new[] { p(0, 0), p(holeI, holeDepth), p(holeO, holeDepth), p(holeO, depth - dip) }
-                    .Concat(Bézier(p(holeO, depth - dip), p(xf, depth - dip), p(width - bevelWidth - xf, depth), p(width - bevelWidth, depth), bézierSteps))
-                    .Concat(Bézier(p(width - bevelWidth, depth), p(width - bevelWidth + bevelF, depth), p(width, depth - bevelWidth + bevelF), p(width, depth - bevelWidth), bézierSteps))
+                    .Concat(Bézier(p(holeO, depth - dip), p(xf, depth - dip), p(width - bevelWidth - xf, depth), p(width - bevelWidth, depth), bézierSteps).Skip(1))
+                    .Concat(Bézier(p(width - bevelWidth, depth), p(width - bevelWidth + bevelF, depth), p(width, depth - bevelWidth + bevelF), p(width, depth - bevelWidth), bézierSteps).Skip(1))
                     .Concat(p(width, 0))
                     .Select(p => pt(p.X, p.Y, 0))
                     .ToArray();
