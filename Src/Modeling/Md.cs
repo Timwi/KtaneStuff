@@ -61,20 +61,13 @@ namespace KtaneStuff.Modeling
 
         private static IEnumerable<IEnumerable<VertexInfo[]>> extrudeImpl(IEnumerable<IEnumerable<PointD>> polygon, double depth, bool includeBackFace)
         {
+            // Walls
             foreach (var path in polygon)
-            {
-                var pointsArr = path.ToArray();
-
-                if (new PolygonD(pointsArr).Area() > 0)
-                    Debugger.Break();
-
-                // Walls
-                yield return pointsArr
+                yield return path
                     .SelectConsecutivePairs(true, (p1, p2) => new { P1 = p1, P2 = p2 })
                     .Where(inf => inf.P1 != inf.P2)
                     .SelectConsecutivePairs(true, (q1, q2) => new { P = q1.P2, N = (pt(0, 1, 0) * pt(q1.P2.X - q1.P1.X, 0, q1.P2.Y - q1.P1.Y)) + (pt(0, 1, 0) * pt(q2.P2.X - q2.P1.X, 0, q2.P2.Y - q2.P1.Y)) })
-                    .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.P.X, 0, p1.P.Y).WithNormal(p1.N), pt(p2.P.X, 0, p2.P.Y).WithNormal(p2.N), pt(p2.P.X, depth, p2.P.Y).WithNormal(p2.N), pt(p1.P.X, depth, p1.P.Y).WithNormal(p1.N) });
-            }
+                    .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.P.X, depth, p1.P.Y).WithNormal(p1.N), pt(p2.P.X, depth, p2.P.Y).WithNormal(p2.N), pt(p2.P.X, 0, p2.P.Y).WithNormal(p2.N), pt(p1.P.X, 0, p1.P.Y).WithNormal(p1.N) });
 
             // Front face
             yield return Triangulate(polygon).Select(ps => ps.Select(p => pt(p.X, depth, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray());
