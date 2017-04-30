@@ -152,11 +152,6 @@ namespace KtaneStuff
                     .Select(arr => arr.Select(p => new VertexInfo(p, null)).ToArray());
             }
 
-            if (svg == "Collider")
-            {
-                throw new NotImplementedException();
-            }
-
             var svgPolygons = DecodeSvgPath.Do(svg, bézierSmoothness).Select(poly => poly.Select(pt => (pt - p(5, 5)) * .11).ToArray()).ToArray();
             var outline = Triangulate(outlineRaw.Select(inf => inf.Point).ToArray().Concat(svgPolygons))
                 .Select(f => f.Select(p => pt(p.X, patch2[0][0].Vertex.Y, p.Y).WithNormal(0, 1, 0).WithTexture(texturize(p))).Reverse().ToArray());
