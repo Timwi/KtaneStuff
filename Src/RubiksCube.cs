@@ -20,10 +20,13 @@ namespace KtaneStuff
         {
             File.WriteAllText(@"D:\c\KTANE\RubiksCube\Assets\Models\Cubelet.obj", GenerateObjFile(Cubelet(), "Cubelet"));
             File.WriteAllText(@"D:\c\KTANE\RubiksCube\Assets\Models\Sticker.obj", GenerateObjFile(Sticker(), "Sticker"));
-            File.WriteAllText(@"D:\c\KTANE\RubiksCube\Assets\Models\Arrow.obj", GenerateObjFile(Arrow(), "Arrow"));
-            File.WriteAllText(@"D:\c\KTANE\RubiksCube\Assets\Models\ArrowHighlight.obj", GenerateObjFile(ArrowHighlight(), "ArrowHighlight"));
             File.WriteAllText(@"D:\c\KTANE\RubiksCube\Assets\Models\Reset.obj", GenerateObjFile(Reset(), "Reset"));
+            File.WriteAllText(@"D:\c\KTANE\RubiksCube\Assets\Models\ArrowNSWE.obj", GenerateObjFile(Shape(ArrowNSWE), "ArrowNSWE"));
+            File.WriteAllText(@"D:\c\KTANE\RubiksCube\Assets\Models\Arrow.obj", GenerateObjFile(Shape(Arrow), "Arrow"));
         }
+
+        const string ArrowNSWE = @"5,0 7,2 6,2 6,4 8,4 8,3 10,5 8,7 8,6 6,6 6,8 7,8 5,10 3,8 4,8 4,6 2,6 2,7 0,5 2,3 2,4 4,4 4,2 3,2";
+        const string Arrow = @"5,0 8,4 6,4 6,10 4,10 4,4 2,4";
 
         private static IEnumerable<VertexInfo[]> Cubelet()
         {
@@ -74,25 +77,9 @@ namespace KtaneStuff
                 yield return frontFace;
         }
 
-        private static IEnumerable<VertexInfo[]> Arrow()
+        private static IEnumerable<VertexInfo[]> Shape(string vertices)
         {
-            return CreateMesh(true, false, Enumerable.Range(0, 36).Select(i => i * 10).Select(angle =>
-                new[] { p(0, 0), p(0, 1), p(10, 1), p(9.75, 2), p(14, 0) }
-                    .Select((p, i) => pt(p.X, p.Y, 0).RotateX(angle)
-                        .WithMeshInfo(Normal.Average, Normal.Average, Normal.Mine, Normal.Mine)
-                        .WithTexture(angle / 720.0 / 2, (p.X / 30) + .5))
-                    .ToArray())
-                .ToArray());
-        }
-
-        private static IEnumerable<VertexInfo[]> ArrowHighlight()
-        {
-            return CreateMesh(true, false, Enumerable.Range(0, 18).Select(i => i * 20).Select(angle =>
-                new[] { p(-1, 0), p(-1, 2), p(9.5, 2), p(9.25, 3), p(16, 0) }
-                    .Select((p, i) => pt(p.X, p.Y, 0).RotateX(angle)
-                        .WithMeshInfo(Normal.Average, Normal.Average, Normal.Mine, Normal.Mine))
-                    .ToArray())
-                .ToArray());
+            return Triangulate(vertices.Split(' ').Reverse().Select(coord => coord.Split(',').Select(int.Parse).ToArray()).Select(c => p(c[0] - 5, c[1] - 5) / 6.0)).Select(poly => poly.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray()).ToArray();
         }
 
         private static IEnumerable<VertexInfo[]> Reset()
