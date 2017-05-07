@@ -329,20 +329,20 @@ namespace KtaneStuff
                 yield return c;
         }
 
-        public static void ClockDiagrams()
+        public static void GenerateCharts()
         {
             // Minutes
-            clockDiagram(@"D:\c\KTANE\HTML\img\The Clock\Minutes Chart.svg", "Minutes", 1, 1.24,
+            generateChart(@"D:\c\KTANE\HTML\img\The Clock\Minutes Chart.svg", "Minutes", 1, 1.24,
                 new RingInfo { Labels = new[] { "Arrows", "Lines", "Spades" }, Horiz = true, FontSize = .8, HFactor = 32, InnerD = .35, OuterD = .6 },
-                new RingInfo { Labels = new[] { "R", "G", "B", "Y", "O" }, Horiz = true, FontSize = .6, HFactor = 24, InnerD = .35, OuterD = .6 },
+                new RingInfo { Labels = new[] { "Red", "Green", "Blue", "Gold", "Black" }, Horiz = true, FontSize = .45, HFactor = 16, InnerD = .425, OuterD = .575 },
                 new RingInfo { Labels = new[] { "B", "W" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .4, OuterD = .6 },
                 new RingInfo { Labels = new[] { "Ab", "Pr" }, Horiz = false, FontSize = .4, HFactor = 12, InnerD = .4, OuterD = .55 });
 
             // Hours
-            clockDiagram(@"D:\c\KTANE\HTML\img\The Clock\Hours Chart.svg", "Hours", 1 / .8, 1,
+            generateChart(@"D:\c\KTANE\HTML\img\The Clock\Hours Chart.svg", "Hours", 1 / .8, 1,
                 new RingInfo { Labels = new[] { "Arabic", "Roman", "None" }, Horiz = true, FontSize = .8, HFactor = 32, InnerD = .35, OuterD = .6 },
                 new RingInfo { Labels = new[] { "Silver", "Gold" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .4, OuterD = .55 },
-                new RingInfo { Labels = new[] { "Matched", "Unmatched" }, Horiz = true, FontSize = .4, HFactor = 12, InnerD = .4, OuterD = .55 });
+                new RingInfo { Labels = new[] { "Matched", "Unmatched" }, Horiz = true, FontSize = .35, HFactor = 14, InnerD = .4, OuterD = .55 });
         }
 
         sealed class RingInfo
@@ -355,7 +355,7 @@ namespace KtaneStuff
             public double OuterD;
         }
 
-        static void clockDiagram(string outputFile, string centerText, double xSizeFac, double ySizeFac, params RingInfo[] rings)
+        static void generateChart(string outputFile, string centerText, double xSizeFac, double ySizeFac, params RingInfo[] rings)
         {
             var factor = 1;
             var svg = new StringBuilder();
