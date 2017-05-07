@@ -8,6 +8,8 @@ using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 
+using static KtaneStuff.Edgework;
+
 namespace KtaneStuff
 {
     static partial class Ktane
@@ -412,8 +414,8 @@ namespace KtaneStuff
                 if (attempt % hundredths == 0)
                     Console.Write($"{attempt / hundredths}%\r");
 
-                var widgets = generateRandomWidgets();
-                var serial = generateRandomSerial();
+                var widgets = Edgework.GenerateWidgets();
+                var serial = Edgework.GenerateSerial();
 
                 foreach (var sim in simulatables)
                 {
