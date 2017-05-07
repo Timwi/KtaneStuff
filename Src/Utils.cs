@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
+using RT.KitchenSink;
 using RT.Util;
 using RT.Util.ExtensionMethods;
+using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -280,6 +284,36 @@ namespace KtaneStuff
                 return (dic[key1][key2] = amount);
             else
                 return (dic[key1][key2] = dic[key1][key2] + amount);
+        }
+
+        public static IEnumerable<DecodeSvgPath.PathPiece> FontToSvgPath(string text, string fontFamily, double emSize)
+        {
+            using (var bmp = new Bitmap(10, 10, PixelFormat.Format32bppArgb))
+            {
+                var gp = new GraphicsPath();
+                gp.AddString(text, new FontFamily(fontFamily), 0, (float) emSize, new PointF(0, 0), new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+
+                var points = gp.PathPoints;
+                var types = gp.PathTypes.Select(b => (PathPointType) b).ToArray();
+
+                var path = new List<DecodeSvgPath.PathPiece>();
+                for (int j = 0; j < gp.PointCount; j++)
+                {
+                    var type =
+                        types[j].HasFlag(PathPointType.Bezier) ? DecodeSvgPath.PathPieceType.Curve :
+                        types[j].HasFlag(PathPointType.Line) ? DecodeSvgPath.PathPieceType.Line : DecodeSvgPath.PathPieceType.Move;
+                    if (type == DecodeSvgPath.PathPieceType.Curve)
+                    {
+                        yield return new DecodeSvgPath.PathPiece(DecodeSvgPath.PathPieceType.Curve, points.Subarray(j, 3).Select(p => new PointD(p)).ToArray());
+                        j += 2;
+                    }
+                    else
+                        yield return new DecodeSvgPath.PathPiece(type, points.Subarray(j, 1).Select(p => new PointD(p)).ToArray());
+
+                    if (types[j].HasFlag(PathPointType.CloseSubpath))
+                        yield return DecodeSvgPath.PathPiece.End;
+                }
+            }
         }
     }
 }

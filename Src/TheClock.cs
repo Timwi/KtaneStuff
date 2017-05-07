@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
+using System.Text.RegularExpressions;
 using KtaneStuff.Modeling;
 using RT.KitchenSink;
 using RT.Util;
@@ -31,11 +31,11 @@ namespace KtaneStuff
         {
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockFrame.obj", GenerateObjFile(ClockFrame(), "ClockFrame"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\Clockface.obj", GenerateObjFile(Clockface(), "Clockface"));
-            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockfaceBackground.obj", GenerateObjFile(Disc(90), "ClockfaceBackground"));
+            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockfaceBackground.obj", GenerateObjFile(Disc(12), "ClockfaceBackground"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\SecondHand.obj", GenerateObjFile(Cylinder(-.9 / 6, .9, .01), "SecondHand"));
 
-            GenerateNumerals();
-            GenerateHands();
+            //GenerateNumerals();
+            //GenerateHands();
         }
 
         private static void GenerateHands()
@@ -309,7 +309,7 @@ namespace KtaneStuff
             const double depth = .05;
             const double bevelRadius = .05;
             const int revSteps = 4;
-            const int circleSteps = 90;
+            const int circleSteps = 48;
             const double circleInnerRadius = 1;
             const double circleOuterRadius = 1.02;
             const double nodeRadius = .03;
@@ -329,73 +329,69 @@ namespace KtaneStuff
                 yield return c;
         }
 
-        public static void ClockDiagram()
+        public static void ClockDiagrams()
         {
-            var multipliers = new[] { 3, 5, 2, 2 };
+            // Minutes
+            clockDiagram(@"D:\c\KTANE\HTML\img\The Clock\Minutes Chart.svg", "Minutes", 1, 1.24,
+                new RingInfo { Labels = new[] { "Arrows", "Lines", "Spades" }, Horiz = true, FontSize = .8, HFactor = 32, InnerD = .35, OuterD = .6 },
+                new RingInfo { Labels = new[] { "R", "G", "B", "Y", "O" }, Horiz = true, FontSize = .6, HFactor = 24, InnerD = .35, OuterD = .6 },
+                new RingInfo { Labels = new[] { "B", "W" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .4, OuterD = .6 },
+                new RingInfo { Labels = new[] { "Ab", "Pr" }, Horiz = false, FontSize = .4, HFactor = 12, InnerD = .4, OuterD = .55 });
+
+            // Hours
+            clockDiagram(@"D:\c\KTANE\HTML\img\The Clock\Hours Chart.svg", "Hours", 1 / .8, 1,
+                new RingInfo { Labels = new[] { "Arabic", "Roman", "None" }, Horiz = true, FontSize = .8, HFactor = 32, InnerD = .35, OuterD = .6 },
+                new RingInfo { Labels = new[] { "Silver", "Gold" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .4, OuterD = .55 },
+                new RingInfo { Labels = new[] { "Matched", "Unmatched" }, Horiz = true, FontSize = .4, HFactor = 12, InnerD = .4, OuterD = .55 });
+        }
+
+        sealed class RingInfo
+        {
+            public string[] Labels;
+            public bool Horiz;
+            public double FontSize;
+            public double HFactor;
+            public double InnerD;
+            public double OuterD;
+        }
+
+        static void clockDiagram(string outputFile, string centerText, double xSizeFac, double ySizeFac, params RingInfo[] rings)
+        {
             var factor = 1;
-            var startAngle = 3.0;
             var svg = new StringBuilder();
             var text = new StringBuilder();
             var circ = 0;
             var innerCirc = 1;
+            var offset = rings.Aggregate(180, (p, n) => p / n.Labels.Length);
 
-            var writingSvg = XDocument.Parse(File.ReadAllText(@"D:\Daten\Upload\TheAuthorOfOZ\Writing.svg")).Root;
-            var writingG = writingSvg.Elements().FirstOrDefault(e => e.Name.LocalName == "g");
-            var getPieces = Ut.Lambda((string id, double dx, double dy) => DecodeSvgPath.DecodePieces(writingG.Elements().Single(e => e.Name.LocalName == "path" && e.Attribute("id").Value == id).Attributes().Single(a => a.Name.LocalName == "d").Value).Select(piece => piece.Select(p => new PointD(p.X + dx, p.Y + dy) / 35)).ToList());
-            var writings = new[] { getPieces("Arabic", -50, -90 - 952.36218), getPieces("Roman", -50, -60 - 952.36218), getPieces("None", -50, -30 - 952.36218) };
-
-            foreach (var mul in multipliers)
+            foreach (var ring in rings)
             {
-                factor *= mul;
                 svg.Append(mkCircle(0, 0, circ + innerCirc, "none", "#000", .05));
-                startAngle += 180.0 / factor;
-                for (int i = 0; i < factor; i++)
+                for (int i = 0; i < ring.Labels.Length * factor; i++)
                 {
-                    var angle = (i * 360 / factor + startAngle) % 360;
-                    svg.Append($"<line x1='0' y1='{circ + innerCirc}' x2='0' y2='{circ + 1 + innerCirc}' transform='rotate({angle})' fill='none' stroke='#000' stroke-width='.03' />");
+                    var lineAngle = (i * 360 / (ring.Labels.Length * factor) + offset) % 360;
+                    svg.Append($"<line x1='0' y1='{circ + innerCirc}' x2='0' y2='{circ + 1 + innerCirc}' transform='rotate({lineAngle})' fill='none' stroke='#000' stroke-width='.03' />");
+                    var textAngle = (lineAngle + 180 / ring.Labels.Length / factor) % 360;
+                    var label = ring.Labels[i % ring.Labels.Length];
 
-                    switch (circ)
+                    if (ring.Horiz)
                     {
-                        case 0:
-                            var writing = writings[i % writings.Length];
-                            angle = (angle + 150) % 360;
-                            if (angle > 180)
-                                svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + .2 + innerCirc).Apply(r => new PointD((-p.Y + r) * cos(angle + p.X * 30), (-p.Y + r) * sin(angle + p.X * 30))))).JoinString(" ")}' fill='#000' stroke='none' />");
-                            else
-                                svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + .7 + innerCirc).Apply(r => new PointD((p.Y + r) * cos(angle - p.X * 30), (p.Y + r) * sin(angle - p.X * 30))))).JoinString(" ")}' fill='#000' stroke='none' />");
-                            break;
-
-                        case 1:
-                            {
-                                var lbls = new[] { "BW", "B", "G", "Y", "R", "P", "G", "BW", "R", "B", "Y", "P", "R", "G", "B" };
-                                if (angle < 90 || angle >= 270)
-                                    text.Append($"<text x='0' y='{-circ - .325 - innerCirc}' transform='rotate({angle})' fill='#000' font-size='.5' text-anchor='middle' font-family='Special Elite'>{lbls[(i + 3) % lbls.Length]}</text>");
-                                else
-                                    text.Append($"<text x='0' y='{circ + .675 + innerCirc}' transform='rotate({angle + 180})' fill='#000' font-size='.5' text-anchor='middle' font-family='Special Elite'>{lbls[(i + 3) % lbls.Length]}</text>");
-                            }
-                            break;
-
-                        case 2:
-                            {
-                                var lbls = new[] { "Lin", "Arw", "Spd" };
-                                if (angle < 90 || angle >= 270)
-                                    text.Append($"<text x='{circ + .5 + innerCirc}' y='0' transform='rotate({angle + 2})' fill='#000' font-size='.4' text-anchor='middle' font-family='Special Elite'>{lbls[i % lbls.Length]}</text>");
-                                else
-                                    text.Append($"<text x='{-circ - .5 - innerCirc}' y='0' transform='rotate({angle - 2 + 180})' fill='#000' font-size='.4' text-anchor='middle' font-family='Special Elite'>{lbls[i % lbls.Length]}</text>");
-                            }
-                            break;
-
-                        case 3:
-                            {
-                                var lbls = new[] { "Ma", "Un", "Ab" };
-                                if (angle < 90 || angle >= 270)
-                                    text.Append($"<text x='{circ + .5 + innerCirc}' y='.0' transform='rotate({angle + 1 + 3})' fill='#000' font-size='.3' text-anchor='middle' font-family='Special Elite'>{lbls[i % lbls.Length]}</text>");
-                                else
-                                    text.Append($"<text x='{-circ - .5 - innerCirc}' y='.0' transform='rotate({angle - 1 + 180 + 3})' fill='#000' font-size='.3' text-anchor='middle' font-family='Special Elite'>{lbls[i % lbls.Length]}</text>");
-                            }
-                            break;
+                        var writing = Utils.FontToSvgPath(label, "Special Elite", ring.FontSize);
+                        var textAngle2 = textAngle + 90;
+                        if (textAngle < 90 || textAngle >= 270)
+                            svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + ring.OuterD + innerCirc).Apply(r => new PointD((r + p.Y) * cos(textAngle2 - p.X * ring.HFactor), (r + p.Y) * sin(textAngle2 - p.X * ring.HFactor))))).JoinString(" ")}' fill='#000' stroke='none' />");
+                        else
+                            svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + ring.InnerD + innerCirc).Apply(r => new PointD((r - p.Y) * cos(textAngle2 + p.X * ring.HFactor), (r - p.Y) * sin(textAngle2 + p.X * ring.HFactor))))).JoinString(" ")}' fill='#000' stroke='none' />");
+                    }
+                    else
+                    {
+                        if (textAngle < 90 || textAngle >= 270)
+                            text.Append($"<text x='{circ + .5 + innerCirc}' y='0' transform='rotate({textAngle + 1.5})' fill='#000' font-size='{ring.FontSize}' text-anchor='middle' font-family='Special Elite'>{ring.Labels[i % ring.Labels.Length]}</text>");
+                        else
+                            text.Append($"<text x='{-circ - .5 - innerCirc}' y='0' transform='rotate({textAngle - 1.5 + 180})' fill='#000' font-size='{ring.FontSize}' text-anchor='middle' font-family='Special Elite'>{ring.Labels[i % ring.Labels.Length]}</text>");
                     }
                 }
+                factor *= ring.Labels.Length;
                 circ++;
             }
             svg.Append(mkCircle(0, 0, circ + innerCirc, "none", "#000", .05));
@@ -407,9 +403,10 @@ namespace KtaneStuff
                     svg.Append($"<line x1='0' y1='{circ + .5 + innerCirc}' x2='0' y2='{circ + 1 + innerCirc}' transform='rotate({i * 360 / 60})' fill='none' stroke='#000' stroke-width='.1' />");
             circ++;
 
-            svg.Append(mkCircle(0, 0, .1));
+            svg.Append($"<text x='0' y='.1' fill='#000' font-size='.4' text-anchor='middle' font-family='Special Elite'>{centerText}</text>");
 
-            File.WriteAllText(@"D:\c\KTANE\TheClock\Manual\img\The Clock\Wheel Chart.svg", $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='{-circ - innerCirc - .2} {-circ - innerCirc - .2} {2 * (circ + innerCirc) + .4} {2 * (circ + innerCirc) + .4}'>{svg}<g>{text}</g></svg>");
+            var match = File.Exists(outputFile) ? Regex.Match(File.ReadAllText(outputFile), @"(?<=<!--%%-->).*(?=<!--%%%-->)", RegexOptions.Singleline) : null;
+            File.WriteAllText(outputFile, $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='{-circ - innerCirc - .2} {-circ - innerCirc - .2} {(2 * (circ + innerCirc) + .4) * xSizeFac} {(2 * (circ + innerCirc) + .4) * ySizeFac}'>{svg}{(text.Length > 0 ? $"<g>{text}</g>" : null)}<!--%%-->{(match != null && match.Success ? match.Value : null)}<!--%%%--></svg>");
         }
 
         private static string mkCircle(double cx, double cy, double r, string fill = null, string stroke = null, double? strokeWidth = null)
