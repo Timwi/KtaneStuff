@@ -106,7 +106,8 @@ namespace KtaneStuff
 
                         if (answer != 0)
                             return 0;
-                        answer = ((x + 3) % 4) + 1;
+                        // The coordinate is 0-based, but the answer needs to be 1-based.
+                        answer = (x % 4) + 1;
 
                         next:;
                     }
@@ -119,7 +120,8 @@ namespace KtaneStuff
 
                         if (answer != 0)
                             return 0;
-                        answer = ((y + 3) % 4) + 1;
+                        // The coordinate is 0-based, but the answer needs to be 1-based.
+                        answer = (y % 4) + 1;
 
                         next:;
                     }
@@ -138,7 +140,8 @@ namespace KtaneStuff
                                 for (int yy = -1; yy < 2; yy++)
                                     if (arr[x + xx][y + yy] != isWhite)
                                         goto next;
-                            return ((x + 3) % 4) + 1;
+                            // x is 0-based, but the answer needs to be 1-based.
+                            return (x % 4) + 1;
                             next:;
                         }
                     return 0;
@@ -164,13 +167,11 @@ namespace KtaneStuff
                 rowColumnRule,
                 quadrantMajorityRule("There are fewer mostly-white quadrants than mostly-black quadrants ⇒ number of mostly-black quadrants", (b, w, widgets) => w < b, (b, w, widgets, arr) => b),
                 totalCountRule(36, true),
-                quadrantMajorityRule("There are more mostly-white quadrants than mostly-black quadrants ⇒ smallest number of black in any quadrant", (b, w, widgets) => w > b, (b, w, widgets, arr) => getQuadrantCounts(arr).Min()),
+                quadrantMajorityRule("There are more mostly-white quadrants than mostly-black quadrants ⇒ smallest number of black in any quadrant", (b, w, widgets) => w > b, (b, w, widgets, arr) => 16 - getQuadrantCounts(arr).Max()),
                 quadrantCountRule(false),
-                quadrantMajorityRule("There are as many mostly-black quadrants as there are unlit indicators ⇒ number of ports", (b, w, widgets) => w == widgets.GetNumUnlitIndicators(), (b, w, widgets, arr) => widgets.GetNumPorts()),
+                quadrantMajorityRule("There are as many mostly-black quadrants as there are unlit indicators ⇒ number of ports", (b, w, widgets) => b == widgets.GetNumUnlitIndicators(), (b, w, widgets, arr) => widgets.GetNumPorts()),
                 squareRule,
                 quadrantMajorityRule("There are as many mostly-white quadrants as mostly-black quadrants ⇒ first numeric digit of the serial number", (b, w, widgets) => w == b, (b, w, widgets, arr) => Rnd.Next(0, 10)));
-
-            Clipboard.SetText(rules.Select((r, i) => r.Item1.Split('⇒').Apply(ar => $"<tr><th>{i}<td>{ar[0].Trim()}<td>{ar[1].Trim()}</tr>")).JoinString("\n"));
 
             var counts = new int[rules.Length, 4];
             for (int iter = 0; iter < iterations; iter++)
