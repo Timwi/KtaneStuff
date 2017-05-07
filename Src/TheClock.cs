@@ -31,11 +31,10 @@ namespace KtaneStuff
         {
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockFrame.obj", GenerateObjFile(ClockFrame(), "ClockFrame"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\Clockface.obj", GenerateObjFile(Clockface(), "Clockface"));
-            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockfaceBackground.obj", GenerateObjFile(Disc(12), "ClockfaceBackground"));
-            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\SecondHand.obj", GenerateObjFile(Cylinder(-.9 / 6, .9, .01), "SecondHand"));
+            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\SecondHand.obj", GenerateObjFile(Cylinder(-.9 / 6, .9, .01, 8), "SecondHand"));
 
-            //GenerateNumerals();
-            //GenerateHands();
+            GenerateNumerals();
+            GenerateHands();
         }
 
         private static void GenerateHands()
@@ -63,8 +62,9 @@ namespace KtaneStuff
 
         private static IEnumerable<VertexInfo[]> Hand(HandStyle style, int design, double thickness, double length, double depth, double elevation)
         {
-            const double bevelRadius = .01;
-            const int revSteps = 3;
+            const double bevelRadiusOutward = .025;
+            const double bevelRadiusDown = .01;
+            const int revSteps = 45;
             double backLength = length / 6;
             const double bézierSmoothness = .001;
 
@@ -111,7 +111,7 @@ namespace KtaneStuff
 
             foreach (var t in Triangulate(new[] { curve }).Select(arr => arr.Select(p => pt(p.X, depth + elevation, p.Y)).ToArray()))
                 yield return t.Select(p => p.WithNormal(0, 1, 0)).Reverse().ToArray();
-            foreach (var b in BevelFromCurve(curve.Select(p => pt(p.X, depth, p.Y)), bevelRadius, revSteps))
+            foreach (var b in BevelFromCurve(curve.Select(p => pt(p.X, depth, p.Y)), bevelRadiusOutward, bevelRadiusDown, revSteps, Normal.Mine))
                 yield return b.Select(vi => new VertexInfo(vi.Location.Add(y: elevation), vi.Normal)).ToArray();
         }
 

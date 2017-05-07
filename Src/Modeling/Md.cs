@@ -251,17 +251,22 @@ namespace KtaneStuff.Modeling
 
         public static IEnumerable<VertexInfo[]> BevelFromCurve(IEnumerable<Pt> points, double radius, int revSteps, Normal normal = Normal.Average)
         {
+            return BevelFromCurve(points, radius, radius, revSteps, normal);
+        }
+
+        public static IEnumerable<VertexInfo[]> BevelFromCurve(IEnumerable<Pt> points, double radiusOut, double radiusDown, int revSteps, Normal normal = Normal.Average)
+        {
             var pts = points.RemoveConsecutiveDuplicates(true).ToArray();
+            var radiusManip = Ut.Lambda((double a, double b, double t) => a * b / Math.Sqrt(Math.Pow(b * cos(t), 2) + Math.Pow(a * sin(t), 2)));
             return CreateMesh(true, false, pts
                 .Select((p, ix) => new
                 {
                     AxisStart = p,
-                    AxisEnd = p + (pts[(ix + 1) % pts.Length] - p).Normalize() + (p - pts[(ix - 1 + pts.Length) % pts.Length]).Normalize(),
-                    Perpendicular = pts[ix].Add(y: radius)
+                    AxisEnd = p + (pts[(ix + 1) % pts.Length] - p).Normalize() + (p - pts[(ix - 1 + pts.Length) % pts.Length]).Normalize()
                 })
                 .Select(inf => Enumerable.Range(0, revSteps)
-                    .Select(i => -90 * i / (revSteps - 1))
-                    .Select(angle => inf.Perpendicular.Rotate(inf.AxisStart, inf.AxisEnd, angle).Add(y: -radius))
+                    .Select(i => -90.0 * i / (revSteps - 1))
+                    .Select(angle => inf.AxisStart.Add(y: radiusManip(radiusDown, radiusOut, angle)).Rotate(inf.AxisStart, inf.AxisEnd, angle).Add(y: -radiusDown))
                     .Select((p, isFirst, isLast) => isFirst ? new MeshVertexInfo(pt(p.X, p.Y, p.Z), pt(0, 1, 0)) : pt(p.X, p.Y, p.Z, normal, normal, isLast ? Normal.Mine : Normal.Average, Normal.Average))
                     .ToArray())
                 .ToArray());
