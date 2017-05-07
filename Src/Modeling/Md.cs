@@ -76,28 +76,28 @@ namespace KtaneStuff.Modeling
                 yield return Triangulate(polygon).Select(ps => ps.Select(p => pt(p.X, 0, p.Y).WithNormal(0, -1, 0)).ToArray());
         }
 
-        public static Pt[][] Disc(int numVertices = 20, bool reverse = false)
+        public static VertexInfo[][] Disc(int numVertices = 20, bool reverse = false)
         {
             return Enumerable.Range(0, numVertices)
                 .Select(i => new PointD(cos(360.0 * i / numVertices), sin(360.0 * i / numVertices)))
-                .SelectConsecutivePairs(true, (p1, p2) => reverse ? new[] { pt(p1.X, 0, p1.Y), pt(p2.X, 0, p2.Y), pt(0, 0, 0) } : new[] { pt(p1.X, 0, p1.Y), pt(0, 0, 0), pt(p2.X, 0, p2.Y) })
+                .SelectConsecutivePairs(true, (p1, p2) => (reverse ? new[] { pt(p1.X, 0, p1.Y), pt(p2.X, 0, p2.Y), pt(0, 0, 0) } : new[] { pt(p1.X, 0, p1.Y), pt(0, 0, 0), pt(p2.X, 0, p2.Y) }).Select(p => p.WithNormal(0, 1, 0)).ToArray())
                 .ToArray();
         }
 
-        public static Pt[][] Square(bool reverse = false)
+        public static VertexInfo[][] Square(bool reverse = false)
         {
-            var arr = new[] { pt(-1, 0, -1), pt(-1, 0, 1), pt(1, 0, 1), pt(1, 0, -1) };
-            return new[] { reverse ? arr.Reverse().ToArray() : arr };
+            var arr = new[] { pt(-1, 0, -1), pt(-1, 0, 1), pt(1, 0, 1), pt(1, 0, -1) }.Select(p => p.WithNormal(0, 1, 0));
+            return new[] { reverse ? arr.Reverse().ToArray() : arr.ToArray() };
         }
 
         public static Pt[][] Box(bool reverse = false)
         {
             var arrs = Ut.NewArray(
                 new[] { pt(-1, 1, -1), pt(-1, 1, 1), pt(1, 1, 1), pt(1, 1, -1) },
-                new[] { pt(-1, -1, -1), pt(-1, -1, 1), pt(1, -1, 1), pt(1, -1, -1) }.Reverse().ToArray(),
-                new[] { pt(-1, -1, 1), pt(-1, 1, 1), pt(1, 1, 1), pt(1, -1, 1) }.Reverse().ToArray(),
+                new[] { pt(-1, -1, -1), pt(1, -1, 1), pt(-1, -1, 1), pt(1, -1, -1) },
+                new[] { pt(-1, -1, 1), pt(1, 1, 1), pt(-1, 1, 1), pt(1, -1, 1) },
                 new[] { pt(-1, -1, -1), pt(-1, 1, -1), pt(1, 1, -1), pt(1, -1, -1) },
-                new[] { pt(1, -1, -1), pt(1, -1, 1), pt(1, 1, 1), pt(1, 1, -1) }.Reverse().ToArray(),
+                new[] { pt(1, -1, -1), pt(1, 1, 1), pt(1, -1, 1), pt(1, 1, -1) },
                 new[] { pt(-1, -1, -1), pt(-1, -1, 1), pt(-1, 1, 1), pt(-1, 1, -1) }
             );
             return reverse ? arrs.Select(arr => arr.Reverse().ToArray()).ToArray() : arrs;
