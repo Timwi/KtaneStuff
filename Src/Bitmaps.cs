@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using KtaneStuff.Modeling;
+using RT.Util;
+using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
+using RT.Util.Text;
 
 namespace KtaneStuff
 {
+    using static Edgework;
     using static Md;
 
     static class Bitmaps
@@ -46,6 +51,177 @@ namespace KtaneStuff
                         .ToArray()
                 ).ToArray();
             return CreateMesh(false, true, arr);
+        }
+
+        public static void Simulations()
+        {
+            const int iterations = 100000;
+            const int quadrantCount = 5;
+
+            var getQuadrantCounts = Ut.Lambda((bool[][] arr) =>
+            {
+                var qCounts = new int[4];
+                for (int x = 0; x < 8; x++)
+                    for (int y = 0; y < 8; y++)
+                        if (arr[x][y])
+                            qCounts[(y / 4) * 2 + (x / 4)]++;
+                return qCounts;
+            });
+
+            var quadrantCountRule = Ut.Lambda((bool white) => new Tuple<string, Func<bool[][], Widget[], int>>(
+                $"Exactly one quadrant has {quadrantCount} or fewer {(white ? "white" : "black")} pixels ⇒ number of {(white ? "white" : "black")} pixels in the other 3 quadrants",
+                (arr, edgework) =>
+                {
+                    var qCounts = getQuadrantCounts(arr);
+                    if ((white ? qCounts.Count(sum => sum <= quadrantCount) : qCounts.Count(sum => sum >= (16 - quadrantCount))) != 1)
+                        return 0;
+                    var qIx = (white ? qCounts.IndexOf(sum => sum <= quadrantCount) : qCounts.IndexOf(sum => sum >= (16 - quadrantCount))) + 1;
+                    return (qCounts.Where((sum, ix) => ix != qIx).Sum() + 3) % 4 + 1;
+                }));
+
+            var totalCountRule = Ut.Lambda((int num, bool white) => new Tuple<string, Func<bool[][], Widget[], int>>(
+                $"The entire bitmap has {num} or more {(white ? "white" : "black")} pixels ⇒ number of {(white ? "white" : "black")} pixels",
+                (arr, edgework) =>
+                {
+                    var sum = 0;
+                    for (int x = 0; x < 8; x++)
+                        for (int y = 0; y < 8; y++)
+                            sum += (arr[x][y] ^ white) ? 0 : 1;
+                    if (sum >= num)
+                        return ((sum + 3) % 4) + 1;
+                    return 0;
+                }));
+
+            var rowColumnRule = new Tuple<string, Func<bool[][], Widget[], int>>(
+                "Exactly one row or column is completely white or completely black ⇒ x- or y-coordinate",
+                (arr, edgework) =>
+                {
+                    int answer = 0;
+                    for (int x = 0; x < 8; x++)
+                    {
+                        var isWhite = arr[x][0];
+                        for (int y = 1; y < 8; y++)
+                            if (arr[x][y] != isWhite)
+                                goto next;
+
+                        if (answer != 0)
+                            return 0;
+                        answer = ((x + 3) % 4) + 1;
+
+                        next:;
+                    }
+                    for (int y = 0; y < 8; y++)
+                    {
+                        var isWhite = arr[0][y];
+                        for (int x = 1; x < 8; x++)
+                            if (arr[x][y] != isWhite)
+                                goto next;
+
+                        if (answer != 0)
+                            return 0;
+                        answer = ((y + 3) % 4) + 1;
+
+                        next:;
+                    }
+                    return answer;
+                });
+
+            var squareRule = new Tuple<string, Func<bool[][], Widget[], int>>(
+                "There is a 3×3 square that is completely white or completely black ⇒ x-coordinate of center of first in reading order",
+                (arr, edgework) =>
+                {
+                    for (int x = 1; x < 7; x++)
+                        for (int y = 1; y < 7; y++)
+                        {
+                            var isWhite = arr[x][y];
+                            for (int xx = -1; xx < 2; xx++)
+                                for (int yy = -1; yy < 2; yy++)
+                                    if (arr[x + xx][y + yy] != isWhite)
+                                        goto next;
+                            return ((x + 3) % 4) + 1;
+                            next:;
+                        }
+                    return 0;
+                });
+
+            var quadrantMajorityRule = Ut.Lambda((string name, Func<int, int, Widget[], bool> compare, Func<int, int, Widget[], bool[][], int> getAnswer) => new Tuple<string, Func<bool[][], Widget[], int>>(
+                name,
+                (arr, widgets) =>
+                {
+                    var quadrantCounts = new int[4];
+                    for (int x = 0; x < 8; x++)
+                        for (int y = 0; y < 8; y++)
+                            if (arr[x][y])
+                                quadrantCounts[(x / 4) * 2 + (y / 4)]++;
+                    var w = quadrantCounts.Count(q => q > 8);
+                    var b = quadrantCounts.Count(q => q < 8);
+                    return compare(b, w, widgets) ? ((getAnswer(b, w, widgets, arr) + 3) % 4) + 1 : 0;
+                }));
+
+            var rules = Ut.NewArray(
+                quadrantCountRule(true),
+                quadrantMajorityRule("There are as many mostly-white quadrants as there are lit indicators ⇒ number of batteries", (b, w, widgets) => w == widgets.GetNumLitIndicators(), (b, w, widgets, arr) => widgets.GetNumBatteries()),
+                rowColumnRule,
+                quadrantMajorityRule("There are fewer mostly-white quadrants than mostly-black quadrants ⇒ number of mostly-black quadrants", (b, w, widgets) => w < b, (b, w, widgets, arr) => b),
+                totalCountRule(36, true),
+                quadrantMajorityRule("There are more mostly-white quadrants than mostly-black quadrants ⇒ smallest number of black in any quadrant", (b, w, widgets) => w > b, (b, w, widgets, arr) => getQuadrantCounts(arr).Min()),
+                quadrantCountRule(false),
+                quadrantMajorityRule("There are as many mostly-black quadrants as there are unlit indicators ⇒ number of ports", (b, w, widgets) => w == widgets.GetNumUnlitIndicators(), (b, w, widgets, arr) => widgets.GetNumPorts()),
+                squareRule,
+                quadrantMajorityRule("There are as many mostly-white quadrants as mostly-black quadrants ⇒ first numeric digit of the serial number", (b, w, widgets) => w == b, (b, w, widgets, arr) => Rnd.Next(0, 10)));
+
+            Clipboard.SetText(rules.Select((r, i) => r.Item1.Split('⇒').Apply(ar => $"<tr><th>{i}<td>{ar[0].Trim()}<td>{ar[1].Trim()}</tr>")).JoinString("\n"));
+
+            var counts = new int[rules.Length, 4];
+            for (int iter = 0; iter < iterations; iter++)
+            {
+                var widgets = GenerateWidgets();
+                var bitmap = Ut.NewArray(8, 8, (_, __) => Rnd.Next(0, 2) == 0);
+                var startRule = Rnd.Next(0, rules.Length);
+
+                var answer = 0;
+                string rule;
+                int ruleIndex;
+                for (int r = 0; r < rules.Length; r++)
+                {
+                    ruleIndex = (r + startRule) % rules.Length;
+                    var tup = rules[ruleIndex];
+                    answer = tup.Item2(bitmap, widgets);
+                    if (answer != 0)
+                    {
+                        rule = tup.Item1;
+                        goto found;
+                    }
+                }
+                Console.WriteLine(rules.Select(r => r.Item2(bitmap, widgets)).JoinString(", "));
+                System.Diagnostics.Debugger.Break();
+                break;
+
+                found:;
+                counts[ruleIndex, answer - 1]++;
+            }
+
+            var tt = new TextTable { ColumnSpacing = 2 };
+            var ruleCounts = new int[rules.Length];
+
+            for (int a = 0; a < 4; a++)
+            {
+                tt.SetCell(a + 1, 0, (a + 1).ToString().Color(ConsoleColor.White), alignment: HorizontalTextAlignment.Right);
+                tt.SetCell(a + 1, rules.Length + 1, ((Enumerable.Range(0, rules.Length).Sum(r => counts[r, a]) * 100 / (double) iterations).ToString("0.0") + "%").Color(ConsoleColor.Green), alignment: HorizontalTextAlignment.Right);
+            }
+
+            for (int r = 0; r < rules.Length; r++)
+            {
+                tt.SetCell(0, r + 1, rules[r].Item1.Color(ConsoleColor.Cyan).Apply(s => s.ColorSubstring(s.IndexOf('⇒'), ConsoleColor.DarkCyan)), alignment: HorizontalTextAlignment.Right);
+                for (int a = 0; a < 4; a++)
+                    tt.SetCell(a + 1, r + 1, ((counts[r, a] * 100 / (double) iterations).ToString("0.0") + "%").Color(ConsoleColor.Magenta), alignment: HorizontalTextAlignment.Right);
+                tt.SetCell(5, r + 1, ((Enumerable.Range(0, 4).Sum(a => counts[r, a]) * 100 / (double) iterations).ToString("0.0") + "%").Color(ConsoleColor.White), alignment: HorizontalTextAlignment.Right);
+                ruleCounts[r] += Enumerable.Range(0, 4).Sum(a => counts[r, a]);
+            }
+
+            tt.WriteToConsole();
+            Console.WriteLine();
+            ConsoleUtil.WriteLine("Ratio of most likely to least likely rule: {0/White:0.0}".Color(ConsoleColor.White).Fmt(ruleCounts.Max() / (double) ruleCounts.Min()));
         }
 
         private static IEnumerable<VertexInfo[]> Button()
