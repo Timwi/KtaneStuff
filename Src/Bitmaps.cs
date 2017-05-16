@@ -46,7 +46,7 @@ namespace KtaneStuff
                     Enumerable.Range(0, roundSteps).Select((i, ft, lt) => new { Normal = ft || lt ? Normal.Mine : Normal.Average, Angle = i * 90 / (roundSteps - 1) + 90, X = -1, Y = 1 })).Concat(
                     Enumerable.Range(0, roundSteps).Select((i, ft, lt) => new { Normal = ft || lt ? Normal.Mine : Normal.Average, Angle = i * 90 / (roundSteps - 1) + 180, X = -1, Y = -1 })).Concat(
                     Enumerable.Range(0, roundSteps).Select((i, ft, lt) => new { Normal = ft || lt ? Normal.Mine : Normal.Average, Angle = i * 90 / (roundSteps - 1) + 270, X = 1, Y = -1 }))
-                        .Select(inf => pt(size * inf.X + bi.Into * cos(inf.Angle), bi.Y, size * inf.Y + bi.Into * sin(inf.Angle), bi.Before, bi.After, inf.Normal, inf.Normal))
+                        .Select(inf => pt(size * inf.X + bi.X * cos(inf.Angle), bi.Y, size * inf.Y + bi.X * sin(inf.Angle), bi.Before, bi.After, inf.Normal, inf.Normal))
                         .Reverse()
                         .ToArray()
                 ).ToArray();
@@ -241,7 +241,7 @@ namespace KtaneStuff
                     Enumerable.Range(0, roundSteps).Select((i, ft, lt) => new { Normal = ft || lt ? Normal.Mine : Normal.Average, Angle = i * 90 / (roundSteps - 1) + 90, X = -1, Y = 1 })).Concat(
                     Enumerable.Range(0, roundSteps).Select((i, ft, lt) => new { Normal = ft || lt ? Normal.Mine : Normal.Average, Angle = i * 90 / (roundSteps - 1) + 180, X = -1, Y = -1 })).Concat(
                     Enumerable.Range(0, roundSteps).Select((i, ft, lt) => new { Normal = ft || lt ? Normal.Mine : Normal.Average, Angle = i * 90 / (roundSteps - 1) + 270, X = 1, Y = -1 }))
-                        .Select(inf => pt(innerSize * inf.X + bi.Into * cos(inf.Angle), bi.Y, innerSize * inf.Y + bi.Into * sin(inf.Angle), bi.Before, bi.After, inf.Normal, inf.Normal))
+                        .Select(inf => pt(innerSize * inf.X + bi.X * cos(inf.Angle), bi.Y, innerSize * inf.Y + bi.X * sin(inf.Angle), bi.Before, bi.After, inf.Normal, inf.Normal))
                         .Reverse()
                         .ToArray()
                 ).ToArray();

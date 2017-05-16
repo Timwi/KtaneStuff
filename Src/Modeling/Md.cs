@@ -279,6 +279,7 @@ namespace KtaneStuff.Modeling
         public static double pow(double x, double y) => Math.Pow(x, y);
         public static Pt pt(double x, double y, double z) => new Pt(x, y, z);
         public static MeshVertexInfo pt(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) => new MeshVertexInfo(new Pt(x, y, z), befX, afX, befY, afY);
+        public static MeshVertexInfo pt(double x, double y, double z, Pt normalOverride) => new MeshVertexInfo(new Pt(x, y, z), normalOverride);
         public static PointD p(double x, double y) => new PointD(x, y);
 
         public static Pt[] MoveX(this Pt[] face, double x) { return face.Select(p => p.Add(x: x)).ToArray(); }
@@ -359,26 +360,7 @@ namespace KtaneStuff.Modeling
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
-            return selectIterator(source, selector);
-        }
-
-        private static IEnumerable<TResult> selectIterator<T, TResult>(IEnumerable<T> source, Func<T, bool, bool, TResult> selector)
-        {
-            var isFirst = true;
-            T elem;
-            using (var e = source.GetEnumerator())
-            {
-                if (!e.MoveNext())
-                    yield break;
-                elem = e.Current;
-                while (e.MoveNext())
-                {
-                    yield return selector(elem, isFirst, false);
-                    isFirst = false;
-                    elem = e.Current;
-                }
-                yield return selector(elem, isFirst, true);
-            }
+            return selectIterator(source, (elem, ix, f, l) => selector(elem, f, l));
         }
 
         public static IEnumerable<TResult> Select<T, TResult>(this IEnumerable<T> source, Func<T, int, bool, bool, TResult> selector)

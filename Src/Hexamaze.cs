@@ -69,7 +69,7 @@ namespace KtaneStuff
                 .Concat(new BevelPoint(0, h, Normal.Mine, Normal.Mine))
                 .Select(bi =>
                     new[] { new { Angle = 90, Dist = .1 }, new { Angle = 190, Dist = .5 }, new { Angle = -10, Dist = .5 } }
-                        .Select(info => pt(bi.Into * info.Dist * cos(info.Angle), bi.Y, bi.Into * info.Dist * sin(info.Angle), bi.Before, bi.After, Normal.Mine, Normal.Mine))
+                        .Select(info => pt(bi.X * info.Dist * cos(info.Angle), bi.Y, bi.X * info.Dist * sin(info.Angle), bi.Before, bi.After, Normal.Mine, Normal.Mine))
                         .ToArray()
                 ).ToArray());
         }

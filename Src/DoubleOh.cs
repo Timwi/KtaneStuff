@@ -57,16 +57,16 @@ namespace KtaneStuff
                 Bézier(p(depth, depth), p(depth - béFac, depth), p(0, béFac), p(0, -.2), 20).Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)))
                 .Select(bi => Ut.NewArray(
                     // Bottom right
-                    bpa(-1 + bi.Into, bi.Y, -ratio + bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(-1 + bi.X, bi.Y, -ratio + bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     // Top right
-                    bpa(-1 + bi.Into, bi.Y, ratio - bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(-1 + bi.X, bi.Y, ratio - bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     // Top left
-                    bpa(1 - bi.Into, bi.Y, ratio - bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(1 - bi.X, bi.Y, ratio - bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     // Bottom left
-                    bpa(1 - bi.Into, bi.Y, -ratio + bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(1 - bi.X, bi.Y, -ratio + bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     null
                 ).Where(x => x != null).SelectMany(x => x).ToArray()).ToArray());

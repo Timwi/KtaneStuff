@@ -222,16 +222,16 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 Bézier(p(h, h), p(h - f, h), p(0, f), p(0, 0), 20).Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)))
                 .Select(bi => Ut.NewArray(
                     // Bottom right
-                    bpa(-1 + bi.Into, bi.Y, -.5 + bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(-1 + bi.X, bi.Y, -.5 + bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     // Top right
-                    quarterCircle(.5, bi.Into).Reverse().Select((p, first, last) => pt(-1 + p.X, bi.Y, 1 - p.Z, bi.Before, bi.After, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)),
+                    quarterCircle(.5, bi.X).Reverse().Select((p, first, last) => pt(-1 + p.X, bi.Y, 1 - p.Z, bi.Before, bi.After, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)),
 
                     // Top left
-                    bpa(1 - bi.Into, bi.Y, 1 - bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(1 - bi.X, bi.Y, 1 - bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     // Bottom left
-                    quarterCircle(.5, bi.Into).Reverse().Select((p, first, last) => pt(1 - p.X, bi.Y, -.5 + p.Z, bi.Before, bi.After, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)),
+                    quarterCircle(.5, bi.X).Reverse().Select((p, first, last) => pt(1 - p.X, bi.Y, -.5 + p.Z, bi.Before, bi.After, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)),
 
                     null
                 ).Where(x => x != null).SelectMany(x => x).ToArray()).ToArray());
@@ -256,16 +256,16 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 Bézier(p(h, h), p(h - f, h), p(0, f), p(0, 0), 20).Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)))
                 .Select(bi => Ut.NewArray(
                     // Bottom right
-                    bpa(-1 + bi.Into, bi.Y, -1 + bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(-1 + bi.X, bi.Y, -1 + bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     // Top right
-                    bpa(-1 + bi.Into, bi.Y, -.55 - bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(-1 + bi.X, bi.Y, -.55 - bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     // Top left
-                    bpa(.5 - bi.Into, bi.Y, -.55 - bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(.5 - bi.X, bi.Y, -.55 - bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     // Bottom left
-                    bpa(.5 - bi.Into, bi.Y, -1 + bi.Into, bi.Before, bi.After, Normal.Mine, Normal.Mine),
+                    bpa(.5 - bi.X, bi.Y, -1 + bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine),
 
                     null
                 ).Where(x => x != null).SelectMany(x => x).ToArray()).ToArray());
@@ -281,7 +281,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 .Concat(new BevelPoint(0, h, Normal.Mine, Normal.Mine))
                 .Select(bi => Enumerable.Range(0, 3)
                 .Select(i => 360 * i / 3 + 90)
-                .Select(angle => pt(bi.Into * cos(angle), bi.Y, bi.Into * sin(angle), bi.Before, bi.After, Normal.Mine, Normal.Mine))
+                .Select(angle => pt(bi.X * cos(angle), bi.Y, bi.X * sin(angle), bi.Before, bi.After, Normal.Mine, Normal.Mine))
                 .ToArray()
             ).ToArray());
         }
@@ -292,12 +292,15 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             var h = .05;
             var steps = 72;
             return CreateMesh(false, true,
-                new BevelPoint(.00, .00, Normal.Mine, Normal.Mine).Concat(
+                new BevelPoint(.00, .00, normal: pt(0, -1, 0)).Concat(
                 Bézier(p(.2, 0), p(.2, f), p(.2 - h + f, h), p(.2 - h, h), 20).Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)))
-                .Concat(new BevelPoint(0, h, Normal.Mine, Normal.Mine))
+                .Concat(new BevelPoint(0, h, normal: pt(0, 1, 0)))
                 .Select(bi => Enumerable.Range(0, steps).Select(i => 360d * i / steps)
-                .Select(angle => pt(bi.Into * cos(angle), bi.Y, bi.Into * sin(angle), bi.Before, bi.After, Normal.Average, Normal.Average)
-            ).ToArray()).ToArray());
+                .Select(angle => bi.NormalOverride == null
+                    ? pt(bi.X * cos(angle), bi.Y, bi.X * sin(angle), bi.Before, bi.After, Normal.Average, Normal.Average)
+                    : pt(bi.X * cos(angle), bi.Y, bi.X * sin(angle), bi.NormalOverride.Value))
+                .ToArray())
+            .ToArray());
         }
 
         private static IEnumerable<VertexInfo[]> SelectorCylinder()
@@ -323,8 +326,8 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 .Select(bi => Enumerable.Range(0, 7)
                     .Select(i => new { One = (i - 1d / 14 + .5) * 360d / 7, Two = (i + 1d / 14 + .5) * 360d / 7 })
                     .SelectMany(angles => Ut.NewArray(
-                        pt(bi.Into, bi.Y * cos(angles.One), bi.Y * sin(angles.One), bi.Before, bi.After, Normal.Mine, Normal.Theirs),
-                        pt(bi.Into, bi.Y * cos(angles.Two), bi.Y * sin(angles.Two), bi.Before, bi.After, Normal.Theirs, Normal.Mine)
+                        pt(bi.X, bi.Y * cos(angles.One), bi.Y * sin(angles.One), bi.Before, bi.After, Normal.Mine, Normal.Theirs),
+                        pt(bi.X, bi.Y * cos(angles.Two), bi.Y * sin(angles.Two), bi.Before, bi.After, Normal.Theirs, Normal.Mine)
                     )).ToArray())
                 .ToArray());
         }
