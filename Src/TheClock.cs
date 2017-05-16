@@ -22,9 +22,9 @@ namespace KtaneStuff
     {
         enum HandStyle
         {
-            Line,
-            Arrow,
-            Spade
+            Lines,
+            Arrows,
+            Spades
         }
 
         public static void DoModels()
@@ -32,6 +32,9 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockFrame.obj", GenerateObjFile(ClockFrame(), "ClockFrame"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\Clockface.obj", GenerateObjFile(Clockface(), "Clockface"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\SecondHand.obj", GenerateObjFile(Cylinder(-.9 / 6, .9, .01, 8), "SecondHand"));
+            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\AM.obj", GenerateObjFile(AmPm("AM"), "AM"));
+            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\PM.obj", GenerateObjFile(AmPm("PM"), "PM"));
+            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\Knob.obj", GenerateObjFile(Knob(), "Knob"));
 
             GenerateNumerals();
             GenerateHands();
@@ -41,7 +44,7 @@ namespace KtaneStuff
         {
             foreach (var minute in new[] { false, true })
             {
-                foreach (var style in new[] { HandStyle.Line, HandStyle.Arrow, HandStyle.Spade })
+                foreach (var style in new[] { HandStyle.Lines, HandStyle.Arrows, HandStyle.Spades })
                 {
                     for (int design = 0; design < 2; design++)
                     {
@@ -71,21 +74,21 @@ namespace KtaneStuff
             PointD[] curve = null;
             switch (style)
             {
-                case HandStyle.Line:
+                case HandStyle.Lines:
                     curve = Ut.NewArray(
                         new[] { p(-thickness / 2, -backLength), p(thickness / 2, -backLength), p(thickness / 2, length), p(-thickness / 2, length) },
                         new[] { p(-thickness * 3 / 2, -backLength), p(thickness * 3 / 2, -backLength), p(-thickness / 100, length), p(thickness / 100, length) }
                     )[design];
                     break;
 
-                case HandStyle.Arrow:
+                case HandStyle.Arrows:
                     curve = Ut.NewArray(
                         new[] { p(-thickness * 2, -backLength), p(0, -backLength * 4 / 5), p(thickness * 2, -backLength), p(thickness / 5, length * .85), p(thickness * 4, length * .77), p(0, length), p(-thickness * 4, length * .77), p(-thickness / 5, length * .85) },
                         new[] { p(-thickness / 2, -backLength), p(thickness / 2, -backLength), p(thickness / 2, length * .85), p(thickness * 3, length * .85), p(0, length), p(-thickness * 3, length * .85), p(-thickness / 2, length * .85) }
                     )[design];
                     break;
 
-                case HandStyle.Spade:
+                case HandStyle.Spades:
                     double spadeWidth = thickness * 3 / 2;
                     double spadeHeightF = 4;
                     curve = Ut.NewArray(
@@ -329,6 +332,25 @@ namespace KtaneStuff
                 yield return c;
         }
 
+        public static void GenerateComponentSvg()
+        {
+            double[] thickness = { .01, .015 };
+            double[] length = { .8, .6 };
+            double[] backLength = { length[0] / 6, length[1] / 6 };
+            double[] angles = { 132, 12 };
+
+            Utils.ReplaceInFile(@"D:\c\KTANE\HTML\img\Component\The Clock.svg", "<!--%%-->", "<!--%%%-->",
+                $@"
+                    {Enumerable.Range(-2, 5).Select(i => $"<line x1='0' y1='0' x2='1.1' y2='0' transform='rotate({20 * i})' stroke-width='.1' stroke='#000' />").JoinString()}
+                    <circle cx='0' cy='0' r='1' fill='#fff' stroke='#000' stroke-width='.01' />
+                    {Enumerable.Range(0, 2)
+                        .Select(i => $"<path transform='rotate({-angles[i]})' d='M {new[] { p(-thickness[i] * 2, -backLength[i]), p(0, -backLength[i] * 4 / 5), p(thickness[i] * 2, -backLength[i]), p(thickness[i] / 5, length[i] * .85), p(thickness[i] * 4, length[i] * .77), p(0, length[i]), p(-thickness[i] * 4, length[i] * .77), p(-thickness[i] / 5, length[i] * .85) }.Select(p => $"{p.X},{p.Y}").JoinString(" ")} z' stroke='none' fill='#000' />")
+                        .JoinString()
+                    }
+                    {Enumerable.Range(1, 12).Select(i => $"<path transform='translate({.8 * cos(i * 30 + 270)}, {.8 * sin(i * 30 + 270) + .05})' d='{Utils.FontToSvgPath(i.ToString(), "Agency FB", .35f).JoinString(" ")}' fill='#000' />").JoinString()}
+                ");
+        }
+
         public static void GenerateCharts()
         {
             // Minutes
@@ -414,6 +436,37 @@ namespace KtaneStuff
             // Amazingly, Google Chrome fails to print SVGs with <circle>! To work around that, simulate a circle using Bézier curves
             double bf = r * (Math.Sqrt(2) - 1) * 4 / 3;
             return $"<path d='M{cx + r},{cy} C{cx + r},{cy + bf} {cx + bf},{cy + r} {cx},{cy + r} {cx - bf},{cy + r} {cx - r},{cy + bf} {cx - r},{cy} {cx - r},{cy - bf} {cx - bf},{cy - r} {cx},{cy - r} {cx + bf},{cy - r} {cx + r},{cy - bf} {cx + r},{cy}' {fill?.Apply(f => $"fill='{f}' ")}{stroke?.Apply(s => $"stroke='{s}' ")}{strokeWidth?.Apply(sw => $"stroke-width='{sw}' ")}/>";
+        }
+
+        private static IEnumerable<VertexInfo[]> AmPm(string text)
+        {
+            var faces = Triangulate(DecodeSvgPath.Do(Utils.FontToSvgPath(text, "Proxima Nova ExCn Rg", 1), .01));
+            var minX = faces.Min(f => f.Min(p => p.X));
+            var maxX = faces.Max(f => f.Max(p => p.X));
+            var minY = faces.Min(f => f.Min(p => p.Y));
+            var maxY = faces.Max(f => f.Max(p => p.Y));
+            var cx = (minX + maxX) / 2;
+            var cy = (minY + maxY) / 2;
+
+            return faces.Select(parr => parr.Select(p => pt(p.X - cx, 0, p.Y - cy).WithNormal(0, 1, 0)).Reverse().ToArray());
+        }
+
+        private static IEnumerable<VertexInfo[]> Knob()
+        {
+            const int revSteps = 45;
+            var middleBézier = SmoothBézier(p(-2, 1.5), p(-3.75, 1.5), p(-4, .75), p(-4, 0), .03).ToArray();
+
+            return CreateMesh(true, false, Enumerable.Range(0, revSteps)
+                .Select(i => -i * 360.0 / revSteps)
+                .Select((angle, ix) =>
+                    new[] { p(0, .6), p(-2, .6) }.Select(p => new { Point = p, AverageNormalX = true, AverageNormalY = false, NormalOverride = false })
+                        .Concat(middleBézier.Select((pt, frst, lst) =>
+                            pt.X > -3 ? new { Point = p(pt.X, pt.Y + (ix % 2 == 0 ? .1 : -.1)), AverageNormalX = false, AverageNormalY = false, NormalOverride = false } :
+                            new { Point = pt, AverageNormalX = true, AverageNormalY = true, NormalOverride = lst }))
+                        .Select(inf => pt(inf.Point.X, 0, inf.Point.Y).RotateX(angle).Apply(rotated =>
+                            inf.NormalOverride ? rotated.WithMeshInfo(-1, 0, 0) : rotated.WithMeshInfo(inf.AverageNormalX ? Normal.Average : Normal.Mine, inf.AverageNormalX ? Normal.Average : Normal.Mine, inf.AverageNormalY ? Normal.Average : Normal.Mine, inf.AverageNormalY ? Normal.Average : Normal.Mine)))
+                        .ToArray())
+                .ToArray());
         }
     }
 }
