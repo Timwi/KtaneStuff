@@ -89,15 +89,21 @@ namespace KtaneStuff
                     .Select(poly => poly.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray());
         }
 
-        private static IEnumerable<VertexInfo[]> ButtonCollider()
+        private static IEnumerable<Pt[]> ButtonCollider()
         {
             var innerRadius = .44;
             var outerRadius = 1.1;
             var angle = 30.0;
+            var vertices = new[] { pt(0, 0, 0), pt(innerRadius * cos(-angle), 0, innerRadius * sin(-angle)), pt(outerRadius, 0, 0), pt(innerRadius * cos(angle), 0, innerRadius * sin(angle)) };
 
-            yield return
-                new[] { p(0, 0), p(innerRadius * cos(angle), innerRadius * sin(angle)), p(outerRadius, 0), p(innerRadius * cos(-angle), innerRadius * sin(-angle)) }
-                    .Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray();
+            // Front face
+            yield return vertices.ToArray();
+            // Back face
+            yield return vertices.Select(v => v.Add(y: .05)).Reverse().ToArray();
+
+            // Walls
+            foreach (var face in vertices.SelectConsecutivePairs(true, (p1, p2) => new[] { p1, p1.Add(y: .05), p2.Add(y: .05), p2 }))
+                yield return face;
         }
 
         private static IEnumerable<IEnumerable<VertexInfo[]>> Flaps()

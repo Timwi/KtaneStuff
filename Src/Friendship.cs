@@ -38,9 +38,10 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelScreenFrame.obj", GenerateObjFile(ScreenFrame(), "ScreenFrame"));
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSelectorFrame.obj", GenerateObjFile(SelectorFrame(), "SelectorFrame"));
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSelectorBtn.obj", GenerateObjFile(SelectorBtn(), "SelectorBtn"));
+            File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSelectorBtnCollider.obj", GenerateObjFile(SelectorBtnCollider(), "SelectorBtnCollider"));
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSelectorCylinder.obj", GenerateObjFile(SelectorCylinder(), "SelectorCylinder"));
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSubmitBtn.obj", GenerateObjFile(SubmitBtn(), "SubmitBtn"));
-            File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelTriangle.obj", GenerateObjFile(Triangle(), "Triangle"));
+            File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSelectorBtnHighlight.obj", GenerateObjFile(SelectorBtnHighlight(), "SelectorBtnHighlight"));
         }
 
         public static void GenerateRawBytes()
@@ -164,7 +165,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
         public static void RenderFriendshipSymbols()
         {
             var ponies = ClassifyJson.DeserializeFile<PonyInfo[]>(_poniesJson);
-            
+
             Enumerable.Range(0, ponies.Length).ParallelForEach(4, i =>
             {
                 var pony = ponies[i];
@@ -332,13 +333,29 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 .ToArray());
         }
 
-        private static IEnumerable<Pt[]> Triangle()
+        private static IEnumerable<Pt[]> SelectorBtnHighlight()
         {
             yield return Enumerable.Range(0, 3)
                 .Select(i => 360 * i / 3 + 90)
                 .Select(angle => pt(.2 * cos(angle), 0, .2 * sin(angle)))
                 .Reverse()
                 .ToArray();
+        }
+
+        private static IEnumerable<Pt[]> SelectorBtnCollider()
+        {
+            var vertices = Enumerable.Range(0, 3)
+                .Select(i => 360 * i / 3 + 90)
+                .Select(angle => pt(.17 * cos(angle), 0, .17 * sin(angle)));
+
+            // Front face
+            yield return vertices.ToArray();
+            // Back face
+            yield return vertices.Select(v => v.Add(y: .05)).Reverse().ToArray();
+
+            // Walls
+            foreach (var face in vertices.SelectConsecutivePairs(true, (p1, p2) => new[] { p1, p1.Add(y: .05), p2.Add(y: .05), p2 }))
+                yield return face;
         }
     }
 }
