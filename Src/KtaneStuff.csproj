@@ -48,6 +48,7 @@
     <Compile Include="Edgework.cs" />
     <Compile Include="Chess.cs" />
     <Compile Include="ChordQualities.cs" />
+    <Compile Include="LedEncryption.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="TheGamepad.cs" />
     <Compile Include="Utils.cs" />
