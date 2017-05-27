@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3DMazeManual.cs" />
+    <Compile Include="CheapCheckout.cs" />
     <Compile Include="Edgework.cs" />
     <Compile Include="Chess.cs" />
     <Compile Include="ChordQualities.cs" />
