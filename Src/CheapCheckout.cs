@@ -172,7 +172,7 @@ namespace KtaneStuff
                     items.OrderBy(item => item.Name).Skip(23 * tblIx).Take(23).Select(item => new TR(new TH { class_ = "item" }._(item.Name), day.Rules.Select(r => new TD(r.Rule(item.Price,
                         (item.Name.ToLowerInvariant().Contains('s') ? Categories.ContainsS : 0) |
                         (fruits.Contains(item.Name) ? Categories.Fruit : 0) |
-                        (sweets.Contains(item.Name) ? Categories.Sweet : 0)).ToString("N2")))))).ToString()).JoinString()}
+                        (sweets.Contains(item.Name) ? Categories.Sweet : 0) | Categories.FixedPrice).ToString("N2")))))).ToString()).JoinString()}
 
                 {new TABLE { class_ = "non-fixed-price-items" }._(
                     day.Rules.Length == 1
@@ -184,7 +184,7 @@ namespace KtaneStuff
                     itemsLb.OrderBy(item => item.Name).Select(item => new TR(new TH { class_ = "item" }._(item.Name), day.Rules.SelectMany(r => new[] { .5m, 1m, 1.5m }.Select(x => new TD(r.Rule(decimal.Round(item.Price * x, 2),
                         (item.Name.ToLowerInvariant().Contains('s') ? Categories.ContainsS : 0) |
                         (fruits.Contains(item.Name) ? Categories.Fruit : 0) |
-                        (sweets.Contains(item.Name) ? Categories.Sweet : 0) | Categories.FixedPrice).ToString("N2"))))))).ToString()}
+                        (sweets.Contains(item.Name) ? Categories.Sweet : 0)).ToString("N2"))))))).ToString()}
 
                 <div class='clear'></div>
             </div>
