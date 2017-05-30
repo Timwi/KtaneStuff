@@ -97,12 +97,12 @@ namespace KtaneStuff
             var vertices = new[] { pt(0, 0, 0), pt(innerRadius * cos(-angle), 0, innerRadius * sin(-angle)), pt(outerRadius, 0, 0), pt(innerRadius * cos(angle), 0, innerRadius * sin(angle)) };
 
             // Front face
-            yield return vertices.ToArray();
+            yield return vertices.Select(v => v.Add(y: -.25)).ToArray();
             // Back face
             yield return vertices.Select(v => v.Add(y: .05)).Reverse().ToArray();
 
             // Walls
-            foreach (var face in vertices.SelectConsecutivePairs(true, (p1, p2) => new[] { p1, p1.Add(y: .05), p2.Add(y: .05), p2 }))
+            foreach (var face in vertices.SelectConsecutivePairs(true, (p1, p2) => new[] { p1.Add(y: -.25), p1.Add(y: .05), p2.Add(y: .05), p2.Add(y: -.25) }))
                 yield return face;
         }
 
