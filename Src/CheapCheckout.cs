@@ -81,8 +81,8 @@ namespace KtaneStuff
                     Name = "Monday",
                     FlavourText = "Meddle with murderous money on Malleable Monday!",
                     Rules = Ut.NewArray(
-                        new { Name = "1/3|5", Rule = Ut.Lambda((decimal d, Categories categories) => !categories.HasFlag(Categories.FixedPrice) ? decimal.Round(d * .85m, 2, MidpointRounding.AwayFromZero) : d) },
-                        new { Name = "2/4|6", Rule = Ut.Lambda((decimal d, Categories categories) => categories.HasFlag(Categories.FixedPrice) ? decimal.Round(d * .85m, 2, MidpointRounding.AwayFromZero) : d) })
+                        new { Name = "1/3|5", Rule = Ut.Lambda((decimal d, Categories categories) => categories.HasFlag(Categories.FixedPrice) ? decimal.Round(d * .85m, 2, MidpointRounding.AwayFromZero) : d) },
+                        new { Name = "2/4|6", Rule = Ut.Lambda((decimal d, Categories categories) => !categories.HasFlag(Categories.FixedPrice) ? decimal.Round(d * .85m, 2, MidpointRounding.AwayFromZero) : d) })
                 },
                 new
                 {
