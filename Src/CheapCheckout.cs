@@ -113,20 +113,20 @@ namespace KtaneStuff
                     Name = "Thursday",
                     FlavourText = "Throw out your thunderous things throughout Thrilling Thursday!",
                     Rules = Ut.NewArray(
-                        new { Name = "1/3|5", Rule = Ut.Lambda((decimal d, Categories categories) => decimal.Round(d / 2, 2)) },
+                        new { Name = "1/3|5", Rule = Ut.Lambda((decimal d, Categories categories) => decimal.Round(d / 2, 2, MidpointRounding.AwayFromZero)) },
                         new { Name = "2/4|6", Rule = Ut.Lambda((decimal d, Categories categories) => d) })
                 },
                 new
                 {
                     Name = "Friday",
                     FlavourText = "Fancy your fellow fleshy friends on Fruity Friday!",
-                    Rules = Ut.NewArray(new { Name = "", Rule = Ut.Lambda((decimal d, Categories categories) => categories.HasFlag(Categories.Fruit) ? decimal.Round(d * 1.25m, 2) : d) })
+                    Rules = Ut.NewArray(new { Name = "", Rule = Ut.Lambda((decimal d, Categories categories) => categories.HasFlag(Categories.Fruit) ? decimal.Round(d * 1.25m, 2, MidpointRounding.AwayFromZero) : d) })
                 },
                 new
                 {
                     Name = "Saturday",
                     FlavourText = "Stock up your supply of satisfying sugary surprises on Sweet Saturday!",
-                    Rules = Ut.NewArray(new { Name = "", Rule = Ut.Lambda((decimal d, Categories categories) => categories.HasFlag(Categories.Sweet) ? decimal.Round(d * .65m, 2) : d) })
+                    Rules = Ut.NewArray(new { Name = "", Rule = Ut.Lambda((decimal d, Categories categories) => categories.HasFlag(Categories.Sweet) ? decimal.Round(d * .65m, 2, MidpointRounding.AwayFromZero) : d) })
                 },
                 new
                 {
@@ -181,7 +181,7 @@ namespace KtaneStuff
                             new TR(new TH { rowspan = 2 }._("Item"), day.Rules.Select(r => new TH { colspan = 3 }._(r.Name.Contains('|') ? r.Name.Split('|')[1] : r.Name))),
                             new TR(day.Rules.Select(r => new[] { "½ lb", "1 lb", "1½ lb" }.Select(x => new TH(x))))
                         ),
-                    itemsLb.OrderBy(item => item.Name).Select(item => new TR(new TH { class_ = "item" }._(item.Name), day.Rules.SelectMany(r => new[] { .5m, 1m, 1.5m }.Select(x => new TD(r.Rule(decimal.Round(item.Price * x, 2),
+                    itemsLb.OrderBy(item => item.Name).Select(item => new TR(new TH { class_ = "item" }._(item.Name), day.Rules.SelectMany(r => new[] { .5m, 1m, 1.5m }.Select(x => new TD(r.Rule(decimal.Round(item.Price * x, 2, MidpointRounding.AwayFromZero),
                         (item.Name.ToLowerInvariant().Contains('s') ? Categories.ContainsS : 0) |
                         (fruits.Contains(item.Name) ? Categories.Fruit : 0) |
                         (sweets.Contains(item.Name) ? Categories.Sweet : 0)).ToString("N2"))))))).ToString()}
