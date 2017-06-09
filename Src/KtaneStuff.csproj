@@ -53,6 +53,7 @@
     <Compile Include="LedEncryption.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="TheGamepad.cs" />
+    <Compile Include="Zoo.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="GridGenerator.cs" />
     <Compile Include="Hex.cs" />
