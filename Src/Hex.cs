@@ -23,7 +23,7 @@ namespace KtaneStuff
         public static readonly double WidthToHeight = Math.Sqrt(3) / 2;
 
         public static double LargeWidth(int sideLength) => (3 * sideLength - 1) * .5;
-        public static double LargeHeight(int sideLength) => 2 * sideLength - 1;
+        public static double LargeHeight(int sideLength) => (2 * sideLength - 1) * WidthToHeight;
 
         public static IEnumerable<PointD> LargeHexagonOutline(int sideLength, double hexWidth, double expand = 0)
         {
