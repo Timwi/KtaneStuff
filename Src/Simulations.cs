@@ -414,12 +414,11 @@ namespace KtaneStuff
                 if (attempt % hundredths == 0)
                     Console.Write($"{attempt / hundredths}%\r");
 
-                var widgets = Edgework.GenerateWidgets();
-                var serial = Edgework.GenerateSerial();
+                var edgework = Edgework.Generate();
 
                 foreach (var sim in simulatables)
                 {
-                    var result = sim.GetResult(widgets, serial);
+                    var result = sim.GetResult(edgework.Widgets, edgework.SerialNumber);
                     if (result == null)
                         continue;
                     var sr = results[sim.Name];

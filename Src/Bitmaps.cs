@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.Consoles;
@@ -11,7 +10,6 @@ using RT.Util.Text;
 
 namespace KtaneStuff
 {
-    using static Edgework;
     using static Md;
 
     static class Bitmaps
@@ -68,7 +66,7 @@ namespace KtaneStuff
                 return qCounts;
             });
 
-            var quadrantCountRule = Ut.Lambda((bool white) => new Tuple<string, Func<bool[][], Widget[], int>>(
+            var quadrantCountRule = Ut.Lambda((bool white) => new Tuple<string, Func<bool[][], Edgework, int>>(
                 $"Exactly one quadrant has {quadrantCount} or fewer {(white ? "white" : "black")} pixels ⇒ number of {(white ? "white" : "black")} pixels in the other 3 quadrants",
                 (arr, edgework) =>
                 {
@@ -79,7 +77,7 @@ namespace KtaneStuff
                     return (qCounts.Where((sum, ix) => ix != qIx).Sum() + 3) % 4 + 1;
                 }));
 
-            var totalCountRule = Ut.Lambda((int num, bool white) => new Tuple<string, Func<bool[][], Widget[], int>>(
+            var totalCountRule = Ut.Lambda((int num, bool white) => new Tuple<string, Func<bool[][], Edgework, int>>(
                 $"The entire bitmap has {num} or more {(white ? "white" : "black")} pixels ⇒ number of {(white ? "white" : "black")} pixels",
                 (arr, edgework) =>
                 {
@@ -92,7 +90,7 @@ namespace KtaneStuff
                     return 0;
                 }));
 
-            var rowColumnRule = new Tuple<string, Func<bool[][], Widget[], int>>(
+            var rowColumnRule = new Tuple<string, Func<bool[][], Edgework, int>>(
                 "Exactly one row or column is completely white or completely black ⇒ x- or y-coordinate",
                 (arr, edgework) =>
                 {
@@ -128,7 +126,7 @@ namespace KtaneStuff
                     return answer;
                 });
 
-            var squareRule = new Tuple<string, Func<bool[][], Widget[], int>>(
+            var squareRule = new Tuple<string, Func<bool[][], Edgework, int>>(
                 "There is a 3×3 square that is completely white or completely black ⇒ x-coordinate of center of first in reading order",
                 (arr, edgework) =>
                 {
@@ -147,7 +145,7 @@ namespace KtaneStuff
                     return 0;
                 });
 
-            var quadrantMajorityRule = Ut.Lambda((string name, Func<int, int, Widget[], bool> compare, Func<int, int, Widget[], bool[][], int> getAnswer) => new Tuple<string, Func<bool[][], Widget[], int>>(
+            var quadrantMajorityRule = Ut.Lambda((string name, Func<int, int, Edgework, bool> compare, Func<int, int, Edgework, bool[][], int> getAnswer) => new Tuple<string, Func<bool[][], Edgework, int>>(
                 name,
                 (arr, widgets) =>
                 {
@@ -176,7 +174,7 @@ namespace KtaneStuff
             var counts = new int[rules.Length, 4];
             for (int iter = 0; iter < iterations; iter++)
             {
-                var widgets = GenerateWidgets();
+                var edgework = Edgework.Generate();
                 var bitmap = Ut.NewArray(8, 8, (_, __) => Rnd.Next(0, 2) == 0);
                 var startRule = Rnd.Next(0, rules.Length);
 
@@ -187,14 +185,14 @@ namespace KtaneStuff
                 {
                     ruleIndex = (r + startRule) % rules.Length;
                     var tup = rules[ruleIndex];
-                    answer = tup.Item2(bitmap, widgets);
+                    answer = tup.Item2(bitmap, edgework);
                     if (answer != 0)
                     {
                         rule = tup.Item1;
                         goto found;
                     }
                 }
-                Console.WriteLine(rules.Select(r => r.Item2(bitmap, widgets)).JoinString(", "));
+                Console.WriteLine(rules.Select(r => r.Item2(bitmap, edgework)).JoinString(", "));
                 System.Diagnostics.Debugger.Break();
                 break;
 
