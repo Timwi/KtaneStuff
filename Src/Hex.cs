@@ -90,6 +90,20 @@ namespace KtaneStuff
             new Hex(Q, R + 1),
             new Hex(Q - 1, R + 1));
 
+        public static Hex GetDirection(int dir)
+        {
+            switch (dir)
+            {
+                case 0: return new Hex(-1, 0);
+                case 1: return new Hex(0, -1);
+                case 2: return new Hex(1, -1);
+                case 3: return new Hex(1, 0);
+                case 4: return new Hex(0, 1);
+                case 5: return new Hex(-1, 1);
+            }
+            throw new ArgumentException("Invalid direction. Direction must be 0–5.", nameof(dir));
+        }
+
         public int Distance => Math.Max(Math.Abs(Q), Math.Max(Math.Abs(R), Math.Abs(-Q - R)));
 
         public IEnumerable<int> GetEdges(int size)
@@ -132,6 +146,8 @@ namespace KtaneStuff
 
         public static Hex operator +(Hex one, Hex two) => new Hex(one.Q + two.Q, one.R + two.R);
         public static Hex operator -(Hex one, Hex two) => new Hex(one.Q - two.Q, one.R - two.R);
+        public static Hex operator *(Hex hex, int mult) => new Hex(hex.Q * mult, hex.R * mult);
+        public static Hex operator *(int mult, Hex hex) => new Hex(hex.Q * mult, hex.R * mult);
 
         public Hex Rotate(int rotation)
         {
