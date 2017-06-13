@@ -6,12 +6,73 @@ using System.Threading;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
+using KtaneStuff.Modeling;
 
 namespace KtaneStuff
 {
+    using static Md;
+
     sealed class Zoo
     {
-        public static void CreateManualAndPngs()
+        public static void CreateModels()
+        {
+            File.WriteAllText(@"D:\c\KTANE\Zoo\Assets\Models\Door.obj", GenerateObjFile(Door(), "Door"));
+            File.WriteAllText(@"D:\c\KTANE\Zoo\Assets\Models\DoorHighlight.obj", GenerateObjFile(DoorHighlight(), "DoorHighlight"));
+            File.WriteAllText(@"D:\c\KTANE\Zoo\Assets\Models\DoorCollider.obj", GenerateObjFile(DoorCollider(), "DoorCollider"));
+            File.WriteAllText(@"D:\c\KTANE\Zoo\Assets\Models\Pedestal.obj", GenerateObjFile(Pedestal(), "Pedestal"));
+            File.WriteAllText(@"D:\c\KTANE\Zoo\Assets\Models\PedestalHighlight.obj", GenerateObjFile(PedestalHighlight(), "PedestalHighlight"));
+        }
+
+        private static IEnumerable<VertexInfo[]> Door()
+        {
+            const int revSteps = 4;
+            IEnumerable<VertexInfo[]> Slat(double x, double y, double z, double angle, double length, double width, double bevelRadius, double textureOffset) =>
+                new[] { pt(-length, 0, -width), pt(length, 0, -width), pt(length, 0, width), pt(-length, 0, width) }.Apply(poly =>
+                BevelFromCurve(poly, bevelRadius, revSteps)
+                    .Concat(new[] { poly.Reverse().Select(pt => pt.WithNormal(0, 1, 0)).ToArray() })
+                    .Select(arr => arr.Select(v => new VertexInfo(v.Location.RotateY(angle).Add(x: x, y: y, z: z), v.Normal, p((v.Location.X + 1.1) / 2.2, (v.Location.Z + 1.1) / 2.2 + textureOffset))).ToArray()));
+
+            return Ut.NewArray(
+                Slat(.25, 0, .9, 0, .75, .1, .05, 0.2),
+                Slat(0, 0, -.9, 180, 1, .1, .05, -0.22),
+                Slat(.9, -.02, 0, 90, 1, .1, .05, -0.1),
+                Slat(-.9, -.02, -.25, 270, .75, .1, .05, -0.28),
+                Slat(-.6, -.025, .6, 45, .44, .1, .05, -0.4),
+
+                Slat(-.7, -.05, -.2, 90, .75, .086, .025, 0.26),
+                Slat(-.5, -.05, -.1, 90, .85, .086, .025, 0.08),
+                Slat(-.3, -.05, 0, 90, .95, .086, .025, 0.32),
+                Slat(-.1, -.05, 0, 90, .95, .086, .025, 0.02),
+                Slat(.1, -.05, 0, 90, .95, .086, .025, 0.14),
+                Slat(.3, -.05, 0, 90, .95, .086, .025, -0.04),
+                Slat(.5, -.05, 0, 90, .95, .086, .025, 0.38),
+                Slat(.7, -.05, 0, 90, .95, .086, .025, -0.16),
+
+                Slat(.15, -.035, -.15, 135, 1, .1, .0375, -0.34)
+            ).SelectMany(x => x);
+        }
+
+        private static IEnumerable<Pt[]> DoorHighlight()
+        {
+            return new[] { p(-1, -1), p(-1, .53), p(-.81, .53), p(-.53, .81), p(-.53, 1), p(1, 1), p(1, -1) }.Triangulate().Select(f => f.Select(p => pt(p.X, 0, p.Y)).Reverse().ToArray());
+        }
+
+        private static IEnumerable<VertexInfo[]> DoorCollider()
+        {
+            return new[] { p(-1, -1), p(-1, .4), p(-.4, 1), p(1, 1), p(1, -1) }.Extrude(.2f).Select(f => f.Select(v => new VertexInfo(v.Location.Add(y: -.1f), v.Normal, v.Texture)).ToArray());
+        }
+
+        private static IEnumerable<VertexInfo[]> Pedestal()
+        {
+            return Enumerable.Range(0, 6).Select(i => i * 360 / 6).Select(angle => p(cos(angle), sin(angle))).Extrude(.25);
+        }
+
+        private static IEnumerable<Pt[]> PedestalHighlight()
+        {
+            return Enumerable.Range(0, 6).Select(i => i * 360 / 6).Select(angle => p(cos(angle), sin(angle))).Reverse().Triangulate().Select(f => f.Select(p => pt(p.X, 0, p.Y)).Reverse().ToArray());
+        }
+
+        public static void CreateManualAndPngs(bool createPngs = false)
         {
             var inGrid = Ut.NewArray(
                 new { Font = "Animals 2", Ch = '3', Name = "Cow" },
@@ -86,7 +147,7 @@ namespace KtaneStuff
                 new { IsQ = true, Font = "Animals 2", Ch = '\"', Name = "Groundhog" },
                 new { IsQ = true, Font = "Afrika Wildlife B Mammals2", Ch = 'G', Name = "Armadillo" },
                 new { IsQ = true, Font = "Animals 1", Ch = 'F', Name = "Orca" },
-                new { IsQ = false, Font = "Animals 1", Ch = 'E', Name = "Sea Turtle" },
+                new { IsQ = false, Font = "Animals 1", Ch = 'E', Name = "Plesiosaur" },
                 new { IsQ = false, Font = "Animals 1", Ch = 'j', Name = "Penguin" },
                 new { IsQ = false, Font = "Afrika Wildlife B Mammals2", Ch = '!', Name = "Baboon" },
                 new { IsQ = false, Font = "Animals 1", Ch = 'G', Name = "Whale" },
@@ -94,7 +155,7 @@ namespace KtaneStuff
                 new { IsQ = false, Font = "Animals 2", Ch = '\'', Name = "Coyote" },
                 new { IsQ = false, Font = "Animals 1", Ch = '1', Name = "Ram" },
                 new { IsQ = false, Font = "Animals 1", Ch = '0', Name = "Deer" },
-                new { IsQ = false, Font = "Animals 1", Ch = '>', Name = "Alligator" });
+                new { IsQ = false, Font = "Animals 1", Ch = '>', Name = "Crocodile" });
 
             const int sideLength = 5;
 
@@ -140,64 +201,67 @@ namespace KtaneStuff
                 <svg class='small-diagram' viewBox='-1.7 -1.7 3.4 3.4'>
                     <path stroke-width='.01' stroke='#000' fill='none' d='M {new Hex(0, 0).GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />
                     {"Parallel,DVI-D,Stereo RCA,Serial,PS/2,RJ-45".Split(',')
-                        .Select((p, i) => new Hex(0, 0).Neighbors[i].GetCenter(1).Apply(cnt => svgArrow(60 * (i - 1) + 180, cnt.X, cnt.Y, 0, -.15)) + $"<text x='0' y='0' transform='rotate({60 * (i - 1)}) translate(0 1.4)' font-family='Special Elite' font-size='.2' text-anchor='middle'>{p}</text>")
+                        .Select((p, i) => new Hex(0, 0).Neighbors[i].GetCenter(1).Apply(cnt => svgArrow(60 * (i - 1) + 180, cnt.X, cnt.Y, 0, -.15)) + $"<text x='0' y='0' transform='rotate({60 * (i - 1) + (i < 3 ? 0 : 180)}) translate(0 {(i < 3 ? -1.25 : 1.4)})' font-family='Special Elite' font-size='.2' text-anchor='middle'>{p}</text>")
                         .JoinString()}
                 </svg>");
 
-            var seq = inGrid.Zip(Hex.LargeHexagon(sideLength), (ig, hex) => new { Font = ig.Font, Ch = ig.Ch, Name = ig.Name, Hex = (Hex?) hex, IsQ = (bool?) null })
-                .Concat(outsideGrid.Select((og, ix) => new { Font = og.Font, Ch = og.Ch, Name = og.Name, Hex = (Hex?) null, IsQ = (bool?) og.IsQ }));
-
-            var hexDeclarations = new List<string>();
-            var qDeclarations = new Dictionary<string, string>();
-            var rDeclarations = new Dictionary<string, string>();
-            var pngcrs = new List<Thread>();
-            foreach (var inf in seq)
+            if (createPngs)
             {
-                //File.WriteAllText($@"D:\temp\Zoo\{inf.Name}.svg", $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 2 2'>{svgForAnimal(inf.Font, inf.Ch, new Hex(0, 0), sizeFactor: 1)}</svg>");
-                //var stuff = CommandRunner.RunRaw($@"D:\Inkscape\InkscapePortable.exe -z -f ""D:\temp\Zoo\{inf.Name}.svg"" -w 256 -e ""D:\temp\Zoo\{inf.Name}.png""").GoGetOutputText();
-                var thr = new Thread(() =>
+                var seq = inGrid.Zip(Hex.LargeHexagon(sideLength), (ig, hex) => new { Font = ig.Font, Ch = ig.Ch, Name = ig.Name, Hex = (Hex?) hex, IsQ = (bool?) null })
+                    .Concat(outsideGrid.Select((og, ix) => new { Font = og.Font, Ch = og.Ch, Name = og.Name, Hex = (Hex?) null, IsQ = (bool?) og.IsQ }));
+
+                var hexDeclarations = new List<string>();
+                var qDeclarations = new Dictionary<string, string>();
+                var rDeclarations = new Dictionary<string, string>();
+                var pngcrs = new List<Thread>();
+                foreach (var inf in seq)
                 {
-                    //CommandRunner.RunRaw($@"pngcr ""D:\temp\Zoo\{inf.Name}.png"" ""D:\temp\Zoo\{inf.Name}.cr.png""").Go();
-                    lock (hexDeclarations)
-                        if (inf.Hex != null)
-                            hexDeclarations.Add($@"{{ new Hex({inf.Hex.Value.Q}, {inf.Hex.Value.R}), new AnimalInfo {{ Name = ""{inf.Name.CLiteralEscape()}"", Png = new byte[] {{ {File.ReadAllBytes($@"D:\temp\Zoo\{inf.Name}.cr.png").JoinString(", ")} }} }} }}");
-                        else
-                            (inf.IsQ.Value ? qDeclarations : rDeclarations).Add(inf.Name, $@"new AnimalInfo {{ Name = ""{inf.Name.CLiteralEscape()}"", Png = new byte[] {{ {File.ReadAllBytes($@"D:\temp\Zoo\{inf.Name}.cr.png").JoinString(", ")} }} }}");
-                    //File.Delete($@"D:\temp\Zoo\{inf.Name}.png");
-                    //File.Delete($@"D:\temp\Zoo\{inf.Name}.cr.png");
-                });
-                thr.Start();
-                pngcrs.Add(thr);
-            }
-            foreach (var th in pngcrs)
-                th.Join();
+                    //File.WriteAllText($@"D:\temp\Zoo\{inf.Name}.svg", $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 2 2'>{svgForAnimal(inf.Font, inf.Ch, new Hex(0, 0), sizeFactor: 1)}</svg>");
+                    //var stuff = CommandRunner.RunRaw($@"D:\Inkscape\InkscapePortable.exe -z -f ""D:\temp\Zoo\{inf.Name}.svg"" -w 256 -e ""D:\temp\Zoo\{inf.Name}.png""").GoGetOutputText();
+                    var thr = new Thread(() =>
+                    {
+                        CommandRunner.RunRaw($@"pngcr ""D:\temp\Zoo\{inf.Name}.png"" ""D:\temp\Zoo\{inf.Name}.cr.png""").Go();
+                        lock (hexDeclarations)
+                            if (inf.Hex != null)
+                                hexDeclarations.Add($@"{{ new Hex({inf.Hex.Value.Q}, {inf.Hex.Value.R}), new AnimalInfo {{ Name = ""{inf.Name.CLiteralEscape()}"", Png = new byte[] {{ {File.ReadAllBytes($@"D:\temp\Zoo\{inf.Name}.cr.png").JoinString(", ")} }} }} }}");
+                            else
+                                (inf.IsQ.Value ? qDeclarations : rDeclarations).Add(inf.Name, $@"new AnimalInfo {{ Name = ""{inf.Name.CLiteralEscape()}"", Png = new byte[] {{ {File.ReadAllBytes($@"D:\temp\Zoo\{inf.Name}.cr.png").JoinString(", ")} }} }}");
+                        //File.Delete($@"D:\temp\Zoo\{inf.Name}.png");
+                        //File.Delete($@"D:\temp\Zoo\{inf.Name}.cr.png");
+                    });
+                    thr.Start();
+                    pngcrs.Add(thr);
+                }
+                foreach (var th in pngcrs)
+                    th.Join();
 
-            if (hexDeclarations.Count != 61 || qDeclarations.Count != 9 || rDeclarations.Count != 9)
-                System.Diagnostics.Debugger.Break();
+                if (hexDeclarations.Count != 61 || qDeclarations.Count != 9 || rDeclarations.Count != 9)
+                    System.Diagnostics.Debugger.Break();
 
-            File.WriteAllText(@"D:\c\KTANE\Zoo\Assets\Data.cs", $@"using System.Collections.Generic;
+                File.WriteAllText(@"D:\c\KTANE\Zoo\Assets\Data.cs", $@"using System.Collections.Generic;
 
 namespace Zoo
 {{
     public sealed class AnimalInfo {{ public string Name; public byte[] Png; }}
     public static class Data
     {{
-        public static Dictionary<Hex, AnimalInfo> HexRawBytes = new Dictionary<Hex, AnimalInfo>
+        public static Dictionary<Hex, AnimalInfo> Hexes = new Dictionary<Hex, AnimalInfo>
         {{
             {hexDeclarations.JoinString(",\r\n            ")}
         }};
 
-        public static AnimalInfo[] QRawBytes = new AnimalInfo[]
+        public static AnimalInfo[] Qs = new AnimalInfo[]
         {{
             {seq.Where(i => i.IsQ == true).Select(i => qDeclarations[i.Name]).JoinString(",\r\n            ")}
         }};
 
-        public static AnimalInfo[] RRawBytes = new AnimalInfo[]
+        public static AnimalInfo[] Rs = new AnimalInfo[]
         {{
             {seq.Where(i => i.IsQ == false).Select(i => rDeclarations[i.Name]).JoinString(",\r\n            ")}
         }};
     }}
 }}");
+            }
         }
 
         public static void RunSimulation()
@@ -205,12 +269,12 @@ namespace Zoo
             const int iterations = 100000;
             var portTypes = EnumStrong.GetValues<PortType>();
             var portTypeToDir = new int[6];
-            portTypeToDir[(int) PortType.Serial] = 0;
-            portTypeToDir[(int) PortType.PS2] = 1;
-            portTypeToDir[(int) PortType.RJ45] = 2;
-            portTypeToDir[(int) PortType.Parallel] = 3;
-            portTypeToDir[(int) PortType.DVI] = 4;
-            portTypeToDir[(int) PortType.StereoRCA] = 5;
+            portTypeToDir[(int) PortType.Parallel] = 0;
+            portTypeToDir[(int) PortType.DVI] = 1;
+            portTypeToDir[(int) PortType.StereoRCA] = 2;
+            portTypeToDir[(int) PortType.Serial] = 3;
+            portTypeToDir[(int) PortType.PS2] = 4;
+            portTypeToDir[(int) PortType.RJ45] = 5;
 
             var countConds = new Dictionary<string, int>();
             for (int i = 0; i < iterations; i++)
