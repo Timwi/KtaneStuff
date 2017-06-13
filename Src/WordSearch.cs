@@ -118,8 +118,8 @@ namespace WordSearch {{
                 .Select(i => i * 180 / steps + 90)
                 .Select(angle => new[] { pt((xyOuter + grooveHeight) * cos(angle) - .64, 0, (xyOuter + grooveHeight) * sin(angle)), pt(-w / 2 + r * cos(angle), 0, r * sin(angle)) })
                 .ToArray());
-            var topFacePart3 = Triangulate(grooveX.Select(pt => p(pt.X, pt.Y + grooveHeight)).Concat(new[] { p(-w / 2, r), p(w / 2, r) })).Select(f => f.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray()).ToArray();
-            var topFacePart4 = Triangulate(grooveX.Select(pt => p(pt.X, -pt.Y - grooveHeight)).Reverse().Concat(new[] { p(w / 2, -r), p(-w / 2, -r) })).Select(f => f.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray()).ToArray();
+            var topFacePart3 = grooveX.Select(pt => p(pt.X, pt.Y + grooveHeight)).Concat(new[] { p(-w / 2, r), p(w / 2, r) }).Triangulate().Select(f => f.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray()).ToArray();
+            var topFacePart4 = grooveX.Select(pt => p(pt.X, -pt.Y - grooveHeight)).Reverse().Concat(new[] { p(w / 2, -r), p(-w / 2, -r) }).Triangulate().Select(f => f.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray()).ToArray();
 
             return BevelFromCurve(outerCurve, bevelR, steps)
                 .Concat(grooveMainPart).Concat(grooveRound1).Concat(grooveRound2)

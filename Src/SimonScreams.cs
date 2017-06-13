@@ -82,10 +82,11 @@ namespace KtaneStuff
             var holeAngle = 30.0;
 
             return
-                Triangulate(Ut.NewArray<IEnumerable<PointD>>(
+                Ut.NewArray<IEnumerable<PointD>>(
                     new[] { p(-preRadius, 0), p(innerRadius * cos(-angle), innerRadius * sin(-angle)), p(outerRadius, 0), p(innerRadius * cos(angle), innerRadius * sin(angle)) },
                     new[] { p(0, 0), p(holeInnerRadius * cos(holeAngle), holeInnerRadius * sin(holeAngle)), p(holeOuterRadius, 0), p(holeInnerRadius * cos(-holeAngle), holeInnerRadius * sin(-holeAngle)) }.Select(p => p + new PointD(.03, 0))
-                ))
+                )
+                    .Triangulate()
                     .Select(poly => poly.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray());
         }
 

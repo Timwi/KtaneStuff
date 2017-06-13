@@ -76,7 +76,7 @@ namespace KtaneStuff
                     // Walls
                     yield return pointsArr.SelectConsecutivePairs(true, (p1, p2) => p1 == p2 ? null : new[] { pt(p1.X, 0, p1.Y), pt(p2.X, 0, p2.Y), pt(p2.X, y, p2.Y), pt(p1.X, y, p1.Y) }).Where(arr => arr != null);
                     // Face
-                    yield return Triangulate(pointsArr).Select(ps => ps.Select(p => pt(p.X, y, p.Y)).ToArray());
+                    yield return pointsArr.Triangulate().Select(ps => ps.Select(p => pt(p.X, y, p.Y)).ToArray());
                 }
             }
         }

@@ -112,7 +112,7 @@ namespace KtaneStuff
             if (curve == null)
                 throw new InvalidOperationException();
 
-            foreach (var t in Triangulate(new[] { curve }).Select(arr => arr.Select(p => pt(p.X, depth + elevation, p.Y)).ToArray()))
+            foreach (var t in new[] { curve }.Triangulate().Select(arr => arr.Select(p => pt(p.X, depth + elevation, p.Y)).ToArray()))
                 yield return t.Select(p => p.WithNormal(0, 1, 0)).Reverse().ToArray();
             foreach (var b in BevelFromCurve(curve.Select(p => pt(p.X, depth, p.Y)), bevelRadiusOutward, bevelRadiusDown, revSteps, Normal.Mine))
                 yield return b.Select(vi => new VertexInfo(vi.Location.Add(y: elevation), vi.Normal)).ToArray();
@@ -266,10 +266,10 @@ namespace KtaneStuff
                 //var reverse = false;
                 var stuff = DecodeSvgPath.Do(path, bézierSmoothness);
                 PointD[][] ts;
-                try { ts = Triangulate(stuff).ToArray(); }
+                try { ts = stuff.Triangulate().ToArray(); }
                 catch (InvalidOperationException)
                 {
-                    ts = Triangulate(stuff.Select(st => st.Reverse())).ToArray();
+                    ts = stuff.Select(st => st.Reverse()).Triangulate().ToArray();
                     //reverse = true;
                 }
                 foreach (var t in ts)
@@ -440,7 +440,7 @@ namespace KtaneStuff
 
         private static IEnumerable<VertexInfo[]> AmPm(string text)
         {
-            var faces = Triangulate(DecodeSvgPath.Do(Utils.FontToSvgPath(text, "Proxima Nova ExCn Rg", 1), .01));
+            var faces = DecodeSvgPath.Do(Utils.FontToSvgPath(text, "Proxima Nova ExCn Rg", 1), .01).Triangulate();
             var minX = faces.Min(f => f.Min(p => p.X));
             var maxX = faces.Max(f => f.Max(p => p.X));
             var minY = faces.Min(f => f.Min(p => p.Y));

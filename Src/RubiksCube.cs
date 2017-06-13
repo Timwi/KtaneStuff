@@ -79,7 +79,7 @@ namespace KtaneStuff
 
         private static IEnumerable<VertexInfo[]> Shape(string vertices)
         {
-            return Triangulate(vertices.Split(' ').Reverse().Select(coord => coord.Split(',').Select(int.Parse).ToArray()).Select(c => p(c[0] - 5, c[1] - 5) / 6.0)).Select(poly => poly.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray()).ToArray();
+            return vertices.Split(' ').Reverse().Select(coord => coord.Split(',').Select(int.Parse).ToArray()).Select(c => p(c[0] - 5, c[1] - 5) / 6.0).Triangulate().Select(poly => poly.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray()).ToArray();
         }
 
         private static IEnumerable<VertexInfo[]> Reset()

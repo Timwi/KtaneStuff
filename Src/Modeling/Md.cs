@@ -281,7 +281,7 @@ namespace KtaneStuff.Modeling
         public static MeshVertexInfo pt(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) => new MeshVertexInfo(new Pt(x, y, z), befX, afX, befY, afY);
         public static MeshVertexInfo pt(double x, double y, double z, Pt normalOverride) => new MeshVertexInfo(new Pt(x, y, z), normalOverride);
         public static PointD p(double x, double y) => new PointD(x, y);
-
+        
         public static Pt[] MoveX(this Pt[] face, double x) { return face.Select(p => p.Add(x: x)).ToArray(); }
         public static Pt[] MoveY(this Pt[] face, double y) { return face.Select(p => p.Add(y: y)).ToArray(); }
         public static Pt[] MoveZ(this Pt[] face, double z) { return face.Select(p => p.Add(z: z)).ToArray(); }
@@ -393,7 +393,7 @@ namespace KtaneStuff.Modeling
             }
         }
 
-        public static IEnumerable<PointD[]> Triangulate(IEnumerable<PointD> face)
+        public static IEnumerable<PointD[]> Triangulate(this IEnumerable<PointD> face)
         {
             var pgon = face.RemoveConsecutiveDuplicates(true).ToList();
 
@@ -432,7 +432,7 @@ namespace KtaneStuff.Modeling
             yield return pgon.ToArray();
         }
 
-        public static PointD[][] Triangulate(IEnumerable<IEnumerable<PointD>> polygons, bool failNegative = false)
+        public static PointD[][] Triangulate(this IEnumerable<IEnumerable<PointD>> polygons, bool failNegative = false)
         {
             var result = new List<PointD[]>();
             var remaining = polygons.Select(p => new PolygonD(p.RemoveConsecutiveDuplicates(true))).ToList();
