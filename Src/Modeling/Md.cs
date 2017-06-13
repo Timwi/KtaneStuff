@@ -54,15 +54,13 @@ namespace KtaneStuff.Modeling
                 .ToArray());
         }
 
-        public static IEnumerable<VertexInfo[]> Extrude(IEnumerable<IEnumerable<PointD>> polygon, double depth, bool includeBackFace = false)
-        {
-            return extrudeImpl(polygon, depth, includeBackFace).SelectMany(x => x);
-        }
+        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<PointD> polygon, double depth, bool includeBackFace = false) => Extrude(new[] { polygon }, depth, includeBackFace);
+        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<IEnumerable<PointD>> polygons, double depth, bool includeBackFace = false) => extrudeImpl(polygons, depth, includeBackFace).SelectMany(x => x);
 
-        private static IEnumerable<IEnumerable<VertexInfo[]>> extrudeImpl(IEnumerable<IEnumerable<PointD>> polygon, double depth, bool includeBackFace)
+        private static IEnumerable<IEnumerable<VertexInfo[]>> extrudeImpl(IEnumerable<IEnumerable<PointD>> polygons, double depth, bool includeBackFace)
         {
             // Walls
-            foreach (var path in polygon)
+            foreach (var path in polygons)
                 yield return path
                     .SelectConsecutivePairs(true, (p1, p2) => new { P1 = p1, P2 = p2 })
                     .Where(inf => inf.P1 != inf.P2)
@@ -70,10 +68,10 @@ namespace KtaneStuff.Modeling
                     .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.P.X, depth, p1.P.Y).WithNormal(p1.N), pt(p2.P.X, depth, p2.P.Y).WithNormal(p2.N), pt(p2.P.X, 0, p2.P.Y).WithNormal(p2.N), pt(p1.P.X, 0, p1.P.Y).WithNormal(p1.N) });
 
             // Front face
-            yield return Triangulate(polygon).Select(ps => ps.Select(p => pt(p.X, depth, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray());
+            yield return Triangulate(polygons).Select(ps => ps.Select(p => pt(p.X, depth, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray());
             // Back face
             if (includeBackFace)
-                yield return Triangulate(polygon).Select(ps => ps.Select(p => pt(p.X, 0, p.Y).WithNormal(0, -1, 0)).ToArray());
+                yield return Triangulate(polygons).Select(ps => ps.Select(p => pt(p.X, 0, p.Y).WithNormal(0, -1, 0)).ToArray());
         }
 
         public static VertexInfo[][] Disc(int numVertices = 20, bool reverse = false)
@@ -281,7 +279,7 @@ namespace KtaneStuff.Modeling
         public static MeshVertexInfo pt(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) => new MeshVertexInfo(new Pt(x, y, z), befX, afX, befY, afY);
         public static MeshVertexInfo pt(double x, double y, double z, Pt normalOverride) => new MeshVertexInfo(new Pt(x, y, z), normalOverride);
         public static PointD p(double x, double y) => new PointD(x, y);
-        
+
         public static Pt[] MoveX(this Pt[] face, double x) { return face.Select(p => p.Add(x: x)).ToArray(); }
         public static Pt[] MoveY(this Pt[] face, double y) { return face.Select(p => p.Add(y: y)).ToArray(); }
         public static Pt[] MoveZ(this Pt[] face, double z) { return face.Select(p => p.Add(z: z)).ToArray(); }

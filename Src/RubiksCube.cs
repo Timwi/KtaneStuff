@@ -108,7 +108,7 @@ namespace KtaneStuff
                         path.Add(DecodeSvgPath.PathPiece.End);
                 }
 
-                return Extrude(DecodeSvgPath.Do(path, .05), 4);
+                return DecodeSvgPath.Do(path, .05).Extrude(4);
             }
         }
     }
