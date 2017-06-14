@@ -182,7 +182,7 @@ namespace KtaneStuff
             }
 
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Zoo.html", "<!--%%-->", "<!--%%%-->", $@"
-                <svg class='full-diagram' viewBox='-3.5 -4.6 7.5 8.7'>
+                <svg class='full-diagram' viewBox='-3.6 -4.6 7.7 8.7'>
                     {Hex.LargeHexagon(sideLength + 1)
                         .Select(h =>
                             // Along the top edge (11 & 1 o’clock)
