@@ -178,11 +178,12 @@ namespace KtaneStuff
                 return
                     (withHexOutline ? $"<path stroke-width='.01' stroke='#000' fill='#fff' d='M {hexagon.GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />" : null) +
                     arrowAngle.NullOr(aa => svgArrow(aa, hexagon.GetCenter(1).X, hexagon.GetCenter(1).Y, 0, .15)) +
-                    $"<path d='{path.Select(pp => pp.Select(translatePoint)).JoinString(" ")}' fill='#000' />";
+                    $"<path d='{path.Select(pp => pp.Select(translatePoint)).JoinString(" ")}' fill='#000' />" +
+                    $"<path class='highlightable' stroke='none' fill='transparent' d='M {hexagon.GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />";
             }
 
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Zoo.html", "<!--%%-->", "<!--%%%-->", $@"
-                <svg class='full-diagram' viewBox='-3.6 -4.6 7.7 8.7'>
+                <svg class='full-diagram' viewBox='-3.6 -4.6 7.9 8.7'>
                     {Hex.LargeHexagon(sideLength + 1)
                         .Select(h =>
                             // Along the top edge (11 & 1 o’clock)
