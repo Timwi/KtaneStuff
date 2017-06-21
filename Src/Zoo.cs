@@ -64,7 +64,7 @@ namespace KtaneStuff
 
         private static IEnumerable<VertexInfo[]> Pedestal()
         {
-            return Enumerable.Range(0, 6).Select(i => i * 360 / 6).Select(angle => p(cos(angle), sin(angle))).Extrude(.25);
+            return Enumerable.Range(0, 6).Select(i => i * 360 / 6).Select(angle => p(cos(angle), sin(angle))).Extrude(.2);
         }
 
         private static IEnumerable<Pt[]> PedestalHighlight()
