@@ -43,8 +43,6 @@ namespace KtaneStuff
                         new TH(base_.Base),
                         acids.Select(acid =>
                         {
-                            //if (acid.Color == "Green" && base_.Base == "NaOH")
-                            //    System.Diagnostics.Debugger.Break();
                             var acidConcentration = acid.AtomicNumber - base_.AtomicNumber;
                             if ((acid.Anion + base_.Cation).Any("AEIOUaeiou".Contains))
                                 acidConcentration -= 4;
