@@ -9,7 +9,7 @@ using RT.Util;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KtaneStuff")]
-[assembly: AssemblyCopyright("Copyright © Timwi 2016")]
+[assembly: AssemblyCopyright("Copyright © Timwi 2016–2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

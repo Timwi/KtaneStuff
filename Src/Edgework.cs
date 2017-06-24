@@ -15,7 +15,6 @@ namespace KtaneStuff
         public const int NumWidgetTypes = 3;
         public const int NumBatteryTypes = 2;
         public const int NumIndicatorTypes = 2;
-        public const double LitIndicatorProbability = .6;
         public const int NumIndicators = 11;
         public const int NumPortTypes = 6;
 
@@ -24,7 +23,6 @@ namespace KtaneStuff
         public static Edgework Generate(int minWidgets = 5, int maxWidgets = 5, Random rnd = null)
         {
             int next(int mx) => rnd == null ? Rnd.Next(0, mx) : rnd.Next(0, mx);
-            double nextDbl() => rnd == null ? Rnd.NextDouble() : rnd.NextDouble();
 
             var plates = Ut.NewArray(
                 new[] { PortType.Parallel, PortType.Serial },
@@ -43,15 +41,15 @@ namespace KtaneStuff
                 return list.ToArray();
             }
 
+            var takenIndicatorLabels = new HashSet<string>();
             return new Edgework(
 
                 // Widgets
-                Enumerable.Range(0, Rnd.Next(minWidgets, maxWidgets + 1))
+                Enumerable.Range(0, next(maxWidgets - minWidgets + 1) + minWidgets)
                     .Select(i => (WidgetType) next(NumWidgetTypes))
                     .Select(wt => new Widget(
                         batteryType: wt == WidgetType.BatteryHolder ? (BatteryType?) next(NumBatteryTypes) : null,
-                        indicatorType: wt == WidgetType.Indicator ? (IndicatorType?) (nextDbl() < LitIndicatorProbability ? IndicatorType.Lit : IndicatorType.Unlit) : null,
-                        indicator: wt == WidgetType.Indicator ? (Indicator?) next(NumIndicators) : null,
+                        indicator: wt == WidgetType.Indicator ? Indicator.Random(takenIndicatorLabels, rnd) : (Indicator?) null,
                         portTypes: wt == WidgetType.PortPlate
                             ? plates[next(plates.Length)].Apply(plate => fromBits(next(1 << plate.Length), plate))
                             : null))
@@ -61,12 +59,12 @@ namespace KtaneStuff
                 "??DLLD".Select(chs => Rnd.GenerateString(1, chs == 'L' ? "ABCDEFGHIJKLMNEPQRSTUVWXZ" : chs == 'D' ? "0123456789" : "ABCDEFGHIJKLMNEPQRSTUVWXZ0123456789", rnd)).JoinString());
         }
 
-        public bool HasIndicator(Indicator indicator) => Widgets.Any(e => e.Indicator == indicator);
-        public bool HasLitIndicator(Indicator indicator) => Widgets.Any(e => e.Indicator == indicator && e.IndicatorType == IndicatorType.Lit);
-        public bool HasUnlitIndicator(Indicator indicator) => Widgets.Any(e => e.Indicator == indicator && e.IndicatorType == IndicatorType.Unlit);
+        public bool HasIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Label == label);
+        public bool HasLitIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Type == IndicatorType.Lit && e.Indicator.Value.Label == label);
+        public bool HasUnlitIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Type == IndicatorType.Unlit && e.Indicator.Value.Label == label);
         public int GetNumIndicators() => Widgets.Count(e => e.Type == WidgetType.Indicator);
-        public int GetNumLitIndicators() => Widgets.Count(e => e.IndicatorType == IndicatorType.Lit);
-        public int GetNumUnlitIndicators() => Widgets.Count(e => e.IndicatorType == IndicatorType.Unlit);
+        public int GetNumLitIndicators() => Widgets.Count(e => e.Indicator != null && e.Indicator.Value.Type == IndicatorType.Lit);
+        public int GetNumUnlitIndicators() => Widgets.Count(e => e.Indicator != null && e.Indicator.Value.Type == IndicatorType.Unlit);
         public int GetNumBatteries() => Widgets.Sum(e => e.BatteryType == BatteryType.BatteryAA ? 2 : e.BatteryType == BatteryType.BatteryD ? 1 : 0);
         public int GetNumAABatteries() => Widgets.Sum(e => e.BatteryType == BatteryType.BatteryAA ? 2 : 0);
         public int GetNumDBatteries() => Widgets.Sum(e => e.BatteryType == BatteryType.BatteryD ? 1 : 0);
@@ -81,22 +79,41 @@ namespace KtaneStuff
     public enum WidgetType { BatteryHolder, Indicator, PortPlate }
     public enum BatteryType { BatteryAA, BatteryD }
     public enum IndicatorType { Lit, Unlit }
-    public enum Indicator { SND, CLR, CAR, IND, FRQ, SIG, NSA, MSA, TRN, BOB, FRK }
     public enum PortType { DVI, Parallel, PS2, RJ45, Serial, StereoRCA }
+
+    public struct Indicator
+    {
+        public const double LitIndicatorProbability = .6;
+        public string Label;
+        public IndicatorType Type;
+        public static string[] WellKnown = new[] { "SND", "CLR", "CAR", "IND", "FRQ", "SIG", "NSA", "MSA", "TRN", "BOB", "FRK", "NLL" };
+        public static Indicator Random(HashSet<string> taken, Random rnd = null)
+        {
+            var wellknown = WellKnown.Where(w => !taken.Contains(w)).ToArray();
+            var result = new Indicator
+            {
+                Type = (rnd == null ? Rnd.NextDouble() : rnd.NextDouble()) < LitIndicatorProbability ? IndicatorType.Lit : IndicatorType.Unlit,
+                Label = wellknown.Length == 0 || (rnd == null ? Rnd.NextDouble() : rnd.NextDouble()) < .1
+                    ? Enumerable.Range(0, 26).SelectMany(a => Enumerable.Range(0, 26).SelectMany(b => Enumerable.Range(0, 26).Select(c => string.Concat((char) (a + 'A'), (char) (b + 'A'), (char) (c + 'A'))))).Where(l => !taken.Contains(l)).PickRandom(rnd)
+                    : WellKnown.Where(w => !taken.Contains(w)).PickRandom(rnd)
+            };
+            taken.Add(result.Label);
+            return result;
+        }
+        public override string ToString() => $"{Type} {Label}";
+    }
 
     public sealed class Widget
     {
         public BatteryType? BatteryType { get; private set; }
-        public IndicatorType? IndicatorType { get; private set; }
         public Indicator? Indicator { get; private set; }
         public PortType[] PortTypes { get; private set; }
 
-        public WidgetType Type => BatteryType != null ? WidgetType.BatteryHolder : IndicatorType != null ? WidgetType.Indicator : WidgetType.PortPlate;
+        public WidgetType Type => BatteryType != null ? WidgetType.BatteryHolder : Indicator != null ? WidgetType.Indicator : WidgetType.PortPlate;
 
-        public Widget(BatteryType? batteryType, IndicatorType? indicatorType, Indicator? indicator, PortType[] portTypes)
+        public Widget(BatteryType? batteryType, Indicator? indicator, PortType[] portTypes)
         {
             BatteryType = batteryType;
-            IndicatorType = indicatorType;
             Indicator = indicator;
             PortTypes = portTypes;
         }
@@ -105,8 +122,8 @@ namespace KtaneStuff
         {
             if (BatteryType != null)
                 return BatteryType.ToString();
-            if (IndicatorType != null)
-                return IndicatorType.ToString() + " " + Indicator.ToString();
+            if (Indicator != null)
+                return Indicator.ToString();
             if (PortTypes != null)
                 return "Ports: " + PortTypes.JoinString(", ");
             return "Invalid";

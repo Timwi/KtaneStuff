@@ -74,7 +74,7 @@ namespace KtaneStuff
                 {
                     Active = false,
                     Name = "Laundry: 4/2+BOB (“unicorn”)",
-                    GetResult = (ws, serial) => ws.Where(w => w.BatteryType == BatteryType.BatteryAA).Count() == 2 && ws.Any(w => w.Indicator == Indicator.BOB && w.IndicatorType == IndicatorType.Lit) ? yes : null
+                    GetResult = (ws, serial) => ws.Where(w => w.BatteryType == BatteryType.BatteryAA).Count() == 2 && ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Label == "BOB" && w.Indicator.Value.Type == IndicatorType.Lit) ? yes : null
                 },
                 new Simulatable
                 {
@@ -99,7 +99,7 @@ namespace KtaneStuff
                     {
                         return Ut.NewArray(
                             serial.Contains('R') ? "1. serial contains R" :
-                            ws.Any(w => w.Indicator == Indicator.CAR || (w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.TRN)) ? "2. lit TRN or lit/unlit CAR" :
+                            ws.Any(w => w.Type == WidgetType.Indicator && (w.Indicator.Value.Label == "CAR" || (w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "TRN"))) ? "2. lit TRN or lit/unlit CAR" :
                             ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.PS2)) ? "3. PS/2 port" :
                             serial.Contains('7') || serial.Contains('8') ? "4. serial contains 7 or 8" :
                             batteryCount(ws) > 2 || Rnd.Next(0, 4) == 0 ? "5. ≥ 2 batteries or observer on left" : "6. otherwise");
@@ -113,44 +113,44 @@ namespace KtaneStuff
                     {
                         var counts = new int[8];
 
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.BOB)) counts[0]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.CAR)) counts[0]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.IND)) counts[0]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "BOB")) counts[0]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "CAR")) counts[0]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "IND")) counts[0]++;
                         if (ws.Count(w => w.Type == WidgetType.BatteryHolder) % 2 == 0) counts[0]++;
 
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.CAR)) counts[1]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.NSA)) counts[1]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.FRK)) counts[1]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "CAR")) counts[1]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "NSA")) counts[1]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "FRK")) counts[1]++;
                         if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45))) counts[1]++;
 
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.FRQ)) counts[2]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.IND)) counts[2]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.TRN)) counts[2]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "FRQ")) counts[2]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "IND")) counts[2]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "TRN")) counts[2]++;
                         if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.DVI))) counts[2]++;
 
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.SIG)) counts[3]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.SND)) counts[3]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.NSA)) counts[3]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "SIG")) counts[3]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "SND")) counts[3]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "NSA")) counts[3]++;
                         if (ws.Sum(w => w.BatteryType == BatteryType.BatteryAA ? 2 : w.BatteryType == BatteryType.BatteryD ? 1 : 0) % 2 == 0) counts[3]++;
 
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.BOB)) counts[4]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.CLR)) counts[4]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "BOB")) counts[4]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "CLR")) counts[4]++;
                         if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.PS2))) counts[4]++;
                         if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial))) counts[4]++;
 
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.FRQ)) counts[5]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.SIG)) counts[5]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.TRN)) counts[5]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "FRQ")) counts[5]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "SIG")) counts[5]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "TRN")) counts[5]++;
                         if (serial.Any("02468".Contains)) counts[5]++;
 
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.FRK)) counts[6]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.MSA)) counts[6]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "FRK")) counts[6]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "MSA")) counts[6]++;
                         if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel))) counts[6]++;
                         if (serial.Any("AEIOU".Contains)) counts[6]++;
 
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.CLR)) counts[7]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.MSA)) counts[7]++;
-                        if (ws.Any(w => w.IndicatorType == IndicatorType.Lit && w.Indicator == Indicator.SND)) counts[7]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "CLR")) counts[7]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "MSA")) counts[7]++;
+                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "SND")) counts[7]++;
                         if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.StereoRCA))) counts[7]++;
 
                         var max = counts.Max();
@@ -317,93 +317,9 @@ namespace KtaneStuff
                 new Simulatable
                 {
                     Active = false,
-                    Name = "Rock-Paper-Scissors-Lizard-Spock",
-                    GetResult = (ws, serial) =>
-                    {
-                        return
-                            serial.Contains('R') ? new[] { "Rock", "1" } :
-                            serial.Contains('P') ? new[] { "Paper", "1" } :
-                            serial.Contains('S') ? new[] { "Scissors", "1" } :
-                            serial.Contains('L') ? new[] { "Lizard", "1" } :
-                            serial.Contains('K') ? new[] { "Spock", "1" } :
-
-                            ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45)) ? new[] { "Rock", "2" } :
-                            ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel)) && ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) ? new[] { "Spock", "2" } :
-                            ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel)) ? new[] { "Paper", "2" } :
-                            ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) ? new[] { "Scissors", "2" } :
-                            ws.Any(w => w.Type == WidgetType.Indicator && w.IndicatorType == IndicatorType.Lit) ? new[] { "Lizard", "2" } :
-
-                            ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.StereoRCA)) ? new[] { "Rock", "3" } :
-                            ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.PS2)) ? new[] { "Paper", "3" } :
-                            ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.SND) ? new[] { "Spock", "3" } :
-                            ws.Any(w => w.IndicatorType == IndicatorType.Unlit && w.Indicator == Indicator.SIG) ? new[] { "Scissors", "3" } :
-                            ws.Any(w => w.IndicatorType == IndicatorType.Unlit) ? new[] { "Lizard", "3" } :
-
-                            serial.Any("AEIOU".Contains) ? new[] { "Rock", "4" } :
-                            ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.DVI)) ? new[] { "Paper", "2" } :
-                            batteryCount(ws) % 2 == 0 ? new[] { "Scissors", "4" } :
-                            ws.Any(w => w.BatteryType == BatteryType.BatteryAA) ? new[] { "Lizard", "4" } :
-                            new[] { "Spock", "4" };
-                    }
-                },
-                new Simulatable
-                {
-                    Active = false,
                     Name = "Chess",
-                    GetResult = (ws, serial) =>
-                    {
-                        int numAttempts;
-                        var chessSolution = Chess.GetSolution(serial.Last() % 2 != 0, out numAttempts);
-                        return new[] { chessSolution[6] };
-                        //return new[] { numAttempts.ToString() };
-                    }
-                },
-                new Simulatable
-                {
-                    Active = true,
-                    Name = "Sequential Discharge",
-                    GetResult = (ws, serial) =>
-                    {
-                        //1. If you have a DVI-D port, look at the 3rd light
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.DVI)))
-                            return new[] { "at least one DVI" };
-                        //2. Otherwise, if you have an RJ-45 port, look at the 1st light
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45)))
-                            return new[] { "RJ-45 and no DVI" };
-                        //3. Otherwise, if you have a Sterio RCA port, look at the 4th light
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.StereoRCA)))
-                            return new[] { "Stereo RCA and no RJ-45 or DVI" };
-                        //4. Otherwise, look at the 2nd light                    
-                        return new[] { "no Stereo RCA, RJ-45 or DVI" };
-                    }
-                },
-                new Simulatable { Active = true, Name = "Logic A", GetResult = (ws, serial) => { return new[] { batteryCount(ws) > 2 ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic B", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic C", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel)) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic D", GetResult = (ws, serial) => { return new[] { "AEIOU".Any(serial.Contains) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic E", GetResult = (ws, serial) => { return new[] { !"AEIOU".Any(serial.Contains) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic F", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.StereoRCA)) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic G", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.CLR && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic H", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.IND && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic I", GetResult = (ws, serial) => { return new[] { batteryCount(ws) < 1 ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic J", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.MSA && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic K", GetResult = (ws, serial) => { return new[] { "13579".Contains(serial.Last()) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic L", GetResult = (ws, serial) => { return new[] { "02468".Contains(serial.Last()) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic M", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.FRK && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
-
-                new Simulatable { Active = true, Name = "Logic N", GetResult = (ws, serial) => { return new[] { batteryCount(ws) == 1 ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic O", GetResult = (ws, serial) => { return new[] { batteryCount(ws) == 0 ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic P", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45)) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic Q", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.DVI)) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic R", GetResult = (ws, serial) => { return new[] { batteryCount(ws) > 5 ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic S", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.SIG && w.IndicatorType == IndicatorType.Lit) && ws.Any(w => w.Indicator == Indicator.CAR && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic T", GetResult = (ws, serial) => { return new[] { batteryCount(ws) >= 2 && ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.PS2)) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic U", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) && ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel)) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic V", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Indicator == Indicator.BOB && w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic W", GetResult = (ws, serial) => { return new[] { false ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic X", GetResult = (ws, serial) => { return new[] { portTypeCount(ws) >= 4 ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic Y", GetResult = (ws, serial) => { return new[] { !ws.Any(w => w.IndicatorType == IndicatorType.Lit) ? "Y" : "N" }; } },
-                new Simulatable { Active = true, Name = "Logic Z", GetResult = (ws, serial) => { return new[] { ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45)) && ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) ? "Y" : "N" }; } }
+                    GetResult = (ws, serial) => new[] { Chess.GetSolution(serial.Last() % 2 != 0, out int numAttempts)[6] }
+                }
             ).Where(s => s.Active).ToArray();
 
             var results = new AutoDictionary<string, SimulatedResult>(str => new SimulatedResult());
