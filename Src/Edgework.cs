@@ -59,6 +59,11 @@ namespace KtaneStuff
                 "??DLLD".Select(chs => Rnd.GenerateString(1, chs == 'L' ? "ABCDEFGHIJKLMNEPQRSTUVWXZ" : chs == 'D' ? "0123456789" : "ABCDEFGHIJKLMNEPQRSTUVWXZ0123456789", rnd)).JoinString());
         }
 
+        public override string ToString()
+        {
+            return $"#={SerialNumber}{(Widgets.Any() ? "; " : "")}{Widgets.GroupBy(w => w.Type).Select(g => g.JoinString(", ")).JoinString("; ")}";
+        }
+
         public bool HasIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Label == label);
         public bool HasLitIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Type == IndicatorType.Lit && e.Indicator.Value.Label == label);
         public bool HasUnlitIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Type == IndicatorType.Unlit && e.Indicator.Value.Label == label);
@@ -123,10 +128,12 @@ namespace KtaneStuff
             if (BatteryType != null)
                 return BatteryType.ToString();
             if (Indicator != null)
-                return Indicator.ToString();
-            if (PortTypes != null)
-                return "Ports: " + PortTypes.JoinString(", ");
-            return "Invalid";
+                return Indicator.Value.ToString();
+            if (PortTypes == null)
+                return "Invalid";
+            if (PortTypes.Length == 0)
+                return "Empty port plate";
+            return "Port plate [" + PortTypes.JoinString(", ") + "]";
         }
     }
 }
