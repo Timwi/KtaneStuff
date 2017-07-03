@@ -50,11 +50,13 @@
     <Compile Include="Chess.cs" />
     <Compile Include="ChordQualities.cs" />
     <Compile Include="EliasCube.cs" />
+    <Compile Include="IceCream.cs" />
     <Compile Include="LedEncryption.cs" />
     <Compile Include="Neutralization.cs" />
     <Compile Include="PointOfOrder.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="TheGamepad.cs" />
+    <Compile Include="Yahtzee.cs" />
     <Compile Include="Zoo.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="GridGenerator.cs" />

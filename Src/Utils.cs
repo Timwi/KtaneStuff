@@ -9,6 +9,7 @@ using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using RT.KitchenSink;
+using RT.TagSoup;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
@@ -17,6 +18,32 @@ namespace KtaneStuff
 {
     static class Utils
     {
+        public static HTML CreateManualPage(string moduleName, object[] pages, string onTheSubjectOf = null, string css = null, bool omitDiagram = false)
+        {
+            return new HTML(
+                new HEAD(
+                    new TITLE(moduleName, " — Keep Talking and Nobody Explodes Mod"),
+                    new META { httpEquiv = "Content-Type", content = "text/html; charset=UTF-8" },
+                    new META { name = "viewport", content = "initial-scale=1" },
+                    new LINK { rel = "stylesheet", type = "text/css", href = "css/normalize.css" },
+                    new LINK { rel = "stylesheet", type = "text/css", href = "css/main.css" },
+                    new LINK { rel = "stylesheet", type = "text/css", href = "css/font.css" },
+                    new SCRIPT { src = "js/highlighter.js" },
+                    css.NullOr(c => new STYLELiteral(c))),
+                new BODY(
+                    pages.Select((page, pageIx) => new DIV { class_ = "section" }._(
+                        new DIV { class_ = $"page page-bg-0{Rnd.Next(1, 8)}" }._(
+                            new DIV { class_ = "page-header" }._(
+                                new SPAN { class_ = "page-header-doc-title" }._("Keep Talking and Nobody Explodes Mod"),
+                                new SPAN { class_ = "page-header-section-title" }._(moduleName)),
+                            new DIV { class_ = "page-content" }._(
+                                pageIx > 0 ? null : Ut.NewArray<object>(
+                                    omitDiagram ? null : new IMG { src = $"img/Component/{moduleName}.svg", class_ = "diagram" },
+                                    new H2($"On the Subject of {onTheSubjectOf ?? moduleName}")),
+                                page),
+                            new DIV { class_ = "page-footer relative-footer" }._($"Page {pageIx + 1} of {pages.Length}"))))));
+        }
+
         public static string Create2DMazeSvg(bool[][] nWalls, bool[][] wWalls, char[][] labels = null, bool highlightCorridors = false, bool frame = false, bool omitAxes = false, string extra = null)
         {
             if (nWalls == null)

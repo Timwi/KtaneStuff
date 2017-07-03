@@ -198,13 +198,14 @@ namespace KtaneStuff
                     {Hex.LargeHexagon(sideLength).Select((h, i) => svgForAnimal(inGrid[i].Font, inGrid[i].Ch, h, withHexOutline: true)).JoinString()}
                 </svg>");
 
-            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Zoo.html", "<!--##-->", "<!--###-->", $@"
-                <svg class='small-diagram' viewBox='-1.7 -1.7 3.4 3.4'>
-                    <path stroke-width='.01' stroke='#000' fill='none' d='M {new Hex(0, 0).GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />
-                    {"Parallel,DVI-D,Stereo RCA,Serial,PS/2,RJ-45".Split(',')
-                        .Select((p, i) => new Hex(0, 0).Neighbors[i].GetCenter(1).Apply(cnt => svgArrow(60 * (i - 1) + 180, cnt.X, cnt.Y, 0, -.15)) + $"<text x='0' y='0' transform='rotate({60 * (i - 1) + (i < 3 ? 0 : 180)}) translate(0 {(i < 3 ? -1.25 : 1.4)})' font-family='Special Elite' font-size='.2' text-anchor='middle'>{p}</text>")
-                        .JoinString()}
-                </svg>");
+            foreach (var ch in "#&")
+                Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Zoo.html", $"<!--{ch}{ch}-->", $"<!--{ch}{ch}{ch}-->", $@"
+                    <svg class='small-diagram{(ch == '&' ? " v2" : " v1")}' viewBox='-1.7 -1.7 3.4 3.4'>
+                        <path stroke-width='.01' stroke='#000' fill='none' d='M {new Hex(0, 0).GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />
+                        {"Parallel,DVI-D,Stereo RCA,Serial,PS/2,RJ-45".Split(',')
+                            .Select((p, i) => new Hex(0, 0).Neighbors[i].GetCenter(1).Apply(cnt => svgArrow(60 * (i - 1) + 180, cnt.X, cnt.Y, 0, -.15)) + $"<text x='0' y='0' transform='rotate({60 * (i - 1) + (i < 3 ? 0 : 180)}) translate(0 {(i < 3 ? -1.25 : 1.4)})' font-family='Special Elite' font-size='.2' text-anchor='middle'>{p}</text>")
+                            .JoinString()}
+                    </svg>");
 
             if (createPngs)
             {
