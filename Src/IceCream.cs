@@ -142,15 +142,18 @@ namespace KtaneStuff
             const double w = .05;
             const double t = .1;
 
-            const int bRev = 8;
+            const int bRev = 36;
             const int rev = 36;
+            const int cuts = 4;
 
             var pivot = p(-h * tan(coneAngle), h);
 
             var curve = Enumerable.Range(0, bRev).Select(i => i * (90 - coneAngle) / (bRev - 1)).Select(angle => new { Point = p(-b * sin(angle), -b * cos(angle) + b / sin(coneAngle)), Normal = Normal.Average })
-                .Concat(Enumerable.Range(0, 10).Select(i => i / 9.0).Select(pr => new { Point = p(-b * sin(90 - coneAngle), -b * cos(90 - coneAngle) + b / sin(coneAngle)) * pr + pivot * (1 - pr), Normal = Normal.Mine }));
+                .Concat(Enumerable.Range(0, cuts).Select(i => i / (cuts - 1.0)).Select(pr => new { Point = p(-b * sin(90 - coneAngle), -b * cos(90 - coneAngle) + b / sin(coneAngle)) * (1 - pr) + pivot * pr, Normal = Normal.Mine }));
+            //.Concat(new { Point = p(-b * sin(90 - coneAngle), -b * cos(90 - coneAngle) + b / sin(coneAngle)), Normal = Normal.Mine })
+            //.Concat(new { Point = pivot, Normal = Normal.Mine });
 
-            var surface = Enumerable.Range(0, rev)
+            var surface = Enumerable.Range(0, rev + 1)
                 .Select(i => 360.0 * i / rev)
                 .Select(angle => curve.Select(p => pt(p.Point.X * cos(angle), p.Point.Y, p.Point.X * sin(angle)).WithMeshInfo(Normal.Average, Normal.Average, p.Normal, p.Normal).WithTexture(angle / 360.0, p.Point.Y / (h + t))).ToArray());
 
@@ -162,8 +165,8 @@ namespace KtaneStuff
 
             File.WriteAllText(@"D:\c\KTANE\IceCream\Assets\Models\IceCreamCone.obj",
                 GenerateObjFile(
-                    CreateMesh(true, false, surface.ToArray())
-                        .Concat(CreateMesh(true, false, surface.Reverse().ToArray()))
+                    CreateMesh(false, false, surface.ToArray())
+                        .Concat(CreateMesh(false, false, surface.Reverse().ToArray()))
                         .Concat(CreateMesh(true, true, rim)),
                     "IceCreamCone"));
 
