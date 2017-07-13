@@ -20,7 +20,7 @@ namespace KtaneStuff
 
         private Edgework(Widget[] widgets, string serialNumber) { Widgets = widgets; SerialNumber = serialNumber; }
 
-        public static Edgework Generate(int minWidgets = 5, int maxWidgets = 5, Random rnd = null)
+        public static Edgework Generate(int minWidgets = 5, int maxWidgets = 5, bool allowCustomIndicators = false, Random rnd = null)
         {
             int next(int mx) => rnd == null ? Rnd.Next(0, mx) : rnd.Next(0, mx);
 
@@ -49,7 +49,7 @@ namespace KtaneStuff
                     .Select(i => (WidgetType) next(NumWidgetTypes))
                     .Select(wt => new Widget(
                         batteryType: wt == WidgetType.BatteryHolder ? (BatteryType?) next(NumBatteryTypes) : null,
-                        indicator: wt == WidgetType.Indicator ? Indicator.Random(takenIndicatorLabels, rnd) : (Indicator?) null,
+                        indicator: wt == WidgetType.Indicator ? Indicator.Random(takenIndicatorLabels, rnd, allowCustomIndicators) : (Indicator?) null,
                         portTypes: wt == WidgetType.PortPlate
                             ? plates[next(plates.Length)].Apply(plate => fromBits(next(1 << plate.Length), plate))
                             : null))
@@ -91,16 +91,16 @@ namespace KtaneStuff
         public const double LitIndicatorProbability = .6;
         public string Label;
         public IndicatorType Type;
-        public static string[] WellKnown = new[] { "SND", "CLR", "CAR", "IND", "FRQ", "SIG", "NSA", "MSA", "TRN", "BOB", "FRK", "NLL" };
-        public static Indicator Random(HashSet<string> taken, Random rnd = null)
+        public static string[] WellKnown = new[] { "SND", "CLR", "CAR", "IND", "FRQ", "SIG", "NSA", "MSA", "TRN", "BOB", "FRK" };
+        public static Indicator Random(HashSet<string> taken, Random rnd = null, bool allowCustomIndicators = false)
         {
             var wellknown = WellKnown.Where(w => !taken.Contains(w)).ToArray();
             var result = new Indicator
             {
                 Type = (rnd == null ? Rnd.NextDouble() : rnd.NextDouble()) < LitIndicatorProbability ? IndicatorType.Lit : IndicatorType.Unlit,
-                Label = wellknown.Length == 0 || (rnd == null ? Rnd.NextDouble() : rnd.NextDouble()) < .1
+                Label = (wellknown.Length == 0 || (rnd == null ? Rnd.NextDouble() : rnd.NextDouble()) < .1) && allowCustomIndicators
                     ? Enumerable.Range(0, 26).SelectMany(a => Enumerable.Range(0, 26).SelectMany(b => Enumerable.Range(0, 26).Select(c => string.Concat((char) (a + 'A'), (char) (b + 'A'), (char) (c + 'A'))))).Where(l => !taken.Contains(l)).PickRandom(rnd)
-                    : WellKnown.Where(w => !taken.Contains(w)).PickRandom(rnd)
+                    : wellknown.Length == 0 ? "NLL" : WellKnown.Where(w => !taken.Contains(w)).PickRandom(rnd)
             };
             taken.Add(result.Label);
             return result;

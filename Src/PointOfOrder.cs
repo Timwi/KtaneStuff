@@ -66,7 +66,7 @@ namespace PointOfOrder
             var numRules = 0;
             for (int iter = 0; iter < numIter; iter++)
             {
-                var rules = getRules(Edgework.Generate(5, 10, rnd));
+                var rules = getRules(Edgework.Generate(5, 10, false, rnd));
                 numRules = rules.Length;
                 var puzzle = generatePuzzle(rules, rnd);
 
@@ -585,7 +585,7 @@ namespace PointOfOrder
                         seed++;
                         var conditionsSatisfied = new bool[conditions.Length];
                         var rnd2 = new Random(seed);
-                        var edgeworks = Ut.NewArray(4, _ => Edgework.Generate(5, 10, rnd2));
+                        var edgeworks = Ut.NewArray(4, _ => Edgework.Generate(5, 10, false, rnd2));
                         for (int i = 0; i < edgeworks.Length; i++)
                             for (int j = 0; j < conditions.Length; j++)
                                 conditionsSatisfied[j] = conditionsSatisfied[j] || conditions[j](edgeworks[i]);
@@ -666,7 +666,7 @@ namespace PointOfOrder
                             // Keep trying to find a counter-example
                             while (true)
                             {
-                                var edgework = Edgework.Generate(5, 7, rnd);
+                                var edgework = Edgework.Generate(5, 7, false, rnd);
                                 if (edgework.Widgets.Any(w => w.Type == WidgetType.Indicator && !Indicator.WellKnown.Contains(w.Indicator.Value.Label)))
                                     continue;
                                 var rules = getRules(edgework);
