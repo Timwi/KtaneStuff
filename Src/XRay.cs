@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using KtaneStuff.Modeling;
+using RT.TagSoup;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
@@ -14,11 +17,7 @@ namespace KtaneStuff
 
     static class XRay
     {
-        public static void DoModels()
-        {
-        }
-
-        public unsafe static void SplitImage()
+        public unsafe static void DoManualAndIcons()
         {
             using (var src = new Bitmap(@"D:\c\KTANE\XRay\Data\Icons.png"))
             {
@@ -92,6 +91,21 @@ namespace KtaneStuff
     }}
 }}");
             }
+
+            string iconIxToPath(int i) => i < 12 ? $"img/X-Ray/Icon A{i + 1}.png" : i < 24 ? $"img/X-Ray/Icon B{i - 12 + 1}.png" : $"img/X-Ray/Icon C{i - 24 + 1}.png";
+            const int width = 38;
+
+            var rnd = new Random(47);
+            var icons = Enumerable.Repeat(Enumerable.Range(0, 33), 5).SelectMany(x => x).ToList().Shuffle(rnd);
+
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\X-Ray.html", "<!--%%-->", "<!--%%%-->", new TABLE { class_ = "xray-table xray-table-1" }._(
+                Enumerable.Range(0, 3).Select(row => new TR(Enumerable.Range(0, 3).Select(col => new TD(new IMG { src = $"img/X-Ray/Icon C{row * 3 + col + 1}.png", width = width }))))).ToString());
+
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\X-Ray.html", "<!--##-->", "<!--###-->", new TABLE { class_ = "xray-table xray-table-2" }._(
+                new TR(new TD { class_ = "corner" }, Enumerable.Range(0, 12).Select(col => new TH(new IMG { src = $"img/X-Ray/Icon A{col + 1}.png", width = width }))),
+                Enumerable.Range(0, 12).Select(row => new TR(new TH(new IMG { src = $"img/X-Ray/Icon B{row + 1}.png", width = width }), icons.Skip(12 * row).Take(12).Select(ix => new TD(new IMG { src = iconIxToPath(ix), width = width }))))).ToString());
+
+            Clipboard.SetText($@"private static int[] _table = {{ {icons.Take(12 * 12).JoinString(", ")} }};");
         }
     }
 }
