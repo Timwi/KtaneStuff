@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="3DMazeManual.cs" />
     <Compile Include="Astrology.cs" />
+    <Compile Include="GridLock.cs" />
     <Compile Include="CheapCheckout.cs" />
     <Compile Include="Edgework.cs" />
     <Compile Include="Chess.cs" />
