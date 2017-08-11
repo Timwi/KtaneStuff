@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using KtaneStuff.Modeling;
 using RT.Util;
+using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
-    using System.Windows.Forms;
-    using RT.Util.Json;
-    using RT.Util.Serialization;
     using static Md;
 
     static class Gridlock
@@ -22,9 +22,44 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
             File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
 
+            var trs = new List<Thread>();
+            var files = new byte[12][];
+            using (var bmp = new Bitmap(@"D:\c\KTANE\Gridlock\Sources\Icons.png"))
+                for (int i = 0; i < 12; i++)
+                {
+                    var j = i;
+                    var path1 = $@"D:\c\KTANE\Gridlock\Sources\Icon{i}a.png";
+                    var path2 = $@"D:\c\KTANE\Gridlock\Sources\Icon{i}b.png";
+                    GraphicsUtil.DrawBitmap(bmp.Width / 4, bmp.Height / 3, g =>
+                    {
+                        g.Clear(Color.Transparent);
+                        g.DrawImage(bmp, (-bmp.Width / 4) * (i % 4), (-bmp.Height / 3) * (i / 4));
+                    }).Save(path1);
+                    trs.Add(new Thread(() =>
+                    {
+                        CommandRunner.Run(@"pngcr", path1, path2).Go();
+                        files[j] = File.ReadAllBytes(path2);
+                        File.Delete(path1);
+                        File.Delete(path2);
+                    }));
+                }
+            foreach (var tr in trs)
+                tr.Start();
+            foreach (var tr in trs)
+                tr.Join();
+
+            File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Data.cs", $@"
+namespace GridLock {{
+    static class Data {{
+        public static byte[][] RawPngs = {{
+            {files.Select(f => $"new byte[] {{ {f.JoinString(", ")} }}").JoinString(",\r\n            ")}
+        }};
+    }}
+}}");
+
             //// For pasting into MeshEdit
-            void jsonIntoClipboard(IEnumerable<VertexInfo[]> stuff) => Clipboard.SetText(stuff.Select(face => new JsonDict { { "Hidden", false }, { "Vertices", ClassifyJson.Serialize(face) } }).ToJsonList().ToStringIndented());
-            jsonIntoClipboard(Grid());
+            //void jsonIntoClipboard(IEnumerable<VertexInfo[]> stuff) => Clipboard.SetText(stuff.Select(face => new JsonDict { { "Hidden", false }, { "Vertices", ClassifyJson.Serialize(face) } }).ToJsonList().ToStringIndented());
+            //jsonIntoClipboard(Grid());
             //jsonIntoClipboard(ButtonHole());
             //jsonIntoClipboard(PageNumHole());
         }
@@ -53,14 +88,14 @@ namespace KtaneStuff
         private static IEnumerable<VertexInfo[]> Screen()
         {
             yield return Ut.NewArray(
-                new VertexInfo(pt(.75, 0, 1), pt(0, 1, 0)),
-                new VertexInfo(pt(1, 0, .75), pt(0, 1, 0)),
+                new VertexInfo(pt(.75, 0, 3), pt(0, 1, 0)),
+                new VertexInfo(pt(1, 0, 2.75), pt(0, 1, 0)),
                 new VertexInfo(pt(1, 0, -.75), pt(0, 1, 0)),
                 new VertexInfo(pt(.75, 0, -1), pt(0, 1, 0)),
                 new VertexInfo(pt(-.75, 0, -1), pt(0, 1, 0)),
                 new VertexInfo(pt(-1, 0, -.75), pt(0, 1, 0)),
-                new VertexInfo(pt(-1, 0, .75), pt(0, 1, 0)),
-                new VertexInfo(pt(-.75, 0, 1), pt(0, 1, 0))
+                new VertexInfo(pt(-1, 0, 2.75), pt(0, 1, 0)),
+                new VertexInfo(pt(-.75, 0, 3), pt(0, 1, 0))
             );
         }
 
@@ -137,7 +172,7 @@ namespace KtaneStuff
         }
 
         private static IEnumerable<VertexInfo[]> ButtonHole() => hole(-1, -1, 7.75, 1);
-        private static IEnumerable<VertexInfo[]> PageNumHole() => hole(8.5, -1, 10.5, 1);
+        private static IEnumerable<VertexInfo[]> PageNumHole() => hole(8.5, -1, 10.5, 3);
 
         private static IEnumerable<Pt[]> ButtonHighlight()
         {
