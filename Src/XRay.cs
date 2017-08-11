@@ -77,29 +77,23 @@ namespace KtaneStuff
                         // Textures for the module
                         var modPath = $@"D:\c\KTANE\XRay\Assets\Textures\Icon {"ABC"[y]}{x + 1}.png";
 
-                        if (!File.Exists(manPath2) || !File.Exists(manPath3) || !File.Exists(modPath))
+                        using (var dest = new Bitmap(w, h, PixelFormat.Format32bppArgb))
+                        using (var g = Graphics.FromImage(dest))
                         {
-                            if (!File.Exists(manPath1))
-                            {
-                                using (var dest = new Bitmap(w, h, PixelFormat.Format32bppArgb))
-                                using (var g = Graphics.FromImage(dest))
-                                {
-                                    g.Clear(Color.Transparent);
-                                    g.DrawImage(src, -x * w, -y * h);
-                                    dest.Save(manPath1);
-                                }
-                            }
-
-                            var thr = new Thread(() =>
-                            {
-                                CommandRunner.Run(@"pngcr", manPath1, manPath2).Go();
-                                File.Delete(manPath1);
-                                File.Copy(manPath2, manPath3, overwrite: true);
-                                File.Copy(manPath2, modPath, overwrite: true);
-                            });
-                            thr.Start();
-                            threads.Add(thr);
+                            g.Clear(Color.Transparent);
+                            g.DrawImage(src, -x * w, -y * h);
+                            dest.Save(manPath1);
                         }
+
+                        var thr = new Thread(() =>
+                        {
+                            CommandRunner.Run(@"pngcr", manPath1, manPath2).Go();
+                            File.Delete(manPath1);
+                            File.Copy(manPath2, manPath3, overwrite: true);
+                            File.Copy(manPath2, modPath, overwrite: true);
+                        });
+                        thr.Start();
+                        threads.Add(thr);
 
                         // C# declaration of the bitwise form of the icons
                         var bmpData = src.LockBits(new Rectangle(x * w, y * h, w, h), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);

@@ -282,6 +282,7 @@ namespace KtaneStuff.Modeling
         public static MeshVertexInfo pt(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) => new MeshVertexInfo(new Pt(x, y, z), befX, afX, befY, afY);
         public static MeshVertexInfo pt(double x, double y, double z, Pt normalOverride) => new MeshVertexInfo(new Pt(x, y, z), normalOverride);
         public static PointD p(double x, double y) => new PointD(x, y);
+        public static VertexInfo Move(this VertexInfo vi, double x = 0, double y = 0, double z = 0) { return new VertexInfo(vi.Location.Add(x, y, z), vi.Normal, vi.Texture); }
 
         public static Pt[] MoveX(this Pt[] face, double x) { return face.Select(p => p.Add(x: x)).ToArray(); }
         public static Pt[] MoveY(this Pt[] face, double y) { return face.Select(p => p.Add(y: y)).ToArray(); }
