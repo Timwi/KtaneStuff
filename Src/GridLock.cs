@@ -20,7 +20,6 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Models\Square.obj", GenerateObjFile(Square(), "Square"));
             File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Models\Screen.obj", GenerateObjFile(Screen(), "Screen"));
             File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
-            File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
 
             var trs = new List<Thread>();
             var files = new byte[12][];
@@ -49,7 +48,7 @@ namespace KtaneStuff
                 tr.Join();
 
             File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Data.cs", $@"
-namespace GridLock {{
+namespace Gridlock {{
     static class Data {{
         public static byte[][] RawPngs = {{
             {files.Select(f => $"new byte[] {{ {f.JoinString(", ")} }}").JoinString(",\r\n            ")}
@@ -174,32 +173,6 @@ namespace GridLock {{
         private static IEnumerable<VertexInfo[]> ButtonHole() => hole(-1, -1, 7.75, 1);
         private static IEnumerable<VertexInfo[]> PageNumHole() => hole(8.5, -1, 10.5, 3);
 
-        private static IEnumerable<Pt[]> ButtonHighlight()
-        {
-            Pt transmogrify(Pt v)
-            {
-                var x = -v.X * 0.135 + .66;
-                var z = v.Z * 0.135 - .66;
-                return pt(x, v.Y + .15, z);
-            }
-
-            const double lx = -1.25;
-            const double ty = -1.25;
-            const double rx = 8;
-            const double by = 1.25;
-
-            var a = pt(lx + .4 - .1 * tan(22.5), 0, ty - .1);
-            var b = pt(rx - .4 + .1 * tan(22.5), 0, ty - .1);
-            var e = pt(lx - .1, 0, ty + .4 - .1 * tan(22.5));
-            var f = pt(rx + .1, 0, ty + .4 - .1 * tan(22.5));
-            var k = pt(lx - .1, 0, by - .4 + .1 * tan(22.5));
-            var l = pt(rx + .1, 0, by - .4 + .1 * tan(22.5));
-            var o = pt(lx + .4 - .1 * tan(22.5), 0, by + .1);
-            var p = pt(rx - .4 + .1 * tan(22.5), 0, by + .1);
-
-            yield return new[] { a, b, f, l, p, o, k, e }.Select(transmogrify).Reverse().ToArray();
-        }
-
         private static IEnumerable<VertexInfo[]> Button()
         {
             const double yHeight = .05;
@@ -216,23 +189,24 @@ namespace GridLock {{
             const double ty = -1;
             const double rx = 7.75;
             const double by = 1;
+            const double bevel = .25;
 
-            var a = pt(lx + .25 + .1 * tan(22.5), yHeight, ty + .1).WithNormal(0, 1, 0);
-            var b = pt(rx - .25 - .1 * tan(22.5), yHeight, ty + .1).WithNormal(0, 1, 0);
+            var a = pt(lx + .25 + bevel * tan(22.5), yHeight, ty + bevel).WithNormal(0, 1, 0);
+            var b = pt(rx - .25 - bevel * tan(22.5), yHeight, ty + bevel).WithNormal(0, 1, 0);
             var c = pt(lx + .25, 0, ty).WithNormal(0, 1, -1);
             var d = pt(rx - .25, 0, ty).WithNormal(0, 1, -1);
-            var e = pt(lx + .1, yHeight, ty + .25 + .1 * tan(22.5)).WithNormal(0, 1, 0);
-            var f = pt(rx - .1, yHeight, ty + .25 + .1 * tan(22.5)).WithNormal(0, 1, 0);
+            var e = pt(lx + bevel, yHeight, ty + .25 + bevel * tan(22.5)).WithNormal(0, 1, 0);
+            var f = pt(rx - bevel, yHeight, ty + .25 + bevel * tan(22.5)).WithNormal(0, 1, 0);
             var g = pt(lx, 0, ty + .25).WithNormal(1, 1, 0);
             var h = pt(rx, 0, ty + .25).WithNormal(-1, 1, 0);
             var i = pt(lx, 0, by - .25).WithNormal(1, 1, 0);
             var j = pt(rx, 0, by - .25).WithNormal(-1, 1, 0);
-            var k = pt(lx + .1, yHeight, by - .25 - .1 * tan(22.5)).WithNormal(0, 1, 0);
-            var l = pt(rx - .1, yHeight, by - .25 - .1 * tan(22.5)).WithNormal(0, 1, 0);
+            var k = pt(lx + bevel, yHeight, by - .25 - bevel * tan(22.5)).WithNormal(0, 1, 0);
+            var l = pt(rx - bevel, yHeight, by - .25 - bevel * tan(22.5)).WithNormal(0, 1, 0);
             var m = pt(lx + .25, 0, by).WithNormal(0, 1, 1);
             var n = pt(rx - .25, 0, by).WithNormal(0, 1, 1);
-            var o = pt(lx + .25 + .1 * tan(22.5), yHeight, by - .1).WithNormal(0, 1, 0);
-            var p = pt(rx - .25 - .1 * tan(22.5), yHeight, by - .1).WithNormal(0, 1, 0);
+            var o = pt(lx + .25 + bevel * tan(22.5), yHeight, by - bevel).WithNormal(0, 1, 0);
+            var p = pt(rx - .25 - bevel * tan(22.5), yHeight, by - bevel).WithNormal(0, 1, 0);
 
             foreach (var face in Ut.NewArray(
                 new[] { c, d, b, a },
