@@ -30,11 +30,11 @@ namespace KtaneStuff
                     new TR(new TD { class_ = "corner" }, acids.Select(a => new TH(a.Color))),
                     new TR(
                         new TD { class_ = "corner" },
-                        acids.Select(acid => new TD(new TABLE(
+                        acids.Select(acid => new TD { class_ = "rules-for-base" }._(new TABLE(
                             new TR(new TH("NSA & 3b"), new TD("NH₃")),
                             new TR(new TH("lit CAR/", new WBR(), "FRQ/IND"), new TD("KOH")),
                             new TR(new TH("0 ports & vwl"), new TD("LiOH")),
-                            new TR(new TH(indicators.Where(i => i.Any(acid.Acid.ToUpperInvariant().Contains)).InsertBetween("/").Split(4).InsertBetween<object>(new WBR())), new TD("KOH")),
+                            new TR(new TH("ind.w. ", acid.Acid.ToUpperInvariant().Distinct().Order().JoinString(","), " e.g. ", indicators.Where(i => i.Any(acid.Acid.ToUpperInvariant().Contains)).InsertBetween("/").InsertBetween<object>(new WBR())), new TD("KOH")),
                             new TR(new TH("D > AA"), new TD("NH₃")),
                             new TR(new TH("else"), new TD(acid.AtomicNumber < 20 ? "NaOH" : "LiOH"))
                         )))
@@ -54,10 +54,10 @@ namespace KtaneStuff
                             return new TD { class_ = base_.FilterOff.Contains(acid.Acid) ? "filter-off" : "filter-on" }._(() =>
                             {
                                 if ((acid.Acid == "HI" && base_.Base == "KOH") || (acid.Acid == "HCl" && base_.Base == "NH₃"))
-                                    return new TABLE(new[] { 5, 10, 15, 20 }.Select(volume => new TR(new TH(volume), new TD(volume * acidConcentrationFunc(volume) / 50))));
+                                    return new TABLE(new TR(new TD { class_ = "corner", colspan = 2 }), new[] { 5, 10, 15, 20 }.Select(volume => new TR(new TH(volume), new TD(volume * acidConcentrationFunc(volume) / 50))));
 
                                 return new TABLE(
-                                    new TR(new TD { class_ = "corner" }, new TH("bh"), new TH("pt"), new TH("i"), new TH("=")),
+                                    new TR { class_ = "criteria" }._(new TD { class_ = "corner" }, new TH("bh"), new TH("pt"), new TH("i"), new TH("=")),
                                     new[] { 5, 10, 15, 20 }.Select(volume => new TR(new TH(volume),
                                         new[] { 5, 10, 20, base_.ClosestConcentration }.Select(baseConcentration => new TD(2 * volume * acidConcentrationFunc(volume) / baseConcentration / 5))))
                                 );
