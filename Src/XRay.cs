@@ -66,52 +66,116 @@ namespace KtaneStuff
                 var h = (src.Height / 3);
                 var threads = new List<Thread>();
                 var declarations = new string[33];
-                for (int y = 0; y < 3; y++)
-                    for (int x = 0; x < (y == 2 ? 9 : 12); x++)
+                for (int icY = 0; icY < 3; icY++)
+                    for (int icX = 0; icX < (icY == 2 ? 9 : 12); icX++)
                     {
+                        var code = $"{"ABC"[icY]}{icX + 1}";
+
                         // For the manual
-                        var manPath1 = $@"D:\c\KTANE\XRay\Manual\img\X-Ray\Icon {"ABC"[y]}{x + 1}_.png";
-                        var manPath2 = $@"D:\c\KTANE\XRay\Manual\img\X-Ray\Icon {"ABC"[y]}{x + 1}.png";
-                        var manPath3 = $@"D:\c\KTANE\Public\HTML\img\X-Ray\Icon {"ABC"[y]}{x + 1}.png";
+                        var manPath1 = $@"D:\c\KTANE\XRay\Manual\img\X-Ray\Icon {code}_.png";
+                        var manPath2 = $@"D:\c\KTANE\XRay\Manual\img\X-Ray\Icon {code}.png";
+                        var manPath3 = $@"D:\c\KTANE\Public\HTML\img\X-Ray\Icon {code}.png";
 
                         // Textures for the module
-                        var modPath = $@"D:\c\KTANE\XRay\Assets\Textures\Icon {"ABC"[y]}{x + 1}.png";
+                        var modPath = $@"D:\c\KTANE\XRay\Assets\Textures\Icon {code}.png";
 
                         using (var dest = new Bitmap(w, h, PixelFormat.Format32bppArgb))
                         using (var g = Graphics.FromImage(dest))
                         {
                             g.Clear(Color.Transparent);
-                            g.DrawImage(src, -x * w, -y * h);
+                            g.DrawImage(src, -icX * w, -icY * h);
                             dest.Save(manPath1);
                         }
 
-                        var thr = new Thread(() =>
                         {
-                            CommandRunner.Run(@"pngcr", manPath1, manPath2).Go();
-                            File.Delete(manPath1);
-                            File.Copy(manPath2, manPath3, overwrite: true);
-                            File.Copy(manPath2, modPath, overwrite: true);
-                        });
-                        thr.Start();
-                        threads.Add(thr);
+                            var thr = new Thread(() =>
+                            {
+                                CommandRunner.Run(@"pngcr", manPath1, manPath2).Go();
+                                File.Delete(manPath1);
+                                File.Copy(manPath2, manPath3, overwrite: true);
+                                File.Copy(manPath2, modPath, overwrite: true);
+                            });
+                            thr.Start();
+                            threads.Add(thr);
+                        }
 
                         // C# declaration of the bitwise form of the icons
-                        var bmpData = src.LockBits(new Rectangle(x * w, y * h, w, h), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                        var bmpData = src.LockBits(new Rectangle(icX * w, icY * h, w, h), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
                         try
                         {
                             var numbers = new List<ulong>();
-                            for (int yy = 0; yy < h; yy++)
+                            var pixels = Ut.NewArray<bool>(w, h);
+                            for (int y = 0; y < h; y++)
                             {
-                                var p = (byte*) (bmpData.Scan0 + bmpData.Stride * yy);
-                                for (int xx = 0; xx < w; xx++)
+                                var p = (byte*) (bmpData.Scan0 + bmpData.Stride * y);
+                                for (int x = 0; x < w; x++)
                                 {
-                                    if (xx % 64 == 0)
+                                    if (x % 64 == 0)
                                         numbers.Add(0);
-                                    if (p[xx * 4] < 0x80)
-                                        numbers[numbers.Count - 1] = numbers[numbers.Count - 1] | (1UL << (xx % 64));
+                                    if (p[x * 4] < 0x80)
+                                    {
+                                        numbers[numbers.Count - 1] = numbers[numbers.Count - 1] | (1UL << (x % 64));
+                                        pixels[x][y] = true;
+                                    }
                                 }
                             }
-                            declarations[12 * y + x] = $"new ulong[] {{ {numbers.Select(n => n + "UL").JoinString(", ")} }}";
+                            declarations[12 * icY + icX] = $"new ulong[] {{ {numbers.Select(n => n + "UL").JoinString(", ")} }}";
+
+                            // Video frames (scanning from top to bottom)
+                            if (true)
+                            {
+                                var thr = new Thread(() =>
+                                {
+                                    var path = @"D:\temp\XRayVideos";
+                                    for (int frame = 0; frame < h + 160; frame++)
+                                    {
+                                        //var backgroundColor = Color.FromArgb(0x11, 0x1D, 0x2C);
+                                        using (var newBmp = new Bitmap(Path.Combine(path, "Background up.png")))
+                                        {
+                                            for (int y = 0; y < 4; y++)
+                                                for (int x = 0; x < w; x++)
+                                                    if (frame < h && pixels[x][frame])
+                                                        newBmp.SetPixel(x + 90, 373 + y, Color.Lime);
+                                            newBmp.Save(Path.Combine(path, $"Icon {code} up bare Frame {frame}.png"));
+                                            //for (int y = 0; y < frame; y++)
+                                            //    for (int x = 0; x < w; x++)
+                                            //        if (y < h && pixels[x][y])
+                                            //            newBmp.SetPixel(x + 90, 373 - (frame - y), Color.Lime);
+                                            //newBmp.Save(Path.Combine(path, $"Icon {code} up Frame {frame}.png"));
+                                        }
+                                    }
+                                });
+                                thr.Start();
+                                threads.Add(thr);
+                            }
+
+                            // Video frames (scanning from bottom to top)
+                            if (false)
+                            {
+                                var thr = new Thread(() =>
+                                {
+                                    var path = @"D:\temp\XRayVideos";
+                                    for (int frame = 0; frame < h + 160; frame++)
+                                    {
+                                        //var backgroundColor = Color.FromArgb(0x11, 0x1D, 0x2C);
+                                        using (var newBmp = new Bitmap(Path.Combine(path, "Background down.png")))
+                                        {
+                                            for (int y = 0; y < 4; y++)
+                                                for (int x = 0; x < w; x++)
+                                                    if (frame < h && pixels[x][h - 1 - frame])
+                                                        newBmp.SetPixel(x + 90, 176 - y, Color.Lime);
+                                            newBmp.Save(Path.Combine(path, $"Icon {code} down bare Frame {frame}.png"));
+                                            //for (int y = 0; y < frame; y++)
+                                            //    for (int x = 0; x < w; x++)
+                                            //        if (y < h && pixels[x][h - 1 - y])
+                                            //            newBmp.SetPixel(x + 90, 176 + (frame - y), Color.Lime);
+                                            //newBmp.Save(Path.Combine(path, $"Icon {code} down Frame {frame}.png"));
+                                        }
+                                    }
+                                });
+                                thr.Start();
+                                threads.Add(thr);
+                            }
                         }
                         finally
                         {
