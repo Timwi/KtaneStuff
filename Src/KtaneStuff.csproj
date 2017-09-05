@@ -57,6 +57,7 @@
     <Compile Include="IceCream.cs" />
     <Compile Include="LedEncryption.cs" />
     <Compile Include="Neutralization.cs" />
+    <Compile Include="PerplexingWires.cs" />
     <Compile Include="PointOfOrder.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="TheGamepad.cs" />
