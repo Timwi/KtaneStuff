@@ -101,13 +101,8 @@
     <Compile Include="TextField.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Simulations.cs" />
-    <Compile Include="WiresDawg.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\OnlineDawg\OnlineDAWG.csproj">
-      <Project>{469867e6-db70-4b6b-9351-a37c61da4ea3}</Project>
-      <Name>OnlineDAWG</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\RT.TagSoup\Src\RT.TagSoup.csproj">
       <Project>{8f80d916-8999-45d8-acb2-ffa7e2698fd6}</Project>
       <Name>RT.TagSoup</Name>
