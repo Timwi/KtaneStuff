@@ -87,11 +87,12 @@ namespace KtaneStuff
 
         public static void DoGraph()
         {
+            const string name = "All matter";
             /*
             var graphJson = GenerateGraph();
-            File.WriteAllText($@"D:\temp\Color Switches ({_numSwitches} switches, {_numColors} colors).json", graphJson.ToStringIndented());
+            File.WriteAllText($@"D:\temp\Colored Switches\{name}.json", graphJson.ToStringIndented());
             /*/
-            var graphJson = JsonValue.Parse(File.ReadAllText($@"D:\temp\Color Switches ({_numSwitches} switches, {_numColors} colors).json"));
+            var graphJson = JsonValue.Parse(File.ReadAllText($@"D:\temp\Colored Switches\{name}.json"));
             /**/
 
             var edges = ClassifyJson.Deserialize<List<Edge>>(graphJson);
@@ -100,20 +101,128 @@ namespace KtaneStuff
             foreach (var node in nodes)
                 edgesFrom[node] = edges.Where(e => e.From == node).ToList();
 
+            var covered = new bool[_numSwitches];
+            foreach (var edge in edges)
+            {
+                var b = edge.From.SwitchStates ^ edge.To.SwitchStates;
+                var bit = 0;
+                while (b > 1)
+                {
+                    bit++;
+                    b >>= 1;
+                }
+                if (covered[bit])
+                    continue;
+                if (Enumerable.Range(0, _numColors).All(c => edges.Any(e => e.Color == c && e.From == edge.From && e.To == edge.To)))
+                    continue;
+                covered[bit] = true;
+            }
+            Console.WriteLine(covered.JoinString(", "));
+
             //System.Windows.Forms.Clipboard.SetText(nodes.Select(n => $"{n.SwitchStates}={edgesFrom[n].Select(e => $"{e.Color}>{e.To.SwitchStates}").JoinString("|")}").JoinString("\n"));
-            JsonGraphToGraphML(graphJson);
+            JsonGraphToGraphML(graphJson, name);
+        }
+
+        private static bool allNodesReachable(Node[] nodes, IEnumerable<Edge> edges)
+        {
+            var edgesFrom = new Dictionary<Node, List<Edge>>();
+            foreach (var node in nodes)
+                edgesFrom[node] = edges.Where(e => e.From == node).ToList();
+
+            var colorPowers = new int[_numSwitches];
+            colorPowers[0] = 1;
+            for (int c = 1; c < _numSwitches; c++)
+                colorPowers[c] = colorPowers[c - 1] * _numColors;
+            var numColorCombinations = colorPowers[_numSwitches - 1] * _numColors;
+
+            // For each node, test that all other nodes are reachable in any color combination
+            var alreadyTested = new HashSet<Node>();
+            foreach (var startNode in nodes.Shuffle())
+            {
+                var reachable = new Dictionary<Node, bool[]>();
+                foreach (var node in nodes)
+                    reachable[node] = node == startNode ? Ut.NewArray(numColorCombinations, _ => true) : new bool[numColorCombinations];
+
+                var q = new Queue<Node>();
+                q.Enqueue(startNode);
+                while (q.Count > 0)
+                {
+                    var elem = q.Dequeue();
+                    if (alreadyTested.Contains(elem) && reachable[elem].All(b => b))
+                        goto isTrue;
+
+                    var reachElem = reachable[elem];
+                    foreach (var edge in edgesFrom[elem])
+                    {
+                        var reachEdgeTo = reachable[edge.To];
+                        var any = false;
+                        for (int cc = 0; cc < numColorCombinations; cc++)
+                            if (reachElem[cc] && !reachEdgeTo[cc] && (cc / colorPowers[edge.Switch]) % _numColors == edge.Color)
+                            {
+                                reachEdgeTo[cc] = true;
+                                any = true;
+                            }
+                        if (any)
+                            q.Enqueue(edge.To);
+                    }
+                }
+
+                if (reachable.Any(p => p.Value.Contains(false)))
+                    return false;
+
+                isTrue:;
+                alreadyTested.Add(startNode);
+            }
+
+            return true;
+        }
+
+        private static bool canHaveEdge(Node one, Node two)
+        {
+            var xor = one.SwitchStates ^ two.SwitchStates;
+            return xor != 0 && (xor & (xor - 1)) == 0;
         }
 
         class Node
         {
             public int SwitchStates;
             public override string ToString() => Convert.ToString(SwitchStates, 2).PadLeft(_numSwitches, '0');
+            public override int GetHashCode() => SwitchStates;
         }
-        class Edge
+
+        class Edge : IClassifyObjectProcessor
         {
-            public Node From, To;
-            public int Color;
-            public override string ToString() => "{0} ={1}=> {2}".Fmt(From, Color, To);
+            public Node From { get; private set; }
+            public Node To { get; private set; }
+            public int Color { get; private set; }
+
+            [ClassifyIgnore]
+            public int Switch { get; private set; }
+
+            public Edge(Node from, Node to, int color)
+            {
+                From = from;
+                To = to;
+                setSwitch();
+                Color = color;
+            }
+            private Edge() { }  // Classify
+
+            public override string ToString() => "{0} =({1})=> {2}".Fmt(From, Color, To);
+
+            void IClassifyObjectProcessor.BeforeSerialize() { }
+            void IClassifyObjectProcessor.AfterDeserialize() { setSwitch(); }
+
+            private void setSwitch()
+            {
+                var bit = From.SwitchStates ^ To.SwitchStates;
+                Switch = 0;
+                while (bit > 1)
+                {
+                    Switch++;
+                    bit >>= 1;
+                }
+            }
         }
 
         const int _numSwitches = 5;
@@ -122,114 +231,21 @@ namespace KtaneStuff
         public static JsonValue GenerateGraph()
         {
             var nodes = Ut.NewArray(1 << _numSwitches, ix => new Node { SwitchStates = ix });
-            var edgesFrom = nodes.ToDictionary(node => node, node => new List<Edge>());
             var edges = new List<Edge>();
 
-            startAgain:
-            var foundUnconnectable = false;
-            Console.WriteLine("Number of edges: " + edgesFrom.Values.Sum(l => l.Count));
+            foreach (var node in nodes)
+                foreach (var node2 in nodes)
+                    if (node2 != node && isPowerOf2(node.SwitchStates ^ node2.SwitchStates))
+                        for (int c = 0; c < _numColors; c++)
+                            edges.Add(new Edge(node, node2, c));
 
-            // Go through all color combinations in a random order and add edges whenever we find a node to be unreachable
-            var numColorCombinations = Enumerable.Range(0, _numSwitches).Aggregate(1, (prev, next) => prev * _numColors);
-            var colorCombinations = Enumerable.Range(0, numColorCombinations).ToList().Shuffle();
-            var colors = new int[_numSwitches];
-            for (int ccIx = 0; ccIx < colorCombinations.Count; ccIx++)
-            {
-                var cc = colorCombinations[ccIx];
-
-                if (ccIx % 1000 == 0)
-                    Console.Write($"{ccIx}/{colorCombinations.Count}\r");
-
-                for (int i = 0; i < _numSwitches; i++)
-                {
-                    colors[i] = cc % _numColors;
-                    cc /= _numColors;
-                }
-
-                // Check all the nodes in random order
-                foreach (var startNode in nodes.Shuffle())
-                {
-                    // Which nodes are reachable from that node?
-                    var reachable = new HashSet<Node>();
-                    var q = new[] { new { Node = startNode, Distance = 0 } }.ToQueue();
-                    while (q.Count > 0)
-                    {
-                        var elem = q.Dequeue();
-                        if (reachable.Add(elem.Node))
-                            foreach (var edge in edgesFrom[elem.Node])
-                                if (edge.Color == colors[findBit(edge.From.SwitchStates ^ edge.To.SwitchStates)])
-                                    q.Enqueue(new { Node = edge.To, Distance = elem.Distance + 1 });
-                    }
-
-                    // If all nodes are either reachable or unconnectable, move on to the next start node
-                    var connectable = nodes.Where(n => !reachable.Contains(n) && isPowerOf2(n.SwitchStates ^ startNode.SwitchStates)).ToArray();
-                    if (connectable.Length == 0)
-                    {
-                        foundUnconnectable |= reachable.Count < nodes.Length;
-                        continue;
-                    }
-
-                    // Make a new connection and then start all over
-                    var randomConnectable = connectable[Rnd.Next(connectable.Length)];
-                    var newEdge = new Edge { From = startNode, To = randomConnectable, Color = colors[findBit(randomConnectable.SwitchStates ^ startNode.SwitchStates)] };
-                    edgesFrom[startNode].Add(newEdge);
-                    edges.Add(newEdge);
-                    goto startAgain;
-                }
-            }
-
-            if (foundUnconnectable)
-                Debugger.Break();
-
-            // See if we can remove any edges without compromising reachability
-            var reducedEdges = Ut.ReduceRequiredSet(edges, skipConsistencyTest: true, test: state =>
-            {
-                var tEdges = state.SetToTest.ToList();
-                var tEdgesFrom = tEdges.ToLookup(e => e.From);
-
-                // Go through all color combinations to make sure that everything is still reachable
-                for (int ccIx = 0; ccIx < colorCombinations.Count; ccIx++)
-                {
-                    var cc = colorCombinations[ccIx];
-
-                    if (ccIx % 1000 == 0)
-                        Console.Write($"{ccIx}/{colorCombinations.Count}\r");
-
-                    for (int i = 0; i < _numSwitches; i++)
-                    {
-                        colors[i] = cc % _numColors;
-                        cc /= _numColors;
-                    }
-
-                    // Check all the nodes
-                    foreach (var startNode in nodes)
-                    {
-                        // Which nodes are reachable from that node?
-                        var reachable = new HashSet<Node>();
-                        var q = new Queue<Node>();
-                        q.Enqueue(startNode);
-                        while (q.Count > 0)
-                        {
-                            var elem = q.Dequeue();
-                            if (reachable.Add(elem))
-                                foreach (var edge in tEdgesFrom[elem])
-                                    if (edge.Color == colors[findBit(edge.From.SwitchStates ^ edge.To.SwitchStates)])
-                                        q.Enqueue(edge.To);
-                        }
-
-                        // If a node is now unreachable, that edge cannot be removed.
-                        if (reachable.Count < nodes.Length)
-                            return false;
-                    }
-                }
-
-                return true;
-            });
-
+            // Remove as many edges as possible without compromising reachability
+            edges.Shuffle();
+            var reducedEdges = Ut.ReduceRequiredSet(edges, skipConsistencyTest: true, test: state => allNodesReachable(nodes, state.SetToTest));
             return ClassifyJson.Serialize(reducedEdges.ToList());
         }
 
-        public static void JsonGraphToGraphML(JsonValue json)
+        public static void JsonGraphToGraphML(JsonValue json, string filenamePart)
         {
             var edges = ClassifyJson.Deserialize<List<Edge>>(json);
             var nodes = edges.Select(e => e.To).Distinct().ToArray();
@@ -285,7 +301,7 @@ namespace KtaneStuff
                 }
                 eIx++;
             }
-            File.WriteAllText($@"D:\temp\Color Switches ({_numSwitches} switches, {_numColors} colors).graphml", xml.ToString());
+            File.WriteAllText($@"D:\temp\Colored Switches\{filenamePart}.graphml", xml.ToString());
         }
 
         private static int findBit(int x)
