@@ -87,8 +87,8 @@ namespace KtaneStuff
 
         public static void DoGraph()
         {
-            const string name = "All matter";
-            /*
+            const string name = "Candidate 1";
+            //*
             var graphJson = GenerateGraph();
             File.WriteAllText($@"D:\temp\Colored Switches\{name}.json", graphJson.ToStringIndented());
             /*/
@@ -119,8 +119,8 @@ namespace KtaneStuff
             }
             Console.WriteLine(covered.JoinString(", "));
 
-            //System.Windows.Forms.Clipboard.SetText(nodes.Select(n => $"{n.SwitchStates}={edgesFrom[n].Select(e => $"{e.Color}>{e.To.SwitchStates}").JoinString("|")}").JoinString("\n"));
-            JsonGraphToGraphML(graphJson, name);
+            Console.WriteLine(nodes.Select(n => $"{n.SwitchStates}={edgesFrom[n].Select(e => $"{e.Color}>{e.To.SwitchStates}").JoinString("|")}").JoinString("\n"));
+            //JsonGraphToGraphML(graphJson, name);
         }
 
         private static bool allNodesReachable(Node[] nodes, IEnumerable<Edge> edges)
@@ -275,7 +275,7 @@ namespace KtaneStuff
                                 new XElement(nm("Shape"), new XAttribute("type", "rectangle"))))));
             }
             var eIx = 0;
-            var colorStrs = "#BB0000|#00AA00|#0000FF|#9900AA|#FF8800|#00AAEE".Split('|');
+            var colorStrs = "#BB0000|#00AA00|#0000FF|#C000DD|#FF8800|#00D2EE".Split('|');
             while (edges.Count > 0)
             {
                 var sameNodes = edgesFrom[edges[0].From].Where(e => e.To == edges[0].To).ToArray();
