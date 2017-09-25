@@ -60,6 +60,7 @@
     <Compile Include="PerplexingWires.cs" />
     <Compile Include="PointOfOrder.cs" />
     <Compile Include="RubiksCube.cs" />
+    <Compile Include="Set.cs" />
     <Compile Include="TheGamepad.cs" />
     <Compile Include="XRay.cs" />
     <Compile Include="Yahtzee.cs" />
