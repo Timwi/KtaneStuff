@@ -1,372 +1,474 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using RT.Util;
+using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
     static class Chess
     {
+        private enum ChessPieceType
+        {
+            Knight,
+            Queen,
+            King,
+            Bishop,
+            Rook
+        }
+        private enum BoardState
+        {
+            Empty,
+            Covered,
+            Filled
+        }
+
         private class ChessPiece
         {
-            public int xCoord;
-
-            public int yCoord;
-
-            public string name;
-
-            public ChessPiece(int x, int y, string pieceName, ref int[,] board)
-            {
-                this.xCoord = x;
-                this.yCoord = y;
-                this.name = pieceName.ToLower();
-                board[x, y] = 2;
-            }
+            public int xCoord, yCoord;
+            public ChessPieceType piece;
 
             public static bool getWhite(int x, int y)
             {
                 return x % 2 != y % 2;
             }
 
-            public static void getRookTouchable(int x, int y, ref int[,] myList, bool tempKing = false)
+            public ChessPiece(int x, int y, ChessPieceType p, ref BoardState[,] board)
             {
+                xCoord = x;
+                yCoord = y;
+                piece = p;
+                board[x, y] = BoardState.Filled;
+            }
+            public static void getRookTouchable(int x, int y, ref BoardState[,] myList, bool tempKing = false)
+            {
+
+
                 for (int i = x + 1; i < 6; i++)
                 {
-                    if (myList[i, y] == 0)
+                    if (myList[i, y] == BoardState.Empty)
                     {
-                        myList[i, y] = 1;
+                        myList[i, y] = BoardState.Covered;
                     }
-                    else if (myList[i, y] == 2)
-                    {
-                        break;
-                    }
-                    if (tempKing)
+                    else if (myList[i, y] == BoardState.Filled)
                     {
                         break;
                     }
+                    if (tempKing) break;
+
                 }
-                for (int j = x - 1; j >= 0; j--)
+
+                for (int i = x - 1; i >= 0; i--)
                 {
-                    if (myList[j, y] == 0)
+                    if (myList[i, y] == BoardState.Empty)
                     {
-                        myList[j, y] = 1;
+                        myList[i, y] = BoardState.Covered;
                     }
-                    else if (myList[j, y] == 2)
-                    {
-                        break;
-                    }
-                    if (tempKing)
+                    else if (myList[i, y] == BoardState.Filled)
                     {
                         break;
                     }
+                    if (tempKing) break;
+
                 }
-                for (int k = y + 1; k < 6; k++)
+
+                for (int i = y + 1; i < 6; i++)
                 {
-                    if (myList[x, k] == 0)
+                    if (myList[x, i] == BoardState.Empty)
                     {
-                        myList[x, k] = 1;
+                        myList[x, i] = BoardState.Covered;
                     }
-                    else if (myList[x, k] == 2)
-                    {
-                        break;
-                    }
-                    if (tempKing)
+                    else if (myList[x, i] == BoardState.Filled)
                     {
                         break;
                     }
+                    if (tempKing) break;
+
                 }
-                for (int l = y - 1; l >= 0; l--)
+
+                for (int i = y - 1; i >= 0; i--)
                 {
-                    if (myList[x, l] == 0)
+                    if (myList[x, i] == BoardState.Empty)
                     {
-                        myList[x, l] = 1;
+                        myList[x, i] = BoardState.Covered;
                     }
-                    else if (myList[x, l] == 2)
-                    {
-                        break;
-                    }
-                    if (tempKing)
+                    else if (myList[x, i] == BoardState.Filled)
                     {
                         break;
                     }
+                    if (tempKing) break;
+
                 }
             }
 
-            public static void getBishopTouchable(int x, int y, ref int[,] myList, bool tempKing = false)
+            public static void getBishopTouchable(int x, int y, ref BoardState[,] myList, bool tempKing = false)
             {
-                int num = x + 1;
-                int num2 = y + 1;
-                while (num2 < 6 && num < 6)
+
+
+                for (int i = x + 1, j = y + 1; j < 6 && i < 6; i++, j++)
                 {
-                    if (myList[num, num2] == 0)
+                    if (myList[i, j] == BoardState.Empty)
                     {
-                        myList[num, num2] = 1;
+                        myList[i, j] = BoardState.Covered;
                     }
-                    else if (myList[num, num2] == 2)
-                    {
-                        break;
-                    }
-                    if (tempKing)
+                    else if (myList[i, j] == BoardState.Filled)
                     {
                         break;
                     }
-                    num++;
-                    num2++;
+                    if (tempKing) break;
+
                 }
-                int num3 = x - 1;
-                int num4 = y + 1;
-                while (num4 < 6 && num3 >= 0)
+
+                for (int i = x - 1, j = y + 1; j < 6 && i >= 0; i--, j++)
                 {
-                    if (myList[num3, num4] == 0)
+                    if (myList[i, j] == BoardState.Empty)
                     {
-                        myList[num3, num4] = 1;
+                        myList[i, j] = BoardState.Covered;
                     }
-                    else if (myList[num3, num4] == 2)
-                    {
-                        break;
-                    }
-                    if (tempKing)
+                    else if (myList[i, j] == BoardState.Filled)
                     {
                         break;
                     }
-                    num3--;
-                    num4++;
+                    if (tempKing) break;
+
                 }
-                int num5 = x + 1;
-                int num6 = y - 1;
-                while (num6 >= 0 && num5 < 6)
+
+                for (int i = x + 1, j = y - 1; j >= 0 && i < 6; i++, j--)
                 {
-                    if (myList[num5, num6] == 0)
+                    if (myList[i, j] == BoardState.Empty)
                     {
-                        myList[num5, num6] = 1;
+                        myList[i, j] = BoardState.Covered;
                     }
-                    else if (myList[num5, num6] == 2)
-                    {
-                        break;
-                    }
-                    if (tempKing)
+                    else if (myList[i, j] == BoardState.Filled)
                     {
                         break;
                     }
-                    num5++;
-                    num6--;
+                    if (tempKing) break;
+
                 }
-                int num7 = x - 1;
-                int num8 = y - 1;
-                while (num8 >= 0 && num7 >= 0)
+
+                for (int i = x - 1, j = y - 1; j >= 0 && i >= 0; i--, j--)
                 {
-                    if (myList[num7, num8] == 0)
+                    if (myList[i, j] == BoardState.Empty)
                     {
-                        myList[num7, num8] = 1;
+                        myList[i, j] = BoardState.Covered;
                     }
-                    else if (myList[num7, num8] == 2)
-                    {
-                        break;
-                    }
-                    if (tempKing)
+                    else if (myList[i, j] == BoardState.Filled)
                     {
                         break;
                     }
-                    num7--;
-                    num8--;
+                    if (tempKing) break;
+
                 }
             }
 
-            public static void getQueenTouchable(int x, int y, ref int[,] myList)
+
+            public static void getQueenTouchable(int x, int y, ref BoardState[,] myList)
             {
-                ChessPiece.getRookTouchable(x, y, ref myList, false);
-                ChessPiece.getBishopTouchable(x, y, ref myList, false);
+                getRookTouchable(x, y, ref myList);
+                getBishopTouchable(x, y, ref myList);
             }
 
-            public static void getKnightTouchable(int x, int y, ref int[,] myList)
+            public static void getKnightTouchable(int x, int y, ref BoardState[,] myList)
             {
-                int num = x + 2;
-                int num2 = y + 1;
-                if (num >= 0 && num < 6 && num2 < 6 && num2 >= 0 && myList[num, num2] == 0)
+                int newX, newY;
+                newX = x + 2;
+                newY = y + 1;
+                if (newX >= 0 && newX < 6 && newY < 6 && newY >= 0 && myList[newX, newY] == BoardState.Empty)
                 {
-                    myList[num, num2] = 1;
+                    myList[newX, newY] = BoardState.Covered;
                 }
-                num = x - 2;
-                num2 = y + 1;
-                if (num >= 0 && num < 6 && num2 < 6 && num2 >= 0 && myList[num, num2] == 0)
+                newX = x - 2;
+                newY = y + 1;
+                if (newX >= 0 && newX < 6 && newY < 6 && newY >= 0 && myList[newX, newY] == BoardState.Empty)
                 {
-                    myList[num, num2] = 1;
+                    myList[newX, newY] = BoardState.Covered;
                 }
-                num = x + 2;
-                num2 = y - 1;
-                if (num >= 0 && num < 6 && num2 < 6 && num2 >= 0 && myList[num, num2] == 0)
+                newX = x + 2;
+                newY = y - 1;
+                if (newX >= 0 && newX < 6 && newY < 6 && newY >= 0 && myList[newX, newY] == BoardState.Empty)
                 {
-                    myList[num, num2] = 1;
+                    myList[newX, newY] = BoardState.Covered;
                 }
-                num = x - 2;
-                num2 = y - 1;
-                if (num >= 0 && num < 6 && num2 < 6 && num2 >= 0 && myList[num, num2] == 0)
+                newX = x - 2;
+                newY = y - 1;
+                if (newX >= 0 && newX < 6 && newY < 6 && newY >= 0 && myList[newX, newY] == BoardState.Empty)
                 {
-                    myList[num, num2] = 1;
+                    myList[newX, newY] = BoardState.Covered;
                 }
-                num = x + 1;
-                num2 = y + 2;
-                if (num >= 0 && num < 6 && num2 < 6 && num2 >= 0 && myList[num, num2] == 0)
+                newX = x + 1;
+                newY = y + 2;
+                if (newX >= 0 && newX < 6 && newY < 6 && newY >= 0 && myList[newX, newY] == BoardState.Empty)
                 {
-                    myList[num, num2] = 1;
+                    myList[newX, newY] = BoardState.Covered;
                 }
-                num = x - 1;
-                num2 = y + 2;
-                if (num >= 0 && num < 6 && num2 < 6 && num2 >= 0 && myList[num, num2] == 0)
+                newX = x - 1;
+                newY = y + 2;
+                if (newX >= 0 && newX < 6 && newY < 6 && newY >= 0 && myList[newX, newY] == BoardState.Empty)
                 {
-                    myList[num, num2] = 1;
+                    myList[newX, newY] = BoardState.Covered;
                 }
-                num = x + 1;
-                num2 = y - 2;
-                if (num >= 0 && num < 6 && num2 < 6 && num2 >= 0 && myList[num, num2] == 0)
+                newX = x + 1;
+                newY = y - 2;
+                if (newX >= 0 && newX < 6 && newY < 6 && newY >= 0 && myList[newX, newY] == BoardState.Empty)
                 {
-                    myList[num, num2] = 1;
+                    myList[newX, newY] = BoardState.Covered;
                 }
-                num = x - 1;
-                num2 = y - 2;
-                if (num >= 0 && num < 6 && num2 < 6 && num2 >= 0 && myList[num, num2] == 0)
+                newX = x - 1;
+                newY = y - 2;
+                if (newX >= 0 && newX < 6 && newY < 6 && newY >= 0 && myList[newX, newY] == BoardState.Empty)
                 {
-                    myList[num, num2] = 1;
+                    myList[newX, newY] = BoardState.Covered;
+                }
+
+            }
+
+            public static void getKingTouchable(int x, int y, ref BoardState[,] myList)
+            {
+                getRookTouchable(x, y, ref myList, true);
+                getBishopTouchable(x, y, ref myList, true);
+            }
+
+
+            public void getTouchable(ref BoardState[,] myList)
+            {
+                switch (piece)
+                {
+                    case ChessPieceType.Queen:
+                        getQueenTouchable(xCoord, yCoord, ref myList);
+                        break;
+                    case ChessPieceType.King:
+                        getKingTouchable(xCoord, yCoord, ref myList);
+                        break;
+                    case ChessPieceType.Bishop:
+                        getBishopTouchable(xCoord, yCoord, ref myList);
+                        break;
+                    case ChessPieceType.Knight:
+                        getKnightTouchable(xCoord, yCoord, ref myList);
+                        break;
+                    case ChessPieceType.Rook:
+                        getRookTouchable(xCoord, yCoord, ref myList);
+                        break;
                 }
             }
 
-            public static void getKingTouchable(int x, int y, ref int[,] myList)
-            {
-                ChessPiece.getRookTouchable(x, y, ref myList, true);
-                ChessPiece.getBishopTouchable(x, y, ref myList, true);
-            }
-
-            public void getTouchable(ref int[,] myList)
-            {
-                string text = this.name;
-                switch (text)
-                {
-                    case "queen":
-                        ChessPiece.getQueenTouchable(this.xCoord, this.yCoord, ref myList);
-                        break;
-                    case "king":
-                        ChessPiece.getKingTouchable(this.xCoord, this.yCoord, ref myList);
-                        break;
-                    case "bishop":
-                        ChessPiece.getBishopTouchable(this.xCoord, this.yCoord, ref myList, false);
-                        break;
-                    case "knight":
-                        ChessPiece.getKnightTouchable(this.xCoord, this.yCoord, ref myList);
-                        break;
-                    case "rook":
-                        ChessPiece.getRookTouchable(this.xCoord, this.yCoord, ref myList, false);
-                        break;
-                }
-            }
         }
 
-        public static bool TestRand(ref string[] generated, bool serialNumberOdd)
+        public static bool TestRand(ref string[][] generatedPairs, int Sign, int MyModuleId, out string BoardString)
         {
-            string[] array = new string[6];
-            string text = string.Empty;
-            int i = 0;
-            while (i < 6)
+            BoardString = "";
+            string[] RandPieces = new string[6];
+            string TestString = "";
+            int ji = 0;
+            while (ji < 6)
             {
-                string text2 = (char) (Rnd.Next(0, 6) + 97) + string.Empty + (Rnd.Next(0, 6) + 1);
-                if (!text.Contains(text2))
+                string temp = (char) (Rnd.Next(0, 6) + 'a') + "" + (Rnd.Next(0, 6) + 1);
+                if (!TestString.Contains(temp))
                 {
-                    array[i] = text2;
-                    text += text2;
-                    i++;
+                    RandPieces[ji] = temp;
+                    TestString += temp;
+                    ji++;
                 }
             }
-            int[,] array2 = new int[6, 6];
-            for (int j = 0; j < 6; j++)
+            BoardState[,] chessBoard = new BoardState[6, 6];
+            ChessPiece[] myPieces;
+            for (int i = 0; i < 6; i++)
             {
-                for (int k = 0; k < 6; k++)
+                for (int j = 0; j < 6; j++)
                 {
-                    array2[j, k] = 0;
+                    chessBoard[i, j] = BoardState.Empty;
                 }
             }
-            ChessPiece[] array3 = new ChessPiece[6];
-            array3[1] = new ChessPiece((int) (array[1][0] - 'a'), (int) (array[1][1] - '1'), serialNumberOdd ? "rook" : "knight", ref array2);
-            array3[3] = new ChessPiece((int) (array[3][0] - 'a'), (int) (array[3][1] - '1'), "rook", ref array2);
-            if (ChessPiece.getWhite((int) (array[4][0] - 'a'), (int) (array[4][1] - '1')))
+
+            myPieces = new ChessPiece[6];
+            myPieces[1] = new ChessPiece((RandPieces[1][0]) - 'a', (RandPieces[1][1]) - '1', (Sign == 0 ? ChessPieceType.Knight : ChessPieceType.Rook), ref chessBoard);
+            myPieces[3] = new ChessPiece(RandPieces[3][0] - 'a', RandPieces[3][1] - '1', ChessPieceType.Rook, ref chessBoard);
+            if (ChessPiece.getWhite(RandPieces[4][0] - 'a', RandPieces[4][1] - '1'))
             {
-                array3[4] = new ChessPiece((int) (array[4][0] - 'a'), (int) (array[4][1] - '1'), "queen", ref array2);
-                array3[0] = new ChessPiece((int) (array[0][0] - 'a'), (int) (array[0][1] - '1'), "king", ref array2);
+                myPieces[4] = new ChessPiece(RandPieces[4][0] - 'a', RandPieces[4][1] - '1', ChessPieceType.Queen, ref chessBoard);
+                myPieces[0] = new ChessPiece(RandPieces[0][0] - 'a', RandPieces[0][1] - '1', ChessPieceType.King, ref chessBoard);
             }
             else
             {
-                array3[4] = new ChessPiece((int) (array[4][0] - 'a'), (int) (array[4][1] - '1'), "rook", ref array2);
-                array3[0] = new ChessPiece((int) (array[0][0] - 'a'), (int) (array[0][1] - '1'), "bishop", ref array2);
+                myPieces[4] = new ChessPiece(RandPieces[4][0] - 'a', RandPieces[4][1] - '1', ChessPieceType.Rook, ref chessBoard);
+                myPieces[0] = new ChessPiece(RandPieces[0][0] - 'a', RandPieces[0][1] - '1', ChessPieceType.Bishop, ref chessBoard);
             }
-            if (serialNumberOdd || array3[4].name == "rook")
+
+            if (Sign == 1 || myPieces[4].piece == ChessPieceType.Rook)
             {
-                array3[2] = new ChessPiece((int) (array[2][0] - 'a'), (int) (array[2][1] - '1'), "king", ref array2);
-            }
-            else
-            {
-                array3[2] = new ChessPiece((int) (array[2][0] - 'a'), (int) (array[2][1] - '1'), "queen", ref array2);
-            }
-            bool flag = false;
-            bool flag2 = false;
-            for (int l = 0; l < 5; l++)
-            {
-                if (array3[l].name == "queen")
-                {
-                    flag = true;
-                }
-                if (array3[l].name == "knight")
-                {
-                    flag2 = true;
-                }
-            }
-            if (!flag)
-            {
-                array3[5] = new ChessPiece((int) (array[5][0] - 'a'), (int) (array[5][1] - '1'), "queen", ref array2);
-            }
-            else if (!flag2)
-            {
-                array3[5] = new ChessPiece((int) (array[5][0] - 'a'), (int) (array[5][1] - '1'), "knight", ref array2);
+                myPieces[2] = new ChessPiece(RandPieces[2][0] - 'a', RandPieces[2][1] - '1', ChessPieceType.King, ref chessBoard);
             }
             else
             {
-                array3[5] = new ChessPiece((int) (array[5][0] - 'a'), (int) (array[5][1] - '1'), "bishop", ref array2);
+                myPieces[2] = new ChessPiece(RandPieces[2][0] - 'a', RandPieces[2][1] - '1', ChessPieceType.Queen, ref chessBoard);
             }
-            ChessPiece[] array4 = array3;
-            for (int m = 0; m < array4.Length; m++)
+
+            bool hasQueen = false;
+            bool hasKnight = false;
+            for (int i = 0; i < 5; i++)
             {
-                ChessPiece chessPiece = array4[m];
-                chessPiece.getTouchable(ref array2);
-            }
-            int num = 0;
-            List<string> list = new List<string>();
-            int num2 = 5;
-            while (num2 >= 0 && num < 2)
-            {
-                int num3 = 0;
-                while (num3 < 6 && num < 2)
+                if (myPieces[i].piece == ChessPieceType.Queen)
                 {
-                    if (array2[num3, num2] == 0)
+                    hasQueen = true;
+                }
+                if (myPieces[i].piece == ChessPieceType.Knight)
+                {
+                    hasKnight = true;
+                }
+            }
+            if (!hasQueen)
+            {
+                myPieces[5] = new ChessPiece(RandPieces[5][0] - 'a', RandPieces[5][1] - '1', ChessPieceType.Queen, ref chessBoard);
+            }
+            else if (!hasKnight)
+            {
+                myPieces[5] = new ChessPiece(RandPieces[5][0] - 'a', RandPieces[5][1] - '1', ChessPieceType.Knight, ref chessBoard);
+            }
+            else
+            {
+                myPieces[5] = new ChessPiece(RandPieces[5][0] - 'a', RandPieces[5][1] - '1', ChessPieceType.Bishop, ref chessBoard);
+            }
+            foreach (ChessPiece i in myPieces)
+            {
+                i.getTouchable(ref chessBoard);
+            }
+
+            int empty = 0;
+            List<string> emptyArr = new List<string>();
+            for (int i = 5; i >= 0 && empty < 2; i--)
+            {
+
+                for (int j = 0; j < 6 && empty < 2; j++)
+                {
+                    if (chessBoard[j, i] == BoardState.Empty)
                     {
-                        num++;
-                        list.Add((char) (num3 + 97) + string.Empty + (num2 + 1));
+                        empty++;
+                        emptyArr.Add((char) (j + 'a') + "" + (i + 1));
                     }
-                    num3++;
+
                 }
-                num2--;
             }
-            if (num == 1)
+            if (empty == 1)
             {
-                for (int n = 0; n < 6; n++)
-                    generated[n] = array[n];
-                generated[6] = list[0];
+                for (int i = 0; i < 6; i++)
+                {
+                    generatedPairs[Sign][i] = RandPieces[i];
+                }
+                generatedPairs[Sign][6] = emptyArr[0];
+                int[] Numbers = new int[6];
+                int SolutionNumber;
+                {
+                    string s1 = generatedPairs[Sign][6];
+                    SolutionNumber = ((s1[0] - 'a')) + 6 * (s1[1] - '1');
+                    for (int i = 0; i < 6; i++)
+                    {
+                        s1 = generatedPairs[Sign][i];
+                        Numbers[i] = ((s1[0] - 'a')) + 6 * (s1[1] - '1');
+                    }
+                }
+                StringBuilder s = new StringBuilder("┌───┬───┬───┬───┬───┬───┐");
+
+                for (int i = 0; i < 11; i++)
+                {
+                    s.Append("\n");
+                    if (i % 2 == 0)
+                    {
+                        int v = 5 - (i / 2);
+                        for (int j = 0; j < 6; j++)
+                        {
+                            s.Append("│");
+                            int o = Array.FindIndex(Numbers, x => x == v * 6 + j);
+                            s.Append(" ");
+                            if (o != -1)
+                            {
+                                ChessPieceType c = myPieces[o].piece;
+                                char pieceChar = ' ';
+                                switch (c)
+                                {
+                                    case ChessPieceType.Bishop:
+                                        pieceChar = 'B';
+                                        break;
+                                    case ChessPieceType.King:
+                                        pieceChar = 'K';
+                                        break;
+                                    case ChessPieceType.Queen:
+                                        pieceChar = 'Q';
+                                        break;
+                                    case ChessPieceType.Knight:
+                                        pieceChar = 'N';
+                                        break;
+                                    case ChessPieceType.Rook:
+                                        pieceChar = 'R';
+                                        break;
+                                }
+                                s.Append(pieceChar);
+                            }
+                            else
+                            {
+
+                                if (v * 6 + j == SolutionNumber)
+                                    s.Append('×');
+                                else
+                                    s.Append(" ");
+
+                            }
+                            s.Append(" ");
+                        }
+                        s.Append("│");
+                    }
+                    else
+                    {
+                        s.Append("├───┼───┼───┼───┼───┼───┤");
+                    }
+                }
+                s.Append("\n");
+                s.Append("└───┴───┴───┴───┴───┴───┘");
+
+                BoardString = s.ToString();
+
                 return true;
             }
             return false;
         }
 
-        public static string[] GetSolution(bool serialNumberOdd, out int numAttempts)
+        public static string[] GetSolution(bool serialNumberOdd, out int numAttempts, out string boardString)
         {
             numAttempts = 1;
-            var generatedPairs = new string[7];
-            while (!TestRand(ref generatedPairs, serialNumberOdd))
+            var generatedPairs = new string[2][];
+            for (int i = 0; i < 2; i++)
+                generatedPairs[i] = new string[7];
+            while (!TestRand(ref generatedPairs, serialNumberOdd ? 1 : 0, 0, out boardString))
                 numAttempts++;
-            return generatedPairs;
+            return generatedPairs[serialNumberOdd ? 1 : 0];
+        }
+
+        public static void Practice()
+        {
+            while (true)
+            {
+                var odd = Rnd.Next(0, 2) == 0;
+                var result = GetSolution(odd, out var numAttempts, out string board);
+                Console.WriteLine(odd ? "Serial number is odd." : "Serial number is even.");
+                Console.WriteLine(result.Take(6).JoinString(" | "));
+                Console.WriteLine("Answer?");
+
+                var correct = false;
+                for (int attempt = 0; attempt < 3 && !correct; attempt++)
+                {
+                    var answer = Console.ReadLine();
+                    if (answer == "exit")
+                        return;
+
+                    if (answer == result[6])
+                        correct = true;
+                    else if (attempt < 2)
+                        Console.WriteLine("Wrong, try again?");
+                }
+                Console.WriteLine(correct ? "Correct." : "Wrong, should have been " + result[6]);
+                Console.WriteLine(board);
+                Console.WriteLine(new string('─', 50));
+            }
         }
     }
 }

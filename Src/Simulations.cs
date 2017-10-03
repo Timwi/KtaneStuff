@@ -318,7 +318,7 @@ namespace KtaneStuff
                 {
                     Active = false,
                     Name = "Chess",
-                    GetResult = (ws, serial) => new[] { Chess.GetSolution(serial.Last() % 2 != 0, out int numAttempts)[6] }
+                    GetResult = (ws, serial) => new[] { Chess.GetSolution(serial.Last() % 2 != 0, out _, out _)[6] }
                 }
             ).Where(s => s.Active).ToArray();
 
