@@ -48,6 +48,7 @@
     <Compile Include="3DMazeManual.cs" />
     <Compile Include="Astrology.cs" />
     <Compile Include="ColoredSwitches.cs" />
+    <Compile Include="ColorGenerator.cs" />
     <Compile Include="GridLock.cs" />
     <Compile Include="CheapCheckout.cs" />
     <Compile Include="Edgework.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="PointOfOrder.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="Set.cs" />
+    <Compile Include="SymbolCycle.cs" />
     <Compile Include="TheGamepad.cs" />
     <Compile Include="XRay.cs" />
     <Compile Include="Yahtzee.cs" />
