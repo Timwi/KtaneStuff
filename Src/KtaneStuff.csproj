@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="3DMazeManual.cs" />
     <Compile Include="Astrology.cs" />
+    <Compile Include="Braille.cs" />
     <Compile Include="ColoredSwitches.cs" />
     <Compile Include="ColorGenerator.cs" />
     <Compile Include="GridLock.cs" />
