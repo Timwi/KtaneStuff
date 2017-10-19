@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace KtaneStuff
     {
         public static void MakeGraphics()
         {
+            var pngCrushers = new List<Action>();
             foreach (var selected in new[] { true, false })
                 using (var srcBmp = new Bitmap($@"D:\c\KTANE\Set\Data\Symbols{(selected ? " selected" : "")}.png"))
                 {
@@ -24,12 +26,26 @@ namespace KtaneStuff
                         for (int y = 0; y < 3; y++)
                             for (int s = 0; s < 3; s++)
                                 for (int r = 0; r < 3; r++)
+                                {
+                                    var tempPath = Path.GetTempFileName();
+                                    var destPath = $@"D:\c\KTANE\Set\Assets\Textures\Icon{(selected ? "Sel" : "")}{(char) ('A' + x)}{(char) ('1' + y)}{(char) ('a' + s)}{(char) ('1' + r)}.png";
                                     GraphicsUtil.DrawBitmap(w, h, g =>
                                     {
                                         g.Clear(Color.Transparent);
                                         g.DrawImage(srcBmp, -w * (3 * s + x), -h * (3 * r + y));
-                                    }).Save($@"D:\c\KTANE\Set\Assets\Textures\Icon{(selected ? "Sel" : "")}{(char) ('A' + x)}{(char) ('1' + y)}{(char) ('a' + s)}{(char) ('1' + r)}.png");
+                                    }).Save(tempPath);
+                                    pngCrushers.Add(() =>
+                                    {
+                                        lock (pngCrushers)
+                                            Console.WriteLine("Crushing: " + destPath);
+                                        CommandRunner.Run("pngcr", tempPath, destPath).Go();
+                                        File.Delete(tempPath);
+                                        lock (pngCrushers)
+                                            Console.WriteLine("Done: " + destPath);
+                                    });
+                                }
                 }
+            Ut.ParallelForEach(pngCrushers, 4, a => a());
         }
 
         public static void DoModels()
