@@ -119,9 +119,9 @@ namespace KtaneStuff
         private static IEnumerable<VertexInfo[]> ScreenHighlight()
         {
             const int revSteps = 6;
-            const double innerRadius = .065;
-            const double outerRadius = .1;
-            const double displacement = .18;
+            const double innerRadius = .07;
+            const double outerRadius = .12;
+            const double displacement = .25;
             const double depth = 0;
 
             Pt rPt(double rds, double angle, int quadrant, double dpth, double dx, double dy) => pt(rds * cos(angle) + dx * new[] { 1, -1, -1, 1 }[quadrant], dpth, rds * sin(angle) + dy * new[] { 1, 1, -1, -1 }[quadrant]);
@@ -160,7 +160,7 @@ namespace KtaneStuff
             const int revSteps = 6;
             const double innerRadius = .04;
             const double outerRadius = .07;
-            const double displacement = .18;
+            const double displacement = .25;
             const double innerDepth = .1;
             const double outerDepth = .15;
 
@@ -171,19 +171,18 @@ namespace KtaneStuff
 
             List<IEnumerable<PointD>> platePoly = new List<IEnumerable<PointD>> { outline };
             for (int x = 0; x < 2; x++)
-                for (int y = 0; y < 2; y++)
-                {
-                    var dx = x * .6 - .5;
-                    var dy = y * .6 - .5;
+            {
+                var dx = x * .8 - .4;
+                var dy = .03;
 
-                    foreach (var face in CreateMesh(true, false, infs.Select(inf => Ut.NewArray(
-                        rPt(innerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, innerDepth, displacement, displacement).Add(x: dx, z: dy).WithMeshInfo(Normal.Average, Normal.Average, Normal.Mine, Normal.Mine),
-                        rPt(outerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, outerDepth, displacement, displacement).Add(x: dx, z: dy).WithMeshInfo(0, 1, 0)
-                    )).ToArray()))
-                        yield return face;
+                foreach (var face in CreateMesh(true, false, infs.Select(inf => Ut.NewArray(
+                    rPt(innerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, innerDepth, displacement, displacement).Add(x: dx, z: dy).WithMeshInfo(Normal.Average, Normal.Average, Normal.Mine, Normal.Mine),
+                    rPt(outerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, outerDepth, displacement, displacement).Add(x: dx, z: dy).WithMeshInfo(0, 1, 0)
+                )).ToArray()))
+                    yield return face;
 
-                    platePoly.Add(infs.Reverse().Select(inf => rPt(outerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, outerDepth, displacement, displacement).Apply(pt => p(pt.X + dx, pt.Z + dy))).ToArray());
-                }
+                platePoly.Add(infs.Reverse().Select(inf => rPt(outerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, outerDepth, displacement, displacement).Apply(pt => p(pt.X + dx, pt.Z + dy))).ToArray());
+            }
 
             const double displacementX = .67;
             const double displacementY = .1;
