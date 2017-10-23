@@ -36,12 +36,12 @@ namespace KtaneStuff
             // Allergies
             AllergyChocolate = ChocolateChips | ChocolateSauce | ChocolateFlavour,
             AllergyStrawberry = FruitPieces | Strawberries | StrawberryFlavour,
-            AllergyRaspberry = RaspberrySauce,
+            AllergyRaspberry = RaspberrySauce | FruitPieces,
             AllergyNuts = Nuts,
             AllergyCookies = Cookies,
             AllergyMint = MintFlavour,
             AllergyFruit = FruitPieces | RaspberrySauce | Strawberries | Cherry | StrawberryFlavour,
-            AllergyCherry = Cherry,
+            AllergyCherry = Cherry | FruitPieces,
             AllergyMarshmallows = Marshmallows
         }
 
@@ -129,9 +129,6 @@ namespace KtaneStuff
                     .Concat(Ut.NewArray<object>(new H3("Abbreviations"), new TABLE { class_ = "abbrevs-table" }._(abbrevs.OrderBy(p => p.Value).Select(p => new TR(new TH(p.Value), new TD(p.Key))))))
                     .ToArray())
                 .ToString());
-
-            Console.WriteLine(stuff.Count);
-            System.Diagnostics.Debugger.Break();
         }
 
         public static void CreateIceCreamConeModel()
