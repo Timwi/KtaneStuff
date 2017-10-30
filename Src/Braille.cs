@@ -3,19 +3,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
+    using static Md;
+
     public static class Braille
     {
-        public static void FindWords()
+        private sealed class BrailleLetter
         {
-            var forbidden = @"catherine,katherine,collins,france,french,steven,surrey,tories,edward,sterling,martin,forget,forgot".Split(',').ToHashSet();
+            public string Bit;
+            public bool CanBeInitial;
+            public bool CanBeFinal;
+            public int Dots;
+        }
 
-            var brailleRaw = @"
+        private static BrailleLetter[] _brailleRaw = @"
 a=1 b=12 c=14
 d=145 e=15 f=124 g=1245 h=125 i=24 j=245
 k=13 l=123 m=134 n=1345 o=135 p=1234 q=12345 r=1235 s=234 t=2345 u=136 v=1236 x=1346 y=13456 z=1356
@@ -24,12 +30,35 @@ ch=16 gh=126 sh=146 th=1456 wh=156 ed=1246 er=12456 ou=1256 ow=246 w=2456
 -ea-=2 -bb-=23 -cc-=25 en=26 -ff-=235 -gg-=2356 in=35 st=34 ar=345
 -ing=346
 "
-                .Split(new[] { '\r', '\n', ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(bit => Regex.Match(bit, @"^(-)?(\w+)(-)?=(\d+)$"))
-                .Where(m => m.Success)
-                .Select(m => new { Bit = m.Groups[2].Value, CanBeInitial = !m.Groups[1].Success, CanBeFinal = !m.Groups[3].Success, Dots = m.Groups[4].Value.Aggregate(0, (prev, next) => prev | (1 << (next - '1'))) })
-                .ToArray();
-            var braille = brailleRaw.ToDictionary(inf => inf.Bit, inf => inf);
+            .Split(new[] { '\r', '\n', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(bit => Regex.Match(bit, @"^(-)?(\w+)(-)?=(\d+)$"))
+            .Where(m => m.Success)
+            .Select(m => new BrailleLetter { Bit = m.Groups[2].Value, CanBeInitial = !m.Groups[1].Success, CanBeFinal = !m.Groups[3].Success, Dots = m.Groups[4].Value.Aggregate(0, (prev, next) => prev | (1 << (next - '1'))) })
+            .ToArray();
+
+        public static void DoModels()
+        {
+            foreach (var letter in _brailleRaw)
+                File.WriteAllText($@"D:\c\KTANE\Braille\Assets\Models\BrailleHighlight_{letter.Bit}.obj", GenerateObjFile(BrailleHighlight(letter.Dots), $"BrailleHighlight_{letter.Bit}"));
+        }
+
+        private static IEnumerable<Pt[]> BrailleHighlight(int i)
+        {
+            const int revSteps = 16;
+            for (int b = 0; b < 6; b++)
+                if ((i & (1 << b)) != 0)
+                    for (int s = 0; s < revSteps; s++)
+                    {
+                        var angle1 = 360.0 * s / revSteps;
+                        var angle2 = 360.0 * (s + 1) / revSteps;
+                        yield return new[] { pt(0, 0, 0), pt(cos(angle1), 0, sin(angle1)), pt(cos(angle2), 0, sin(angle2)) }.Select(p => pt(p.X * .9 + 2.5 * (b / 3) - 1.25, 0, p.Z * .9 + 2.5 * (b % 3) - 2.5)).ToArray();
+                    }
+        }
+
+        public static void FindWords()
+        {
+            var forbidden = @"catherine,katherine,collins,france,french,steven,surrey,tories,edward,sterling,martin,forget,forgot".Split(',').ToHashSet();
+            var braille = _brailleRaw.ToDictionary(inf => inf.Bit, inf => inf);
             var brailleRegex = new Regex($@"({braille.OrderByDescending(kvp => kvp.Key.Length).Select(kvp => $"{(kvp.Value.CanBeInitial ? "" : "(?!^)")}{kvp.Key}{(kvp.Value.CanBeFinal ? "" : "(?!$)")}").JoinString("|")})", RegexOptions.Compiled);
 
             var numBCols = 10;
@@ -37,7 +66,7 @@ ch=16 gh=126 sh=146 th=1456 wh=156 ed=1246 er=12456 ou=1256 ow=246 w=2456
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Braille.html", "<!--#-->", "<!--##-->",
                 Enumerable.Range(0, numBRows).Select(row => "<tr>" + Enumerable.Range(0, numBCols)
                     .Select(col => /*row + numBRows * col*/col + numBCols * row)
-                    .Select(ix => $"<td><svg class='braille-pattern' viewBox='-.5 -.5 4 6'>{Enumerable.Range(0, 6).Select(b => $"<circle cx='{(b / 3) * 2 + .5}' cy='{(b % 3) * 2 + .5}' r='.5' fill='{((brailleRaw[ix].Dots & (1 << b)) != 0 ? "black" : "white")}' stroke='{((brailleRaw[ix].Dots & (1 << b)) != 0 ? "none" : "#ccc")}' stroke-width='.1' />").JoinString()}</svg><div>{brailleRaw[ix].Bit}</div>")
+                    .Select(ix => $"<td><svg class='braille-pattern' viewBox='-.5 -.5 4 6'>{Enumerable.Range(0, 6).Select(b => $"<circle cx='{(b / 3) * 2 + .5}' cy='{(b % 3) * 2 + .5}' r='.5' fill='{((_brailleRaw[ix].Dots & (1 << b)) != 0 ? "black" : "white")}' stroke='{((_brailleRaw[ix].Dots & (1 << b)) != 0 ? "none" : "#ccc")}' stroke-width='.1' />").JoinString()}</svg><div>{_brailleRaw[ix].Bit}</div>")
                     .JoinString()).JoinString("\n"));
 
             var words = File.ReadAllLines(@"D:\Daten\Unsorted\english-frequency.txt")
