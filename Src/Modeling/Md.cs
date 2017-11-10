@@ -104,9 +104,9 @@ namespace KtaneStuff.Modeling
             return reverse ? arrs.Select(arr => arr.Reverse().ToArray()).ToArray() : arrs;
         }
 
-        public static string GenerateObjFile(IEnumerable<Pt[]> faces, string objectName = null)
+        public static string GenerateObjFile(IEnumerable<Pt[]> faces, string objectName = null, AutoNormal autoNormal = AutoNormal.None)
         {
-            return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, null, null)).ToArray()).ToArray(), objectName);
+            return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, autoNormal == AutoNormal.Flat && face.Length >= 3 ? (face[2] - face[1]) * (face[0] - face[1]) : (Pt?) null, null)).ToArray()).ToArray(), objectName);
         }
 
         public static string GenerateObjFile(IEnumerable<VertexInfo[]> faces, string objectName = null)
