@@ -5,7 +5,7 @@ namespace KtaneStuff.Modeling
     public struct Pt : IEquatable<Pt>
     {
         public double X; public double Y; public double Z;
-        public override string ToString() { return string.Format("({0:R}, {1:R}, {2:R})", X, Y, Z); }
+        public override string ToString() { return string.Format("({0}, {1}, {2})", X, Y, Z); }
         public Pt(double x, double y, double z) { X = x; Y = y; Z = z; }
         public Pt Add(double x = 0, double y = 0, double z = 0) { return new Pt(X + x, Y + y, Z + z); }
         public Pt Set(double? x = null, double? y = null, double? z = null) { return new Pt(x ?? X, y ?? Y, z ?? Z); }
@@ -35,9 +35,10 @@ namespace KtaneStuff.Modeling
 
         public bool IsZero { get { return X == 0 && Y == 0 && Z == 0; } }
 
+        public double Length => Math.Sqrt(X * X + Y * Y + Z * Z);
         public Pt Normalize()
         {
-            var d = Math.Sqrt(X * X + Y * Y + Z * Z);
+            var d = Length;
             if (d == 0)
                 return this;
             return new Pt(X / d, Y / d, Z / d);

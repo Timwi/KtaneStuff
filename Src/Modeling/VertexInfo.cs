@@ -24,5 +24,6 @@ namespace KtaneStuff.Modeling
 
         public VertexInfo WithTexture(PointD texture) { return new VertexInfo(Location, Normal, texture); }
         public VertexInfo WithTexture(double x, double y) { return new VertexInfo(Location, Normal, new PointD(x, y)); }
+        public static VertexInfo operator +(VertexInfo one, Pt two) => new VertexInfo(one.Location + two, one.Normal, one.Texture);
     }
 }

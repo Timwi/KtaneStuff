@@ -152,7 +152,9 @@ namespace KtaneStuff
                             // Video frames (scanning from bottom to top)
                             if (false)
                             {
+#pragma warning disable 162
                                 var thr = new Thread(() =>
+#pragma warning restore 162
                                 {
                                     var path = @"D:\temp\XRayVideos";
                                     for (int frame = 0; frame < h + 160; frame++)

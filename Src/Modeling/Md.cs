@@ -277,6 +277,8 @@ namespace KtaneStuff.Modeling
         public static double sin(double x) => Math.Sin(x * pi / 180);
         public static double cos(double x) => Math.Cos(x * pi / 180);
         public static double tan(double x) => Math.Tan(x * pi / 180);
+        public static double arcsin(double x) => Math.Asin(x) / Math.PI * 180;
+        public static double arccos(double x) => Math.Acos(x) / Math.PI * 180;
         public static double pow(double x, double y) => Math.Pow(x, y);
         public static Pt pt(double x, double y, double z) => new Pt(x, y, z);
         public static MeshVertexInfo pt(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) => new MeshVertexInfo(new Pt(x, y, z), befX, afX, befY, afY);
@@ -560,6 +562,18 @@ namespace KtaneStuff.Modeling
 
                 return DecodeSvgPath.Do(path, bézierSmoothness).Extrude(extrusionDepth);
             }
+        }
+
+        public static VertexInfo[] FlatNormals(this Pt[] polygon)
+        {
+            var normal = (polygon[2] - polygon[1]) * (polygon[0] - polygon[1]);
+            return polygon.Select(f => f.WithNormal(normal)).ToArray();
+        }
+
+        public static IEnumerable<VertexInfo[]> DoubleSidedFlatNormals(this Pt[] polygon)
+        {
+            yield return polygon.FlatNormals();
+            yield return polygon.Reverse().ToArray().FlatNormals();
         }
     }
 }

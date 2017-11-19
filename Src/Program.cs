@@ -30,7 +30,9 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            Mafia.DoModels();
+            PentagonalHexecontahedralMaze.DoModels();
+            PentagonalHexecontahedralMaze.GenerateNets(PentagonalHexecontahedralMaze.DeltoidalHexecontahedron(), "Deltoidal Hexecontahedron");
+            PentagonalHexecontahedralMaze.GenerateNets(PentagonalHexecontahedralMaze.PentagonalHexecontahedron(), "Pentagonal Hexecontahedron");
 
             Console.WriteLine("Done.");
             Console.ReadLine();
