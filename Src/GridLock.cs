@@ -27,8 +27,8 @@ namespace KtaneStuff
                 for (int i = 0; i < 12; i++)
                 {
                     var j = i;
-                    var path1 = $@"D:\c\KTANE\Gridlock\Sources\Icon{i}a.png";
-                    var path2 = $@"D:\c\KTANE\Gridlock\Sources\Icon{i}b.png";
+                    var path1 = $@"D:\Temp\Gridlock-Icon{i}a.png";
+                    var path2 = $@"D:\c\KTANE\Gridlock\Assets\Images\Icon{i}.png";
                     GraphicsUtil.DrawBitmap(bmp.Width / 4, bmp.Height / 3, g =>
                     {
                         g.Clear(Color.Transparent);
@@ -39,22 +39,12 @@ namespace KtaneStuff
                         CommandRunner.Run(@"pngcr", path1, path2).Go();
                         files[j] = File.ReadAllBytes(path2);
                         File.Delete(path1);
-                        File.Delete(path2);
                     }));
                 }
             foreach (var tr in trs)
                 tr.Start();
             foreach (var tr in trs)
                 tr.Join();
-
-            File.WriteAllText(@"D:\c\KTANE\Gridlock\Assets\Data.cs", $@"
-namespace Gridlock {{
-    static class Data {{
-        public static byte[][] RawPngs = {{
-            {files.Select(f => $"new byte[] {{ {f.JoinString(", ")} }}").JoinString(",\r\n            ")}
-        }};
-    }}
-}}");
 
             //// For pasting into MeshEdit
             //void jsonIntoClipboard(IEnumerable<VertexInfo[]> stuff) => Clipboard.SetText(stuff.Select(face => new JsonDict { { "Hidden", false }, { "Vertices", ClassifyJson.Serialize(face) } }).ToJsonList().ToStringIndented());
