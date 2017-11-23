@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,10 @@ namespace KtaneStuff
 {
     static partial class Ktane
     {
-        public static void Do3DMazeManual()
+        public static void Do3DMazeManual(bool cheatSheet)
         {
-            var output1 = new StringBuilder();
-            var output2 = new StringBuilder();
+            var outputs = new List<string>();
+            var headers = cheatSheet ? "ABC|ABD|ABH|ACD|ACH|ADH|BCD|BCH|BDH|CDH".Split('|').Select(h => $"<div class='header'>{h}</div>").ToArray() : null;
             for (int mapIndex = 0; mapIndex < 10; mapIndex++)
             {
                 string[] labels, nWalls, wWalls;
@@ -90,16 +91,31 @@ namespace KtaneStuff
                         break;
                 }
 
-                (mapIndex >= 6 ? output2 : output1).AppendLine($@"<div class='tmaze-outer'>{Utils.Create2DMazeSvg(
+                outputs.Add($@"<div class='tmaze-outer'>{headers?[mapIndex]}{Utils.Create2DMazeSvg(
                     nWalls.Select(row => row.Select(ch => ch == '1').ToArray()).ToArray(),
                     wWalls.Select(row => row.Select(ch => ch == '1').ToArray()).ToArray(),
                     labels.Select(str => str.ToCharArray()).ToArray(),
-                    highlightCorridors: true)}</div>");
+                    highlightCorridors: cheatSheet)}</div>");
             }
-            var alltext = File.ReadAllText(@"D:\c\KTANE\HTML\3D Maze cheat sheet (Timwi).html");
-            alltext = Regex.Replace(alltext, @"(?<=<!-- ##\[## -->).*(?=<!-- ##\]## -->)", Environment.NewLine + output1.ToString(), RegexOptions.Singleline);
-            alltext = Regex.Replace(alltext, @"(?<=<!-- ###\[### -->).*(?=<!-- ###\]### -->)", Environment.NewLine + output2.ToString(), RegexOptions.Singleline);
-            File.WriteAllText(@"D:\c\KTANE\HTML\3D Maze cheat sheet (Timwi).html", alltext);
+            var path = cheatSheet ? @"D:\c\KTANE\Public\HTML\3D Maze embellished (Timwi).html" : @"D:\c\KTANE\Public\HTML\3D Maze.html";
+            var alltext = File.ReadAllText(path);
+
+            alltext = Regex.Replace(alltext, @"(?<=<!-- ##\[## -->).*(?=<!-- ##\]## -->)", @"
+<table class='mazes-table'>
+    <tr><td>{0}</td><td>{1}</td></tr>
+    <tr><td>{2}</td><td>{3}</td></tr>
+    <tr><td>{4}</td><td>{5}</td></tr>
+</table>
+".Fmt(outputs.ToArray()), RegexOptions.Singleline);
+
+            alltext = Regex.Replace(alltext, @"(?<=<!-- ###\[### -->).*(?=<!-- ###\]### -->)", @"
+<table class='mazes-table'>
+    <tr><td>{6}</td><td>{7}</td></tr>
+    <tr><td>{8}</td><td>{9}</td></tr>
+</table>
+".Fmt(outputs.ToArray()), RegexOptions.Singleline);
+
+            File.WriteAllText(path, alltext);
         }
     }
 }
