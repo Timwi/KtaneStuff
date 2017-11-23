@@ -29,7 +29,6 @@ namespace KtaneStuff
         {
             const int padding = 10;
             var threads = new List<Thread>();
-            var declarations = new List<string>();
             for (int i = 3; i <= 6; i++)
                 foreach (var diagonal in new[] { false, true })
                 {
@@ -38,7 +37,7 @@ namespace KtaneStuff
                     {
                         var length = diagonal ? j * Math.Sqrt(2) : j;
                         var path1 = $@"D:\temp\temp{j}{diagonal}.png";
-                        var path2 = $@"D:\temp\temp{j}{diagonal}.cr.png";
+                        var path2 = $@"D:\c\KTANE\WordSearch\Assets\Images\{(diagonal ? "diag" : "str")}{j}.png";
                         GraphicsUtil.DrawBitmap((int) (length * 100), 100, g =>
                         {
                             g.Clear(Color.Transparent);
@@ -47,27 +46,13 @@ namespace KtaneStuff
                             g.DrawPath(new Pen(Color.Yellow, 10f), path);
                         }).Save(path1);
                         CommandRunner.Run("pngcr.bat", path1, path2).Go();
-                        lock (declarations)
-                            declarations.Add($@"{{ ""{(diagonal ? "diag" : "str")}{j}"", new byte[] {{ {File.ReadAllBytes(path2).JoinString(",")} }} }}");
                         File.Delete(path1);
-                        File.Delete(path2);
                     }));
                 }
             foreach (var thr in threads)
                 thr.Start();
             foreach (var thr in threads)
                 thr.Join();
-
-            File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\RawPngs.cs", $@"
-using System.Collections.Generic;
-namespace WordSearch {{
-    public static class Pngs {{
-        public static Dictionary<string, byte[]> RawData = new Dictionary<string, byte[]> {{
-            {declarations.Order().JoinString(",\r\n            ")}
-        }};
-    }}
-}}
-");
         }
 
         private static IEnumerable<VertexInfo[]> Decoration()

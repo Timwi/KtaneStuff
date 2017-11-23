@@ -43,19 +43,7 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSubmitBtn.obj", GenerateObjFile(SubmitBtn(), "SubmitBtn"));
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSelectorBtnHighlight.obj", GenerateObjFile(SelectorBtnHighlight(), "SelectorBtnHighlight"));
         }
-
-        public static void GenerateRawBytes()
-        {
-            File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\FriendshipSymbols.cs", $@"
-namespace Friendship {{
-    static class FriendshipSymbols {{
-        public static byte[][] RawBytes = new byte[][] {{
-            {Enumerable.Range(0, 56).Select(i => $@"new byte[] {{{File.ReadAllBytes($@"D:\c\KTANE\Friendship\Manual\img\Friendship\Friendship Symbol {i:00}.png").JoinString(",")}}}").JoinString(",\r\n            ")}
-        }};
-    }}
-}}");
-        }
-
+        
         public static void SimulateFriendship()
         {
             var ponyNames = new[] {

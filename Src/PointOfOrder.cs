@@ -31,29 +31,7 @@ namespace KtaneStuff
         }
 
         const int _numActiveRules = 2;
-        const int numPlayedCards = 5;
-
-        public static void CreateDataCs()
-        {
-            File.WriteAllText(@"D:\c\KTANE\PointOfOrder\Assets\Data.cs", $@"using System.Collections.Generic;
-
-namespace PointOfOrder
-{{
-    static class RawPngs
-    {{
-        public static Dictionary<Suit, Dictionary<Rank, byte[]>> CardData = new Dictionary<Suit, Dictionary<Rank, byte[]>> {{
-            {Enumerable.Range(0, 4).Select(i => (Suit) i).Select(suit => $@"{{ Suit.{suit}, new Dictionary<Rank, byte[]> {{
-                {Enumerable.Range(0, 13).Select(i => (Rank) i).Select(rank => $@"{{ Rank.{rank}, new byte[] {{ {File.ReadAllBytes($@"D:\Daten\Upload\KTANE\Cards\Extracted\Cards\{rank} of {suit}.png").JoinString(", ")} }} }}")
-                    .JoinString(",\r\n                ")} }} }}")
-                .JoinString(",\r\n            ")}
-        }};
-
-        public static byte[][] BackData = new byte[][] {{
-            {Enumerable.Range(0, 10).Select(n => $@"new byte[] {{ {File.ReadAllBytes($@"D:\Daten\Upload\KTANE\Cards\Extracted\Backs\back{n}.png").JoinString(", ")} }}").JoinString(",\r\n            ")}
-        }};
-    }}
-}}");
-        }
+        const int _numPlayedCards = 5;
 
         public static void Test()
         {
@@ -132,7 +110,7 @@ namespace PointOfOrder
                 // For the first 𝑛−1 cards, only make sure that they satisfy the two active rules.
                 var permissibleCards = PlayingCard.AllCards.Where(c => !pile.Contains(c) && activeRules.All(rule => rule(c, pile)));
 
-                if (pile.Count == numPlayedCards - 1)
+                if (pile.Count == _numPlayedCards - 1)
                 {
                     // For the 𝑛th card, also make sure that the pile as a whole doesn’t satisfy any inactive rule
                     permissibleCards = permissibleCards.Where(c =>
@@ -150,7 +128,7 @@ namespace PointOfOrder
                     });
                 }
 
-                if (pile.Count == numPlayedCards)
+                if (pile.Count == _numPlayedCards)
                 {
                     // Choose a “correct” card
                     correctCards = permissibleCards.ToArray();

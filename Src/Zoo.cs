@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
-using KtaneStuff.Modeling;
 
 namespace KtaneStuff
 {
@@ -179,7 +182,7 @@ namespace KtaneStuff
                     (withHexOutline ? $"<path stroke-width='.01' stroke='#000' fill='#fff' d='M {hexagon.GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />" : null) +
                     arrowAngle.NullOr(aa => svgArrow(aa, hexagon.GetCenter(1).X, hexagon.GetCenter(1).Y, 0, .15)) +
                     $"<path d='{path.Select(pp => pp.Select(translatePoint)).JoinString(" ")}' fill='#000' />" +
-                    $"<path class='highlightable' stroke='none' fill='transparent' d='M {hexagon.GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />";
+                    (withHexOutline ? $"<path class='highlightable' stroke='none' fill='transparent' d='M {hexagon.GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />" : null);
             }
 
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Zoo.html", "<!--%%-->", "<!--%%%-->", $@"
@@ -207,63 +210,72 @@ namespace KtaneStuff
                             .JoinString()}
                     </svg>");
 
-            if (createPngs)
-            {
-                var seq = inGrid.Zip(Hex.LargeHexagon(sideLength), (ig, hex) => new { Font = ig.Font, Ch = ig.Ch, Name = ig.Name, Hex = (Hex?) hex, IsQ = (bool?) null })
-                    .Concat(outsideGrid.Select((og, ix) => new { Font = og.Font, Ch = og.Ch, Name = og.Name, Hex = (Hex?) null, IsQ = (bool?) og.IsQ }));
+            var seq = inGrid.Zip(Hex.LargeHexagon(sideLength), (ig, hex) => new { Font = ig.Font, Ch = ig.Ch, Name = ig.Name, Hex = (Hex?) hex, IsQ = (bool?) null })
+                .Concat(outsideGrid.Select((og, ix) => new { Font = og.Font, Ch = og.Ch, Name = og.Name, Hex = (Hex?) null, IsQ = (bool?) og.IsQ }));
 
-                var hexDeclarations = new List<string>();
-                var qDeclarations = new Dictionary<string, string>();
-                var rDeclarations = new Dictionary<string, string>();
-                var pngcrs = new List<Thread>();
-                foreach (var inf in seq)
+            var hexDeclarations = new List<string>();
+            var qDeclarations = new Dictionary<string, string>();
+            var rDeclarations = new Dictionary<string, string>();
+            var pngcrs = new List<Thread>();
+            var statements = new StringBuilder();
+            foreach (var inf in seq)
+            {
+                if (createPngs)
                 {
-                    //File.WriteAllText($@"D:\temp\Zoo\{inf.Name}.svg", $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 2 2'>{svgForAnimal(inf.Font, inf.Ch, new Hex(0, 0), sizeFactor: 1)}</svg>");
-                    //var stuff = CommandRunner.RunRaw($@"D:\Inkscape\InkscapePortable.exe -z -f ""D:\temp\Zoo\{inf.Name}.svg"" -w 256 -e ""D:\temp\Zoo\{inf.Name}.png""").GoGetOutputText();
+                    var svgPath = $@"D:\temp\Zoo\{inf.Name}.svg";
+                    var pngPath1 = $@"D:\temp\Zoo\{inf.Name}.png";
+                    var pngPath2 = $@"D:\temp\Zoo\{inf.Name}2.png";
+                    var pngPathOutput = $@"D:\c\KTANE\Zoo\Assets\Images\{inf.Name}.png";
+
+                    File.WriteAllText(svgPath, $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 2 2'>{svgForAnimal(inf.Font, inf.Ch, new Hex(0, 0), sizeFactor: 1)}</svg>");
+                    var stuff = CommandRunner.RunRaw($@"D:\Inkscape\InkscapePortable.exe -z -f ""{svgPath}"" -w 256 -e ""{pngPath1}""").GoGetOutputText();
                     var thr = new Thread(() =>
                     {
-                        CommandRunner.RunRaw($@"pngcr ""D:\temp\Zoo\{inf.Name}.png"" ""D:\temp\Zoo\{inf.Name}.cr.png""").Go();
-                        lock (hexDeclarations)
-                            if (inf.Hex != null)
-                                hexDeclarations.Add($@"{{ new Hex({inf.Hex.Value.Q}, {inf.Hex.Value.R}), new AnimalInfo {{ Name = ""{inf.Name.CLiteralEscape()}"", Png = new byte[] {{ {File.ReadAllBytes($@"D:\temp\Zoo\{inf.Name}.cr.png").JoinString(", ")} }} }} }}");
-                            else
-                                (inf.IsQ.Value ? qDeclarations : rDeclarations).Add(inf.Name, $@"new AnimalInfo {{ Name = ""{inf.Name.CLiteralEscape()}"", Png = new byte[] {{ {File.ReadAllBytes($@"D:\temp\Zoo\{inf.Name}.cr.png").JoinString(", ")} }} }}");
-                        //File.Delete($@"D:\temp\Zoo\{inf.Name}.png");
-                        //File.Delete($@"D:\temp\Zoo\{inf.Name}.cr.png");
+                        unsafe
+                        {
+                            using (var origBmp = new Bitmap(pngPath1))
+                            using (var newBmp = new Bitmap(origBmp.Width, origBmp.Height, PixelFormat.Format32bppArgb))
+                            {
+                                var width = origBmp.Width;
+                                var height = origBmp.Height;
+                                var readBits = origBmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                                var writeBits = newBmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                                for (int y = 0; y < height; y++)
+                                {
+                                    byte* read = (byte*) readBits.Scan0 + y * readBits.Stride;
+                                    byte* write = (byte*) writeBits.Scan0 + y * writeBits.Stride;
+                                    for (int x = 0; x < width; x++)
+                                    {
+                                        write[4 * x + 0] = 0;// read[4 * x + 0];
+                                        write[4 * x + 1] = 0;//read[4 * x + 1];
+                                        write[4 * x + 2] = 0;//read[4 * x + 2];
+                                        write[4 * x + 3] = read[4 * x + 3];
+                                    }
+                                }
+                                origBmp.UnlockBits(readBits);
+                                newBmp.UnlockBits(writeBits);
+                                newBmp.Save(pngPath2);
+                            }
+                        }
+                        CommandRunner.RunRaw($@"pngcr ""{pngPath2}"" ""{pngPathOutput}""").Go();
+                        File.Delete(svgPath);
+                        File.Delete(pngPath1);
+                        File.Delete(pngPath2);
                     });
                     thr.Start();
                     pngcrs.Add(thr);
                 }
-                foreach (var th in pngcrs)
-                    th.Join();
 
-                if (hexDeclarations.Count != 61 || qDeclarations.Count != 9 || rDeclarations.Count != 9)
-                    System.Diagnostics.Debugger.Break();
-
-                File.WriteAllText(@"D:\c\KTANE\Zoo\Assets\Data.cs", $@"using System.Collections.Generic;
-
-namespace Zoo
-{{
-    public sealed class AnimalInfo {{ public string Name; public byte[] Png; }}
-    public static class Data
-    {{
-        public static Dictionary<Hex, AnimalInfo> Hexes = new Dictionary<Hex, AnimalInfo>
-        {{
-            {hexDeclarations.JoinString(",\r\n            ")}
-        }};
-
-        public static AnimalInfo[] Qs = new AnimalInfo[]
-        {{
-            {seq.Where(i => i.IsQ == true).Select(i => qDeclarations[i.Name]).JoinString(",\r\n            ")}
-        }};
-
-        public static AnimalInfo[] Rs = new AnimalInfo[]
-        {{
-            {seq.Where(i => i.IsQ == false).Select(i => rDeclarations[i.Name]).JoinString(",\r\n            ")}
-        }};
-    }}
-}}");
+                if (inf.Hex != null)
+                    statements.AppendLine($@"_inGrid[new Hex({inf.Hex.Value.Q}, {inf.Hex.Value.R})] = ""{inf.Name.CLiteralEscape()}"";");
+                else
+                    statements.AppendLine($@"{(inf.IsQ.Value ? "_outGridQ" : "_outGridR")}.Add(""{inf.Name.CLiteralEscape()}"");");
             }
+            foreach (var th in pngcrs)
+                th.Join();
+
+            Console.WriteLine();
+            Console.WriteLine(statements.ToString());
         }
 
         public static void RunSimulation()

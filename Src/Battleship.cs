@@ -134,37 +134,6 @@ namespace KtaneStuff
                 .ToArray();
         }
 
-        public static void DoGraphics()
-        {
-            var declarations = new List<string>();
-            var threads = new List<Thread>();
-            foreach (var name in new string[] { "SqWater", "SqShip", "SqShipL", "SqShipR", "SqShipT", "SqShipB", "SqShipF", "SqShipA" })
-            {
-                var thr = new Thread(() =>
-                {
-                    File.WriteAllBytes($@"D:\temp\temp-{name}.png", File.ReadAllBytes($@"D:\c\KTANE\Battleship\Assets\Misc\{name}.svg.png"));
-                    CommandRunner.RunRaw($@"pngcr D:\c\KTANE\Battleship\Assets\Misc\{name}.svg.png D:\c\KTANE\Battleship\Assets\Misc\{name}.png").Go();
-                    lock (declarations)
-                        declarations.Add($@"{{ ""{name}"", new byte[] {{ {File.ReadAllBytes($@"D:\c\KTANE\Battleship\Assets\Misc\{name}.png").JoinString(", ")} }} }}");
-                });
-                thr.Start();
-                threads.Add(thr);
-            }
-            foreach (var th in threads)
-                th.Join();
-
-            if (declarations.Count > 0)
-                File.WriteAllText(@"D:\c\KTANE\Battleship\Assets\RawPngs.cs", $@"
-using System.Collections.Generic;
-namespace Battleship {{
-    public static class RawPngs {{
-        public static Dictionary<string, byte[]> RawBytes = new Dictionary<string, byte[]> {{
-            {declarations.JoinString(",\r\n            ")}
-        }};
-    }}
-}}");
-        }
-
         public static void GeneratePuzzle()
         {
             var theLog = new List<string>();

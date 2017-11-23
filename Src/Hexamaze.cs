@@ -478,8 +478,6 @@ namespace KtaneStuff
 
         public static void GenerateMarkingsSvg()
         {
-            var declarations = new List<string>();
-            string lineDeclaration = null;
             var pngcrs = new List<Thread>();
             foreach (var obj in new object[] { "Line", Marking.None, Marking.Circle, Marking.Hexagon, Marking.TriangleDown, Marking.TriangleLeft, Marking.TriangleRight, Marking.TriangleUp })
             {
@@ -488,36 +486,18 @@ namespace KtaneStuff
 
                 File.WriteAllText($@"D:\temp\temp.svg", marking != null
                     ? $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-.5 -.5 1 1'>{marking.Value.getMarkingSvg(1, 0, 0, useAttributes: true, strokeWidth: .02, includeDot: true)}</svg>"
-                    : $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-.75 -.75 1.5 1.5'>{new Hex(0, 0).GetPolygon(1).Apply(ps => $"<line x1='{ps[0].X}' y1='{ps[0].Y}' x2='{ps[1].X}' y2='{ps[1].Y}' stroke-width='.1' stroke='#f0faff' stroke-linecap='round' />")}</svg>");
+                    : $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-.75 -.75 1.5 1.5'>{new Hex(0, 0).GetPolygon(1).Apply(ps => $"<line x1='{ps[1].X}' y1='{ps[1].Y}' x2='{ps[2].X}' y2='{ps[2].Y}' stroke-width='.1' stroke='#f0faff' stroke-linecap='round' />")}</svg>");
                 CommandRunner.RunRaw($@"D:\Inkscape\InkscapePortable.exe -z -f D:\temp\temp.svg -w {(marking == null ? 150 : 100)} -e D:\temp\temp-{name}.png").Go();
                 var thr = new Thread(() =>
                 {
-                    CommandRunner.RunRaw($@"pngcr D:\temp\temp-{name}.png D:\temp\temp-{name}.cr.png").Go();
-                    if (marking != null)
-                        lock (declarations)
-                            declarations.Add($@"{{ Marking.{name}, new byte[] {{ {File.ReadAllBytes($@"D:\temp\temp-{name}.cr.png").JoinString(", ")} }} }}");
-                    else
-                        lineDeclaration = $@"new byte[] {{ {File.ReadAllBytes($@"D:\temp\temp-{name}.cr.png").JoinString(", ")} }}";
+                    CommandRunner.RunRaw($@"pngcr D:\temp\temp-{name}.png D:\c\KTANE\Hexamaze\Assets\Images\{name}.png").Go();
                     File.Delete($@"D:\temp\temp-{name}.png");
-                    File.Delete($@"D:\temp\temp-{name}.cr.png");
                 });
                 thr.Start();
                 pngcrs.Add(thr);
             }
             foreach (var th in pngcrs)
                 th.Join();
-
-            if (declarations.Count > 0)
-                File.WriteAllText(@"D:\c\KTANE\Hexamaze\Assets\MarkingPngs.cs", $@"
-using System.Collections.Generic;
-namespace Hexamaze {{
-    public static class MarkingPngs {{
-        public static Dictionary<Marking, byte[]> RawBytes = new Dictionary<Marking, byte[]> {{
-            {declarations.JoinString(",\r\n            ")}
-        }};
-        public static byte[] LineRawBytes = {lineDeclaration};
-    }}
-}}");
         }
 
         public static void DoStuff()
