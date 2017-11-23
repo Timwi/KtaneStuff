@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="3DMazeManual.cs" />
     <Compile Include="Astrology.cs" />
+    <Compile Include="ExtendedPassword.cs" />
     <Compile Include="Mafia.cs" />
     <Compile Include="Braille.cs" />
     <Compile Include="ColoredSwitches.cs" />
