@@ -19,7 +19,7 @@ using RT.Util;
 
 namespace KtaneStuff
 {
-    class Program
+    partial class Program
     {
         [STAThread()]
         static int Main(string[] args)
