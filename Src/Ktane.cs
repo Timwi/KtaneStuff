@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -43,6 +44,32 @@ namespace KtaneStuff
                 row++;
             }
             tt.WriteToConsole();
+        }
+    }
+
+    static class ExtensionMethods
+    {
+        public static void AddSafe<K1, K2, K3, K4, V>(this IDictionary<K1, Dictionary<K2, Dictionary<K3, Dictionary<K4, V>>>> dic, K1 key1, K2 key2, K3 key3, K4 key4, V value)
+        {
+            if (dic == null)
+                throw new ArgumentNullException("dic");
+            if (key1 == null)
+                throw new ArgumentNullException("key1", "Null values cannot be used for keys in dictionaries.");
+            if (key2 == null)
+                throw new ArgumentNullException("key2", "Null values cannot be used for keys in dictionaries.");
+            if (key3 == null)
+                throw new ArgumentNullException("key3", "Null values cannot be used for keys in dictionaries.");
+            if (key4 == null)
+                throw new ArgumentNullException("key4", "Null values cannot be used for keys in dictionaries.");
+
+            if (!dic.ContainsKey(key1))
+                dic[key1] = new Dictionary<K2, Dictionary<K3, Dictionary<K4, V>>>();
+            if (!dic[key1].ContainsKey(key2))
+                dic[key1][key2] = new Dictionary<K3, Dictionary<K4, V>>();
+            if (!dic[key1][key2].ContainsKey(key3))
+                dic[key1][key2][key3] = new Dictionary<K4, V>();
+
+            dic[key1][key2][key3][key4] = value;
         }
     }
 }

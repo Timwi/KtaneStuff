@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using RT.Util;
+using RT.Util.ExtensionMethods;
 
 [assembly: AssemblyTitle("KtaneStuff")]
 [assembly: AssemblyDescription("Contains some ancillary code used in the creation of some Keep Talking and Nobody Explodes mods.")]
@@ -30,7 +34,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            PentagonalHexecontahedralMaze.GenerateNets();
+            SolidMaze.DoEverything();
 
             Console.WriteLine("Done.");
             Console.ReadLine();
