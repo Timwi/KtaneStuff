@@ -235,9 +235,10 @@ namespace KtaneStuff
                 var edgeIx = edgeData["edge"].GetInt();
                 var adjInf = polyhedron.Adjacencies.Single(ad => (ad.FromFace == faceIx && ad.FromEdge == edgeIx) || (ad.ToFace == faceIx && ad.ToEdge == edgeIx));
                 adjInf.Adjacency = adj;
-                SendMessage(new JsonDict { { "svg", polyhedron.SvgId }, { "tag", "delete" }, { "className", $"poly-{polyhedron.FileCompatibleName}-edge-{faceIx}-{edgeIx}" } });
+                SendMessage(new JsonDict { { "svg", polyhedron.SvgId }, { "tag", "delete" }, { "className", $"poly-{polyhedron.FileCompatibleName}-edge" } });
                 _boundingBoxes[pIx] = GenerateNet(polyhedron);
                 SendViewBoxes();
+                save();
             }
 
             private BoundingBoxD GenerateNet(PolyhedronInfo polyhedron)
@@ -437,22 +438,22 @@ namespace KtaneStuff
 
                                     case Adjacency.NetWall:
                                     case Adjacency.Net:
-                                        //sendText($"portal-letter-{fromFaceIx}-{fromEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", 1, p1c.X, p1c.Y, "?", "#f00", edgeData);
-                                        //sendText($"portal-letter-{toFaceIx}-{toEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", 1, p2c.X, p2c.Y, "?", "#f00", edgeData);
-                                        //sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", edgeData, $"M {(p11.X + p1m.X) / 2},{(p11.Y + p1m.Y) / 2} {(p1c.X + p1m.X) / 2},{(p1c.Y + p1m.Y) / 2} {(p12.X + p1m.X) / 2},{(p12.Y + p1m.Y) / 2} z", strokeWidth: null, fill: "#000");
-                                        //sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", edgeData, $"M {(p21.X + p2m.X) / 2},{(p21.Y + p2m.Y) / 2} {(p2c.X + p2m.X) / 2},{(p2c.Y + p2m.Y) / 2} {(p22.X + p2m.X) / 2},{(p22.Y + p2m.Y) / 2} z", strokeWidth: null, fill: "#000");
+                                        //sendText($"portal-letter-{fromFaceIx}-{fromEdgeIx}", "edge", 1, p1c.X, p1c.Y, "?", "#f00", edgeData);
+                                        //sendText($"portal-letter-{toFaceIx}-{toEdgeIx}", "edge", 1, p2c.X, p2c.Y, "?", "#f00", edgeData);
+                                        //sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", "edge", edgeData, $"M {(p11.X + p1m.X) / 2},{(p11.Y + p1m.Y) / 2} {(p1c.X + p1m.X) / 2},{(p1c.Y + p1m.Y) / 2} {(p12.X + p1m.X) / 2},{(p12.Y + p1m.Y) / 2} z", strokeWidth: null, fill: "#000");
+                                        //sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", "edge", edgeData, $"M {(p21.X + p2m.X) / 2},{(p21.Y + p2m.Y) / 2} {(p2c.X + p2m.X) / 2},{(p2c.Y + p2m.Y) / 2} {(p22.X + p2m.X) / 2},{(p22.Y + p2m.Y) / 2} z", strokeWidth: null, fill: "#000");
                                         break;
 
                                     case Adjacency.Portal:
                                         var ch = polyhedron.GetPortalLetter(fromFaceIx, fromEdgeIx);
-                                        sendText($"portal-letter-{fromFaceIx}-{fromEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", .5, p1c.X, p1c.Y, ch.ToString(), "#000", edgeData);
-                                        sendText($"portal-letter-{toFaceIx}-{toEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", .5, p2c.X, p2c.Y, ch.ToString(), "#000", edgeData);
-                                        sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", edgeData, $"M {(p11.X + p1m.X) / 2},{(p11.Y + p1m.Y) / 2} {(p1c.X + p1m.X) / 2},{(p1c.Y + p1m.Y) / 2} {(p12.X + p1m.X) / 2},{(p12.Y + p1m.Y) / 2} z", strokeWidth: null, fill: "#000");
-                                        sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", edgeData, $"M {(p21.X + p2m.X) / 2},{(p21.Y + p2m.Y) / 2} {(p2c.X + p2m.X) / 2},{(p2c.Y + p2m.Y) / 2} {(p22.X + p2m.X) / 2},{(p22.Y + p2m.Y) / 2} z", strokeWidth: null, fill: "#000");
+                                        sendText($"portal-letter-{fromFaceIx}-{fromEdgeIx}", "edge", .5, p1c.X, p1c.Y, ch.ToString(), "#000", edgeData);
+                                        sendText($"portal-letter-{toFaceIx}-{toEdgeIx}", "edge", .5, p2c.X, p2c.Y, ch.ToString(), "#000", edgeData);
+                                        sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", "edge", edgeData, $"M {(p11.X + p1m.X) / 2},{(p11.Y + p1m.Y) / 2} {(p1c.X + p1m.X) / 2},{(p1c.Y + p1m.Y) / 2} {(p12.X + p1m.X) / 2},{(p12.Y + p1m.Y) / 2} z", strokeWidth: null, fill: "#000");
+                                        sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", "edge", edgeData, $"M {(p21.X + p2m.X) / 2},{(p21.Y + p2m.Y) / 2} {(p2c.X + p2m.X) / 2},{(p2c.Y + p2m.Y) / 2} {(p22.X + p2m.X) / 2},{(p22.Y + p2m.Y) / 2} z", strokeWidth: null, fill: "#000");
                                         break;
 
                                     case Adjacency.Curve:
-                                        sendPath($"curve-{fromFaceIx}-{fromEdgeIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", edgeData,
+                                        sendPath($"curve-{fromFaceIx}-{fromEdgeIx}", "edge", edgeData,
                                             (p2m - p1m).Distance() < .5 ? $"M {p1m.X},{p1m.Y} L {p2m.X},{p2m.Y}" :
                                             l1 >= 0 && l1 <= 1 && l2 >= 0 && l2 <= 1 ? $"M {p1m.X},{p1m.Y} C {intersect.X},{intersect.Y} {intersect.X},{intersect.Y} {p2m.X},{p2m.Y}" :
                                             $"M {p1m.X},{p1m.Y} C {p1c.X},{p1c.Y} {p2c.X},{p2c.Y} {p2m.X},{p2m.Y}",

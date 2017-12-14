@@ -667,7 +667,7 @@
         "ToFace": 39
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Portal",
         "FromEdge": 6,
         "FromFace": 15,
         "ToEdge": 0,
@@ -2217,14 +2217,14 @@
         "ToFace": 38
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 5,
         "FromFace": 0,
         "ToEdge": 0,
         "ToFace": 1
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 5,
         "FromFace": 1,
         "ToEdge": 0,
@@ -2364,7 +2364,7 @@
         "ToFace": 4
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 3,
         "FromFace": 1,
         "ToEdge": 5,
@@ -2378,14 +2378,14 @@
         "ToFace": 30
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 4,
         "FromFace": 28,
         "ToEdge": 2,
         "ToFace": 30
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 1,
         "FromFace": 13,
         "ToEdge": 3,
@@ -2448,7 +2448,7 @@
         "ToFace": 24
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 3,
         "FromFace": 6,
         "ToEdge": 2,
@@ -2476,7 +2476,7 @@
         "ToFace": 32
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 2,
         "FromFace": 7,
         "ToEdge": 0,
@@ -2588,7 +2588,7 @@
         "ToFace": 31
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 3,
         "FromFace": 16,
         "ToEdge": 2,
@@ -2616,7 +2616,7 @@
         "ToFace": 40
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 5,
         "FromFace": 13,
         "ToEdge": 0,
@@ -2658,14 +2658,14 @@
         "ToFace": 36
       },
       {
-        "Adjacency": "Portal",
+        "Adjacency": "Curve",
         "FromEdge": 4,
         "FromFace": 20,
         "ToEdge": 1,
         "ToFace": 36
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 5,
         "FromFace": 19,
         "ToEdge": 0,
@@ -2693,14 +2693,14 @@
         "ToFace": 32
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 1,
         "FromFace": 29,
         "ToEdge": 2,
         "ToFace": 32
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 3,
         "FromFace": 19,
         "ToEdge": 2,
@@ -2791,7 +2791,7 @@
         "ToFace": 25
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 3,
         "FromFace": 3,
         "ToEdge": 2,
@@ -2819,28 +2819,28 @@
         "ToFace": 31
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 5,
         "FromFace": 15,
         "ToEdge": 0,
         "ToFace": 16
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 1,
         "FromFace": 16,
         "ToEdge": 0,
         "ToFace": 40
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Portal",
         "FromEdge": 5,
         "FromFace": 16,
         "ToEdge": 0,
         "ToFace": 17
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 4,
         "FromFace": 15,
         "ToEdge": 1,
@@ -2896,7 +2896,7 @@
         "ToFace": 19
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 1,
         "FromFace": 19,
         "ToEdge": 0,
@@ -2910,7 +2910,7 @@
         "ToFace": 22
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Portal",
         "FromEdge": 5,
         "FromFace": 21,
         "ToEdge": 0,
@@ -2938,7 +2938,7 @@
         "ToFace": 23
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Portal",
         "FromEdge": 4,
         "FromFace": 21,
         "ToEdge": 4,
@@ -2952,7 +2952,7 @@
         "ToFace": 23
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Portal",
         "FromEdge": 1,
         "FromFace": 21,
         "ToEdge": 3,
@@ -2966,35 +2966,35 @@
         "ToFace": 25
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Portal",
         "FromEdge": 1,
         "FromFace": 25,
         "ToEdge": 2,
         "ToFace": 37
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 3,
         "FromFace": 17,
         "ToEdge": 2,
         "ToFace": 25
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Portal",
         "FromEdge": 4,
         "FromFace": 17,
         "ToEdge": 1,
         "ToFace": 37
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Portal",
         "FromEdge": 0,
         "FromFace": 15,
         "ToEdge": 5,
         "ToFace": 17
       },
       {
-        "Adjacency": "Portal",
+        "Adjacency": "Net",
         "FromEdge": 1,
         "FromFace": 15,
         "ToEdge": 0,
@@ -3015,7 +3015,7 @@
         "ToFace": 41
       },
       {
-        "Adjacency": "Portal",
+        "Adjacency": "Curve",
         "FromEdge": 4,
         "FromFace": 23,
         "ToEdge": 4,
@@ -4357,7 +4357,7 @@
     "Rotation": 106,
     "SvgId": "svg-1",
     "XOffset": 14.500000000000002,
-    "YOffset": 2.3999999999999995
+    "YOffset": 2.6999999999999997
   },
   {
     "Adjacencies": null,
