@@ -205,6 +205,7 @@ namespace KtaneStuff
                 switch (json["Command"].GetString())
                 {
                     case "add": Update(json["Polyhedron"].GetString(), polyhedron => { polyhedron.SvgId = json["SvgId"].GetString(); SendPolyhedronSelect(polyhedron); }); break;
+                    case "remove": Update(json["Polyhedron"].GetString(), polyhedron => { polyhedron.SvgId = null; SendPolyhedronSelect(polyhedron); }); break;
                     case "rotate": Update(edgeData["polyhedron"].GetString(), polyhedron => { polyhedron.Rotation += json["Amount"].GetDouble(NumericConversionOptions.AllowConversionFromString); }); break;
                     case "move": Update(edgeData["polyhedron"].GetString(), polyhedron => { polyhedron.XOffset += json["XAmount"].GetDouble(NumericConversionOptions.AllowConversionFromString); polyhedron.YOffset += json["YAmount"].GetDouble(NumericConversionOptions.AllowConversionFromString); }); break;
 
@@ -222,7 +223,8 @@ namespace KtaneStuff
                 var polyIx = _polyhedra.IndexOf(p => p.FileCompatibleName == polyhedronId);
                 var polyhedron = _polyhedra[polyIx];
                 action(polyhedron);
-                _boundingBoxes[polyIx] = GenerateNet(polyhedron);
+                if (polyhedron.SvgId != null)
+                    _boundingBoxes[polyIx] = GenerateNet(polyhedron);
                 SendViewBoxes();
                 save();
             }

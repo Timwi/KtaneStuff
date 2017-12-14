@@ -135,6 +135,7 @@
             }
 
             $('#add-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'add', Polyhedron: $('#polyhedra').find(":selected").attr('data-name'), SvgId: $('.radio-svg:checked').val() })); });
+            $('#remove-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'remove', Polyhedron: $('#polyhedra').find(":selected").attr('data-name') })); });
             $('#convert-to-portal').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-portal', EdgeData: selectedEdge.getAttribute('data-edge') })); });
             $('#convert-to-curve').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-curve', EdgeData: selectedEdge.getAttribute('data-edge') })); });
             $('#make-connected').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'make-connected', EdgeData: selectedEdge.getAttribute('data-edge') })); });
@@ -174,7 +175,7 @@
             }
 
         #log-wrap {
-            position: absolute;
+            position: fixed;
             top: 1em;
             right: 1em;
             width: 35em;
@@ -193,7 +194,7 @@
                 <div><textarea id='log' style="white-space:pre"></textarea></div>
                 <div><select accesskey="," id="polyhedra"></select></div>
                 <div><input type="radio" name="radio-svg" class="radio-svg" accesskey="1" value="svg-1" checked /> SVG <u>1</u> | <input type="radio" name="radio-svg" class="radio-svg" accesskey="2" value="svg-2" /> SVG <u>2</u></div>
-                <div><button id="add-polyhedron" accesskey="a"><u>A</u>dd polyhedron</button></div>
+                <div><button id="add-polyhedron" accesskey="a"><u>A</u>dd polyhedron</button> <button id="remove-polyhedron" accesskey="m">Re<u>m</u>ove polyhedron</button></div>
                 <div id="edge-options">
                     <div>Selected edge: <span id="eo-data"></span></div>
                     <div>
@@ -247,8 +248,8 @@
                         <p>[2] <a href='https://en.wikipedia.org/wiki/Net_(polyhedron)'>https://en.wikipedia.org/wiki/Net_(polyhedron)</a></p>
                     </div>
                 </div>
+                <div class="page-footer relative-footer">Page 1 of 2</div>
             </div>
-            <div class="page-footer relative-footer">Page 1 of 2</div>
         </div>
         <div class="page page-bg-06">
             <div class="page-header">

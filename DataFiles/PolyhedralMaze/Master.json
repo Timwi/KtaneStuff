@@ -303,7 +303,7 @@
         "ToFace": 20
       },
       {
-        "Adjacency": "Net",
+        "Adjacency": "Curve",
         "FromEdge": 5,
         "FromFace": 6,
         "ToEdge": 1,
@@ -317,7 +317,7 @@
         "ToFace": 7
       },
       {
-        "Adjacency": "Curve",
+        "Adjacency": "Net",
         "FromEdge": 1,
         "FromFace": 7,
         "ToEdge": 0,
@@ -4360,7 +4360,848 @@
     "YOffset": 2.6999999999999997
   },
   {
-    "Adjacencies": null,
+    "Adjacencies": [
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 0,
+        "ToEdge": 2,
+        "ToFace": 20
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 0,
+        "ToEdge": 1,
+        "ToFace": 30
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 0,
+        "ToEdge": 3,
+        "ToFace": 19
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 3,
+        "FromFace": 0,
+        "ToEdge": 5,
+        "ToFace": 8
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 0,
+        "ToEdge": 1,
+        "ToFace": 32
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 5,
+        "FromFace": 0,
+        "ToEdge": 0,
+        "ToFace": 1
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 19,
+        "ToEdge": 0,
+        "ToFace": 20
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 20,
+        "ToEdge": 2,
+        "ToFace": 30
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 13,
+        "ToEdge": 3,
+        "ToFace": 20
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 20,
+        "ToEdge": 2,
+        "ToFace": 42
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 3,
+        "FromFace": 12,
+        "ToEdge": 5,
+        "ToFace": 20
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 19,
+        "ToEdge": 0,
+        "ToFace": 30
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 18,
+        "ToEdge": 0,
+        "ToFace": 19
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 19,
+        "ToEdge": 0,
+        "ToFace": 46
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 0,
+        "FromFace": 6,
+        "ToEdge": 2,
+        "ToFace": 19
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 7,
+        "ToEdge": 0,
+        "ToFace": 8
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 8,
+        "ToEdge": 2,
+        "ToFace": 48
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 8,
+        "ToEdge": 0,
+        "ToFace": 24
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 2,
+        "FromFace": 1,
+        "ToEdge": 3,
+        "ToFace": 8
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 8,
+        "ToEdge": 2,
+        "ToFace": 32
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 1,
+        "FromFace": 1,
+        "ToEdge": 0,
+        "ToFace": 32
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 3,
+        "FromFace": 1,
+        "ToEdge": 5,
+        "ToFace": 26
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 1,
+        "ToEdge": 0,
+        "ToFace": 44
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 1,
+        "ToEdge": 0,
+        "ToFace": 2
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 12,
+        "ToEdge": 0,
+        "ToFace": 13
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 13,
+        "ToEdge": 0,
+        "ToFace": 42
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 5,
+        "FromFace": 2,
+        "ToEdge": 3,
+        "ToFace": 13
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 13,
+        "ToEdge": 2,
+        "ToFace": 34
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 13,
+        "ToEdge": 0,
+        "ToFace": 14
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 12,
+        "ToEdge": 1,
+        "ToFace": 42
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 12,
+        "ToEdge": 2,
+        "ToFace": 23
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 12,
+        "ToEdge": 2,
+        "ToFace": 38
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 12,
+        "ToEdge": 3,
+        "ToFace": 22
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 0,
+        "FromFace": 18,
+        "ToEdge": 2,
+        "ToFace": 22
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 18,
+        "ToEdge": 0,
+        "ToFace": 40
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 18,
+        "ToEdge": 3,
+        "ToFace": 21
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 6,
+        "ToEdge": 3,
+        "ToFace": 18
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 18,
+        "ToEdge": 1,
+        "ToFace": 46
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 6,
+        "ToEdge": 2,
+        "ToFace": 46
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 3,
+        "FromFace": 6,
+        "ToEdge": 2,
+        "ToFace": 15
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 6,
+        "ToEdge": 0,
+        "ToFace": 36
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 6,
+        "ToEdge": 0,
+        "ToFace": 7
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 7,
+        "ToEdge": 2,
+        "ToFace": 36
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 7,
+        "ToEdge": 0,
+        "ToFace": 15
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 3,
+        "FromFace": 7,
+        "ToEdge": 2,
+        "ToFace": 24
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 7,
+        "ToEdge": 0,
+        "ToFace": 48
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 24,
+        "ToEdge": 1,
+        "ToFace": 48
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 17,
+        "ToEdge": 3,
+        "ToFace": 24
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 24,
+        "ToEdge": 2,
+        "ToFace": 41
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 5,
+        "FromFace": 24,
+        "ToEdge": 0,
+        "ToFace": 25
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 25,
+        "ToEdge": 0,
+        "ToFace": 26
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 26,
+        "ToEdge": 0,
+        "ToFace": 39
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 26,
+        "ToEdge": 3,
+        "ToFace": 29
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 2,
+        "ToEdge": 3,
+        "ToFace": 26
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 26,
+        "ToEdge": 1,
+        "ToFace": 44
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 2,
+        "ToEdge": 2,
+        "ToFace": 44
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 3,
+        "FromFace": 2,
+        "ToEdge": 2,
+        "ToFace": 14
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 4,
+        "FromFace": 2,
+        "ToEdge": 0,
+        "ToFace": 34
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 1,
+        "FromFace": 14,
+        "ToEdge": 1,
+        "ToFace": 34
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 5,
+        "ToEdge": 3,
+        "ToFace": 14
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 14,
+        "ToEdge": 1,
+        "ToFace": 35
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 3,
+        "FromFace": 4,
+        "ToEdge": 5,
+        "ToFace": 14
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 22,
+        "ToEdge": 0,
+        "ToFace": 23
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 23,
+        "ToEdge": 0,
+        "ToFace": 38
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 4,
+        "ToEdge": 3,
+        "ToFace": 23
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 23,
+        "ToEdge": 1,
+        "ToFace": 43
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 3,
+        "FromFace": 3,
+        "ToEdge": 5,
+        "ToFace": 23
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 22,
+        "ToEdge": 1,
+        "ToFace": 38
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 21,
+        "ToEdge": 0,
+        "ToFace": 22
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 22,
+        "ToEdge": 1,
+        "ToFace": 40
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 21,
+        "ToEdge": 2,
+        "ToFace": 40
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 2,
+        "FromFace": 10,
+        "ToEdge": 0,
+        "ToFace": 21
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 21,
+        "ToEdge": 1,
+        "ToFace": 47
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 3,
+        "FromFace": 9,
+        "ToEdge": 2,
+        "ToFace": 21
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 15,
+        "ToEdge": 1,
+        "ToFace": 36
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 9,
+        "ToEdge": 3,
+        "ToFace": 15
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 4,
+        "FromFace": 15,
+        "ToEdge": 1,
+        "ToFace": 37
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 15,
+        "ToEdge": 0,
+        "ToFace": 16
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 16,
+        "ToEdge": 0,
+        "ToFace": 17
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 17,
+        "ToEdge": 1,
+        "ToFace": 49
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 2,
+        "FromFace": 17,
+        "ToEdge": 0,
+        "ToFace": 27
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 3,
+        "FromFace": 17,
+        "ToEdge": 2,
+        "ToFace": 25
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 17,
+        "ToEdge": 0,
+        "ToFace": 41
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 1,
+        "FromFace": 25,
+        "ToEdge": 1,
+        "ToFace": 41
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 3,
+        "FromFace": 25,
+        "ToEdge": 5,
+        "ToFace": 29
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 25,
+        "ToEdge": 1,
+        "ToFace": 39
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 29,
+        "ToEdge": 2,
+        "ToFace": 39
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 28,
+        "ToEdge": 0,
+        "ToFace": 29
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 29,
+        "ToEdge": 1,
+        "ToFace": 45
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 3,
+        "FromFace": 5,
+        "ToEdge": 2,
+        "ToFace": 29
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 4,
+        "ToEdge": 0,
+        "ToFace": 5
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 5,
+        "ToEdge": 2,
+        "ToFace": 35
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 5,
+        "ToEdge": 0,
+        "ToFace": 45
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 5,
+        "ToEdge": 3,
+        "ToFace": 28
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 4,
+        "ToEdge": 0,
+        "ToFace": 35
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 3,
+        "ToEdge": 0,
+        "ToFace": 4
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 4,
+        "ToEdge": 2,
+        "ToFace": 43
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 3,
+        "ToEdge": 0,
+        "ToFace": 43
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 3,
+        "ToEdge": 2,
+        "ToFace": 11
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 3,
+        "ToEdge": 0,
+        "ToFace": 31
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 3,
+        "ToEdge": 3,
+        "ToFace": 10
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 9,
+        "ToEdge": 0,
+        "ToFace": 10
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 1,
+        "FromFace": 10,
+        "ToEdge": 2,
+        "ToFace": 47
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 10,
+        "ToEdge": 2,
+        "ToFace": 31
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 10,
+        "ToEdge": 0,
+        "ToFace": 11
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 9,
+        "ToEdge": 0,
+        "ToFace": 47
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 9,
+        "ToEdge": 2,
+        "ToFace": 16
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 9,
+        "ToEdge": 2,
+        "ToFace": 37
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 16,
+        "ToEdge": 0,
+        "ToFace": 37
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 3,
+        "FromFace": 16,
+        "ToEdge": 2,
+        "ToFace": 27
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 16,
+        "ToEdge": 2,
+        "ToFace": 49
+      },
+      {
+        "Adjacency": "Portal",
+        "FromEdge": 1,
+        "FromFace": 27,
+        "ToEdge": 0,
+        "ToFace": 49
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 5,
+        "FromFace": 11,
+        "ToEdge": 3,
+        "ToFace": 27
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 27,
+        "ToEdge": 0,
+        "ToFace": 33
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 5,
+        "FromFace": 27,
+        "ToEdge": 0,
+        "ToFace": 28
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 28,
+        "ToEdge": 2,
+        "ToFace": 33
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 3,
+        "FromFace": 11,
+        "ToEdge": 2,
+        "ToFace": 28
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 28,
+        "ToEdge": 2,
+        "ToFace": 45
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 11,
+        "ToEdge": 1,
+        "ToFace": 31
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 4,
+        "FromFace": 11,
+        "ToEdge": 1,
+        "ToFace": 33
+      }
+    ],
     "Faces": [
       [
         {
@@ -5664,12 +6505,63 @@
       ]
     ],
     "FileCompatibleName": "ChamferedIcosahedron1",
-    "FontSizes": null,
+    "FontSizes": [
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5
+    ],
     "ReadableName": "Chamfered Icosahedron",
-    "Rotation": 0,
-    "SvgId": null,
-    "XOffset": 0,
-    "YOffset": 0
+    "Rotation": -23,
+    "SvgId": "svg-1",
+    "XOffset": 2.600000000000001,
+    "YOffset": 7.3000000000000025
   },
   {
     "Adjacencies": null,
@@ -17212,7 +18104,638 @@
     "YOffset": 0
   },
   {
-    "Adjacencies": null,
+    "Adjacencies": [
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 0,
+        "ToEdge": 2,
+        "ToFace": 2
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 0,
+        "ToEdge": 1,
+        "ToFace": 38
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 0,
+        "ToEdge": 0,
+        "ToFace": 1
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 1,
+        "ToEdge": 0,
+        "ToFace": 2
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 2,
+        "ToEdge": 1,
+        "ToFace": 6
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 37,
+        "ToEdge": 0,
+        "ToFace": 38
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 36,
+        "ToEdge": 2,
+        "ToFace": 38
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 1,
+        "ToEdge": 1,
+        "ToFace": 48
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 6,
+        "ToEdge": 2,
+        "ToFace": 8
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 6,
+        "ToEdge": 0,
+        "ToFace": 7
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 36,
+        "ToEdge": 0,
+        "ToFace": 37
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 26,
+        "ToEdge": 1,
+        "ToFace": 37
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 14,
+        "ToEdge": 1,
+        "ToFace": 36
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 48,
+        "ToEdge": 2,
+        "ToFace": 50
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 48,
+        "ToEdge": 0,
+        "ToFace": 49
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 7,
+        "ToEdge": 0,
+        "ToFace": 8
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 8,
+        "ToEdge": 1,
+        "ToFace": 42
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 7,
+        "ToEdge": 1,
+        "ToFace": 56
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 25,
+        "ToEdge": 0,
+        "ToFace": 26
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 24,
+        "ToEdge": 2,
+        "ToFace": 26
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 13,
+        "ToEdge": 0,
+        "ToFace": 14
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 12,
+        "ToEdge": 2,
+        "ToFace": 14
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 49,
+        "ToEdge": 0,
+        "ToFace": 50
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 18,
+        "ToEdge": 1,
+        "ToFace": 50
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 30,
+        "ToEdge": 1,
+        "ToFace": 49
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 42,
+        "ToEdge": 2,
+        "ToFace": 44
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 42,
+        "ToEdge": 0,
+        "ToFace": 43
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 55,
+        "ToEdge": 0,
+        "ToFace": 56
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 54,
+        "ToEdge": 2,
+        "ToFace": 56
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 24,
+        "ToEdge": 0,
+        "ToFace": 25
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 25,
+        "ToEdge": 1,
+        "ToFace": 31
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 24,
+        "ToEdge": 1,
+        "ToFace": 40
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 12,
+        "ToEdge": 0,
+        "ToFace": 13
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 13,
+        "ToEdge": 1,
+        "ToFace": 16
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 12,
+        "ToEdge": 1,
+        "ToFace": 44
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 18,
+        "ToEdge": 2,
+        "ToFace": 20
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 18,
+        "ToEdge": 0,
+        "ToFace": 19
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 30,
+        "ToEdge": 2,
+        "ToFace": 32
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 30,
+        "ToEdge": 0,
+        "ToFace": 31
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 43,
+        "ToEdge": 0,
+        "ToFace": 44
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 27,
+        "ToEdge": 1,
+        "ToFace": 43
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 54,
+        "ToEdge": 0,
+        "ToFace": 55
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 35,
+        "ToEdge": 1,
+        "ToFace": 55
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 20,
+        "ToEdge": 1,
+        "ToFace": 54
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 31,
+        "ToEdge": 0,
+        "ToFace": 32
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 39,
+        "ToEdge": 0,
+        "ToFace": 40
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 40,
+        "ToEdge": 0,
+        "ToFace": 41
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 15,
+        "ToEdge": 0,
+        "ToFace": 16
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 16,
+        "ToEdge": 0,
+        "ToFace": 17
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 19,
+        "ToEdge": 0,
+        "ToFace": 20
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 19,
+        "ToEdge": 1,
+        "ToFace": 22
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 32,
+        "ToEdge": 1,
+        "ToFace": 52
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 27,
+        "ToEdge": 2,
+        "ToFace": 29
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 27,
+        "ToEdge": 0,
+        "ToFace": 28
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 34,
+        "ToEdge": 0,
+        "ToFace": 35
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 33,
+        "ToEdge": 2,
+        "ToFace": 35
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 0,
+        "FromFace": 39,
+        "ToEdge": 2,
+        "ToFace": 41
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 5,
+        "ToEdge": 1,
+        "ToFace": 39
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 15,
+        "ToEdge": 1,
+        "ToFace": 41
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 0,
+        "FromFace": 15,
+        "ToEdge": 2,
+        "ToFace": 17
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 17,
+        "ToEdge": 1,
+        "ToFace": 45
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 21,
+        "ToEdge": 0,
+        "ToFace": 22
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 22,
+        "ToEdge": 0,
+        "ToFace": 23
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 51,
+        "ToEdge": 0,
+        "ToFace": 52
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 52,
+        "ToEdge": 0,
+        "ToFace": 53
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 28,
+        "ToEdge": 0,
+        "ToFace": 29
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 29,
+        "ToEdge": 1,
+        "ToFace": 46
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 28,
+        "ToEdge": 1,
+        "ToFace": 34
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 33,
+        "ToEdge": 0,
+        "ToFace": 34
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 33,
+        "ToEdge": 1,
+        "ToFace": 58
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 4,
+        "ToEdge": 0,
+        "ToFace": 5
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 3,
+        "ToEdge": 2,
+        "ToFace": 5
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 0,
+        "FromFace": 45,
+        "ToEdge": 2,
+        "ToFace": 47
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 45,
+        "ToEdge": 0,
+        "ToFace": 46
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 0,
+        "FromFace": 21,
+        "ToEdge": 2,
+        "ToFace": 23
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 21,
+        "ToEdge": 1,
+        "ToFace": 59
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 23,
+        "ToEdge": 1,
+        "ToFace": 51
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 0,
+        "FromFace": 51,
+        "ToEdge": 2,
+        "ToFace": 53
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 1,
+        "FromFace": 4,
+        "ToEdge": 1,
+        "ToFace": 53
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 46,
+        "ToEdge": 0,
+        "ToFace": 47
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 2,
+        "FromFace": 57,
+        "ToEdge": 0,
+        "ToFace": 58
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 58,
+        "ToEdge": 0,
+        "ToFace": 59
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 3,
+        "ToEdge": 0,
+        "ToFace": 4
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 3,
+        "ToEdge": 1,
+        "ToFace": 11
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 9,
+        "ToEdge": 1,
+        "ToFace": 47
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 0,
+        "FromFace": 57,
+        "ToEdge": 2,
+        "ToFace": 59
+      },
+      {
+        "Adjacency": "Net",
+        "FromEdge": 1,
+        "FromFace": 10,
+        "ToEdge": 1,
+        "ToFace": 57
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 10,
+        "ToEdge": 0,
+        "ToFace": 11
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 0,
+        "FromFace": 9,
+        "ToEdge": 2,
+        "ToFace": 11
+      },
+      {
+        "Adjacency": "Curve",
+        "FromEdge": 2,
+        "FromFace": 9,
+        "ToEdge": 0,
+        "ToFace": 10
+      }
+    ],
     "Faces": [
       [
         {
@@ -18236,7 +19759,68 @@
       ]
     ],
     "FileCompatibleName": "TriakisIcosahedron",
-    "FontSizes": null,
+    "FontSizes": [
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5
+    ],
     "ReadableName": "Triakis Icosahedron",
     "Rotation": 0,
     "SvgId": null,
