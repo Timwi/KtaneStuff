@@ -69,7 +69,7 @@
     <Compile Include="LedEncryption.cs" />
     <Compile Include="Modeling\AutoNormal.cs" />
     <Compile Include="Neutralization.cs" />
-    <Compile Include="SolidMaze.cs" />
+    <Compile Include="PolyhedralMaze.cs" />
     <Compile Include="PerplexingWires.cs" />
     <Compile Include="PointOfOrder.cs" />
     <Compile Include="RubiksCube.cs" />
@@ -118,6 +118,10 @@
     <Compile Include="Simulations.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\RT.Servers\Src\RT.Servers.csproj">
+      <Project>{a7333c19-56a9-4a8e-a196-7648666ef26a}</Project>
+      <Name>RT.Servers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\RT.TagSoup\Src\RT.TagSoup.csproj">
       <Project>{8f80d916-8999-45d8-acb2-ffa7e2698fd6}</Project>
       <Name>RT.TagSoup</Name>

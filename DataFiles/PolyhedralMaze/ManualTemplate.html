@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>Polyhedral Maze — Keep Talking and Nobody Explodes Module</title>
+    <meta content="initial-scale=1" name="viewport">
+    <link rel='stylesheet' type='text/css' href='css/font.css'>
+    <link href="css/normalize.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <script src='js/highlighter.js'></script>
+    <script src="js/jquery.3.1.1.min.js"></script>
+    <script>
+        $(function ()
+        {
+            function addLog(msg)
+            {
+                $('#log').val(function (i, text)
+                {
+                    return msg + "\n" + text;
+                });
+            }
+
+            var socket;
+            var selectedEdge = null;
+
+            function setEdgeAppearance(obj, stroke, strokeWidth)
+            {
+                obj.setAttribute('stroke', stroke);
+                obj.setAttribute('stroke-width', strokeWidth);
+            }
+
+            function processElementClick()
+            {
+                if (this.getAttribute('data-edge') !== null)
+                {
+                    // User clicked on something that represents an edge.
+                    // Deselect previous edge first
+                    if (selectedEdge != null)
+                        selectedEdge.returnToNormal();
+
+                    $('#edge-options').show();
+                    $('#eo-data').text(this.getAttribute('data-edge'));
+                    this.returnToNormal = function (obj, str, sw) { return function () { setEdgeAppearance(obj, str, sw); } }(this, this.getAttribute('stroke'), this.getAttribute('stroke-width'));
+                    setEdgeAppearance(this, '#6495ed', '.1');
+                    selectedEdge = this;
+                }
+            }
+
+            function newSocket()
+            {
+                socket = new WebSocket("ws://localhost:8991/websocket");
+                socket.onopen = function ()
+                {
+                    addLog('Socket opened.');
+                };
+                socket.onclose = function ()
+                {
+                    addLog('Socket closed.');
+                };
+                socket.onerror = function (err)
+                {
+                    addLog('Socket error: ' + err);
+                    console.log(err);
+                };
+                socket.onmessage = function (msg)
+                {
+                    var json;
+                    try { json = JSON.parse(msg.data); }
+                    catch (e) { json = null; }
+                    if (!(json instanceof Object))
+                        addLog('Received non-object: ' + msg.data);
+                    else if ('svg' in json)
+                    {
+                        var svg = document.getElementById(json.svg);
+                        if (!svg)
+                            addLog('SVG not found: ' + json.svg);
+                        else if (json.viewBox)
+                            svg.setAttribute('viewBox', json.viewBox);
+                        else
+                        {
+                            var obj = document.getElementById(json.id);
+                            if (obj && obj.tagName !== json.tag)
+                            {
+                                obj.parentNode.removeChild(obj);
+                                obj = null;
+                            }
+                            if (json.tag === 'delete')
+                            {
+                                var list = document.getElementsByClassName(json.className);
+                                for (var i = list.length - 1; i >= 0; i--)
+                                    list[i].parentNode.removeChild(list[i]);
+                            }
+                            else
+                            {
+                                if (!obj)
+                                {
+                                    obj = document.createElementNS('http://www.w3.org/2000/svg', json.tag);
+                                    svg.appendChild(obj);
+                                    obj.id = json.id;
+                                    $(obj).click(processElementClick);
+                                }
+                                if ('className' in json && json.className !== null)
+                                    obj.setAttribute('class', json.className);
+                                if ('attr' in json)
+                                {
+                                    for (var k in json.attr)
+                                        if (json.attr.hasOwnProperty(k))
+                                            obj.setAttribute(k, json.attr[k]);
+                                }
+                                if ('content' in json)
+                                    obj.textContent = json.content;
+                                if ('edgeData' in json)
+                                    obj.setAttribute('data-edge', json.edgeData);
+                            }
+                        }
+                    }
+                    else if ('polyhedron' in json)
+                    {
+                        var poly = json.polyhedron;
+                        var id = 'poly-' + poly;
+                        var option = document.getElementById(id);
+                        if (!option)
+                        {
+                            option = document.createElement('option');
+                            option.id = id;
+                            document.getElementById('polyhedra').appendChild(option);
+                            option.setAttribute('data-name', poly);
+                        }
+                        option.innerText = json.select;
+                    }
+                    else
+                        addLog('Unrecognized message: ' + msg.data);
+                };
+            }
+
+            $('#add-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'add', Polyhedron: $('#polyhedra').find(":selected").attr('data-name'), SvgId: $('.radio-svg:checked').val() })); });
+            $('#convert-to-portal').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-portal', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('#convert-to-curve').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-curve', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('#make-connected').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'make-connected', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('#deselect').click(function () { if (selectedEdge != null) selectedEdge.returnToNormal(); selectedEdge = null; $('#edge-options').hide(); });
+            $('.rotate-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'rotate', Amount: this.getAttribute('data-amount'), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('.move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move', XAmount: this.getAttribute('data-x-amount'), YAmount: this.getAttribute('data-y-amount'), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+
+            $('#edge-options').hide();
+
+            newSocket();
+        });
+
+    </script>
+    <style>
+        .page {
+            margin: 1em auto 1em 1.5em;
+        }
+
+        div.footnotes {
+            font-size: smaller;
+            margin-top: 1em;
+            padding-top: .5em;
+            position: relative;
+        }
+
+            div.footnotes::before {
+                content: '';
+                border-top: 1px solid #ccc;
+                width: 10em;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+
+            div.footnotes p {
+                margin: .3em;
+            }
+
+        #log-wrap {
+            position: absolute;
+            top: 1em;
+            right: 1em;
+            width: 35em;
+        }
+
+        #log {
+            width: 100%;
+            height: 30em;
+        }
+    </style>
+</head>
+<body>
+    <div id="ManualContent">
+        <div class="section">
+            <div id='log-wrap'>
+                <div><textarea id='log' style="white-space:pre"></textarea></div>
+                <div><select accesskey="," id="polyhedra"></select></div>
+                <div><input type="radio" name="radio-svg" class="radio-svg" accesskey="1" value="svg-1" checked /> SVG <u>1</u> | <input type="radio" name="radio-svg" class="radio-svg" accesskey="2" value="svg-2" /> SVG <u>2</u></div>
+                <div><button id="add-polyhedron" accesskey="a"><u>A</u>dd polyhedron</button></div>
+                <div id="edge-options">
+                    <div>Selected edge: <span id="eo-data"></span></div>
+                    <div>
+                        <button id="convert-to-portal" accesskey="p">Convert to <u>P</u>ortal</button>
+                        <button id="convert-to-curve" accesskey="v">Convert to Cur<u>v</u>e</button>
+                        <button id="make-connected" accesskey="c">Make <u>c</u>onnected</button>
+                        <button id="deselect" accesskey="d"><u>D</u>eselect</button>
+                    </div>
+                    <div>
+                        <button accesskey="l" class="rotate-button" data-amount="10">Rotate <u>L</u>eft 10°</button>
+                        <button accesskey="e" class="rotate-button" data-amount="1">Rotate L<u>e</u>ft 1°</button>
+                        <button accesskey="r" class="rotate-button" data-amount="-1">Rotate <u>R</u>ight 1°</button>
+                        <button accesskey="i" class="rotate-button" data-amount="-10">Rotate R<u>i</u>ght 10°</button>
+                    </div>
+                    <div>
+                        Big:
+                        <button accesskey="" class="move-button" data-x-amount="0" data-y-amount="-1">Move Up</button>
+                        <button accesskey="" class="move-button" data-x-amount="0" data-y-amount="1">Move Down</button>
+                        <button accesskey="" class="move-button" data-x-amount="-1" data-y-amount="0">Move Left</button>
+                        <button accesskey="" class="move-button" data-x-amount="1" data-y-amount="0">Move Right</button>
+                    </div>
+                    <div>
+                        Small:
+                        <button accesskey="" class="move-button" data-x-amount="0" data-y-amount="-.1">Move Up</button>
+                        <button accesskey="" class="move-button" data-x-amount="0" data-y-amount=".1">Move Down</button>
+                        <button accesskey="" class="move-button" data-x-amount="-.1" data-y-amount="0">Move Left</button>
+                        <button accesskey="" class="move-button" data-x-amount=".1" data-y-amount="0">Move Right</button>
+                    </div>
+                </div>
+            </div>
+            <div class="page page-bg-07">
+                <div class="page-header">
+                    <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                    <span class="page-header-section-title">Polyhedral Maze</span>
+                </div>
+                <div class="page-content">
+                    <img class="diagram" src="img/Component/Polyhedral Maze.svg">
+                    <h2>On the Subject of Polyhedral Mazes</h2>
+
+                    <p class="flavour-text">What’s a pentecostal hexadecimal contradiction?</p>
+
+                    <p>Identify the polyhedron<sup>[1]</sup> on the module and find its corresponding net<sup>[2]</sup> below.</p>
+                    <p>The number in the bottom-left of the module shows the current face on the polyhedron. The number in the bottom-right shows the destination face that must be reached to defuse the module.</p>
+                    <p>Navigate to the destination face without crossing any of the thick lines. These are not visible on the module. The letters and the curved lines indicate faces that are connected even though they are not adjacent in the net.</p>
+
+                    <svg id='svg-1'>
+                    </svg>
+
+                    <div class='footnotes'>
+                        <p>[1] <a href='https://en.wikipedia.org/wiki/Polyhedron'>https://en.wikipedia.org/wiki/Polyhedron</a></p>
+                        <p>[2] <a href='https://en.wikipedia.org/wiki/Net_(polyhedron)'>https://en.wikipedia.org/wiki/Net_(polyhedron)</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="page-footer relative-footer">Page 1 of 2</div>
+        </div>
+        <div class="page page-bg-06">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Polyhedral Maze</span>
+            </div>
+            <div class="page-content">
+                <svg id='svg-2'>
+                </svg>
+            </div>
+            <div class="page-footer relative-footer">Page 2 of 2</div>
+        </div>
+    </div>
+</body>
+</html>
