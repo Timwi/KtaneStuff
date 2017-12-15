@@ -25,22 +25,38 @@ namespace KtaneStuff
         private static string _masterJsonPath = @"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Master.json";
         private static object _lockObj = new object();
 
+        [Flags]
         public enum Adjacency
         {
-            /// <summary>The faces are NOT adjacent in the net, nor can you walk from one to the other.</summary>
-            None,
-            /// <summary>The faces are adjacent in the net, but you cannot walk from one to the other (it’s a wall).</summary>
-            NetWall,
-            /// <summary>The faces are adjacent in the net and you cannot walk from one to the other.</summary>
-            Net,
-            /// <summary>
-            ///     The faces are NOT adjacent in the net, but you cannot walk from one to the other. The connection is
-            ///     indicated by a letter.</summary>
-            Portal,
-            /// <summary>
-            ///     The faces are NOT adjacent in the net, but you cannot walk from one to the other. The connection is
-            ///     indicated by a curved line.</summary>
-            Curve
+            /// <summary>This edge is a wall.</summary>
+            NotTraversible = 0 << 0,
+            /// <summary>This edge is traversible (not a wall).</summary>
+            Traversible = 1 << 0,
+
+            /// <summary>The faces are connected in the net.</summary>
+            Connected = 0 << 1,
+            /// <summary>The faces are connected via a curved line (assuming the edge is traversible).</summary>
+            Curved = 1 << 1,
+            /// <summary>The faces are connected via a lettered reference (assuming the edge is traversible).</summary>
+            Portaled = 2 << 1,
+
+            /// <summary>A mask used to determine the connection type.</summary>
+            ConnectionMask = 3 << 1,
+
+            ///// <summary>The faces are NOT adjacent in the net, nor can you walk from one to the other.</summary>
+            //None = NotTraversible | Portaled,
+            ///// <summary>The faces are adjacent in the net, but you cannot walk from one to the other (it’s a wall).</summary>
+            //NetWall = NotTraversible | Connected,
+            ///// <summary>The faces are adjacent in the net and you cannot walk from one to the other.</summary>
+            //Net = Traversible | Connected,
+            ///// <summary>
+            /////     The faces are NOT adjacent in the net, but you cannot walk from one to the other. The connection is
+            /////     indicated by a letter.</summary>
+            //Portal = Traversible | Portaled,
+            ///// <summary>
+            /////     The faces are NOT adjacent in the net, but you cannot walk from one to the other. The connection is
+            /////     indicated by a curved line.</summary>
+            //Curve = Traversible | Curved
         }
 
         public sealed class AdjacencyInfo
@@ -73,6 +89,9 @@ namespace KtaneStuff
             public double Rotation { get; set; }
             public double XOffset { get; set; }
             public double YOffset { get; set; }
+            public double ScaleFactor { get; set; }
+            public double LabelX { get; set; }
+            public double LabelY { get; set; }
 
             public PolyhedronInfo(string fileCompatibleName, string readableName, Pt[][] faces)
             {
@@ -95,7 +114,7 @@ namespace KtaneStuff
                         return ch;
                     if (Adjacencies[i].ToFace == faceIx && Adjacencies[i].ToEdge == edgeIx)
                         return ch;
-                    if (Adjacencies[i].Adjacency == Adjacency.Portal)
+                    if (Adjacencies[i].Adjacency.HasFlag(Adjacency.Portaled | Adjacency.Traversible))
                         ch++;
                 }
                 Debugger.Break();
@@ -139,6 +158,7 @@ namespace KtaneStuff
 
             var server = new HttpServer(8991)
             {
+                PropagateExceptions = true,
                 Handler = new UrlResolver(
                     new UrlMapping(path: "/", specificPath: true, handler: req => mainPage(req)),
                     new UrlMapping(path: "/css", handler: new FileSystemHandler(@"D:\c\KTANE\Public\HTML\css").Handle),
@@ -207,15 +227,86 @@ namespace KtaneStuff
                     case "add": Update(json["Polyhedron"].GetString(), polyhedron => { polyhedron.SvgId = json["SvgId"].GetString(); SendPolyhedronSelect(polyhedron); }); break;
                     case "remove": Update(json["Polyhedron"].GetString(), polyhedron => { polyhedron.SvgId = null; SendPolyhedronSelect(polyhedron); }); break;
                     case "rotate": Update(edgeData["polyhedron"].GetString(), polyhedron => { polyhedron.Rotation += json["Amount"].GetDouble(NumericConversionOptions.AllowConversionFromString); }); break;
+                    case "scale": Update(edgeData["polyhedron"].GetString(), polyhedron => { polyhedron.ScaleFactor += json["Amount"].GetDouble(NumericConversionOptions.AllowConversionFromString); }); break;
                     case "move": Update(edgeData["polyhedron"].GetString(), polyhedron => { polyhedron.XOffset += json["XAmount"].GetDouble(NumericConversionOptions.AllowConversionFromString); polyhedron.YOffset += json["YAmount"].GetDouble(NumericConversionOptions.AllowConversionFromString); }); break;
+                    case "move-caption": Update(edgeData["polyhedron"].GetString(), polyhedron => { polyhedron.LabelX += json["XAmount"].GetDouble(NumericConversionOptions.AllowConversionFromString); polyhedron.LabelY += json["YAmount"].GetDouble(NumericConversionOptions.AllowConversionFromString); }); break;
 
-                    case "convert-to-portal": convertTo(Adjacency.Portal, edgeData); break;
-                    case "convert-to-curve": convertTo(Adjacency.Curve, edgeData); break;
-                    case "make-connected": convertTo(Adjacency.Net, edgeData); break;
+                    case "convert-to-portal": ConvertTo(Adjacency.Portaled, edgeData); break;
+                    case "convert-to-curve": ConvertTo(Adjacency.Curved, edgeData); break;
+                    case "make-connected": ConvertTo(Adjacency.Connected, edgeData); break;
+
+                    case "generate-maze": Update(edgeData["polyhedron"].GetString(), GenerateMaze); break;
+                    case "clear-maze": Update(edgeData["polyhedron"].GetString(), ClearMaze); break;
 
                     default:
+                        Debugger.Break();
                         break;
                 }
+            }
+
+            private static void ClearMaze(PolyhedronInfo polyhedron)
+            {
+                foreach (var adj in polyhedron.Adjacencies)
+                    adj.Adjacency = adj.Adjacency | Adjacency.Traversible;
+            }
+
+            private void GenerateMaze(PolyhedronInfo polyhedron)
+            {
+                SendDelete(polyhedron, "decor");
+
+                const double wallProbability = .33;
+
+                var iterations = 0;
+                tryAgain:
+                iterations++;
+                if (iterations >= 50000)
+                {
+                    SendMessage($"Log: Giving up after {iterations} iterations.");
+                    ClearMaze(polyhedron);
+                    return;
+                }
+
+                // Put random walls in
+                var adjs = polyhedron.Adjacencies.ToArray().Shuffle();
+                for (int i = 0; i < adjs.Length; i++)
+                    adjs[i].Adjacency = (adjs[i].Adjacency & ~Adjacency.Traversible) | (i <= adjs.Length * wallProbability ? 0 : Adjacency.Traversible);
+
+                int maxDist = 0, maxFrom = -1, maxTo = -1;
+                for (int startFace = 0; startFace < polyhedron.Faces.Length; startFace++)
+                {
+                    var visited = new bool[polyhedron.Faces.Length];
+                    var qq = new Queue<(int face, int dist)>();
+                    qq.Enqueue((startFace, 0));
+                    while (qq.Count > 0)
+                    {
+                        var (face, dist) = qq.Dequeue();
+                        if (visited[face])
+                            continue;
+                        if (maxDist < dist)
+                        {
+                            maxDist = dist;
+                            maxFrom = startFace;
+                            maxTo = face;
+                        }
+                        visited[face] = true;
+                        for (int i = 0; i < adjs.Length; i++)
+                            if (adjs[i].Adjacency.HasFlag(Adjacency.Traversible))
+                            {
+                                if (adjs[i].FromFace == face)
+                                    qq.Enqueue((adjs[i].ToFace, dist + 1));
+                                else if (adjs[i].ToFace == face)
+                                    qq.Enqueue((adjs[i].FromFace, dist + 1));
+                            }
+                    }
+
+                    // Make sure the maze isn’t disjoint
+                    if (startFace == 0)
+                        for (int i = 0; i < visited.Length; i++)
+                            if (!visited[i])
+                                goto tryAgain;
+                }
+
+                SendMessage($"Log: iterations = {iterations}, max distance = {maxDist} ({maxFrom} to {maxTo})");
             }
 
             private void Update(string polyhedronId, Action<PolyhedronInfo> action)
@@ -229,50 +320,53 @@ namespace KtaneStuff
                 save();
             }
 
-            private void convertTo(Adjacency adj, JsonValue edgeData)
+            private void ConvertTo(Adjacency adj, JsonValue edgeData)
             {
                 var pIx = _polyhedra.IndexOf(poly => poly.FileCompatibleName == edgeData["polyhedron"].GetString());
                 var polyhedron = _polyhedra[pIx];
                 var faceIx = edgeData["face"].GetInt();
                 var edgeIx = edgeData["edge"].GetInt();
                 var adjInf = polyhedron.Adjacencies.Single(ad => (ad.FromFace == faceIx && ad.FromEdge == edgeIx) || (ad.ToFace == faceIx && ad.ToEdge == edgeIx));
-                adjInf.Adjacency = adj;
-                SendMessage(new JsonDict { { "svg", polyhedron.SvgId }, { "tag", "delete" }, { "className", $"poly-{polyhedron.FileCompatibleName}-edge" } });
+                adjInf.Adjacency = (adjInf.Adjacency & ~Adjacency.ConnectionMask) | adj;
+                SendDelete(polyhedron, $"face-{faceIx}", $"edge-{faceIx}-{edgeIx}", "decor");
                 _boundingBoxes[pIx] = GenerateNet(polyhedron);
                 SendViewBoxes();
                 save();
             }
 
+            private void SendDelete(PolyhedronInfo polyhedron, params string[] classes)
+            {
+                SendMessage(new JsonDict { { "svg", polyhedron.SvgId }, { "tag", "delete" }, { "classes", classes.Select(c => $"poly-{polyhedron.FileCompatibleName}-{c}").ToJsonList() } });
+            }
+
             private BoundingBoxD GenerateNet(PolyhedronInfo polyhedron)
             {
-                void sendPath(string id, string className, string edgeData, string data, double? strokeWidth = null, string fill = null)
+                // Numbers closer than this are considered equal
+                const double closeness = .00001;
+                bool sufficientlyClose(Pt p1, Pt p2) => Math.Abs(p1.X - p2.X) < closeness && Math.Abs(p1.Y - p2.Y) < closeness && Math.Abs(p1.Z - p2.Z) < closeness;
+
+                void send(string id, IEnumerable<string> classes, string tag, JsonDict attr, string content, string edgeData)
                 {
-                    var dict = new JsonDict { { "svg", polyhedron.SvgId }, { "id", $"poly-{polyhedron.FileCompatibleName}-{id}" }, { "className", $"poly-{polyhedron.FileCompatibleName}-{className}" }, { "tag", "path" }, { "attr", new JsonDict {
-                        { "d", data },
-                        { "stroke", strokeWidth == null ? "none" : "black" },
-                        { "stroke-linejoin", "round" },
-                        { "stroke-width", strokeWidth ?? 0 },
-                        { "fill", fill ?? "none" }
-                    } } };
+                    var dict = new JsonDict();
+                    dict["svg"] = polyhedron.SvgId;
+                    dict["id"] = $"poly-{polyhedron.FileCompatibleName}-{id}";
+                    dict["classes"] = (classes ?? Enumerable.Empty<string>()).Select(c => $"poly-{polyhedron.FileCompatibleName}-{c}").Concat($"poly-{polyhedron.FileCompatibleName}").ToJsonList();
+                    dict["tag"] = tag;
+                    dict["attr"] = attr;
+                    if (content != null)
+                        dict["content"] = content;
                     if (edgeData != null)
                         dict["edgeData"] = edgeData;
                     SendMessage(dict);
                 }
 
-                void sendText(string id, string className, double fontSize, double x, double y, string content, string fill, string edgeData = null)
-                {
-                    var dict = new JsonDict { { "svg", polyhedron.SvgId }, { "id", $"poly-{polyhedron.FileCompatibleName}-{id}" }, { "className", $"poly-{polyhedron.FileCompatibleName}-{className}" }, { "tag", "text" },
-                        { "attr", new JsonDict { { "x", x }, { "y", y + fontSize * .35 }, { "text-anchor", "middle" }, { "alignment-baseline", "middle" }, { "fill", fill }, { "font-size", fontSize } } },
-                        { "content", content }
-                    };
-                    if (edgeData != null)
-                        dict.Add("edgeData", edgeData);
-                    SendMessage(dict);
-                }
+                void sendPath(string id, IEnumerable<string> classes, string edgeData, string data, string stroke = null, double? strokeWidth = null, string strokeDasharray = null, string fill = null) =>
+                    send(id, classes, "path", new JsonDict { { "d", data }, { "stroke", stroke ?? (strokeWidth == null ? "none" : "black") }, { "stroke-linejoin", "round" }, { "stroke-width", strokeWidth }, { "stroke-dasharray", strokeDasharray }, { "fill", fill ?? "none" } }, null, edgeData);
 
-                // Numbers closer than this are considered equal
-                const double closeness = .00001;
-                bool sufficientlyClose(Pt p1, Pt p2) => Math.Abs(p1.X - p2.X) < closeness && Math.Abs(p1.Y - p2.Y) < closeness && Math.Abs(p1.Z - p2.Z) < closeness;
+                void sendText(string id, IEnumerable<string> classes, double fontSize, double x, double y, string content, string fill, string edgeData = null) =>
+                    send(id, classes, "text", new JsonDict { { "x", x }, { "y", y + fontSize * .35 }, { "text-anchor", "middle" }, { "fill", fill }, { "font-size", fontSize }, { "style", "white-space:pre" } }, content, edgeData);
+
+                sendText("caption", null, .6, polyhedron.LabelX + polyhedron.XOffset, polyhedron.LabelY + polyhedron.YOffset, polyhedron.ReadableName, "#000");
 
                 var anyChanges = false;
 
@@ -281,9 +375,6 @@ namespace KtaneStuff
                     polyhedron.FontSizes = Ut.NewArray(polyhedron.Faces.Length, _ => .5);
                     anyChanges = true;
                 }
-
-                // Take a full copy of this
-                var faces = polyhedron.Faces.Select(face => face.ToArray()).ToArray();
 
                 void setConnection(int fromFaceIx, int fromEdgeIx, int toFaceIx, int toEdgeIx, Adjacency value)
                 {
@@ -323,13 +414,16 @@ namespace KtaneStuff
                     return polyhedron.Adjacencies?.FirstOrDefault(ad => ad.FromFace == fromFaceIx && ad.FromEdge == fromEdgeIx && ad.ToFace == toFaceIx && ad.ToEdge == toEdgeIx)?.Adjacency;
                 }
 
+                // Take a full copy of this and apply scale
+                var faces = polyhedron.Faces.Select(face => face.Select(p => p * polyhedron.ScaleFactor).ToArray()).ToArray();
+
                 // Restricted variable scope
                 {
                     var vx = faces[0][0];
                     // Put first vertex at origin and apply rotation
                     for (int i = 0; i < faces.Length; i++)
                         for (int j = 0; j < faces[i].Length; j++)
-                            faces[i][j] = (faces[i][j] - vx).RotateZ(polyhedron.Rotation);
+                            faces[i][j] = faces[i][j] - vx;
 
                     // Rotate so that first face is on the X/Y plane
                     var normal = (faces[0][2] - faces[0][1]) * (faces[0][0] - faces[0][1]);
@@ -349,11 +443,11 @@ namespace KtaneStuff
                     if (faces.Sum(f => f.Sum(p => p.Z)) < 0)
                         faces = faces.Select(f => f.Select(p => pt(-p.X, p.Y, -p.Z)).ToArray()).ToArray();
 
-                    // Finally, apply offset
+                    // Finally, apply rotation and offset
                     var offsetPt = pt(polyhedron.XOffset, polyhedron.YOffset, 0);
                     for (int i = 0; i < faces.Length; i++)
                         for (int j = 0; j < faces[i].Length; j++)
-                            faces[i][j] = faces[i][j] + offsetPt;
+                            faces[i][j] = faces[i][j].RotateZ(polyhedron.Rotation) + offsetPt;
                 }
 
                 var polyDraws = new List<Action>();
@@ -370,11 +464,11 @@ namespace KtaneStuff
                 {
                     var (fromFaceIx, rotatedPolyhedron) = q.Dequeue();
                     polygons[fromFaceIx] = rotatedPolyhedron[fromFaceIx].Select(pt => p(pt.X, pt.Y)).ToArray();
-                    sendText($"label-{fromFaceIx}", null, polyhedron.FontSizes[fromFaceIx], polygons[fromFaceIx].Sum(p => p.X) / polygons[fromFaceIx].Length, polygons[fromFaceIx].Sum(p => p.Y) / polygons[fromFaceIx].Length, fromFaceIx.ToString(), "#000");
+                    sendText($"label-{fromFaceIx}", new[] { $"face-{fromFaceIx}" }, polyhedron.FontSizes[fromFaceIx], polygons[fromFaceIx].Sum(p => p.X) / polygons[fromFaceIx].Length, polygons[fromFaceIx].Sum(p => p.Y) / polygons[fromFaceIx].Length, fromFaceIx.ToString(), "#000");
 
                     for (int fromEdgeIx = 0; fromEdgeIx < rotatedPolyhedron[fromFaceIx].Length; fromEdgeIx++)
                     {
-                        var edgeData = new JsonDict { { "polyhedron", polyhedron.FileCompatibleName }, { "face", fromFaceIx }, { "edge", fromEdgeIx } }.ToStringIndented();
+                        var edgeData = new JsonDict { { "polyhedron", polyhedron.FileCompatibleName }, { "face", fromFaceIx }, { "edge", fromEdgeIx } }.ToString();
                         int toEdgeIx = -1;
                         // Find another face that has the same edge
                         var toFaceIx = rotatedPolyhedron.IndexOf(fc =>
@@ -385,16 +479,16 @@ namespace KtaneStuff
                         if (toEdgeIx == -1 || toFaceIx == -1)
                             Debugger.Break();
 
-                        var adj = getConnection(fromFaceIx, fromEdgeIx, toFaceIx, toEdgeIx);
-
                         // Make sure that this connection has an entry in the adjacency array
-                        if (adj == null)
+                        var adjNullable = getConnection(fromFaceIx, fromEdgeIx, toFaceIx, toEdgeIx);
+                        if (adjNullable == null)
                         {
-                            adj = seen.Contains(toFaceIx) ? Adjacency.Curve : Adjacency.Net;
-                            setConnection(fromFaceIx, fromEdgeIx, toFaceIx, toEdgeIx, adj.Value);
+                            adjNullable = seen.Contains(toFaceIx) ? Adjacency.Curved : Adjacency.Connected;
+                            setConnection(fromFaceIx, fromEdgeIx, toFaceIx, toEdgeIx, adjNullable.Value);
                         }
+                        var adj = adjNullable.Value;
 
-                        if ((adj == Adjacency.Net || adj == Adjacency.NetWall) && seen.Add(toFaceIx))
+                        if ((adj & Adjacency.ConnectionMask) == Adjacency.Connected && seen.Add(toFaceIx))
                         {
                             // Rotate about the edge so that the new face is on the X/Y plane (i.e. “roll” the polyhedron)
                             var toFace = rotatedPolyhedron[toFaceIx];
@@ -414,10 +508,14 @@ namespace KtaneStuff
                         {
                             var p1 = polygons[fromFaceIx][fromEdgeIx];
                             var p2 = polygons[fromFaceIx][(fromEdgeIx + 1) % polygons[fromFaceIx].Length];
-                            sendPath($"edge-{fromFaceIx}-{fromEdgeIx}", null, edgeData, $"M {p1.X},{p1.Y} L {p2.X},{p2.Y}", strokeWidth: adj == Adjacency.None || adj == Adjacency.NetWall ? .05 : .025);
-                            if (polygons[toFaceIx] != null)
+                            IEnumerable<string> classes = new[] { $"face-{fromFaceIx}", $"face-{toFaceIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", $"edge-{toFaceIx}-{toEdgeIx}" };
+                            sendPath($"edge-{fromFaceIx}-{fromEdgeIx}", classes, edgeData, $"M {p1.X},{p1.Y} L {p2.X},{p2.Y}",
+                                strokeWidth: adj.HasFlag(Adjacency.Traversible) ? .025 : .1,
+                                //strokeDasharray: adj.HasFlag(Adjacency.Traversible) ? ".1,.1" : null,
+                                stroke: adj.HasFlag(Adjacency.Traversible) ? "black" : null);
+                            if (polygons[toFaceIx] != null && adj.HasFlag(Adjacency.Traversible))
                             {
-                                var controlPointFactor = adj == Adjacency.Curve ? 1 : .6;
+                                var controlPointFactor = (adj & Adjacency.ConnectionMask) == Adjacency.Curved ? 1 : .6;
 
                                 var p11 = polygons[fromFaceIx][fromEdgeIx];
                                 var p12 = polygons[fromFaceIx][(fromEdgeIx + 1) % polygons[fromFaceIx].Length];
@@ -433,39 +531,25 @@ namespace KtaneStuff
                                 Intersect.LineWithLine(ref edge1, ref edge2, out var l1, out var l2);
                                 var intersect = edge1.Start + l1 * (edge1.End - edge1.Start);
 
-                                switch (adj.Value)
+                                classes = classes.Concat("decor");
+                                switch (adj & Adjacency.ConnectionMask)
                                 {
-                                    case Adjacency.None:
-                                        break;
-
-                                    case Adjacency.NetWall:
-                                    case Adjacency.Net:
-                                        //sendText($"portal-letter-{fromFaceIx}-{fromEdgeIx}", "edge", 1, p1c.X, p1c.Y, "?", "#f00", edgeData);
-                                        //sendText($"portal-letter-{toFaceIx}-{toEdgeIx}", "edge", 1, p2c.X, p2c.Y, "?", "#f00", edgeData);
-                                        //sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", "edge", edgeData, $"M {(p11.X + p1m.X) / 2},{(p11.Y + p1m.Y) / 2} {(p1c.X + p1m.X) / 2},{(p1c.Y + p1m.Y) / 2} {(p12.X + p1m.X) / 2},{(p12.Y + p1m.Y) / 2} z", strokeWidth: null, fill: "#000");
-                                        //sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", "edge", edgeData, $"M {(p21.X + p2m.X) / 2},{(p21.Y + p2m.Y) / 2} {(p2c.X + p2m.X) / 2},{(p2c.Y + p2m.Y) / 2} {(p22.X + p2m.X) / 2},{(p22.Y + p2m.Y) / 2} z", strokeWidth: null, fill: "#000");
-                                        break;
-
-                                    case Adjacency.Portal:
+                                    case Adjacency.Portaled:
                                         var ch = polyhedron.GetPortalLetter(fromFaceIx, fromEdgeIx);
-                                        sendText($"portal-letter-{fromFaceIx}-{fromEdgeIx}", "edge", .5, p1c.X, p1c.Y, ch.ToString(), "#000", edgeData);
-                                        sendText($"portal-letter-{toFaceIx}-{toEdgeIx}", "edge", .5, p2c.X, p2c.Y, ch.ToString(), "#000", edgeData);
-                                        sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", "edge", edgeData, $"M {(p11.X + p1m.X) / 2},{(p11.Y + p1m.Y) / 2} {(p1c.X + p1m.X) / 2},{(p1c.Y + p1m.Y) / 2} {(p12.X + p1m.X) / 2},{(p12.Y + p1m.Y) / 2} z", strokeWidth: null, fill: "#000");
-                                        sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", "edge", edgeData, $"M {(p21.X + p2m.X) / 2},{(p21.Y + p2m.Y) / 2} {(p2c.X + p2m.X) / 2},{(p2c.Y + p2m.Y) / 2} {(p22.X + p2m.X) / 2},{(p22.Y + p2m.Y) / 2} z", strokeWidth: null, fill: "#000");
+                                        sendText($"portal-letter-{fromFaceIx}-{fromEdgeIx}", classes, .5, p1c.X, p1c.Y, ch.ToString(), "#000", edgeData);
+                                        sendText($"portal-letter-{toFaceIx}-{toEdgeIx}", classes, .5, p2c.X, p2c.Y, ch.ToString(), "#000", edgeData);
+                                        sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", classes, edgeData, $"M {(p11.X + p1m.X) / 2},{(p11.Y + p1m.Y) / 2} {(p1c.X + p1m.X) / 2},{(p1c.Y + p1m.Y) / 2} {(p12.X + p1m.X) / 2},{(p12.Y + p1m.Y) / 2} z", fill: "#888");
+                                        sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", classes, edgeData, $"M {(p21.X + p2m.X) / 2},{(p21.Y + p2m.Y) / 2} {(p2c.X + p2m.X) / 2},{(p2c.Y + p2m.Y) / 2} {(p22.X + p2m.X) / 2},{(p22.Y + p2m.Y) / 2} z", fill: "#888");
                                         break;
 
-                                    case Adjacency.Curve:
-                                        sendPath($"curve-{fromFaceIx}-{fromEdgeIx}", "edge", edgeData,
+                                    case Adjacency.Curved:
+                                        sendPath($"curve-{fromFaceIx}-{fromEdgeIx}", classes, edgeData,
                                             (p2m - p1m).Distance() < .5 ? $"M {p1m.X},{p1m.Y} L {p2m.X},{p2m.Y}" :
                                             l1 >= 0 && l1 <= 1 && l2 >= 0 && l2 <= 1 ? $"M {p1m.X},{p1m.Y} C {intersect.X},{intersect.Y} {intersect.X},{intersect.Y} {p2m.X},{p2m.Y}" :
                                             $"M {p1m.X},{p1m.Y} C {p1c.X},{p1c.Y} {p2c.X},{p2c.Y} {p2m.X},{p2m.Y}",
-                                            strokeWidth: .01);
-                                        break;
-
-                                    default:
+                                            strokeWidth: .025);
                                         break;
                                 }
-
                             }
                         }
                     }
@@ -476,10 +560,10 @@ namespace KtaneStuff
 
                 return new BoundingBoxD
                 {
-                    Xmin = polygons.Min(pg => pg?.Min(p => p.X)).Value,
-                    Ymin = polygons.Min(pg => pg?.Min(p => p.Y)).Value,
-                    Xmax = polygons.Max(pg => pg?.Max(p => p.X)).Value,
-                    Ymax = polygons.Max(pg => pg?.Max(p => p.Y)).Value
+                    Xmin = Math.Min(polygons.Min(pg => pg?.Min(p => p.X)).Value, polyhedron.LabelX + polyhedron.XOffset),
+                    Ymin = Math.Min(polygons.Min(pg => pg?.Min(p => p.Y)).Value, polyhedron.LabelY + polyhedron.YOffset),
+                    Xmax = Math.Max(polygons.Max(pg => pg?.Max(p => p.X)).Value, polyhedron.LabelX + polyhedron.XOffset),
+                    Ymax = Math.Max(polygons.Max(pg => pg?.Max(p => p.Y)).Value, polyhedron.LabelY + polyhedron.YOffset)
                 };
             }
 

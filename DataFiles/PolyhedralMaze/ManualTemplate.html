@@ -65,6 +65,12 @@
                 };
                 socket.onmessage = function (msg)
                 {
+                    if (msg.data.startsWith("Log: "))
+                    {
+                        addLog(msg.data.substr("Log: ".length));
+                        return;
+                    }
+
                     var json;
                     try { json = JSON.parse(msg.data); }
                     catch (e) { json = null; }
@@ -76,7 +82,11 @@
                         if (!svg)
                             addLog('SVG not found: ' + json.svg);
                         else if (json.viewBox)
+                        {
                             svg.setAttribute('viewBox', json.viewBox);
+                            var result = /^\S* \S* (\S*) \S*$/.exec(json.viewBox);
+                            $('#view-width-' + json.svg).text(result[1]);
+                        }
                         else
                         {
                             var obj = document.getElementById(json.id);
@@ -87,9 +97,12 @@
                             }
                             if (json.tag === 'delete')
                             {
-                                var list = document.getElementsByClassName(json.className);
-                                for (var i = list.length - 1; i >= 0; i--)
-                                    list[i].parentNode.removeChild(list[i]);
+                                for (var j = 0; j < json.classes.length; j++)
+                                {
+                                    var list = document.getElementsByClassName(json.classes[j]);
+                                    for (var i = list.length - 1; i >= 0; i--)
+                                        list[i].parentNode.removeChild(list[i]);
+                                }
                             }
                             else
                             {
@@ -100,12 +113,12 @@
                                     obj.id = json.id;
                                     $(obj).click(processElementClick);
                                 }
-                                if ('className' in json && json.className !== null)
-                                    obj.setAttribute('class', json.className);
+                                if ('classes' in json && json.classes instanceof Array)
+                                    obj.setAttribute('class', json.classes.join(' '));
                                 if ('attr' in json)
                                 {
                                     for (var k in json.attr)
-                                        if (json.attr.hasOwnProperty(k))
+                                        if (json.attr.hasOwnProperty(k) && json.attr[k] !== null)
                                             obj.setAttribute(k, json.attr[k]);
                                 }
                                 if ('content' in json)
@@ -127,11 +140,25 @@
                             document.getElementById('polyhedra').appendChild(option);
                             option.setAttribute('data-name', poly);
                         }
-                        option.innerText = json.select;
+                        option.innerText = json.select.replace(/\n/g, ' ');
                     }
                     else
                         addLog('Unrecognized message: ' + msg.data);
                 };
+            }
+
+            var svgContainers = $('.svg-container');
+            var svgSelector = $('#svg-selector');
+            for (var i = 0; i < svgContainers.length; i++)
+            {
+                var div = $('<div>');
+                div.append($('<input type="radio" name="radio-svg" class="radio-svg">').attr('value', svgContainers[i].id).attr('id', 'opt-' + svgContainers[i].id).prop('checked', i === 0));
+                div.append(" ");
+                div.append($('<label>').attr('for', 'opt-' + svgContainers[i].id).text(svgContainers[i].id));
+                div.append(" (");
+                div.append($('<span>').attr('id', 'view-width-' + svgContainers[i].id));
+                div.append(")");
+                svgSelector.append(div);
             }
 
             $('#add-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'add', Polyhedron: $('#polyhedra').find(":selected").attr('data-name'), SvgId: $('.radio-svg:checked').val() })); });
@@ -141,11 +168,19 @@
             $('#make-connected').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'make-connected', EdgeData: selectedEdge.getAttribute('data-edge') })); });
             $('#deselect').click(function () { if (selectedEdge != null) selectedEdge.returnToNormal(); selectedEdge = null; $('#edge-options').hide(); });
             $('.rotate-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'rotate', Amount: this.getAttribute('data-amount'), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('.move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move', XAmount: this.getAttribute('data-x-amount'), YAmount: this.getAttribute('data-y-amount'), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('.move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move', XAmount: this.getAttribute('data-x-amount') * $('#move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('.caption-move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move-caption', XAmount: this.getAttribute('data-x-amount') * $('#caption-move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#caption-move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('.scale-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'scale', Amount: this.getAttribute('data-amount') * $('#scale-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('#generate-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'generate-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('#clear-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'clear-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); });
 
             $('#edge-options').hide();
 
             newSocket();
+
+            var accessKeys = $('*[accesskey]').map(function (_, e) { return e.getAttribute('accesskey').toUpperCase(); }).get().filter(x => x.length > 0).sort();
+            addLog("Used access keys: " + accessKeys.join(''));
+            addLog("Available access keys: " + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').filter(x => accessKeys.indexOf(x) === -1).join(''));
         });
 
     </script>
@@ -193,7 +228,7 @@
             <div id='log-wrap'>
                 <div><textarea id='log' style="white-space:pre"></textarea></div>
                 <div><select accesskey="," id="polyhedra"></select></div>
-                <div><input type="radio" name="radio-svg" class="radio-svg" accesskey="1" value="svg-1" checked /> SVG <u>1</u> | <input type="radio" name="radio-svg" class="radio-svg" accesskey="2" value="svg-2" /> SVG <u>2</u></div>
+                <div id="svg-selector"></div>
                 <div><button id="add-polyhedron" accesskey="a"><u>A</u>dd polyhedron</button> <button id="remove-polyhedron" accesskey="m">Re<u>m</u>ove polyhedron</button></div>
                 <div id="edge-options">
                     <div>Selected edge: <span id="eo-data"></span></div>
@@ -204,24 +239,36 @@
                         <button id="deselect" accesskey="d"><u>D</u>eselect</button>
                     </div>
                     <div>
-                        <button accesskey="l" class="rotate-button" data-amount="10">Rotate <u>L</u>eft 10°</button>
-                        <button accesskey="e" class="rotate-button" data-amount="1">Rotate L<u>e</u>ft 1°</button>
-                        <button accesskey="r" class="rotate-button" data-amount="-1">Rotate <u>R</u>ight 1°</button>
-                        <button accesskey="i" class="rotate-button" data-amount="-10">Rotate R<u>i</u>ght 10°</button>
+                        <button accesskey="z" id="generate-maze">Generate ma<u>z</u>e</button>
+                        <button accesskey="y" id="clear-maze">Empt<u>y</u> maze</button>
                     </div>
                     <div>
-                        Big:
-                        <button accesskey="" class="move-button" data-x-amount="0" data-y-amount="-1">Move Up</button>
-                        <button accesskey="" class="move-button" data-x-amount="0" data-y-amount="1">Move Down</button>
-                        <button accesskey="" class="move-button" data-x-amount="-1" data-y-amount="0">Move Left</button>
-                        <button accesskey="" class="move-button" data-x-amount="1" data-y-amount="0">Move Right</button>
+                        <button accesskey="l" class="rotate-button" data-amount="-10">Rotate <u>L</u>eft 10°</button>
+                        <button accesskey="e" class="rotate-button" data-amount="-1">Rotate L<u>e</u>ft 1°</button>
+                        <button accesskey="r" class="rotate-button" data-amount="1">Rotate <u>R</u>ight 1°</button>
+                        <button accesskey="i" class="rotate-button" data-amount="10">Rotate R<u>i</u>ght 10°</button>
                     </div>
                     <div>
-                        Small:
-                        <button accesskey="" class="move-button" data-x-amount="0" data-y-amount="-.1">Move Up</button>
-                        <button accesskey="" class="move-button" data-x-amount="0" data-y-amount=".1">Move Down</button>
-                        <button accesskey="" class="move-button" data-x-amount="-.1" data-y-amount="0">Move Left</button>
-                        <button accesskey="" class="move-button" data-x-amount=".1" data-y-amount="0">Move Right</button>
+                        Move:
+                        <button class="move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
+                        <button class="move-button" data-x-amount="0" data-y-amount=".1">Down</button>
+                        <button class="move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
+                        <button class="move-button" data-x-amount=".1" data-y-amount="0">Right</button>
+                        by <input type="number" step="1" value="1" id="move-amount" size="3" />
+                    </div>
+                    <div>
+                        Caption move:
+                        <button class="caption-move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
+                        <button class="caption-move-button" data-x-amount="0" data-y-amount=".1">Down</button>
+                        <button class="caption-move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
+                        <button class="caption-move-button" data-x-amount=".1" data-y-amount="0">Right</button>
+                        by <input type="number" step="1" value="1" id="caption-move-amount" size="3" />
+                    </div>
+                    <div>
+                        Scale:
+                        <button class="scale-button" data-amount="1">Up</button>
+                        <button class="scale-button" data-amount="-1">Down</button>
+                        by <input type="number" step=".1" value=".1" id="scale-amount" size="3" />
                     </div>
                 </div>
             </div>
@@ -240,7 +287,7 @@
                     <p>The number in the bottom-left of the module shows the current face on the polyhedron. The number in the bottom-right shows the destination face that must be reached to defuse the module.</p>
                     <p>Navigate to the destination face without crossing any of the thick lines. These are not visible on the module. The letters and the curved lines indicate faces that are connected even though they are not adjacent in the net.</p>
 
-                    <svg id='svg-1'>
+                    <svg id='svg-1' class="svg-container">
                     </svg>
 
                     <div class='footnotes'>
@@ -257,7 +304,18 @@
                 <span class="page-header-section-title">Polyhedral Maze</span>
             </div>
             <div class="page-content">
-                <svg id='svg-2'>
+                <svg id='svg-2' class="svg-container">
+                </svg>
+            </div>
+            <div class="page-footer relative-footer">Page 2 of 2</div>
+        </div>
+        <div class="page page-bg-02">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Polyhedral Maze</span>
+            </div>
+            <div class="page-content">
+                <svg id='svg-3' class="svg-container">
                 </svg>
             </div>
             <div class="page-footer relative-footer">Page 2 of 2</div>
