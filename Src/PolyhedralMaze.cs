@@ -81,7 +81,7 @@ namespace KtaneStuff
         {
             public string FileCompatibleName { get; private set; }
             public string ReadableName { get; private set; }
-            public Pt[][] Faces { get; private set; }
+            public Pt[][] Faces { get; set; }
 
             public AdjacencyInfo[] Adjacencies { get; set; }
             public string SvgId { get; set; }
@@ -98,11 +98,13 @@ namespace KtaneStuff
                 FileCompatibleName = fileCompatibleName;
                 ReadableName = readableName;
                 Faces = faces;
+                ScaleFactor = 1;
             }
             private PolyhedronInfo() { }    // Classify
             public void GenerateObjFile()
             {
-                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces, ReadableName, AutoNormal.Flat));
+                Directory.CreateDirectory(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra");
+                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces, FileCompatibleName, AutoNormal.Flat));
             }
 
             internal char GetPortalLetter(int faceIx, int edgeIx)
@@ -124,6 +126,21 @@ namespace KtaneStuff
 
         public static void GeneratePolyhedronInfos()
         {
+            var wanted = @"4TruncatedDeltoidalIcositetrahedron2
+ChamferedDodecahedron1
+ChamferedIcosahedron1
+DeltoidalHexecontahedron
+DisdyakisDodecahedron
+JoinedIcosidodecahedron
+JoinedLsnubCube
+JoinedRhombicuboctahedron
+LpentagonalHexecontahedron
+OrthokisPropelloCube
+PentakisDodecahedron
+RectifiedRhombicuboctahedron
+TriakisIcosahedron
+Rhombicosidodecahedron".Replace("\r", "").Split('\n');
+
             List<PolyhedronInfo> polyhedra;
             try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
             catch { polyhedra = new List<PolyhedronInfo>(); }
@@ -131,18 +148,31 @@ namespace KtaneStuff
             foreach (var file in new DirectoryInfo(@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Txt").GetFiles("*.txt"))
             {
                 var (name, faces) = Parse(File.ReadAllText(file.FullName));
-                if (faces.Length < 40 || faces.Length > 60)
+                var newInfo = new PolyhedronInfo(Path.GetFileNameWithoutExtension(file.Name), name, faces);
+                //if ((faces.Length < 40 || faces.Length > 60) && newInfo.FileCompatibleName != "Rhombicosidodecahedron")
+                if (!wanted.Contains(newInfo.FileCompatibleName))
                     continue;
 
-                var info = polyhedra.FirstOrDefault(si => si.ReadableName == name);
+                var info = polyhedra.FirstOrDefault(si => si.FileCompatibleName == newInfo.FileCompatibleName);
                 if (info == null)
                 {
-                    info = new PolyhedronInfo(Path.GetFileNameWithoutExtension(file.Name), name, faces);
-                    polyhedra.Add(info);
+                    Console.WriteLine($"Adding {newInfo.ReadableName} ({newInfo.Faces.Length})");
+                    polyhedra.Add(newInfo);
                 }
+                else
+                    info.Faces = faces;
             }
 
             ClassifyJson.SerializeToFile(polyhedra, _masterJsonPath);
+        }
+
+        public static void GenerateModels()
+        {
+            List<PolyhedronInfo> polyhedra;
+            try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
+            catch { polyhedra = new List<PolyhedronInfo>(); }
+            foreach (var poly in polyhedra)
+                poly.GenerateObjFile();
         }
 
         public static void RunServer()
