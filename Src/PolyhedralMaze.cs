@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using CsQuery;
 using KtaneStuff.Modeling;
 using RT.Servers;
@@ -104,10 +105,11 @@ namespace KtaneStuff
             public void GenerateObjFile()
             {
                 Directory.CreateDirectory(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra");
-                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces, FileCompatibleName, AutoNormal.Flat));
+                var avg = Faces.SelectMany(p => p).Average(p => p.Length);
+                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces.Select(f => f.Select(p => p / avg).ToArray()).ToArray(), FileCompatibleName, AutoNormal.Flat));
             }
 
-            internal char GetPortalLetter(int faceIx, int edgeIx)
+            public char GetPortalLetter(int faceIx, int edgeIx)
             {
                 char ch = 'A';
                 for (int i = 0; i < Adjacencies.Length; i++)
@@ -121,6 +123,27 @@ namespace KtaneStuff
                 }
                 Debugger.Break();
                 throw new InvalidOperationException();
+            }
+    
+            public string Declaration
+            {
+                get
+                {
+                    var avg = Faces.SelectMany(p => p).Average(p => p.Length);
+                    var sb = new StringBuilder();
+                    sb.AppendLine($@"new Polyhedron {{ Name = ""{FileCompatibleName.CLiteralEscape()}"", ReadableName = ""{ReadableName.CLiteralEscape()}"", Faces = new Face[] {{");
+                    for (int fIx = 0; fIx < Faces.Length; fIx++)
+                    {
+                        var normal = ((Faces[fIx][2] - Faces[fIx][1]) * (Faces[fIx][0] - Faces[fIx][1])).Normalize();
+                        var adjFacesInf = Enumerable.Range(0, Faces[fIx].Length).Select(eIx => Adjacencies.Select(adj => adj.FromFace == fIx && adj.FromEdge == eIx ? adj.ToFace : adj.ToFace == fIx && adj.ToEdge == eIx ? adj.FromFace : (int?) null).First(adj => adj != null).Value).JoinString(", ");
+                        sb.AppendLine($@"                new Face {{ Normal = new Vector3({-normal.X}f, {normal.Y}f, {normal.Z}f), Distance = {normal.Dot(Faces[fIx][0] / avg)}f, AdjacentFaces = new int[] {{ {adjFacesInf} }}, Vertices = new Vector3[] {{");
+                        for (int eIx = 0; eIx < Faces[fIx].Length; eIx++)
+                            sb.AppendLine($@"                    new Vector3({-Faces[fIx][eIx].X / avg}f, {Faces[fIx][eIx].Y / avg}f, {Faces[fIx][eIx].Z / avg}f){(eIx == Faces[fIx].Length - 1 ? "" : ",")}");
+                        sb.AppendLine($@"                }} }}{(fIx == Faces.Length - 1 ? "" : ",")}");
+                    }
+                    sb.Append($@"            }} }}");
+                    return sb.ToString();
+                }
             }
         }
 
@@ -173,6 +196,56 @@ Rhombicosidodecahedron".Replace("\r", "").Split('\n');
             catch { polyhedra = new List<PolyhedronInfo>(); }
             foreach (var poly in polyhedra)
                 poly.GenerateObjFile();
+
+            File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Arrow.obj", GenerateObjFile(Arrow(), "Arrow"));
+            File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Frame.obj", GenerateObjFile(Frame(), "Frame"));
+
+            Console.WriteLine("Models generated.");
+        }
+
+        private static IEnumerable<VertexInfo[]> Arrow()
+        {
+            var shape = new[] { p(1, 0), p(.75, 2), p(1.5, 2), p(0, 4), p(-1.5, 2), p(-.75, 2), p(-1, 0) }.Extrude(.4, includeBackFace: true, flatSideNormals: true);
+            return shape;
+        }
+
+        public static void GenerateDeclaration()
+        {
+            List<PolyhedronInfo> polyhedra;
+            try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
+            catch { polyhedra = new List<PolyhedronInfo>(); }
+
+            File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Polyhedra.cs", $@"
+using UnityEngine;
+
+namespace PolyhedralMaze
+{{
+    sealed class Polyhedron
+    {{
+        public string Name;
+        public string ReadableName;
+        public Face[] Faces;
+    }}
+
+    sealed class Face
+    {{
+        public Vector3[] Vertices;
+        public int[] AdjacentFaces;
+        public Vector3 Normal;
+        public float Distance;
+    }}
+
+    static class Data
+    {{
+        public static Polyhedron[] Polyhedra = new Polyhedron[] {{
+            {polyhedra.Select(p => p.Declaration).JoinString(@",
+            ")}
+        }};
+    }}
+}}
+
+");
+            Console.WriteLine("Declaration file generated.");
         }
 
         public static void RunServer()
@@ -669,6 +742,38 @@ Rhombicosidodecahedron".Replace("\r", "").Split('\n');
             var vertices = matches.Where(m => m.VertexMatch.Success).ToDictionary(m => int.Parse(m.VertexMatch.Groups[1].Value), m => m.VertexMatch.Groups.Apply(g => pt(resolveCoord(g["m1"], g["c1"], g["n1"]), resolveCoord(g["m2"], g["c2"], g["n2"]), resolveCoord(g["m3"], g["c3"], g["n3"]))));
             var faces = matches.Where(m => m.FaceMatch.Success).Select(m => m.FaceMatch.Groups[1].Value.Split(',').Select(str => vertices[int.Parse(str.Trim())]).ToArray()).ToArray();
             return (name, faces);
+        }
+
+        private static IEnumerable<VertexInfo[]> Frame()
+        {
+            var depth = .06;
+            var béFac = depth * .55;
+            var ratio = .825;
+            var th = .2;
+            const int bézierSteps = 6;
+
+            MeshVertexInfo[] bpa(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY, double bx, double by, double ax, double ay) { return new[] { pt(x, y, z, befX, afX, befY, afY).WithTexture(bx, by, ax, ay) }; }
+
+            double xf = .25;
+
+            return CreateMesh(true, true,
+                Bézier(p(th, 0), p(th, béFac), p(th - depth + béFac, depth), p(th - depth, depth), bézierSteps).Select((p, ix, first, last) => new { BP = new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average), Y = ix / (double) (3 * bézierSteps - 1) }).Concat(
+                Bézier(p(depth, depth), p(depth - béFac, depth), p(0, béFac), p(0, -.2), bézierSteps).Select((p, ix, first, last) => new { BP = new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average), Y = (ix + 2 * bézierSteps) / (double) (3 * bézierSteps - 1) }))
+                .Select((inf, ix) => inf.BP.Apply(bi => Ut.NewArray(
+                    // Bottom right
+                    bpa(-1 + bi.X, bi.Y, -ratio + bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine, 4 * xf, 1 - inf.Y, 0, 1 - inf.Y),
+
+                    // Top right
+                    bpa(-1 + bi.X, bi.Y, ratio - bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine, xf, 1 - inf.Y, xf, inf.Y),
+
+                    // Top left
+                    bpa(1 - bi.X, bi.Y, ratio - bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine, 2 * xf, inf.Y, 2 * xf, inf.Y),
+
+                    // Bottom left
+                    bpa(1 - bi.X, bi.Y, -ratio + bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine, 3 * xf, inf.Y, 3 * xf, 1 - inf.Y),
+
+                    null
+                )).Where(x => x != null).SelectMany(x => x).ToArray()).ToArray(), textureCoordsAreFlipped: true);
         }
     }
 }
