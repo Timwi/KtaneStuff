@@ -12,8 +12,9 @@ namespace KtaneStuff.Modeling
         public Normal NormalAfterY { get; private set; }
         public Pt? NormalOverride { get; private set; }
         public PointD? Texture { get; private set; }
+        public PointD? TextureAfter { get; private set; }
 
-        public MeshVertexInfo(Pt pt, Normal befX, Normal afX, Normal befY, Normal afY, PointD? texture = null) : this()
+        public MeshVertexInfo(Pt pt, Normal befX, Normal afX, Normal befY, Normal afY, PointD? texture = null, PointD? textureAfter = null) : this()
         {
             Location = pt;
             NormalBeforeX = befX;
@@ -21,13 +22,15 @@ namespace KtaneStuff.Modeling
             NormalBeforeY = befY;
             NormalAfterY = afY;
             Texture = texture;
+            TextureAfter = textureAfter;
         }
 
-        public MeshVertexInfo(Pt pt, Pt normalOverride, PointD? texture = null) : this()
+        public MeshVertexInfo(Pt pt, Pt normalOverride, PointD? texture = null, PointD? textureAfter = null) : this()
         {
             Location = pt;
             NormalOverride = normalOverride;
             Texture = texture;
+            TextureAfter = textureAfter;
         }
 
         public override string ToString()
@@ -41,6 +44,13 @@ namespace KtaneStuff.Modeling
                 ? new MeshVertexInfo(Location, NormalBeforeX, NormalAfterX, NormalBeforeY, NormalAfterY, texture)
                 : new MeshVertexInfo(Location, NormalOverride.Value, texture);
         }
+        public MeshVertexInfo WithTexture(PointD texture, PointD textureAfter)
+        {
+            return NormalOverride == null
+                ? new MeshVertexInfo(Location, NormalBeforeX, NormalAfterX, NormalBeforeY, NormalAfterY, texture, textureAfter)
+                : new MeshVertexInfo(Location, NormalOverride.Value, texture, textureAfter);
+        }
         public MeshVertexInfo WithTexture(double x, double y) { return WithTexture(new PointD(x, y)); }
+        public MeshVertexInfo WithTexture(double bx, double by, double ax, double ay) { return WithTexture(new PointD(bx, by), new PointD(ax, ay)); }
     }
 }

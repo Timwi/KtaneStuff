@@ -15,6 +15,13 @@ namespace KtaneStuff.Modeling
             Texture = texture;
         }
 
+        public VertexInfo(Pt loc, Pt? normal, double? textureU, double? textureV) : this()
+        {
+            Location = loc;
+            Normal = normal;
+            Texture = textureU == null || textureV == null ? (PointD?) null : new PointD(textureU.Value, textureV.Value);
+        }
+
         public override string ToString()
         {
             if (Normal == null)
