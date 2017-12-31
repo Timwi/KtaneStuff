@@ -69,6 +69,7 @@
     <Compile Include="LedEncryption.cs" />
     <Compile Include="Modeling\AutoNormal.cs" />
     <Compile Include="Neutralization.cs" />
+    <Compile Include="Poker.cs" />
     <Compile Include="PolyhedralMaze.cs" />
     <Compile Include="PerplexingWires.cs" />
     <Compile Include="PointOfOrder.cs" />
