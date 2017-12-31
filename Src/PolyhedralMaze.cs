@@ -124,7 +124,7 @@ namespace KtaneStuff
                 Debugger.Break();
                 throw new InvalidOperationException();
             }
-    
+
             public string Declaration
             {
                 get
@@ -135,8 +135,11 @@ namespace KtaneStuff
                     for (int fIx = 0; fIx < Faces.Length; fIx++)
                     {
                         var normal = ((Faces[fIx][2] - Faces[fIx][1]) * (Faces[fIx][0] - Faces[fIx][1])).Normalize();
-                        var adjFacesInf = Enumerable.Range(0, Faces[fIx].Length).Select(eIx => Adjacencies.Select(adj => adj.FromFace == fIx && adj.FromEdge == eIx ? adj.ToFace : adj.ToFace == fIx && adj.ToEdge == eIx ? adj.FromFace : (int?) null).First(adj => adj != null).Value).JoinString(", ");
-                        sb.AppendLine($@"                new Face {{ Normal = new Vector3({-normal.X}f, {normal.Y}f, {normal.Z}f), Distance = {normal.Dot(Faces[fIx][0] / avg)}f, AdjacentFaces = new int[] {{ {adjFacesInf} }}, Vertices = new Vector3[] {{");
+                        var adjFacesInf = Enumerable.Range(0, Faces[fIx].Length)
+                            .Select(eIx => Adjacencies.Select(adj => adj.FromFace == fIx && adj.FromEdge == eIx && adj.Adjacency.HasFlag(Adjacency.Traversible) ? adj.ToFace : adj.ToFace == fIx && adj.ToEdge == eIx && adj.Adjacency.HasFlag(Adjacency.Traversible) ? adj.FromFace : (int?) null).FirstOrDefault(adj => adj != null))
+                            .Select(val => val == null ? "null" : val.Value.ToString())
+                            .JoinString(", ");
+                        sb.AppendLine($@"                new Face {{ Normal = new Vector3({-normal.X}f, {normal.Y}f, {normal.Z}f), Distance = {normal.Dot(Faces[fIx][0] / avg)}f, AdjacentFaces = new int?[] {{ {adjFacesInf} }}, Vertices = new Vector3[] {{");
                         for (int eIx = 0; eIx < Faces[fIx].Length; eIx++)
                             sb.AppendLine($@"                    new Vector3({-Faces[fIx][eIx].X / avg}f, {Faces[fIx][eIx].Y / avg}f, {Faces[fIx][eIx].Z / avg}f){(eIx == Faces[fIx].Length - 1 ? "" : ",")}");
                         sb.AppendLine($@"                }} }}{(fIx == Faces.Length - 1 ? "" : ",")}");
@@ -230,7 +233,7 @@ namespace PolyhedralMaze
     sealed class Face
     {{
         public Vector3[] Vertices;
-        public int[] AdjacentFaces;
+        public int?[] AdjacentFaces;
         public Vector3 Normal;
         public float Distance;
     }}
