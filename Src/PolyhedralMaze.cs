@@ -87,7 +87,6 @@ namespace KtaneStuff
 
             public AdjacencyInfo[] Adjacencies { get; set; }
             public string SvgId { get; set; }
-            public double[] FontSizes { get; set; }
             public double Rotation { get; set; }
             public double XOffset { get; set; }
             public double YOffset { get; set; }
@@ -520,12 +519,6 @@ namespace PolyhedralMaze
 
                 var anyChanges = false;
 
-                if (polyhedron.FontSizes == null)
-                {
-                    polyhedron.FontSizes = Ut.NewArray(polyhedron.Faces.Length, _ => .5);
-                    anyChanges = true;
-                }
-
                 void setConnection(int fromFaceIx, int fromEdgeIx, int toFaceIx, int toEdgeIx, Adjacency value)
                 {
                     if (fromFaceIx > toFaceIx)
@@ -614,7 +607,7 @@ namespace PolyhedralMaze
                 {
                     var (fromFaceIx, rotatedPolyhedron) = q.Dequeue();
                     polygons[fromFaceIx] = rotatedPolyhedron[fromFaceIx].Select(pt => p(pt.X, pt.Y)).ToArray();
-                    sendText($"label-{fromFaceIx}", new[] { $"face-{fromFaceIx}" }, polyhedron.FontSizes[fromFaceIx], polygons[fromFaceIx].Sum(p => p.X) / polygons[fromFaceIx].Length, polygons[fromFaceIx].Sum(p => p.Y) / polygons[fromFaceIx].Length, fromFaceIx.ToString(), "#000");
+                    sendText($"label-{fromFaceIx}", new[] { $"face-{fromFaceIx}" }, .5, polygons[fromFaceIx].Sum(p => p.X) / polygons[fromFaceIx].Length, polygons[fromFaceIx].Sum(p => p.Y) / polygons[fromFaceIx].Length, fromFaceIx.ToString(), "#000");
 
                     for (int fromEdgeIx = 0; fromEdgeIx < rotatedPolyhedron[fromFaceIx].Length; fromEdgeIx++)
                     {
