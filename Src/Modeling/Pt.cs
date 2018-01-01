@@ -1,4 +1,5 @@
 ﻿using System;
+using RT.Util.Geometry;
 
 namespace KtaneStuff.Modeling
 {
@@ -25,6 +26,7 @@ namespace KtaneStuff.Modeling
 
         public VertexInfo WithNormal(Pt normal) => new VertexInfo(this, normal);
         public VertexInfo WithNormal(double x, double y, double z) => new VertexInfo(this, new Pt(x, y, z));
+        public VertexInfo WithTexture(PointD texture) { return new VertexInfo(this, null, texture); }
 
         public MeshVertexInfo WithMeshInfo(Pt normal) => new MeshVertexInfo(this, normal);
         public MeshVertexInfo WithMeshInfo(double normalX, double normalY, double normalZ) => new MeshVertexInfo(this, new Pt(normalX, normalY, normalZ));

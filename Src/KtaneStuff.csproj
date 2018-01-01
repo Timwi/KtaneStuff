@@ -68,6 +68,7 @@
     <Compile Include="IceCream.cs" />
     <Compile Include="LedEncryption.cs" />
     <Compile Include="Modeling\AutoNormal.cs" />
+    <Compile Include="Modeling\GaussianBlur.cs" />
     <Compile Include="Neutralization.cs" />
     <Compile Include="Poker.cs" />
     <Compile Include="PolyhedralMaze.cs" />

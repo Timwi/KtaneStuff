@@ -171,7 +171,7 @@
             $('.move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move', XAmount: this.getAttribute('data-x-amount') * $('#move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
             $('.caption-move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move-caption', XAmount: this.getAttribute('data-x-amount') * $('#caption-move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#caption-move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
             $('.scale-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'scale', Amount: this.getAttribute('data-amount') * $('#scale-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('#generate-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'generate-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('#generate-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'generate-maze', EdgeData: selectedEdge.getAttribute('data-edge'), WallProb: $('#wall-probability').val(), Seed: $('#seed').val() })); $('#seed').val((+$('#seed').val()) + 1); });
             $('#clear-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'clear-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); });
 
             $('#edge-options').hide();
@@ -240,6 +240,8 @@
                     </div>
                     <div>
                         <button accesskey="z" id="generate-maze">Generate ma<u>z</u>e</button>
+                        <label for="wall-probability"><u>W</u>all prob:</label> <input type="number" step=".1" accesskey="w" id="wall-probability" value=".3" style="width: 4em" />
+                        <label for="seed"><u>S</u>eed:</label> <input type="number" step="1" accesskey="s" id="seed" value="1" style="width: 4em" /> •
                         <button accesskey="y" id="clear-maze">Empt<u>y</u> maze</button>
                     </div>
                     <div>

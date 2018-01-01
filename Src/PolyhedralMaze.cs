@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -102,11 +103,11 @@ namespace KtaneStuff
                 ScaleFactor = 1;
             }
             private PolyhedronInfo() { }    // Classify
-            public void GenerateObjFile()
+            public void GenerateObjFile(Func<int, int, PointD> getTexturePoint)
             {
                 Directory.CreateDirectory(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra");
                 var avg = Faces.SelectMany(p => p).Average(p => p.Length);
-                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces.Select(f => f.Select(p => p / avg).ToArray()).ToArray(), FileCompatibleName, AutoNormal.Flat));
+                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces.Select(face => face.Select((p, vIx) => (p / avg).WithTexture(getTexturePoint(vIx, face.Length))).ToArray()).ToArray(), FileCompatibleName, AutoNormal.Flat));
             }
 
             public char GetPortalLetter(int faceIx, int edgeIx)
@@ -131,7 +132,7 @@ namespace KtaneStuff
                 {
                     var avg = Faces.SelectMany(p => p).Average(p => p.Length);
                     var sb = new StringBuilder();
-                    sb.AppendLine($@"new Polyhedron {{ Name = ""{FileCompatibleName.CLiteralEscape()}"", ReadableName = ""{ReadableName.CLiteralEscape()}"", Faces = new Face[] {{");
+                    sb.AppendLine($@"new Polyhedron {{ Name = ""{FileCompatibleName.CLiteralEscape()}"", ReadableName = ""{ReadableName.Replace("\r", "").Replace("\n", " ").CLiteralEscape()}"", Faces = new Face[] {{");
                     for (int fIx = 0; fIx < Faces.Length; fIx++)
                     {
                         var normal = ((Faces[fIx][2] - Faces[fIx][1]) * (Faces[fIx][0] - Faces[fIx][1])).Normalize();
@@ -154,7 +155,7 @@ namespace KtaneStuff
         {
             var wanted = @"4TruncatedDeltoidalIcositetrahedron2
 ChamferedDodecahedron1
-ChamferedIcosahedron1
+ChamferedIcosahedron2
 DeltoidalHexecontahedron
 DisdyakisDodecahedron
 JoinedIcosidodecahedron
@@ -194,14 +195,41 @@ Rhombicosidodecahedron".Replace("\r", "").Split('\n');
 
         public static void GenerateModels()
         {
+            const int minEdges = 3;
+            const int maxEdges = 7;
+            const int x0 = 110;
+            const int y0 = 110;
+            const int spacing = 210;
+            const int radius = 100;
+
+            const int w = 2 * x0 + (maxEdges - minEdges) * spacing;
+            const int h = 2 * y0;
+
+            //Console.WriteLine("Generating texture file...");
+
+            //var texturePath = @"D:\c\KTANE\PolyhedralMaze\Assets\Textures\PolyTexture.png";
+
+            //File.WriteAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Texture.svg", $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {w} {h}'>
+            //    <!-- path d='M-5 -5 H{w + 10} V{h + 10} H-5z' fill='#888' / -->
+            //    {Enumerable.Range(minEdges, maxEdges - minEdges + 1).Select(edges => $@"<path d='M {Enumerable.Range(0, edges).Select(e => $"{x0 + (edges - minEdges) * spacing + radius * cos(360 / edges * e)},{y0 + radius * sin(360 / edges * e)}").JoinString(" ")} z' stroke='white' stroke-opacity='.5' stroke-width='5' fill='none'/>").JoinString()}
+            //    </svg>");
+            //CommandRunner.RunRaw($@"D:\Inkscape\InkscapePortable.exe -z -f D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Texture.svg -w {w} -e {texturePath}").Go();
+            //Bitmap blurred;
+            //using (var bmp = new Bitmap(texturePath))
+            //    blurred = GaussianBlur.Blur(bmp, 3);
+            //blurred.Save(texturePath);
+
+            Console.WriteLine("Generating models...");
+
             List<PolyhedronInfo> polyhedra;
             try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
             catch { polyhedra = new List<PolyhedronInfo>(); }
             foreach (var poly in polyhedra)
-                poly.GenerateObjFile();
+                poly.GenerateObjFile((e, edges) => new PointD((x0 + (edges - minEdges) * spacing + radius * cos(360 / edges * e)) / w, (y0 + radius * sin(360 / edges * e)) / h));
 
             File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Arrow.obj", GenerateObjFile(Arrow(), "Arrow"));
             File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Frame.obj", GenerateObjFile(Frame(), "Frame"));
+            File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Button.obj", GenerateObjFile(ResetButton(), "Button"));
 
             Console.WriteLine("Models generated.");
         }
@@ -210,6 +238,23 @@ Rhombicosidodecahedron".Replace("\r", "").Split('\n');
         {
             var shape = new[] { p(1, 0), p(.75, 2), p(1.5, 2), p(0, 4), p(-1.5, 2), p(-.75, 2), p(-1, 0) }.Extrude(.4, includeBackFace: true, flatSideNormals: true);
             return shape;
+        }
+
+        public static void CheckSuitableStartFaces()
+        {
+            List<PolyhedronInfo> polyhedra;
+            try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
+            catch { polyhedra = new List<PolyhedronInfo>(); }
+
+            foreach (var poly in polyhedra)
+            {
+                ConsoleUtil.WriteLine(poly.ReadableName.Replace("\n", " ").Color(ConsoleColor.White));
+                var faces = new List<int>();
+                for (int i = 0; i < poly.Faces.Length; i++)
+                    if (!(poly.Adjacencies.Any(a => (a.FromFace == i || a.ToFace == i) && !a.Adjacency.HasFlag(Adjacency.Traversible))))
+                        faces.Add(i);
+                ConsoleUtil.WriteLine($"    - Faces: {faces.JoinString(", ")}".Color(faces.Count == 0 ? ConsoleColor.Red : ConsoleColor.Green));
+            }
         }
 
         public static void GenerateDeclaration()
@@ -341,7 +386,7 @@ namespace PolyhedralMaze
                     case "convert-to-curve": ConvertTo(Adjacency.Curved, edgeData); break;
                     case "make-connected": ConvertTo(Adjacency.Connected, edgeData); break;
 
-                    case "generate-maze": Update(edgeData["polyhedron"].GetString(), GenerateMaze); break;
+                    case "generate-maze": Update(edgeData["polyhedron"].GetString(), p => GenerateMaze(p, json["WallProb"].GetDoubleLenient(), json["Seed"].GetIntLenient())); break;
                     case "clear-maze": Update(edgeData["polyhedron"].GetString(), ClearMaze); break;
 
                     default:
@@ -356,24 +401,23 @@ namespace PolyhedralMaze
                     adj.Adjacency = adj.Adjacency | Adjacency.Traversible;
             }
 
-            private void GenerateMaze(PolyhedronInfo polyhedron)
+            private void GenerateMaze(PolyhedronInfo polyhedron, double wallProbability, int seed)
             {
+                var rnd = new Random(seed);
                 SendDelete(polyhedron, "decor");
-
-                const double wallProbability = .33;
 
                 var iterations = 0;
                 tryAgain:
                 iterations++;
                 if (iterations >= 50000)
                 {
-                    SendMessage($"Log: Giving up after {iterations} iterations.");
+                    SendMessage($"Log: (seed={seed}) (prob={wallProbability}) Giving up after {iterations} iterations.");
                     ClearMaze(polyhedron);
                     return;
                 }
 
                 // Put random walls in
-                var adjs = polyhedron.Adjacencies.ToArray().Shuffle();
+                var adjs = polyhedron.Adjacencies.ToArray().Shuffle(rnd);
                 for (int i = 0; i < adjs.Length; i++)
                     adjs[i].Adjacency = (adjs[i].Adjacency & ~Adjacency.Traversible) | (i <= adjs.Length * wallProbability ? 0 : Adjacency.Traversible);
 
@@ -412,7 +456,7 @@ namespace PolyhedralMaze
                                 goto tryAgain;
                 }
 
-                SendMessage($"Log: iterations = {iterations}, max distance = {maxDist} ({maxFrom} to {maxTo})");
+                SendMessage($"Log: (seed={seed}) (prob={wallProbability}) (starts={Enumerable.Range(0, polyhedron.Faces.Length).Count(face => adjs.All(a => (a.FromFace != face && a.ToFace != face) || a.Adjacency.HasFlag(Adjacency.Traversible)))}) (maxdist={maxDist} ({maxFrom}-{maxTo}))");
             }
 
             private void Update(string polyhedronId, Action<PolyhedronInfo> action)
@@ -777,6 +821,43 @@ namespace PolyhedralMaze
 
                     null
                 )).Where(x => x != null).SelectMany(x => x).ToArray()).ToArray(), textureCoordsAreFlipped: true);
+        }
+
+        private static IEnumerable<VertexInfo[]> ResetButton()
+        {
+            var depth = .1;
+            var béFac = depth * .55;
+            var ratio = .5;
+            var th = .2;
+            const int bézierSteps = 6;
+
+            MeshVertexInfo[] bpa(double x, double y, double z, Normal befX, Normal afX, Pt? normalOverride, Normal befY, Normal afY) { return new[] { (normalOverride == null ? pt(x, y, z, befX, afX, befY, afY) : pt(x, y, z, normalOverride.Value)).WithTexture((x + 1) / 2, (z + ratio) / (2 * ratio)) }; }
+
+            double xf = .25;
+
+            return CreateMesh(true, true,
+                Bézier(p(depth, depth), p(depth - béFac, depth), p(0, béFac), p(0, -.1), bézierSteps).Select((p, ix, first, last) => new
+                {
+                    BP = first
+                        ? new BevelPoint(p.X, p.Y, normal: pt(0, 1, 0))
+                        : new BevelPoint(p.X, p.Y, last ? Normal.Mine : Normal.Average, last ? Normal.Mine : Normal.Average),
+                    Y = (ix + 2 * bézierSteps) / (double) (3 * bézierSteps - 1)
+                })
+                .Select((inf, ix) => inf.BP.Apply(bi => Ut.NewArray(
+                    // Bottom right
+                    bpa(-1 + bi.X, bi.Y, -ratio + bi.X, bi.Before, bi.After, bi.NormalOverride, Normal.Mine, Normal.Mine),
+
+                    // Top right
+                    bpa(-1 + bi.X, bi.Y, ratio - bi.X, bi.Before, bi.After, bi.NormalOverride, Normal.Mine, Normal.Mine),
+
+                    // Top left
+                    bpa(1 - bi.X, bi.Y, ratio - bi.X, bi.Before, bi.After, bi.NormalOverride, Normal.Mine, Normal.Mine),
+
+                    // Bottom left
+                    bpa(1 - bi.X, bi.Y, -ratio + bi.X, bi.Before, bi.After, bi.NormalOverride, Normal.Mine, Normal.Mine),
+
+                    null
+                )).Where(x => x != null).SelectMany(x => x).ToArray()).Concat(new[] { Enumerable.Repeat(pt(0, depth, 0).WithMeshInfo(0d, 1d, 0d).WithTexture(.5, .5), 4).ToArray() }).ToArray(), textureCoordsAreFlipped: true);
         }
     }
 }

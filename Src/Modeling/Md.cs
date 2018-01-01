@@ -110,12 +110,16 @@ namespace KtaneStuff.Modeling
 
         public static string GenerateObjFile(IEnumerable<Pt[]> faces, string objectName = null, AutoNormal autoNormal = AutoNormal.None)
         {
-            return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, autoNormal == AutoNormal.Flat && face.Length >= 3 ? (face[2] - face[1]) * (face[0] - face[1]) : (Pt?) null, null)).ToArray()).ToArray(), objectName);
+            return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, null)).ToArray()).ToArray(), objectName);
         }
 
-        public static string GenerateObjFile(IEnumerable<VertexInfo[]> faces, string objectName = null)
+        public static string GenerateObjFile(IEnumerable<VertexInfo[]> faces, string objectName = null, AutoNormal autoNormal = AutoNormal.None)
         {
-            var facesArr = faces.ToArray();
+            var facesProcessed = faces;
+            if (autoNormal != AutoNormal.None)
+                facesProcessed = faces.Select(face => face.Select(p => new VertexInfo(p.Location, p.Normal ?? (autoNormal == AutoNormal.Flat && face.Length >= 3 ? (face[2].Location - face[1].Location) * (face[0].Location - face[1].Location) : (Pt?) null), p.Texture)).ToArray());
+
+            var facesArr = facesProcessed.ToArray();
             var vertices = facesArr.SelectMany(f => f).Select(f => f.Location).Distinct().ToArray();
             var verticesLookup = vertices.Select((v, i) => Ut.KeyValuePair(v, i + 1)).ToDictionary();
             var normals = facesArr.SelectMany(f => f).Where(f => f.Normal != null).Select(f => f.Normal.Value).Distinct().ToArray();
