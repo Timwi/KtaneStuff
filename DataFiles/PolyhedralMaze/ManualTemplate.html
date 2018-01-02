@@ -10,7 +10,7 @@
     <link href="css/main.css" rel="stylesheet" type="text/css">
     <script src='js/highlighter.js'></script>
     <script src="js/jquery.3.1.1.min.js"></script>
-    <script>
+    <script id="main-js">
         $(function ()
         {
             function addLog(msg)
@@ -122,7 +122,24 @@
                                             obj.setAttribute(k, json.attr[k]);
                                 }
                                 if ('content' in json)
-                                    obj.textContent = json.content;
+                                {
+                                    if (json.content.indexOf('\n') === -1)
+                                        obj.textContent = json.content;
+                                    else
+                                    {
+                                        while (obj.firstChild)
+                                            obj.removeChild(obj.firstChild);
+                                        var list = json.content.split('\n');
+                                        for (var i = 0; i < list.length; i++)
+                                        {
+                                            var subObj = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                                            subObj.setAttribute('x', json.attr.x);
+                                            subObj.setAttribute('y', +json.attr.y + .7 * i);
+                                            subObj.textContent = list[i];
+                                            obj.appendChild(subObj);
+                                        }
+                                    }
+                                }
                                 if ('edgeData' in json)
                                     obj.setAttribute('data-edge', json.edgeData);
                             }
@@ -141,6 +158,14 @@
                             option.setAttribute('data-name', poly);
                         }
                         option.innerText = json.select.replace(/\n/g, ' ');
+                    }
+                    else if ('make-ready' in json)
+                    {
+                        $('#log-wrap,#main-js,#extra-css').remove();
+                        $('.svg-container').each((_, x) => $(x).attr('id', null).attr('class', null));
+                        $('svg *[class]').each((_, x) => x.removeAttribute('class'));
+                        $('svg *[id]').each((_, x) => { var id = x.getAttribute('id'); x.removeAttribute('id'); if (id.indexOf('outline') !== -1) x.setAttribute('class', 'highlightable'); });
+                        $('*[data-edge]').each((_, x) => x.removeAttribute('data-edge'));
                     }
                     else
                         addLog('Unrecognized message: ' + msg.data);
@@ -173,6 +198,7 @@
             $('.scale-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'scale', Amount: this.getAttribute('data-amount') * $('#scale-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
             $('#generate-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'generate-maze', EdgeData: selectedEdge.getAttribute('data-edge'), WallProb: $('#wall-probability').val(), Seed: $('#seed').val() })); $('#seed').val((+$('#seed').val()) + 1); });
             $('#clear-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'clear-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+            $('#make-ready').click(function () { socket.send(JSON.stringify({ Command: 'make-ready' })); });
 
             $('#edge-options').hide();
 
@@ -185,10 +211,6 @@
 
     </script>
     <style>
-        .page {
-            margin: 1em auto 1em 1.5em;
-        }
-
         div.footnotes {
             font-size: smaller;
             margin-top: 1em;
@@ -208,6 +230,11 @@
             div.footnotes p {
                 margin: .3em;
             }
+    </style>
+    <style id="extra-css">
+        .page {
+            margin: 1em auto 1em 1.5em;
+        }
 
         #log-wrap {
             position: fixed;
@@ -223,105 +250,103 @@
     </style>
 </head>
 <body>
-    <div id="ManualContent">
-        <div class="section">
-            <div id='log-wrap'>
-                <div><textarea id='log' style="white-space:pre"></textarea></div>
-                <div><select accesskey="," id="polyhedra"></select></div>
-                <div id="svg-selector"></div>
-                <div><button id="add-polyhedron" accesskey="a"><u>A</u>dd polyhedron</button> <button id="remove-polyhedron" accesskey="m">Re<u>m</u>ove polyhedron</button></div>
-                <div id="edge-options">
-                    <div>Selected edge: <span id="eo-data"></span></div>
-                    <div>
-                        <button id="convert-to-portal" accesskey="p">Convert to <u>P</u>ortal</button>
-                        <button id="convert-to-curve" accesskey="v">Convert to Cur<u>v</u>e</button>
-                        <button id="make-connected" accesskey="c">Make <u>c</u>onnected</button>
-                        <button id="deselect" accesskey="d"><u>D</u>eselect</button>
-                    </div>
-                    <div>
-                        <button accesskey="z" id="generate-maze">Generate ma<u>z</u>e</button>
-                        <label for="wall-probability"><u>W</u>all prob:</label> <input type="number" step=".1" accesskey="w" id="wall-probability" value=".3" style="width: 4em" />
-                        <label for="seed"><u>S</u>eed:</label> <input type="number" step="1" accesskey="s" id="seed" value="1" style="width: 4em" /> •
-                        <button accesskey="y" id="clear-maze">Empt<u>y</u> maze</button>
-                    </div>
-                    <div>
-                        <button accesskey="l" class="rotate-button" data-amount="-10">Rotate <u>L</u>eft 10°</button>
-                        <button accesskey="e" class="rotate-button" data-amount="-1">Rotate L<u>e</u>ft 1°</button>
-                        <button accesskey="r" class="rotate-button" data-amount="1">Rotate <u>R</u>ight 1°</button>
-                        <button accesskey="i" class="rotate-button" data-amount="10">Rotate R<u>i</u>ght 10°</button>
-                    </div>
-                    <div>
-                        Move:
-                        <button class="move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
-                        <button class="move-button" data-x-amount="0" data-y-amount=".1">Down</button>
-                        <button class="move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
-                        <button class="move-button" data-x-amount=".1" data-y-amount="0">Right</button>
-                        by <input type="number" step="1" value="1" id="move-amount" size="3" />
-                    </div>
-                    <div>
-                        Caption move:
-                        <button class="caption-move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
-                        <button class="caption-move-button" data-x-amount="0" data-y-amount=".1">Down</button>
-                        <button class="caption-move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
-                        <button class="caption-move-button" data-x-amount=".1" data-y-amount="0">Right</button>
-                        by <input type="number" step="1" value="1" id="caption-move-amount" size="3" />
-                    </div>
-                    <div>
-                        Scale:
-                        <button class="scale-button" data-amount="1">Up</button>
-                        <button class="scale-button" data-amount="-1">Down</button>
-                        by <input type="number" step=".1" value=".1" id="scale-amount" size="3" />
-                    </div>
+    <div class="section">
+        <div id='log-wrap'>
+            <div><textarea id='log' style="white-space:pre"></textarea></div>
+            <div><select accesskey="," id="polyhedra"></select></div>
+            <div id="svg-selector"></div>
+            <div><button id="add-polyhedron" accesskey="a"><u>A</u>dd polyhedron</button> <button id="remove-polyhedron" accesskey="m">Re<u>m</u>ove polyhedron</button> • <button id="make-ready" accesskey="f">Make ready <u>f</u>or save</button></div>
+            <div id="edge-options">
+                <div>Selected edge: <span id="eo-data"></span></div>
+                <div>
+                    <button id="convert-to-portal" accesskey="p">Convert to <u>P</u>ortal</button>
+                    <button id="convert-to-curve" accesskey="v">Convert to Cur<u>v</u>e</button>
+                    <button id="make-connected" accesskey="c">Make <u>c</u>onnected</button>
+                    <button id="deselect" accesskey="d"><u>D</u>eselect</button>
                 </div>
-            </div>
-            <div class="page page-bg-07">
-                <div class="page-header">
-                    <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
-                    <span class="page-header-section-title">Polyhedral Maze</span>
+                <div>
+                    <button accesskey="z" id="generate-maze">Generate ma<u>z</u>e</button>
+                    <label for="wall-probability"><u>W</u>all prob:</label> <input type="number" step=".1" accesskey="w" id="wall-probability" value=".3" style="width: 4em" />
+                    <label for="seed"><u>S</u>eed:</label> <input type="number" step="1" accesskey="s" id="seed" value="1" style="width: 4em" /> •
+                    <button accesskey="y" id="clear-maze">Empt<u>y</u> maze</button>
                 </div>
-                <div class="page-content">
-                    <img class="diagram" src="img/Component/Polyhedral Maze.svg">
-                    <h2>On the Subject of Polyhedral Mazes</h2>
-
-                    <p class="flavour-text">What’s a pentecostal hexadecimal contradiction?</p>
-
-                    <p>Identify the polyhedron<sup>[1]</sup> on the module and find its corresponding net<sup>[2]</sup> below.</p>
-                    <p>The number in the bottom-left of the module shows the current face on the polyhedron. The number in the bottom-right shows the destination face that must be reached to defuse the module.</p>
-                    <p>Navigate to the destination face without crossing any of the thick lines. These are not visible on the module. The letters and the curved lines indicate faces that are connected even though they are not adjacent in the net.</p>
-
-                    <svg id='svg-1' class="svg-container">
-                    </svg>
-
-                    <div class='footnotes'>
-                        <p>[1] <a href='https://en.wikipedia.org/wiki/Polyhedron'>https://en.wikipedia.org/wiki/Polyhedron</a></p>
-                        <p>[2] <a href='https://en.wikipedia.org/wiki/Net_(polyhedron)'>https://en.wikipedia.org/wiki/Net_(polyhedron)</a></p>
-                    </div>
+                <div>
+                    <button accesskey="l" class="rotate-button" data-amount="-10">Rotate <u>L</u>eft 10°</button>
+                    <button accesskey="e" class="rotate-button" data-amount="-1">Rotate L<u>e</u>ft 1°</button>
+                    <button accesskey="r" class="rotate-button" data-amount="1">Rotate <u>R</u>ight 1°</button>
+                    <button accesskey="i" class="rotate-button" data-amount="10">Rotate R<u>i</u>ght 10°</button>
                 </div>
-                <div class="page-footer relative-footer">Page 1 of 3</div>
+                <div>
+                    Move:
+                    <button class="move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
+                    <button class="move-button" data-x-amount="0" data-y-amount=".1">Down</button>
+                    <button class="move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
+                    <button class="move-button" data-x-amount=".1" data-y-amount="0">Right</button>
+                    by <input type="number" step="1" value="1" id="move-amount" size="3" />
+                </div>
+                <div>
+                    Caption move:
+                    <button class="caption-move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
+                    <button class="caption-move-button" data-x-amount="0" data-y-amount=".1">Down</button>
+                    <button class="caption-move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
+                    <button class="caption-move-button" data-x-amount=".1" data-y-amount="0">Right</button>
+                    by <input type="number" step="1" value="1" id="caption-move-amount" size="3" />
+                </div>
+                <div>
+                    Scale:
+                    <button class="scale-button" data-amount="1">Up</button>
+                    <button class="scale-button" data-amount="-1">Down</button>
+                    by <input type="number" step=".1" value=".1" id="scale-amount" size="3" />
+                </div>
             </div>
         </div>
-        <div class="page page-bg-06">
+        <div class="page page-bg-07">
             <div class="page-header">
                 <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
                 <span class="page-header-section-title">Polyhedral Maze</span>
             </div>
             <div class="page-content">
-                <svg id='svg-2' class="svg-container">
+                <img class="diagram" src="img/Component/Polyhedral Maze.svg">
+                <h2>On the Subject of Polyhedral Mazes</h2>
+
+                <p class="flavour-text">What’s a pentecostal hexadecimal contradiction?</p>
+
+                <p>Identify the polyhedron<sup>[1]</sup> on the module and find its corresponding net<sup>[2]</sup> below.</p>
+                <p>The number in the bottom-left of the module shows the current face on the polyhedron. The number in the bottom-right shows the destination face that must be reached to defuse the module.</p>
+                <p>Navigate to the destination face without crossing any of the thick lines. These are not visible on the module. The letters and the curved lines indicate faces that are connected even though they are not adjacent in the net.</p>
+
+                <svg id='svg-1' class="svg-container">
                 </svg>
+
+                <div class='footnotes'>
+                    <p>[1] <a href='https://en.wikipedia.org/wiki/Polyhedron'>https://en.wikipedia.org/wiki/Polyhedron</a></p>
+                    <p>[2] <a href='https://en.wikipedia.org/wiki/Net_(polyhedron)'>https://en.wikipedia.org/wiki/Net_(polyhedron)</a></p>
+                </div>
             </div>
-            <div class="page-footer relative-footer">Page 2 of 3</div>
+            <div class="page-footer relative-footer">Page 1 of 3</div>
         </div>
-        <div class="page page-bg-02">
-            <div class="page-header">
-                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
-                <span class="page-header-section-title">Polyhedral Maze</span>
-            </div>
-            <div class="page-content">
-                <svg id='svg-3' class="svg-container">
-                </svg>
-            </div>
-            <div class="page-footer relative-footer">Page 3 of 3</div>
+    </div>
+    <div class="page page-bg-06">
+        <div class="page-header">
+            <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+            <span class="page-header-section-title">Polyhedral Maze</span>
         </div>
+        <div class="page-content">
+            <svg id='svg-2' class="svg-container">
+            </svg>
+        </div>
+        <div class="page-footer relative-footer">Page 2 of 3</div>
+    </div>
+    <div class="page page-bg-02">
+        <div class="page-header">
+            <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+            <span class="page-header-section-title">Polyhedral Maze</span>
+        </div>
+        <div class="page-content">
+            <svg id='svg-3' class="svg-container">
+            </svg>
+        </div>
+        <div class="page-footer relative-footer">Page 3 of 3</div>
     </div>
 </body>
 </html>

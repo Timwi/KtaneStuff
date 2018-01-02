@@ -17,6 +17,7 @@ using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
 using RT.Util.Json;
 using RT.Util.Serialization;
+using RT.Util.Text;
 
 namespace KtaneStuff
 {
@@ -153,11 +154,11 @@ namespace KtaneStuff
         public static void GeneratePolyhedronInfos()
         {
             var wanted = @"4TruncatedDeltoidalIcositetrahedron2
+CanonicalRectifiedLsnubCube
 ChamferedDodecahedron1
 ChamferedIcosahedron2
 DeltoidalHexecontahedron
 DisdyakisDodecahedron
-JoinedIcosidodecahedron
 JoinedLsnubCube
 JoinedRhombicuboctahedron
 LpentagonalHexecontahedron
@@ -388,6 +389,12 @@ namespace PolyhedralMaze
                     case "generate-maze": Update(edgeData["polyhedron"].GetString(), p => GenerateMaze(p, json["WallProb"].GetDoubleLenient(), json["Seed"].GetIntLenient())); break;
                     case "clear-maze": Update(edgeData["polyhedron"].GetString(), ClearMaze); break;
 
+                    case "make-ready":
+                        foreach (var p in _polyhedra)
+                            GenerateNet(p, sendPolygons: true);
+                        SendMessage(new JsonDict { { "make-ready", true } });
+                        break;
+
                     default:
                         Debugger.Break();
                         break;
@@ -488,7 +495,7 @@ namespace PolyhedralMaze
                 SendMessage(new JsonDict { { "svg", polyhedron.SvgId }, { "tag", "delete" }, { "classes", classes.Select(c => $"poly-{polyhedron.FileCompatibleName}-{c}").ToJsonList() } });
             }
 
-            private BoundingBoxD GenerateNet(PolyhedronInfo polyhedron)
+            private BoundingBoxD GenerateNet(PolyhedronInfo polyhedron, bool sendPolygons = false)
             {
                 // Numbers closer than this are considered equal
                 const double closeness = .00001;
@@ -513,9 +520,10 @@ namespace PolyhedralMaze
                     send(id, classes, "path", new JsonDict { { "d", data }, { "stroke", stroke ?? (strokeWidth == null ? "none" : "black") }, { "stroke-linejoin", "round" }, { "stroke-width", strokeWidth }, { "stroke-dasharray", strokeDasharray }, { "fill", fill ?? "none" } }, null, edgeData);
 
                 void sendText(string id, IEnumerable<string> classes, double fontSize, double x, double y, string content, string fill, string edgeData = null) =>
-                    send(id, classes, "text", new JsonDict { { "x", x }, { "y", y + fontSize * .35 }, { "text-anchor", "middle" }, { "fill", fill }, { "font-size", fontSize }, { "style", "white-space:pre" } }, content, edgeData);
+                    send(id, classes, "text", new JsonDict { { "x", x }, { "y", y + fontSize * .35 }, { "text-anchor", "middle" }, { "fill", fill }, { "font-size", fontSize } }, content, edgeData);
 
-                sendText("caption", null, .6, polyhedron.LabelX + polyhedron.XOffset, polyhedron.LabelY + polyhedron.YOffset, polyhedron.ReadableName, "#000");
+                if (!sendPolygons)
+                    sendText("caption", null, .6, polyhedron.LabelX + polyhedron.XOffset, polyhedron.LabelY + polyhedron.YOffset, polyhedron.ReadableName, "#000");
 
                 var anyChanges = false;
 
@@ -593,7 +601,6 @@ namespace PolyhedralMaze
                             faces[i][j] = faces[i][j].RotateZ(polyhedron.Rotation) + offsetPt;
                 }
 
-                var polyDraws = new List<Action>();
                 var q = new Queue<(int newFaceIx, Pt[][] rotatedSolid)>();
 
                 // Keeps track of the polygons in the net and also which faces have already been processed during the following algorithm (unvisited ones are null).
@@ -607,7 +614,11 @@ namespace PolyhedralMaze
                 {
                     var (fromFaceIx, rotatedPolyhedron) = q.Dequeue();
                     polygons[fromFaceIx] = rotatedPolyhedron[fromFaceIx].Select(pt => p(pt.X, pt.Y)).ToArray();
-                    sendText($"label-{fromFaceIx}", new[] { $"face-{fromFaceIx}" }, .5, polygons[fromFaceIx].Sum(p => p.X) / polygons[fromFaceIx].Length, polygons[fromFaceIx].Sum(p => p.Y) / polygons[fromFaceIx].Length, fromFaceIx.ToString(), "#000");
+
+                    if (!sendPolygons)
+                        sendText($"label-{fromFaceIx}", new[] { $"face-{fromFaceIx}" }, .5, polygons[fromFaceIx].Sum(p => p.X) / polygons[fromFaceIx].Length, polygons[fromFaceIx].Sum(p => p.Y) / polygons[fromFaceIx].Length, fromFaceIx.ToString(), "#000");
+                    else
+                        sendPath($"outline-{fromFaceIx}", null, null, $"M{polygons[fromFaceIx].Select(p => $"{p.X},{p.Y}").JoinString(" ")}z", fill: "transparent");
 
                     for (int fromEdgeIx = 0; fromEdgeIx < rotatedPolyhedron[fromFaceIx].Length; fromEdgeIx++)
                     {
@@ -647,14 +658,13 @@ namespace PolyhedralMaze
                                 .MinElement(sld => sld[toFaceIx].Sum(p => p.Z * p.Z));
                             q.Enqueue((toFaceIx, newPolyhedron));
                         }
-                        else
+                        else if (!sendPolygons)
                         {
                             var p1 = polygons[fromFaceIx][fromEdgeIx];
                             var p2 = polygons[fromFaceIx][(fromEdgeIx + 1) % polygons[fromFaceIx].Length];
                             IEnumerable<string> classes = new[] { $"face-{fromFaceIx}", $"face-{toFaceIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", $"edge-{toFaceIx}-{toEdgeIx}" };
                             sendPath($"edge-{fromFaceIx}-{fromEdgeIx}", classes, edgeData, $"M {p1.X},{p1.Y} L {p2.X},{p2.Y}",
                                 strokeWidth: adj.HasFlag(Adjacency.Traversible) ? .025 : .1,
-                                //strokeDasharray: adj.HasFlag(Adjacency.Traversible) ? ".1,.1" : null,
                                 stroke: adj.HasFlag(Adjacency.Traversible) ? "black" : null);
                             if (polygons[toFaceIx] != null && adj.HasFlag(Adjacency.Traversible))
                             {
@@ -851,6 +861,23 @@ namespace PolyhedralMaze
 
                     null
                 )).Where(x => x != null).SelectMany(x => x).ToArray()).Concat(new[] { Enumerable.Repeat(pt(0, depth, 0).WithMeshInfo(0d, 1d, 0d).WithTexture(.5, .5), 4).ToArray() }).ToArray(), textureCoordsAreFlipped: true);
+        }
+
+        public static void Temp()
+        {
+            var tt = new TextTable { ColumnSpacing = 2 };
+
+            foreach (var elem in new DirectoryInfo(@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Txt").GetFiles("*.txt")
+                .Select(file => new { Inf = Parse(File.ReadAllText(file.FullName)), File = file })
+                .Select(inf => new PolyhedronInfo(Path.GetFileNameWithoutExtension(inf.File.Name), inf.Inf.name, inf.Inf.faces))
+                .OrderBy(result => result.Faces.Length)
+                .Select((inf, ix) => new { Inf = inf, Index = ix }))
+            {
+                tt.SetCell(0, elem.Index, elem.Inf.Faces.Length.ToString(), alignment: HorizontalTextAlignment.Right);
+                tt.SetCell(1, elem.Index, elem.Inf.ReadableName);
+            }
+
+            tt.WriteToConsole();
         }
     }
 }
