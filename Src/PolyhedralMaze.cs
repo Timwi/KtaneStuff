@@ -863,7 +863,7 @@ namespace PolyhedralMaze
                 )).Where(x => x != null).SelectMany(x => x).ToArray()).Concat(new[] { Enumerable.Repeat(pt(0, depth, 0).WithMeshInfo(0d, 1d, 0d).WithTexture(.5, .5), 4).ToArray() }).ToArray(), textureCoordsAreFlipped: true);
         }
 
-        public static void Temp()
+        public static void ListPolyhedra()
         {
             var tt = new TextTable { ColumnSpacing = 2 };
 
@@ -875,6 +875,7 @@ namespace PolyhedralMaze
             {
                 tt.SetCell(0, elem.Index, elem.Inf.Faces.Length.ToString(), alignment: HorizontalTextAlignment.Right);
                 tt.SetCell(1, elem.Index, elem.Inf.ReadableName);
+                tt.SetCell(2, elem.Index, elem.Inf.FileCompatibleName);
             }
 
             tt.WriteToConsole();
