@@ -30,6 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CsQuery, Version=1.3.3.249, Culture=neutral, processorArchitecture=MSIL">
@@ -53,6 +54,7 @@
   <ItemGroup>
     <Compile Include="3DMazeManual.cs" />
     <Compile Include="Astrology.cs" />
+    <Compile Include="Curriculum.cs" />
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="Ktane.cs" />
     <Compile Include="Mafia.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="RubiksCube.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="SymbolCycle.cs" />
+    <Compile Include="SymbolicCoordinates.cs" />
     <Compile Include="TheGamepad.cs" />
     <Compile Include="XRay.cs" />
     <Compile Include="Yahtzee.cs" />

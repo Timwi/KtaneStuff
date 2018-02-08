@@ -13,7 +13,7 @@ using RT.Util.ExtensionMethods;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KtaneStuff")]
-[assembly: AssemblyCopyright("Copyright © Timwi 2016–2017")]
+[assembly: AssemblyCopyright("Copyright © Timwi 2016–2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
@@ -34,7 +34,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            PolyhedralMaze.ListPolyhedra();
+            var result = GridGenerator.GenerateSudoku(5);
 
             Console.WriteLine("Done.");
             Console.ReadLine();

@@ -88,6 +88,17 @@ namespace KtaneStuff
                 yield return face;
         }
 
+        public static void PngCrush()
+        {
+            var lck = new object();
+            Enumerable.Range(0, 2252).ParallelForEach(8, i =>
+            {
+                lock (lck)
+                    Console.WriteLine($"{i}/2252");
+                CommandRunner.Run("pngcr", $@"D:\c\KTANE\SymbolCycle\Assets\Symbols\Icon{i}.png", $@"D:\c\KTANE\SymbolCycle\Assets\Symbols\cr\Icon{i}.png").OutputNothing().Go();
+            });
+        }
+
         private static IEnumerable<VertexInfo[]> SwitchCasing()
         {
             const int revSteps = 17;

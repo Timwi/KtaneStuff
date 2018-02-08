@@ -831,7 +831,6 @@ namespace PolyhedralMaze
             var depth = .1;
             var béFac = depth * .55;
             var ratio = .5;
-            var th = .2;
             const int bézierSteps = 6;
 
             MeshVertexInfo[] bpa(double x, double y, double z, Normal befX, Normal afX, Pt? normalOverride, Normal befY, Normal afY) { return new[] { (normalOverride == null ? pt(x, y, z, befX, afX, befY, afY) : pt(x, y, z, normalOverride.Value)).WithTexture((x + 1) / 2, (z + ratio) / (2 * ratio)) }; }

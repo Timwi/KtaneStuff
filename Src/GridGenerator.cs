@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
@@ -10,13 +11,48 @@ namespace KtaneStuff
 {
     public sealed class GridGenerator
     {
+        /// <summary>
+        ///     Generates a Sudoku-like grid, distributing numbers in rows and columns.</summary>
+        /// <param name="width">
+        ///     Width of the grid.</param>
+        /// <param name="height">
+        ///     Height of the grid.</param>
+        /// <param name="minNum">
+        ///     Smallest number to be used in the grid.</param>
+        /// <param name="maxNum">
+        ///     Largest number to be used in the grid.</param>
+        /// <param name="extraTaken">
+        ///     Function that can specify additional constraints. Without this function, the standard constraints are only to
+        ///     have unique numbers in each row or column. To implement a true Sudoku, an additional criterion has to be added
+        ///     to constrain the numbers in each subgrid. The first parameter is the current (incomplete) grid. The second
+        ///     parameter is the index at which a number has just been placed. The third parameter is the number placed, minus
+        ///     <paramref name="minNum"/>. The return value is a bitfield specifying which grid locations can no longer hold
+        ///     which values.</param>
+        /// <param name="rnd">
+        ///     Optional random number generator.</param>
+        /// <returns>
+        ///     A lazy enumerable containing all solutions. To find just one solution, enumerate only the first element.</returns>
         public static IEnumerable<int[]> GenerateGrid(int width, int height, int minNum, int maxNum, Func<int[], int, int, BigInteger> extraTaken = null, Random rnd = null)
         {
-            rnd = rnd ?? new Random();
             var max = maxNum - minNum + 1;
-            var generator = new GridGenerator(Ut.NewArray(width * height, _ => rnd.Next(max)), width, height, max, extraTaken);
+            var generator = new GridGenerator(Ut.NewArray(width * height, _ => rnd == null ? Rnd.Next(max) : rnd.Next(max)), width, height, max, extraTaken);
             foreach (var result in generator.recurse(BigInteger.Zero, 0, 0))
                 yield return Ut.NewArray(width * height, ix => generator._grid[ix] + minNum);
+        }
+
+        /// <summary>
+        ///     Generates a Sudoku.</summary>
+        /// <param name="size">
+        ///     The size of each subgrid. For example, if <paramref name="size"/> is 3, the generated Sudoku is a standard
+        ///     Sudoku with 9 rows, 9 columns and 9 subgrids.</param>
+        /// <returns/>
+        public static int[] GenerateSudoku(int size)
+        {
+            var sq = size * size;
+            var block = (~(BigInteger.MinusOne << (size * (sq + 1)))) / (~(BigInteger.MinusOne << (sq + 1)));
+            for (int i = 1; i < size; i++)
+                block |= block << (sq * (sq + 1));
+            return GenerateGrid(sq, sq, 1, sq, (grid, index, num) => block << (num + size * (sq + 1) * ((index % sq) / size) + size * sq * (sq + 1) * (index / (size * sq)))).First();
         }
 
         private GridGenerator(int[] grid, int width, int height, int max, Func<int[], int, int, BigInteger> extraTaken)
@@ -60,8 +96,9 @@ namespace KtaneStuff
             _debugCounter++;
             if (_debugCounter == 100000)
             {
+                var len = (_max + 1).ToString().Length;
                 Console.Clear();
-                ConsoleUtil.WriteLine(Enumerable.Range(0, 9).Select(row => _grid.Subarray(9 * row, 9).Select((i, col) => i.ToString().Color(row < y || (row == y && col < x) ? ConsoleColor.White : ConsoleColor.Red)).JoinColoredString(" ")).JoinColoredString("\n"));
+                ConsoleUtil.WriteLine(Enumerable.Range(0, _max).Select(row => _grid.Subarray(_max * row, _max).Select((i, col) => i.ToString().PadLeft(len).Color(row < y || (row == y && col < x) ? ConsoleColor.White : ConsoleColor.Red)).JoinColoredString(" ")).JoinColoredString("\n"));
                 _debugCounter = 0;
             }
 
