@@ -18,7 +18,7 @@ namespace KtaneStuff
         {
             public bool Active;
             public string Name;
-            public Func<Widget[], string, string[]> GetResult;
+            public Func<Edgework, string[]> GetResult;
         }
 
         sealed class SimulatedResult
@@ -40,23 +40,22 @@ namespace KtaneStuff
 
         public static void Simulations()
         {
-            const int numIterations = 1000000;
+            const int numIterations = 100000;
 
             var astrologyElements = new[] { "Fire", "Water", "Earth", "Air" };
             var astrologyPlanets = new[] { "Sun", "Jupiter", "Moon", "Saturn", "Mercury", "Uranus", "Venus", "Neptune", "Mars", "Pluto" };
             var astrologyZodiacs = new[] { "Aries", "Leo", "Sagittarius", "Taurus", "Virgo", "Capricorn", "Gemini", "Libra", "Aquarius", "Cancer", "Scorpio", "Pisces" };
 
             var yes = new[] { "Yes" };
-            var batteryCount = Ut.Lambda((Widget[] ws) => ws.Sum(w => w.BatteryType == null ? 0 : w.BatteryType == BatteryType.BatteryAA ? 2 : 1));
-            var batteryHolderCount = Ut.Lambda((Widget[] ws) => ws.Count(w => w.BatteryType != null));
-            var portTypeCount = Ut.Lambda((Widget[] ws) => ws.Where(w => w.Type == WidgetType.PortPlate).SelectMany(w => w.PortTypes).Distinct().Count());
+
+            var blindMazeColorNames = "Red,Green,White,Gray,Yellow".Split(',');
 
             var simulatables = Ut.NewArray(
                 new Simulatable
                 {
                     Active = false,
                     Name = "Connection Check",
-                    GetResult = (ws, serial) =>
+                    GetResult = ew =>
                     {
                         var numbers = Enumerable.Range(0, 8).Select(_ => Rnd.Next(1, 9)).ToArray();
                         return Ut.NewArray(
@@ -66,7 +65,7 @@ namespace KtaneStuff
                             numbers.Count(c => c == 2) >= 3 ? "4. at least three “2”s" :
                             numbers.Count(c => c == 5) == 0 ? "5. no “5”s" :
                             numbers.Count(c => c == 8) == 2 ? "6. exactly two “8”s" :
-                            batteryCount(ws).Apply(bs => bs > 6 || bs == 0) ? "7. more than 6 or no batteries" :
+                            ew.GetNumBatteries().Apply(bs => bs > 6 || bs == 0) ? "7. more than 6 or no batteries" :
                             "8. count the batteries");
                     }
                 },
@@ -74,96 +73,28 @@ namespace KtaneStuff
                 {
                     Active = false,
                     Name = "Laundry: 4/2+BOB (“unicorn”)",
-                    GetResult = (ws, serial) => ws.Where(w => w.BatteryType == BatteryType.BatteryAA).Count() == 2 && ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Label == "BOB" && w.Indicator.Value.Type == IndicatorType.Lit) ? yes : null
+                    GetResult = ew => ew.GetNumAABatteries() == 4 && ew.GetNumDBatteries() == 0 && ew.HasLitIndicator("BOB") ? yes : null
                 },
                 new Simulatable
                 {
                     Active = false,
                     Name = "Lettered Keys",
-                    GetResult = (ws, serial) =>
+                    GetResult = ew =>
                     {
                         var number = Rnd.Next(0, 100);
                         return Ut.NewArray(
                             number == 69 ? "1. 69 → D" :
                             number % 6 == 0 ? "2. divisible by 6 → A" :
-                            batteryCount(ws) >= 2 && number % 3 == 0 ? "3. ≥ 2 batteries and divisible by 3 → B" :
-                            serial.Any("CE3".Contains) ? (number >= 22 && number <= 79 ? "4. C, E, 3 & 22 ≤ n ≤ 79 → B" : "5. C, E, 3 → C") :
+                            ew.GetNumBatteries() >= 2 && number % 3 == 0 ? "3. ≥ 2 batteries and divisible by 3 → B" :
+                            ew.SerialNumber.Any("CE3".Contains) ? (number >= 22 && number <= 79 ? "4. C, E, 3 & 22 ≤ n ≤ 79 → B" : "5. C, E, 3 → C") :
                             number < 46 ? "6. n < 46 → D" : "7. otherwise → A");
                     }
                 },
                 new Simulatable
                 {
                     Active = false,
-                    Name = "Orientation Cube",
-                    GetResult = (ws, serial) =>
-                    {
-                        return Ut.NewArray(
-                            serial.Contains('R') ? "1. serial contains R" :
-                            ws.Any(w => w.Type == WidgetType.Indicator && (w.Indicator.Value.Label == "CAR" || (w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "TRN"))) ? "2. lit TRN or lit/unlit CAR" :
-                            ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.PS2)) ? "3. PS/2 port" :
-                            serial.Contains('7') || serial.Contains('8') ? "4. serial contains 7 or 8" :
-                            batteryCount(ws) > 2 || Rnd.Next(0, 4) == 0 ? "5. ≥ 2 batteries or observer on left" : "6. otherwise");
-                    }
-                },
-                new Simulatable
-                {
-                    Active = false,
-                    Name = "Blind Alley",
-                    GetResult = (ws, serial) =>
-                    {
-                        var counts = new int[8];
-
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "BOB")) counts[0]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "CAR")) counts[0]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "IND")) counts[0]++;
-                        if (ws.Count(w => w.Type == WidgetType.BatteryHolder) % 2 == 0) counts[0]++;
-
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "CAR")) counts[1]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "NSA")) counts[1]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "FRK")) counts[1]++;
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.RJ45))) counts[1]++;
-
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "FRQ")) counts[2]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "IND")) counts[2]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "TRN")) counts[2]++;
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.DVI))) counts[2]++;
-
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "SIG")) counts[3]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "SND")) counts[3]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "NSA")) counts[3]++;
-                        if (ws.Sum(w => w.BatteryType == BatteryType.BatteryAA ? 2 : w.BatteryType == BatteryType.BatteryD ? 1 : 0) % 2 == 0) counts[3]++;
-
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "BOB")) counts[4]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "CLR")) counts[4]++;
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.PS2))) counts[4]++;
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial))) counts[4]++;
-
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "FRQ")) counts[5]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "SIG")) counts[5]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "TRN")) counts[5]++;
-                        if (serial.Any("02468".Contains)) counts[5]++;
-
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "FRK")) counts[6]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "MSA")) counts[6]++;
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel))) counts[6]++;
-                        if (serial.Any("AEIOU".Contains)) counts[6]++;
-
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "CLR")) counts[7]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Unlit && w.Indicator.Value.Label == "MSA")) counts[7]++;
-                        if (ws.Any(w => w.Type == WidgetType.Indicator && w.Indicator.Value.Type == IndicatorType.Lit && w.Indicator.Value.Label == "SND")) counts[7]++;
-                        if (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.StereoRCA))) counts[7]++;
-
-                        var max = counts.Max();
-                        var maxCount = counts.Count(c => c == max);
-
-                        return new[] { $"{maxCount} regions", $"{max} matches" };
-                    }
-                },
-                new Simulatable
-                {
-                    Active = false,
                     Name = "Astrology",
-                    GetResult = (ws, serial) =>
+                    GetResult = ew =>
                     {
                         var planet = Rnd.Next(astrologyPlanets.Length);
                         var zodiac = Rnd.Next(astrologyZodiacs.Length);
@@ -194,7 +125,7 @@ namespace KtaneStuff
                             { -1,0,0,-1,-2,1,2,1,1,0,0,-1 }
                         };
 
-                        var omen = new[] { astrologyPlanets[planet], astrologyZodiacs[zodiac], astrologyElements[element] }.Sum(str => str.Any(serial.Contains) ? 1 : -1);
+                        var omen = new[] { astrologyPlanets[planet], astrologyZodiacs[zodiac], astrologyElements[element] }.Sum(str => str.Any(ew.SerialNumber.Contains) ? 1 : -1);
                         omen += elemPlanet[element, planet] + elemZodiac[element, zodiac] + planetZodiac[planet, zodiac];
                         return omen == 0 ? new[] { "No Omen" } : omen > 0 ? new[] { "Good Omen", omen.ToString() } : new[] { "Poor Omen", (-omen).ToString() };
                     }
@@ -203,36 +134,36 @@ namespace KtaneStuff
                 {
                     Active = false,
                     Name = "Plumbing",
-                    GetResult = (ws, serial) =>
+                    GetResult = ew =>
                     {
                         // Plumbing: most inputs and outputs
                         var redInput =
                             // For: Serial contains a '1'
-                            +(serial.Contains('1') ? 1 : 0)
+                            +(ew.SerialNumber.Contains('1') ? 1 : 0)
                             // For: Exactly 1 RJ45 port
-                            + (ws.Sum(w => w.Type == WidgetType.PortPlate ? w.PortTypes.Count(p => p == PortType.RJ45) : 0) == 1 ? 1 : 0)
+                            + (ew.GetNumPorts(PortType.RJ45) == 1 ? 1 : 0)
                             // Against: Any duplicate ports
-                            - (ws.Where(w => w.Type == WidgetType.PortPlate).SelectMany(w => w.PortTypes).Order().SelectConsecutivePairs(false, (p1, p2) => p1 == p2).Any() ? 1 : 0)
-                            // Against: Any duplicate serial characters
-                            - (serial.Order().SelectConsecutivePairs(false, (c1, c2) => c1 == c2).Any() ? 1 : 0)
+                            - (ew.HasDuplicatePorts() ? 1 : 0)
+                            // Against: Any duplicate ew.SerialNumber characters
+                            - (ew.SerialNumber.Order().SelectConsecutivePairs(false, (c1, c2) => c1 == c2).Any() ? 1 : 0)
                             > 0;
 
                         var yellowInput =
                             // For: Serial contains a '2'
-                            +(serial.Contains('2') ? 1 : 0)
+                            +(ew.SerialNumber.Contains('2') ? 1 : 0)
                             // For: One or more Stereo RCA ports
-                            + (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.StereoRCA)) ? 1 : 0)
+                            + (ew.GetNumPorts(PortType.StereoRCA) > 0 ? 1 : 0)
                             // Against: No duplicate ports
-                            - (ws.Where(w => w.Type == WidgetType.PortPlate).SelectMany(w => w.PortTypes).Order().SelectConsecutivePairs(false, (p1, p2) => p1 == p2).Any() ? 0 : 1)
+                            - (ew.HasDuplicatePorts() ? 0 : 1)
                             // Against: Serial contains a '1' or 'L'
-                            - (serial.Contains('1') || serial.Contains('L') ? 1 : 0)
+                            - (ew.SerialNumber.Contains('1') || ew.SerialNumber.Contains('L') ? 1 : 0)
                             > 0;
 
                         var greenInput =
                             // For: Serial contains 3 or more numbers
-                            +(serial.Count(ch => ch >= '0' && ch <= '9') >= 3 ? 1 : 0)
+                            +(ew.SerialNumber.Count(ch => ch >= '0' && ch <= '9') >= 3 ? 1 : 0)
                             // For: One or more DVI-D ports
-                            + (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.DVI)) ? 1 : 0)
+                            + (ew.GetNumPorts(PortType.DVI) > 0 ? 1 : 0)
                             // Against: Red Input is inactive
                             - (redInput ? 0 : 1)
                             // Against: Yellow Input is inactive
@@ -241,48 +172,49 @@ namespace KtaneStuff
 
                         var blueInput =
                             // Note: Always active if all other inputs are inactive
-                            (!redInput && !yellowInput && !greenInput) ||
-                            // For: At least 4 unique ports
-                            +(ws.Where(w => w.Type == WidgetType.PortPlate).SelectMany(w => w.PortTypes).Distinct().Count() >= 4 ? 1 : 0)
-                            // For: At least 4 batteries
-                            + (ws.Sum(w => w.BatteryType == BatteryType.BatteryAA ? 2 : w.BatteryType == BatteryType.BatteryD ? 1 : 0) >= 4 ? 1 : 0)
-                            // Against: No ports
-                            - (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Length > 0) ? 0 : 1)
-                            // Against: No batteries
-                            - (ws.Any(w => w.Type == WidgetType.BatteryHolder) ? 0 : 1)
-                            > 0;
+                            (!redInput && !yellowInput && !greenInput) || (
+                                // For: At least 4 unique ports
+                                (ew.GetNumPortTypes() >= 4 ? 1 : 0)
+                                // For: At least 4 batteries
+                                + (ew.GetNumBatteries() >= 4 ? 1 : 0)
+                                // Against: No ports
+                                - (ew.GetPorts().Any() ? 0 : 1)
+                                // Against: No batteries
+                                - (ew.GetNumBatteries() == 0 ? 1 : 0)
+                                > 0
+                            );
 
                         var redOutput =
                             // For: One or more Serial ports
-                            +(ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Serial)) ? 1 : 0)
+                            (ew.GetNumPorts(PortType.Serial) > 0 ? 1 : 0)
                             // For: Exactly one battery
-                            + (ws.Count(w => w.Type == WidgetType.BatteryHolder && w.BatteryType == BatteryType.BatteryD) == 1 ? 1 : 0)
+                            + (ew.GetNumBatteries() == 1 ? 1 : 0)
                             // Against: Serial contains more than 2 numbers
-                            - (serial.Count(ch => ch >= '0' && ch <= '9') >= 3 ? 1 : 0)
+                            - (ew.SerialNumber.Count(ch => ch >= '0' && ch <= '9') >= 3 ? 1 : 0)
                             // Against: More than 2 inputs are active
                             - ((redInput ? 1 : 0) + (blueInput ? 1 : 0) + (greenInput ? 1 : 0) + (yellowInput ? 1 : 0) > 2 ? 1 : 0)
                             > 0;
 
                         var yellowOutput =
                             // For: Any duplicate ports
-                            +(ws.Where(w => w.Type == WidgetType.PortPlate).SelectMany(w => w.PortTypes).Order().SelectConsecutivePairs(false, (p1, p2) => p1 == p2).Any() ? 1 : 0)
+                            (ew.HasDuplicatePorts() ? 1 : 0)
                             // For: Serial contains a '4' or '8'
-                            + (serial.Contains('4') || serial.Contains('8') ? 1 : 0)
+                            + (ew.SerialNumber.Contains('4') || ew.SerialNumber.Contains('8') ? 1 : 0)
                             // Against: Serial doesn't contain a '2'
-                            - (serial.Contains('2') ? 0 : 1)
+                            - (ew.SerialNumber.Contains('2') ? 0 : 1)
                             // Against: Green Input is active
                             - (greenInput ? 1 : 0)
                             > 0;
 
                         var greenOutput =
                             // For: Exactly 3 inputs are active
-                            +((redInput ? 1 : 0) + (blueInput ? 1 : 0) + (greenInput ? 1 : 0) + (yellowInput ? 1 : 0) == 3 ? 1 : 0)
+                            ((redInput ? 1 : 0) + (blueInput ? 1 : 0) + (greenInput ? 1 : 0) + (yellowInput ? 1 : 0) == 3 ? 1 : 0)
                             // For: Exactly 3 ports are present
-                            + (ws.Sum(w => w.Type == WidgetType.PortPlate ? w.PortTypes.Length : 0) == 3 ? 1 : 0)
+                            + (ew.GetNumPorts() == 3 ? 1 : 0)
                             // Against: Less than 3 ports are present
-                            - (ws.Sum(w => w.Type == WidgetType.PortPlate ? w.PortTypes.Length : 0) < 3 ? 1 : 0)
+                            - (ew.GetNumPorts() < 3 ? 1 : 0)
                             // Against: Serial contains more than 3 numbers
-                            - (serial.Count(ch => ch >= '0' && ch <= '9') > 3 ? 1 : 0)
+                            - (ew.SerialNumberDigits().Count() > 3 ? 1 : 0)
                             > 0;
 
                         var blueOutput =
@@ -293,16 +225,13 @@ namespace KtaneStuff
                             // For: Any other output is inactive
                             + (!redOutput || !yellowOutput || !greenOutput ? 1 : 0)
                             // Against: Less than 2 batteries
-                            - (batteryCount(ws) < 2 ? 1 : 0)
+                            - (ew.GetNumBatteries() < 2 ? 1 : 0)
                             // Against: No Parallel port
-                            - (ws.Any(w => w.Type == WidgetType.PortPlate && w.PortTypes.Contains(PortType.Parallel)) ? 0 : 1)
+                            - (ew.GetNumPorts(PortType.Parallel) == 0 ? 1 : 0)
                             > 0;
 
                         var numInputs = (redInput ? 1 : 0) + (blueInput ? 1 : 0) + (greenInput ? 1 : 0) + (yellowInput ? 1 : 0);
                         var numOutputs = (redOutput ? 1 : 0) + (blueOutput ? 1 : 0) + (greenOutput ? 1 : 0) + (yellowOutput ? 1 : 0);
-
-                        if (numInputs + numOutputs >= 6)
-                            File.AppendAllLines(@"D:\temp\temp.txt", new[] { $@"{numInputs + numOutputs} = Widgets: [{ws.JoinString(", ")}], Serial: {serial}" });
 
                         return Ut.NewArray(
                             //$"{numInputs} inputs",
@@ -318,7 +247,56 @@ namespace KtaneStuff
                 {
                     Active = false,
                     Name = "Chess",
-                    GetResult = (ws, serial) => new[] { Chess.GetSolution(serial.Last() % 2 != 0, out _, out _)[6] }
+                    GetResult = ew => new[] { Chess.GetSolution(ew.SerialNumber.Last() % 2 != 0, out _, out _)[6] }
+                },
+                new Simulatable
+                {
+                    Active = true,
+                    Name = "Blind Maze",
+                    GetResult = ew =>
+                    {
+                        // Colors of the N/S/W/E buttons
+                        var cols = new[] { Rnd.Next(0, 5), Rnd.Next(0, 5), Rnd.Next(0, 5), Rnd.Next(0, 5) };
+
+                        // 0 = Red
+                        // 1 = Green
+                        // 2 = White
+                        // 3 = Gray
+                        // 4 = Yellow
+
+                        // If there are at least two red buttons,
+                        if (cols.Count(c => c == 0) >= 2)
+                            // rotate the maze 90 degrees clockwise and then calculate starting position.
+                            return new[] { "90", "after" };
+
+                        // Otherwise, if there are at least 5 batteries,
+                        if (ew.GetNumBatteries() >= 5)
+                            // calculate starting position and then rotate the maze 90 degrees clockwise.
+                            return new[] { "90", "before" };
+
+                        // Otherwise, if there is an IND indicator,
+                        if (ew.HasIndicator("IND"))
+                            // rotate the maze 180 degrees and then calculate starting position.
+                            return new[] { "180", "after" };
+
+                        // Otherwise, if there are no yellow buttons and at least one red button,
+                        if (cols.Count(c => c == 4) == 0 && cols.Count(c => c == 0) > 0)
+                            // rotate your perspective of the maze 90 degrees clockwise and then calculate starting position.
+                            return new[] { "270", "after" };
+
+                        // Otherwise, if there are at least 2 types of maze-based modules on the bomb*,
+                        if (Rnd.NextDouble() < .25)
+                            // calculate starting position and then rotate the maze 180 degrees clockwise.
+                            return new[] { "180", "before" };
+
+                        // Otherwise, if there is at most 1 port type on the bomb,
+                        if (ew.GetNumPortTypes() < 2)
+                            // calculate starting position and then rotate your perspective of the maze 90 degrees clockwise.
+                            return new[] { "270", "before" };
+
+                        // Otherwise, keep the maze as it is.
+                        return new[] { "0" };
+                    }
                 }
             ).Where(s => s.Active).ToArray();
 
@@ -334,7 +312,7 @@ namespace KtaneStuff
 
                 foreach (var sim in simulatables)
                 {
-                    var result = sim.GetResult(edgework.Widgets, edgework.SerialNumber);
+                    var result = sim.GetResult(edgework);
                     if (result == null)
                         continue;
                     var sr = results[sim.Name];

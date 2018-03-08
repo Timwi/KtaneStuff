@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using CsQuery;
 using KtaneStuff.Modeling;
 using RT.Servers;
@@ -834,8 +831,6 @@ namespace PolyhedralMaze
             const int bézierSteps = 6;
 
             MeshVertexInfo[] bpa(double x, double y, double z, Normal befX, Normal afX, Pt? normalOverride, Normal befY, Normal afY) { return new[] { (normalOverride == null ? pt(x, y, z, befX, afX, befY, afY) : pt(x, y, z, normalOverride.Value)).WithTexture((x + 1) / 2, (z + ratio) / (2 * ratio)) }; }
-
-            double xf = .25;
 
             return CreateMesh(true, true,
                 Bézier(p(depth, depth), p(depth - béFac, depth), p(0, béFac), p(0, -.1), bézierSteps).Select((p, ix, first, last) => new

@@ -56,6 +56,7 @@
     <Compile Include="Astrology.cs" />
     <Compile Include="Curriculum.cs" />
     <Compile Include="ExtendedPassword.cs" />
+    <Compile Include="GridMatching.cs" />
     <Compile Include="Ktane.cs" />
     <Compile Include="Mafia.cs" />
     <Compile Include="Braille.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="SymbolCycle.cs" />
     <Compile Include="SymbolicCoordinates.cs" />
     <Compile Include="TheGamepad.cs" />
+    <Compile Include="Translatable.cs" />
     <Compile Include="XRay.cs" />
     <Compile Include="Yahtzee.cs" />
     <Compile Include="Zoo.cs" />

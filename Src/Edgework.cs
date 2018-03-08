@@ -64,6 +64,10 @@ namespace KtaneStuff
             return $"#={SerialNumber}{(Widgets.Any() ? "; " : "")}{Widgets.GroupBy(w => w.Type).Select(g => g.JoinString(", ")).JoinString("; ")}";
         }
 
+        public IEnumerable<int> SerialNumberDigits() => SerialNumber.Where(ch => ch >= '0' && ch <= '9').Select(ch => ch - '0');
+        public IEnumerable<char> SerialNumberLetters() => SerialNumber.Where(ch => ch >= 'A' && ch <= 'Z');
+        public bool SerialNumberHasVowel() => SerialNumberLetters().Any("AEIOU".Contains);
+
         public bool HasIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Label == label);
         public bool HasLitIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Type == IndicatorType.Lit && e.Indicator.Value.Label == label);
         public bool HasUnlitIndicator(string label) => Widgets.Any(e => e.Indicator != null && e.Indicator.Value.Type == IndicatorType.Unlit && e.Indicator.Value.Label == label);
@@ -74,11 +78,22 @@ namespace KtaneStuff
         public int GetNumAABatteries() => Widgets.Sum(e => e.BatteryType == BatteryType.BatteryAA ? 2 : 0);
         public int GetNumDBatteries() => Widgets.Sum(e => e.BatteryType == BatteryType.BatteryD ? 1 : 0);
         public int GetNumBatteryHolders() => Widgets.Count(e => e.Type == WidgetType.BatteryHolder);
-        public int GetNumPorts() => Widgets.Sum(e => e.PortTypes == null ? 0 : e.PortTypes.Length);
-        public int GetNumPortPlates() => Widgets.Count(e => e.Type == WidgetType.PortPlate);
-        public int GetNumEmptyPortPlates() => Widgets.Count(e => e.Type == WidgetType.PortPlate && e.PortTypes.Length == 0);
         public IEnumerable<PortType> GetPorts() => Widgets.Where(w => w.PortTypes != null).SelectMany(w => w.PortTypes);
         public IEnumerable<PortType> GetUniquePorts() => Widgets.Where(w => w.PortTypes != null).SelectMany(w => w.PortTypes).Distinct();
+        public int GetNumPorts() => Widgets.Sum(e => e.PortTypes == null ? 0 : e.PortTypes.Length);
+        public int GetNumPorts(PortType port) => GetPorts().Count(pt => pt == port);
+        public int GetNumPortPlates() => Widgets.Count(e => e.Type == WidgetType.PortPlate);
+        public int GetNumPortTypes() => GetUniquePorts().Count();
+        public int GetNumEmptyPortPlates() => Widgets.Count(e => e.Type == WidgetType.PortPlate && e.PortTypes.Length == 0);
+
+        public bool HasDuplicatePorts()
+        {
+            var hash = new HashSet<PortType>();
+            foreach (var port in GetPorts())
+                if (!hash.Add(port))
+                    return true;
+            return false;
+        }
     }
 
     public enum WidgetType { BatteryHolder, Indicator, PortPlate }
