@@ -101,6 +101,7 @@
     <Compile Include="Battleship.cs" />
     <Compile Include="SimonScreams.cs" />
     <Compile Include="ColoredSquares.cs" />
+    <Compile Include="Superlogic.cs" />
     <Compile Include="FollowTheLeader.cs" />
     <Compile Include="Friendship.cs" />
     <Compile Include="Hexamaze.cs" />
