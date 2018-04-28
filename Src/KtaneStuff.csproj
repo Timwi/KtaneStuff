@@ -83,6 +83,7 @@
     <Compile Include="SymbolicCoordinates.cs" />
     <Compile Include="TheGamepad.cs" />
     <Compile Include="Translatable.cs" />
+    <Compile Include="TumbleLock.cs" />
     <Compile Include="XRay.cs" />
     <Compile Include="Yahtzee.cs" />
     <Compile Include="Zoo.cs" />
