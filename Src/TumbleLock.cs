@@ -1,99 +1,161 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using KtaneStuff.Modeling;
-using System.IO;
-using RT.Util.Geometry;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using KtaneStuff.Modeling;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
+using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
-    using RT.Util.Serialization;
     using static Md;
 
     static class TumbleLock
     {
+        const double height = 1;
+        const double bevelSize = .075;
+        const double marble = .375;
+        const double bevelRatio = .7;
+        const double bevMid = bevelSize * bevelRatio;
+        const double bevMid2 = bevelSize * (1 - bevelRatio);
+
         public static void DoModels()
         {
-            File.WriteAllText(@"D:\c\KTANE\TumbleLock\Assets\Models\Cylinder-1.obj", GenerateObjFile(Cylinder(5, 6, 45), "Cylinder"));
+            var nums = new[] { 3, 4, 5, 6, 8 };
+            for (int r = 1; r <= 5; r++)
+                for (int t = 1; t < nums[r - 1]; t++)
+                    File.WriteAllText($@"D:\c\KTANE\TumbleLock\Assets\Models\Cylinder-{r}-{t}.obj", GenerateObjFile(Cylinder(r - .5, r + .5, (360 / nums[r - 1]) * t), $"Cylinder_{r}_{t}"));
         }
 
         private static IEnumerable<double> range(double from, double to, int steps) => Enumerable.Range(0, steps).Select(i => from + (to - from) * i / steps);
 
-        private static IEnumerable<PointD> CylinderPolygon(double inner, double outer, double marble, double trapFillet, int trap)
+        /// <summary>
+        ///     Generates a polygon that describes the outline of a single tumble-lock cylinder.</summary>
+        /// <param name="inner">
+        ///     The radius of the inside (the “hole in the ring”).</param>
+        /// <param name="outer">
+        ///     The radius of the outside (the full size of the cylinder).</param>
+        /// <param name="marble">
+        ///     The width of the marble holes (both gap and trap).</param>
+        /// <param name="trapFillet">
+        ///     The size of the rounding at the top of the trap.</param>
+        /// <param name="trap">
+        ///     The angle where the trap is on the cylinder. (The gap is always at 0°).</param>
+        /// <param name="textureDist">
+        ///     The distance from the original curve at which to calculate the UV coordinates.</param>
+        /// <returns>
+        ///     A sequence of points that describe the outline, decorated with texture coordinates.</returns>
+        private static IEnumerable<(PointD p, PointD texture)> CylinderPolygon(double inner, double outer, double marble, double trapFillet, int trap, double textureDist)
         {
-            //const double inner = 5;
-            //const double outer = 6;
-            //const double marble = .4;
-            //const double trap = 45;     // where the trap is on the ring
-            double w = (outer - inner) / 2;
-            double m = (outer + inner) / 2;
-            double gapAngle = arcsin(marble / m) + arcsin(w / m);
-            double trapAngle = arcsin(marble / m) + arcsin(trapFillet / m);
-            double t1 = trap - trapAngle;
-            double t2 = trap + trapAngle;
+            double w = (outer - inner) / 2;     // half the width of the cylinder’s bulk (same as radius of the semicircles on each side of the gap)
+            double m = (outer + inner) / 2;     // distance from center to the middle of the bulk
+            double gapAngle = arcsin(marble / m) + arcsin(w / m);               // angle between the middle of the gap and the centerpoint of the semicircles on either side of it
+            double trapAngle = arcsin(marble / (outer - trapFillet)) + arcsin(trapFillet / (outer - trapFillet));   // angle between the middle of the trap and the centerpoint of the fillet
+            double t1 = trap - trapAngle;       // angle of the centerpoint of the first trap fillet
+            double t2 = trap + trapAngle;       // angle of the centerpoint of the other trap fillet
 
-            var semiCircleUnderGap = range(0, 180, 12).Select(i => p(w * cos(i - gapAngle) + m * cos(-gapAngle), w * sin(i - gapAngle) + m * sin(-gapAngle)));
-            var innerRim = range(-gapAngle, -360 + gapAngle, 60).Select(i => p(inner * cos(i), inner * sin(i)));
-            var semiCircleAboveGap = range(-180, 0, 12).Select(i => p(w * cos(i + gapAngle) + m * cos(gapAngle), w * sin(i + gapAngle) + m * sin(gapAngle)));
-            var outerRimToTrap = range(gapAngle, t1, (trap + 5) / 6).Select(i => p(outer * cos(i), outer * sin(i)));
-            var trapFillet1 = range(0, 90, 6).Select(i => p(trapFillet * cos(i + t1) + (outer - trapFillet) * cos(t1), trapFillet * sin(i + t1) + (outer - trapFillet) * sin(t1)));
-            var trapBottom = range(270, 90, 12).Select(i => p(marble * cos(i + trap) + (outer - trapFillet) * cos(trap), marble * sin(i + trap) + (outer - trapFillet) * sin(trap)));
-            var trapFillet2 = range(-90, 0, 6).Select(i => p(trapFillet * cos(i + t2) + (outer - trapFillet) * cos(t2), trapFillet * sin(i + t2) + (outer - trapFillet) * sin(t2)));
-            var outerRimFromTrap = range(t2, 360 - gapAngle, (360 - trap) / 6).Select(i => p(outer * cos(i), outer * sin(i)));
+            (PointD p, PointD texture) mk(double rMin, double θMin, double rMaj, double θMaj) => (
+                p(rMin * cos(θMin) + rMaj * cos(θMaj), rMin * sin(θMin) + rMaj * sin(θMaj)),
+                p((rMin + textureDist) * cos(θMin) + rMaj * cos(θMaj), (rMin + textureDist) * sin(θMin) + rMaj * sin(θMaj)));
+
+            var semiCircleUnderGap = range(0, 180, 12).Select(i => mk(w, i - gapAngle, m, -gapAngle));
+            var innerRim = range(-gapAngle, -360 + gapAngle, 60).Select(i => mk(-w, i, m, i));
+            var semiCircleAboveGap = range(-180, 0, 12).Select(i => mk(w, i + gapAngle, m, gapAngle));
+            var outerRimToTrap = range(gapAngle, t1, (trap + 5) / 6).Select(i => mk(w, i, m, i));
+            var trapFillet1 = range(0, 90, 6).Select(i => mk(trapFillet, i + t1, outer - trapFillet, t1));
+            var trapBottom = range(270, 90, 12).Select(i => mk(marble, i + trap, outer - trapFillet, trap));
+            var trapFillet2 = range(-90, 0, 6).Select(i => mk(trapFillet, i + t2, outer - trapFillet, t2));
+            var outerRimFromTrap = range(t2, 360 - gapAngle, (365 - trap) / 6).Select(i => mk(w, i, m, i));
 
             return new[] { semiCircleUnderGap, innerRim, semiCircleAboveGap, outerRimToTrap, trapFillet1, trapBottom, trapFillet2, outerRimFromTrap }.SelectMany(p => p);
         }
 
         private static IEnumerable<VertexInfo[]> Cylinder(double inner, double outer, int trap)
         {
-            const double height = 1;
-            const double bevelSize = .075;
-            const double marble = .375;
-            const double bevelRatio = .7;
+            var topFaceOutline = CylinderPolygon(inner + bevelSize, outer - bevelSize, marble + bevelSize, marble - bevelSize, trap, 0);
 
-            var bottom = CylinderPolygon(inner, outer, marble, marble, trap).Select(p => pt(p.X, 0, p.Y).WithMeshInfo(Normal.Mine, Normal.Mine, Normal.Average, Normal.Average)).ToArray();
-            var bevelBottom = CylinderPolygon(inner, outer, marble, marble, trap).Select(p => pt(p.X, height, p.Y).WithMeshInfo(Normal.Mine, Normal.Theirs, Normal.Average, Normal.Average)).ToArray();
-            var bevelMiddle = CylinderPolygon(inner + bevelSize * (1 - bevelRatio), outer - bevelSize * (1 - bevelRatio), marble + bevelSize * (1 - bevelRatio), marble - bevelSize * (1 - bevelRatio), trap).Select(p => pt(p.X, height + bevelSize * bevelRatio, p.Y).WithMeshInfo(Normal.Average, Normal.Average, Normal.Average, Normal.Average)).ToArray();
-            var bevelTop = CylinderPolygon(inner + bevelSize, outer - bevelSize, marble + bevelSize, marble - bevelSize, trap).Select(p => pt(p.X, height + bevelSize, p.Y).WithMeshInfo(0, 1, 0)).ToArray();
+            var bottom = CylinderPolygon(inner, outer, marble, marble, trap, 1).Select(p => pt(p.p.X, 0, p.p.Y).WithMeshInfo(Normal.Mine, Normal.Mine, Normal.Average, Normal.Average).WithTexture(p.texture)).ToArray();
+            var bevelBottom = CylinderPolygon(inner, outer, marble, marble, trap, .1).Select(p => pt(p.p.X, height, p.p.Y).WithMeshInfo(Normal.Mine, Normal.Theirs, Normal.Average, Normal.Average).WithTexture(p.texture)).ToArray();
+            var bevelMiddle = CylinderPolygon(inner + bevMid2, outer - bevMid2, marble + bevMid2, marble - bevMid2, trap, .05).Select(p => pt(p.p.X, height + bevMid, p.p.Y).WithMeshInfo(Normal.Average, Normal.Average, Normal.Average, Normal.Average).WithTexture(p.texture)).ToArray();
+            var bevelTop = topFaceOutline.Select(p => pt(p.p.X, height + bevelSize, p.p.Y).WithMeshInfo(0, 1, 0).WithTexture(p.texture)).ToArray();
 
             var mesh = CreateMesh(false, true, new[] { bottom, bevelBottom, bevelMiddle, bevelTop });
-            var topFace = Md.Triangulate(CylinderPolygon(inner + bevelSize, outer - bevelSize, marble + bevelSize, marble - bevelSize, trap).Reverse()).Select(face => face.Select(p => pt(p.X, height + bevelSize, p.Y).WithNormal(0, 1, 0)).ToArray()).ToArray();
-            return mesh.Concat(topFace);
+            try
+            {
+                var topFace = Md.Triangulate(topFaceOutline.Reverse().Select(p => p.p)).Select(face => face.Select(p => pt(p.X, height + bevelSize, p.Y).WithNormal(0, 1, 0).WithTexture(topFaceOutline.MinElement(p2 => p2.p.Distance(p)).texture)).ToArray()).ToArray();
+                var allFaces = mesh.Concat(topFace);
+
+                var allTextures = allFaces.SelectMany(f => f).Select(v => v.Texture.Value);
+                var txMinX = -outer - 1;//allTextures.Min(p => p.X);
+                var txMaxX = outer + 1;//allTextures.Max(p => p.X);
+                var txMinY = -outer - 1;//allTextures.Min(p => p.Y);
+                var txMaxY = outer + 1;//allTextures.Max(p => p.Y);
+                PointD translateTexture(PointD orig) => p((orig.X - txMinX) / (txMaxX - txMinX), (orig.Y - txMinY) / (txMaxY - txMinY));
+                return allFaces.Select(f => f.Select(v => v.WithTexture(translateTexture(v.Texture.Value))).ToArray());
+            }
+            catch (Exception e)
+            {
+                makeTempPng(topFaceOutline.Select(t => t.p));
+                throw;
+            }
         }
 
-        public static void Do()
+        public static void DoDebug()
         {
-            const double inner = 5;
-            const double outer = 6;
-            const double bevelSize = .075;
-            const double marble = .375;
-            const int trap = 45;
+            makeTempPng(CylinderPolygon(.5, 1.5, marble, marble, 120, 0).Select(p => p.p));
+        }
 
-            var polygon = CylinderPolygon(inner + bevelSize, outer - bevelSize, marble + bevelSize, marble - bevelSize, trap);
-            var triangulated = polygon.Reverse().Triangulate();
-            //foreach (var tri in triangulated)
-            //    yield return tri.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).ToArray();
+        private static void makeTempPng(IEnumerable<PointD> polygon)
+        {
+            const double po = .02;
+            const float pw = .02f;
 
             GraphicsUtil.DrawBitmap(1000, 1000, g =>
             {
                 g.Clear(Color.Transparent);
                 using (var tr = new GraphicsTransformer(g).Scale(75, 75).Translate(500, 500))
                 {
-                    foreach (var point in polygon)
+                    void drawPoint(PointD p, Brush brush)
                     {
-                        //g.DrawLine(Pens.Black, (point - new PointD(.1, .1)).ToPointF(), (point + new PointD(.1, .1)).ToPointF());
-                        //g.DrawLine(Pens.Black, (point + new PointD(.1, -.1)).ToPointF(), (point + new PointD(-.1, .1)).ToPointF());
+                        g.DrawLine(new Pen(brush, pw), (p + new PointD(-po, -po)).ToPointF(), (p + new PointD(po, po)).ToPointF());
+                        g.DrawLine(new Pen(brush, pw), (p + new PointD(po, -po)).ToPointF(), (p + new PointD(-po, po)).ToPointF());
                     }
-                    foreach (var tup in polygon.ConsecutivePairs(true))
-                        g.DrawLine(new Pen(Brushes.Black, .2f), tup.Item1.ToPointF(), tup.Item2.ToPointF());
+                    foreach (var point in polygon)
+                        drawPoint(point, Brushes.Black);
 
-                    foreach (var tri in triangulated)
-                        g.FillPolygon(Brushes.CornflowerBlue, tri.Select(v => v.ToPointF()).ToArray());
+                    double inner = .5;
+                    double outer = 1.5;
+                    double trapFillet = marble;
+                    int trap = 120;
+                    double textureDist = 0;
+                    double w = (outer - inner) / 2;     // half the width of the cylinder’s bulk (same as radius of the semicircles on each side of the gap)
+                    double m = (outer + inner) / 2;     // distance from center to the middle of the bulk
+                    double gapAngle = arcsin(marble / m) + arcsin(w / m);               // angle between the middle of the gap and the centerpoint of the semicircles on either side of it
+                    double trapAngle = arcsin(marble / (outer - trapFillet)) + arcsin(trapFillet / (outer - trapFillet));   // angle between the middle of the trap and the centerpoint of the fillet
+                    double t1 = trap - trapAngle;       // angle of the centerpoint of the first trap fillet
+                    double t2 = trap + trapAngle;       // angle of the centerpoint of the other trap fillet
+
+                    (PointD p, PointD texture) mk(double rMin, double θMin, double rMaj, double θMaj) => (
+                        p(rMin * cos(θMin) + rMaj * cos(θMaj), rMin * sin(θMin) + rMaj * sin(θMaj)),
+                        p((rMin + textureDist) * cos(θMin) + rMaj * cos(θMaj), (rMin + textureDist) * sin(θMin) + rMaj * sin(θMaj)));
+
+                    var trapFillet1 = range(0, 90, 6 * 4).Select(i => mk(trapFillet, i + t1, outer - trapFillet, t1));
+                    var trapBottom = range(270, 90, 12 * 4).Select(i => mk(marble, i + trap, outer - trapFillet, trap));
+                    var trapFillet2 = range(-90, 0, 6 * 4).Select(i => mk(trapFillet, i + t2, outer - trapFillet, t2));
+
+                    var mp = mk(0, 0, outer - trapFillet, t1);
+                    drawPoint(mp.p, Brushes.Red);
+                    g.DrawLine(new Pen(Brushes.Red, .05f), new PointF(0, 0), mp.p.ToPointF());
+                    g.DrawLine(new Pen(Brushes.Red, .05f), mp.p.ToPointF(), mk(trapFillet, 0 + t1, outer - trapFillet, t1).p.ToPointF());
+                    g.DrawLine(new Pen(Brushes.Red, .05f), mp.p.ToPointF(), mk(trapFillet, 90 + t1, outer - trapFillet, t1).p.ToPointF());
+
+                    //foreach (var tup in polygon.ConsecutivePairs(true))
+                    //    g.DrawLine(new Pen(Brushes.Black, .2f), tup.Item1.ToPointF(), tup.Item2.ToPointF());
+
+                    //foreach (var tri in triangulated)
+                    //    g.FillPolygon(Brushes.CornflowerBlue, tri.Select(v => v.ToPointF()).ToArray());
                 }
             }).Save(@"D:\temp\temp.png");
         }
