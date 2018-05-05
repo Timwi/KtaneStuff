@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using KtaneStuff.Modeling;
+using RT.Util;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
@@ -12,7 +13,7 @@ namespace KtaneStuff
 {
     using static Md;
 
-    static class TumbleLock
+    static class MarbleTumble
     {
         const double height = 1;
         const double bevelSize = .11;
@@ -21,12 +22,18 @@ namespace KtaneStuff
         const double bevMid = bevelSize * bevelRatio;
         const double bevMid2 = bevelSize * (1 - bevelRatio);
 
+        const int numNotches = 10;
+        static int[] notchMins = new[] { 3, 2, 1, 1, 1 };
+        static int[] notchMaxs = new[] { 7, 8, 9, 9, 9 };
+
         public static void DoModels()
         {
-            var nums = new[] { 4, 5, 6, 8, 10 };
+            foreach (var file in new DirectoryInfo(@"D:\c\KTANE\MarbleTumble\Assets\Models").EnumerateFileSystemInfos("*.obj"))
+                if (file.Name.StartsWith("Cylinder-") && file.Name.EndsWith(".obj"))
+                    file.Delete();
             for (int r = 1; r <= 5; r++)
-                for (int t = 1; t < nums[r - 1]; t++)
-                    File.WriteAllText($@"D:\c\KTANE\TumbleLock\Assets\Models\Cylinder-{r}-{t}.obj", GenerateObjFile(Cylinder(r - .5, r + .5, (360 / nums[r - 1]) * t), $"Cylinder_{r}_{t}"));
+                for (int t = notchMins[r - 1]; t <= notchMaxs[r - 1]; t++)
+                    File.WriteAllText($@"D:\c\KTANE\MarbleTumble\Assets\Models\Cylinder-{r}-{t}.obj", GenerateObjFile(Cylinder(r - .5, r + .5, (360 / numNotches) * t), $"Cylinder_{r}_{t}"));
         }
 
         private static IEnumerable<double> range(double from, double to, int steps) => Enumerable.Range(0, steps).Select(i => from + (to - from) * i / steps);
@@ -157,6 +164,19 @@ namespace KtaneStuff
                     //    g.FillPolygon(Brushes.CornflowerBlue, tri.Select(v => v.ToPointF()).ToArray());
                 }
             }).Save(@"D:\temp\temp.png");
+        }
+
+        public static void GenerateSvg()
+        {
+            var path = @"D:\c\KTANE\Public\HTML\img\Component\Marble Tumble.svg";
+            Utils.ReplaceInFile(path, @"<!--%%-->", @"<!--%%%-->", Enumerable.Range(0, 5).Select(ix => $@"<path d='M {
+                (Rnd.Next(0, 10) * Math.PI / 5).Apply(angle =>
+                    CylinderPolygon(ix + .5, ix + 1.5, marble, marble, (360 / numNotches) * Rnd.Next(notchMins[ix], notchMaxs[ix] + 1), 0)
+                        .Select(tup => tup.p.Rotated(angle))
+                        .Select(p => p * 300 / 11 + new PointD(166, 348 - 166))
+                        .Select(tup => $"{tup.X},{tup.Y}")
+                        .JoinString(" "))
+            } z' stroke-width='1' stroke='#000' fill='{Rnd.Next(64, 255).Apply(shade => $"#{shade.ToString("X2")}{shade.ToString("X2")}{shade.ToString("X2")}")}' />").JoinString());
         }
     }
 }
