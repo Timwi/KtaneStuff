@@ -33,10 +33,7 @@ namespace KtaneStuff.Modeling
             TextureAfter = textureAfter;
         }
 
-        public override string ToString()
-        {
-            return "{0}, bef={1},{2}, aft={3},{4}".Fmt(Location, NormalBeforeX, NormalBeforeY, NormalAfterX, NormalAfterY);
-        }
+        public override string ToString() => $"{Location}, {(NormalOverride != null ? $"Normal={NormalOverride}" : $"Normals: X={NormalBeforeX},{NormalAfterX}, Y={NormalBeforeY},{NormalAfterY}")}{(Texture == null ? null : $", Texture={Texture}")}{(TextureAfter == null ? null : $", TextureAfter={TextureAfter}")}";
 
         public MeshVertexInfo WithTexture(PointD texture)
         {

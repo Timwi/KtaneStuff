@@ -281,6 +281,29 @@ namespace KtaneStuff.Modeling
                 .ToArray());
         }
 
+        public static IEnumerable<VertexInfo[]> TubeFromCurve(IEnumerable<Pt> points, double radius, int revSteps)
+        {
+            var pts = (points as Pt[]) ?? points.ToArray();
+            var normals = new Pt[pts.Length];
+            normals[0] = ((pts[1] - pts[0]) * pt(0, 1, 0)).Apply(n => n.Length > .001 ? n : (pts[1] - pts[0]) * pt(1, 0, 0)).Normalize() * radius;
+            for (int i = 1; i < pts.Length - 1; i++)
+                normals[i] = normals[i - 1].ProjectOntoPlane((pts[i + 1] - pts[i]).Normalize() + (pts[i] - pts[i - 1]).Normalize()).Normalize() * radius;
+            normals[pts.Length - 1] = normals[pts.Length - 2].ProjectOntoPlane(pts[pts.Length - 1] - pts[pts.Length - 2]).Normalize() * radius;
+
+            var axes = pts.Select((p, i) =>
+                i == 0 ? new { Start = pts[0], End = pts[1] } :
+                i == pts.Length - 1 ? new { Start = pts[pts.Length - 2], End = pts[pts.Length - 1] } :
+                new { Start = p, End = p + (pts[i + 1] - p).Normalize() + (p - pts[i - 1]).Normalize() }).ToArray();
+
+            return CreateMesh(false, true, Enumerable.Range(0, pts.Length)
+                .Select(ix => new { Axis = axes[ix], Perp = pts[ix] + normals[ix], Point = pts[ix] })
+                .Select(inf => Enumerable.Range(0, revSteps)
+                    .Select(i => 360 * i / revSteps)
+                    .Select(angle => inf.Perp.Rotate(inf.Axis.Start, inf.Axis.End, angle))
+                    .Reverse().ToArray())
+                .ToArray());
+        }
+
         public static double pi = Math.PI;
         public static double sin(double x) => Math.Sin(x * pi / 180);
         public static double cos(double x) => Math.Cos(x * pi / 180);
