@@ -24,6 +24,7 @@
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -127,6 +128,10 @@
     <Compile Include="Simulations.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\RT.Dijkstra\Src\RT.Dijkstra.csproj">
+      <Project>{1e53ea37-7c37-4185-82fd-d3bf9e4c878e}</Project>
+      <Name>RT.Dijkstra</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\RT.Servers\Src\RT.Servers.csproj">
       <Project>{a7333c19-56a9-4a8e-a196-7648666ef26a}</Project>
       <Name>RT.Servers</Name>
