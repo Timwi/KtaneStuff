@@ -591,6 +591,32 @@ namespace KtaneStuff.Modeling
             return DecodeSvgPath.Do(path, bézierSmoothness).Extrude(extrusionDepth);
         }
 
+        public static IEnumerable<VertexInfo[]> FlatText(string text, string fontFamily, double bézierSmoothness = .05)
+        {
+            var gp = new GraphicsPath();
+            gp.AddString(text, new FontFamily(fontFamily), (int) FontStyle.Regular, 12f, new PointF(0, 0), new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+
+            var path = new List<DecodeSvgPath.PathPiece>();
+            for (int j = 0; j < gp.PointCount; j++)
+            {
+                var type =
+                    ((PathPointType) gp.PathTypes[j]).HasFlag(PathPointType.Bezier) ? DecodeSvgPath.PathPieceType.Curve :
+                    ((PathPointType) gp.PathTypes[j]).HasFlag(PathPointType.Line) ? DecodeSvgPath.PathPieceType.Line : DecodeSvgPath.PathPieceType.Move;
+                if (type == DecodeSvgPath.PathPieceType.Curve)
+                {
+                    path.Add(new DecodeSvgPath.PathPiece(DecodeSvgPath.PathPieceType.Curve, gp.PathPoints.Subarray(j, 3).Select(p => new PointD(p)).ToArray()));
+                    j += 2;
+                }
+                else
+                    path.Add(new DecodeSvgPath.PathPiece(type, gp.PathPoints.Subarray(j, 1).Select(p => new PointD(p)).ToArray()));
+
+                if (((PathPointType) gp.PathTypes[j]).HasFlag(PathPointType.CloseSubpath))
+                    path.Add(DecodeSvgPath.PathPiece.End);
+            }
+
+            return DecodeSvgPath.Do(path, bézierSmoothness).Triangulate().Select(ps => ps.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray());
+        }
+
         public static VertexInfo[] FlatNormals(this Pt[] polygon)
         {
             var normal = (polygon[2] - polygon[1]) * (polygon[0] - polygon[1]);

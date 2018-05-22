@@ -2,52 +2,53 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using KtaneStuff.Modeling;
+using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
+using RT.Util.Text;
 
 namespace KtaneStuff
 {
-    using RT.Util;
     using static Md;
 
     static class SimonSends
     {
-        public static string[][] _text = @"This is the “first” word for the purposes of counting words and paragraphs in this text.
+        public static string[][] _text;
+        static SimonSends()
+        {
+            var text = File.ReadAllText(@"D:\c\KTANE\Public\HTML\Simon Sends.html");
+            var m = Regex.Match(text, @"(?<=<!-- start -->)(.*)(?=<!-- end -->)", RegexOptions.Singleline);
+            var p = Regex.Replace(m.Groups[1].Value, @"</?(p|em)>", "").Trim().ToUpperInvariant();
+            var q = p.Where(ch => ch == ' ' || ch == '\n' || (ch >= 'A' && ch <= 'Z')).JoinString();
+            _text = q.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(line => line.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)).ToArray();
+        }
 
-Hyphenated and apostrophized words equate as just one word; punctuation marks do not count as letters.
-
-The module contains three colorized LEDs (red, green and blue) which flash three unique letters in Morse code simultaneously.
-
-However, due to their proximity, the lit LEDs’ light mixes according to additive color mixing.
-
-Acquire the letters by disjoining the colors, then convert each letter into a number by using its alphabetic position. Call these numbers R, G and B.
-
-Construct a new color sequence by combining (using the same additive color mixing) a red, green and blue Morse code letter determined as follows:
-
-The R’th letter from the start of the G’th word from the start of the B’th paragraph on this page is the new red letter.
-
-The G’th letter from the start of the B’th word from the start of the R’th paragraph on this page is the new green letter.
-
-The B’th letter from the start of the R’th word from the start of the G’th paragraph on this page is the new blue letter.
-
-The size of a dot in Morse code is one unit. A dash is three. The gap between dashes and dots is one unit in size.
-
-Enter the result using the eight colored buttons.
-
-A mistake results in an immediate strike. Continue entering the code where you left off.
-
-Jump back to the “first” word if while counting letters you advance beyond the “last” word, which is this. ".Trim().ToUpperInvariant().Where(ch => ch == ' ' || ch == '\n' || (ch >= 'A' && ch <= 'Z')).JoinString().Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(line => line.Split(' ')).ToArray();
         public static string[] _morse = ".-|-...|-.-.|-..|.|..-.|--.|....|..|.---|-.-|.-..|--|-.|---|.--.|--.-|.-.|...|-|..-|...-|.--|-..-|-.--|--..".Split('|');
 
         public static void DoModels()
         {
             File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\Wire.obj", GenerateObjFile(Wire(), "Wire"));
+            File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\Knob.obj", GenerateObjFile(Knob(), "Knob"));
+            File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\KnobBase.obj", GenerateObjFile(Cylinder(0, -.05, .1, 36).Select(f => f.Select(v => v.RotateX(90)).ToArray()), "KnobBase"));
+            File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\KnobHighlight.obj", GenerateObjFile(Disc(36, reverse: true), "KnobHighlight"));
 
             var (button, highlight) = ButtonAndHighlight();
             File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\Button.obj", GenerateObjFile(button, "Button"));
             File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\ButtonHighlight.obj", GenerateObjFile(highlight, "ButtonHighlight"));
+        }
+
+        private static IEnumerable<VertexInfo[]> Knob()
+        {
+            var num = 45;
+            return CreateMesh(true, false, Enumerable.Range(0, num).Select(i => Ut.NewArray(
+                pt(0, .5, 0).WithMeshInfo(0, 1, 0),
+                pt(.35, .5, 0).RotateY(i * 360 / num).WithMeshInfo(0, 1, 0),
+                pt(i % 2 != 0 ? .5 : .55, .6, 0).RotateY(i * 360 / num).WithMeshInfo(Normal.Average, Normal.Average, Normal.Mine, Normal.Mine),
+                pt(i % 2 != 0 ? .85 : .9, .1, 0).RotateY(i * 360 / num).WithMeshInfo(Normal.Mine, Normal.Mine, i == 0 ? Normal.Mine : Normal.Average, i == 0? Normal.Mine : Normal.Average),
+                pt(i == 0 ? 1.25 : i % 2 != 0 ? .85 : .9, 0, 0).RotateY(i * 360 / num).WithMeshInfo(Normal.Mine, Normal.Mine, Normal.Mine, Normal.Mine)
+            )).ToArray());
         }
 
         public static void GenerateData()
@@ -60,7 +61,6 @@ Jump back to the “first” word if while counting letters you advance beyond t
             ConsoleUtil.WriteParagraphs(freqs.OrderByDescending(kvp => kvp.Value).Select(kvp => $"{kvp.Key}={kvp.Value}").JoinString(", "));
 
             Console.WriteLine(new string('─', 20));
-            Console.WriteLine(freqs.Count);
 
             var lists = _text.Select(line => line.Select(word => word.Select(x => new List<(int paraIx, int wordIx, int letterIx)>()).ToArray()).ToArray()).ToArray();
             var dic = new Dictionary<char, List<(int paraIx, int wordIx, int letterIx)>>();
@@ -80,38 +80,67 @@ Jump back to the “first” word if while counting letters you advance beyond t
                 var num = lists[paraIx][wordIx][chIx].Count / 2;
                 return ch.Color((ConsoleColor) (num % 16), num == 0 ? ConsoleColor.Red : (ConsoleColor) (num / 16));
             }).JoinColoredString()).JoinColoredString(" ")).JoinColoredString("\n"));
-            Console.WriteLine($"All letters covered = {lists.All(one => one.All(two => two.All(three => three.Count > 0)))}");
+            ConsoleUtil.WriteLine("{0} paragraphs. Unused letters = {1}".Color(null)
+                .Fmt(_text.Length, lists.Sum(one => one.Sum(two => two.Count(three => three.Count == 0))).Apply(x => x.ToString().Color(x == 0 ? ConsoleColor.Green : ConsoleColor.Magenta))));
 
-            var possible = new bool[26, 26, 26];
-            var possibleCount = 0;
-            for (char r = 'A'; r <= 'Z'; r++)
+            Utils.ReplaceInFile(@"D:\c\KTANE\SimonSends\Assets\SimonSendsModule.cs", "/*MANUAL*/", "/*!MANUAL*/", $@"@""{_text.Select(para => para.JoinString(" ")).JoinString("|")}""");
+
+            const int iterations = 1000000;
+
+            // How many times does each combo occur? Sum of the values is equal to iterations.
+            var comboStats = new Dictionary<string, int>();
+
+            // How many times does each letter (A–Z) occur? Sum is greater than iterations.
+            var letterStats = Ut.NewArray(3, _ => new Dictionary<char, int>());
+
+            // How many times does each solution length occur?
+            var lengthStats = new Dictionary<int, int>();
+
+            for (int iter = 0; iter < iterations; iter++)
             {
-                var poss = new HashSet<string>();
-                for (char g = 'A'; g <= 'Z'; g++)
-                    for (char b = 'A'; b <= 'Z'; b++)
+                var available = Enumerable.Range(0, 26).ToList().Shuffle();
+                var r = available[0];
+                var g = available[1];
+                var b = available[2];
+
+                var (_, _, _, newR) = getPosition(b, g, r);
+                var (_, _, _, newG) = getPosition(r, b, g);
+                var (_, _, _, newB) = getPosition(g, r, b);
+
+                var rMorse = constructMorse(newR);
+                var gMorse = constructMorse(newG);
+                var bMorse = constructMorse(newB);
+                var combo = Enumerable.Range(0, Ut.Max(rMorse.Length, gMorse.Length, bMorse.Length))
+                    .Select(i =>
                     {
-                        // Looking for R,G,B such that
-                        // (B, G, R) = r
-                        // (R, B, G) = g
-                        // (G, R, B) = b
-                        var isPossible = dic[r]
-                            .Where(tup => dic[g].Any(gtup => gtup.paraIx == tup.letterIx && gtup.wordIx == tup.paraIx && gtup.letterIx == tup.wordIx))
-                            .Where(tup => dic[b].Any(btup => btup.paraIx == tup.wordIx && btup.wordIx == tup.letterIx && btup.letterIx == tup.paraIx))
-                            .Any();
-                        if (isPossible)
-                        {
-                            possible[r - 'A', g - 'A', b - 'A'] = true;
-                            poss.Add(g + "" + b);
-                            possibleCount++;
-                        }
-                    }
-                ConsoleUtil.Write("{1,3/Green}/{2,3/Magenta}={0/White}".Color(null).Fmt(r, poss.Count, 26 * 26 - poss.Count));
-                if (poss.Count < 100)
-                    ConsoleUtil.Write($" ({poss.JoinString("/")})".Color(ConsoleColor.DarkGray));
-                Console.WriteLine();
+                        var isR = i >= rMorse.Length ? false : rMorse[i] == '#';
+                        var isG = i >= gMorse.Length ? false : gMorse[i] == '#';
+                        var isB = i >= bMorse.Length ? false : bMorse[i] == '#';
+                        return "KBGCRMYW"[(isB ? 1 : 0) + (isG ? 2 : 0) + (isR ? 4 : 0)];
+                    })
+                    .JoinString();
+                comboStats.IncSafe(combo);
+                letterStats[0].IncSafe(newR);
+                letterStats[1].IncSafe(newG);
+                letterStats[2].IncSafe(newB);
+                lengthStats.IncSafe(combo.Length);
             }
-            Console.WriteLine();
-            Console.WriteLine($"Possible combinations: {possibleCount}");
+
+            Console.WriteLine(comboStats.Count);
+            foreach (var kvp in comboStats.OrderByDescending(p => p.Value).Take(10))
+                Console.WriteLine($"{kvp.Key,13} = {100 * kvp.Value / (double) iterations:0.##}%");
+            Console.WriteLine("---");
+            var tt = new TextTable { ColumnSpacing = 2 };
+            for (int i = 0; i < 3; i++)
+                tt.SetCell(i, 0, letterStats[i]
+                    .OrderByDescending(p => p.Value)
+                    .Select(kvp => "{0} = {1,6:0.00}% {2}".Color(null).Fmt(kvp.Key.Color(new[] { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue }[i]), 100 * kvp.Value / (double) iterations, new string('█', (200 * kvp.Value + iterations / 2) / iterations)))
+                    .JoinColoredString("\n")
+                    .Replace(" ", "\u00a0"));
+            tt.WriteToConsole();
+            Console.WriteLine("---");
+            foreach (var kvp in lengthStats.OrderBy(p => p.Key))
+                Console.WriteLine($"{kvp.Key,2} = {100 * kvp.Value / (double) iterations,6:0.00}% {new string('█', (100 * kvp.Value + iterations / 2) / iterations)}");
         }
 
         private static (int paraIx, int wordIx, int letterIx, char ch) getPosition(int paraCount, int wordCount, int letterCount)
@@ -147,43 +176,9 @@ Jump back to the “first” word if while counting letters you advance beyond t
 
         private static string constructMorse(char letter) => _morse[letter - 'A'].Select(ch => ch == '.' ? "#" : "###").JoinString(" ");
 
-        public static void DoStatistics()
-        {
-            const int iterations = 1000000;
-
-            var stats = new Dictionary<string, int>();
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                var r = Rnd.Next(0, 26);
-                var g = Rnd.Next(0, 26);
-                var b = Rnd.Next(0, 26);
-                var (_, _, _, newR) = getPosition(b, g, r);
-                var (_, _, _, newG) = getPosition(r, b, g);
-                var (_, _, _, newB) = getPosition(g, r, b);
-
-                var rMorse = constructMorse(newR);
-                var gMorse = constructMorse(newG);
-                var bMorse = constructMorse(newB);
-                var combo = Enumerable.Range(0, Ut.Max(rMorse.Length, gMorse.Length, bMorse.Length))
-                    .Select(i =>
-                    {
-                        var isR = i >= rMorse.Length ? false : rMorse[i] == '#';
-                        var isG = i >= gMorse.Length ? false : gMorse[i] == '#';
-                        var isB = i >= bMorse.Length ? false : bMorse[i] == '#';
-                        return "KBGCRMYW"[(isB ? 1 : 0) + (isG ? 2 : 0) + (isR ? 4 : 0)];
-                    })
-                    .JoinString();
-                stats.IncSafe(combo);
-            }
-
-            Console.WriteLine(stats.Count);
-            foreach (var kvp in stats.OrderByDescending(p => p.Value).Take(20))
-                Console.WriteLine($"{kvp.Key,13} = {100 * kvp.Value / (double) stats.Count:0.##}%");
-        }
-
         private static IEnumerable<VertexInfo[]> Wire()
         {
-            var origPoints = new[] { pt(-.7, .15, -.35), pt(-1.065, .15, -.35), pt(-1.065, .075, -.35), pt(-1, 0, -.35), pt(-1, 0, -.6 - .15), pt(-.6, 0, -.6 - .15), pt(.6, 0, 0 - .2), pt(1, 0, 0 - .2), pt(1, 0, -.475), pt(1, .074, -.575), pt(1, .11, -.58), pt(.7, .11, -.58) }.Select(p => -p).ToArray();
+            var origPoints = new[] { pt(-.7, .15, -.35), pt(-1.065, .15, -.35), pt(-1.065, .075, -.35), pt(-1, 0, -.35), pt(-1, 0, -.6 - .15), pt(-.5, 0, -.6 - .15), pt(.7, 0, 0 - .2), pt(1, 0, 0 - .2), pt(1, 0, -.475), pt(1, .074, -.575), pt(1, .11, -.58), pt(.7, .11, -.58) }.Select(p => -p).ToArray();
 
             var newPoints = new List<Pt> { origPoints[0] };
             for (int i = 1; i < origPoints.Length - 1; i++)
