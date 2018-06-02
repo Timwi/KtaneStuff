@@ -101,7 +101,8 @@ namespace KtaneStuff
 
         public static void CreateCheatSheet()
         {
-            string[] _grid = new[]
+            var colorNames = "RYGCBWM";
+            int[][] _grid = new[]
             {
                 "GMCBYRCYBWR",
                 "GWCWMYRWWRC",
@@ -114,40 +115,107 @@ namespace KtaneStuff
                 "RCYBCBGRCBM",
                 "YYMGBMCYWCW",
                 "WCGMRGCMGBB"
-            };
-            var colorNames = "RYGCBWM";
+            }
+                .Select(arr => arr.Select(ch => colorNames.IndexOf(ch)).ToArray()).ToArray();
 
-            var table = new StringBuilder();
+            var xs = new[] { 2, 8, 2, 8, 2, 8, 5 };
+            var ys = new[] { 2, 2, 8, 8, 5, 5, 5 };
 
-            for (int cx = 2; cx <= 8; cx++)
-                for (int cy = 2; cy <= 8; cy++)
-                {
-                    var countColors = new int[7];
-                    var firstOccurrence = new int[7];
-                    var cells = 25;
-                    for (int y = 2; y >= -2; y--)
-                        for (int x = 2; x >= -2; x--)
+            var svg = $@"
+                <svg viewBox='0 0 7 7' text-anchor='middle'>
+
+                    <!-- Frame -->
+                    <rect x='0' y='0' width='7' height='7' stroke-width='.1' fill='none' stroke='#000' />
+
+                    <!-- Starting locations -->
+                    <g stroke='none' fill='#ccc' font-size='1.2'>
+                        {Enumerable.Range(0, 7).Select(col => $"<text x='{xs[col] - 2 + .5}' y='{ys[col] - 2 + .925}'>{col}</text>").JoinString()}
+                    </g>
+
+                    <!-- Grid lines -->
+                    <g stroke-width='.01' stroke-dasharray='.01, .02' fill='none' stroke='#000'>
+                        {Enumerable.Range(1, 6).Select(i => $"<line x1='0' y1='{i}' x2='7' y2='{i}' /><line x1='{i}' y1='0' x2='{i}' y2='7' />").JoinString()}
+                    </g>
+
+                    <!-- Answers (text objects) -->
+                    <g font-size='.2'>
+                        {Enumerable.Range(2, 7).SelectMany(cy =>
+                            Enumerable.Range(2, 7).Select(cx =>
+                            {
+                                var countColors = new int[7];
+                                var firstOccurrence = new int[7];
+                                var cells = 25;
+                                for (int y = 2; y >= -2; y--)
+                                    for (int x = 2; x >= -2; x--)
+                                    {
+                                        countColors[_grid[cy + y][cx + x]]++;
+                                        firstOccurrence[_grid[cy + y][cx + x]] = cells;
+                                        cells--;
+                                    }
+
+                                string answer(bool hasVowel)
+                                {
+                                    var colorsToPress = Enumerable.Range(0, 7).Where(ix => countColors[ix] % 2 == (hasVowel ? 0 : 1)).ToArray();
+                                    Array.Sort(colorsToPress, (v1, v2) =>
+                                        countColors[v1] > countColors[v2] ? 1 :
+                                        countColors[v1] < countColors[v2] ? -1 :
+                                        firstOccurrence[v1] > firstOccurrence[v2] ? 1 :
+                                        firstOccurrence[v1] < firstOccurrence[v2] ? -1 : 0);
+                                    return colorsToPress.Select(c => colorNames[c]).JoinString("");
+                                }
+
+                                return $"<text x='{cx - 2 + .5}' y='{cy - 2 + .425}'>{answer(true)}</text><text x='{cx - 2 + .5}' y='{cy - 2 + .675}'>{answer(false)}</text>";
+                            })
+                        ).JoinString()}
+                    </g>
+
+                    <!-- Arrows -->
+                    <g fill='#fff' stroke-width='.01' stroke='#000' font-size='.1'>
+                        {new Func<string>(() =>
                         {
-                            countColors[colorNames.IndexOf(_grid[cy + y][cx + x])]++;
-                            firstOccurrence[colorNames.IndexOf(_grid[cy + y][cx + x])] = cells;
-                            cells--;
-                        }
+                            var d = new Dictionary<(int x, int y, int angle), (string left, string right)>();
 
-                    string answer(bool hasVowel)
-                    {
-                        var colorsToPress = Enumerable.Range(0, 7).Where(ix => countColors[ix] % 2 == (hasVowel ? 0 : 1)).ToArray();
-                        Array.Sort(colorsToPress, (v1, v2) =>
-                            countColors[v1] > countColors[v2] ? 1 :
-                            countColors[v1] < countColors[v2] ? -1 :
-                            firstOccurrence[v1] > firstOccurrence[v2] ? 1 :
-                            firstOccurrence[v1] < firstOccurrence[v2] ? -1 : 0);
-                        return colorsToPress.Select(c => colorNames[c]).JoinString(" ");
-                    }
+                            for (int cx = 2; cx <= 8; cx++)
+                                for (int cy = 2; cy <= 8; cy++)
+                                {
+                                    foreach (var col in Enumerable.Range(0, 7))
+                                    {
+                                        int nx = xs[col], ny = ys[col];
+                                        int dx = Math.Abs(cx - nx), dy = Math.Abs(cy - ny), sx = Math.Sign(nx - cx), sy = Math.Sign(ny - cy);
+                                        int mx = 0, my = 0;
 
-                    table.AppendLine($@"<tr><th>({cx}, {cy})</th><td>{answer(true)}</td><td>{answer(false)}</td></tr>");
-                }
+                                        if (dx >= dy)
+                                            mx += sx;
+                                        if (dx <= dy)
+                                            my += sy;
 
-            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Simon Shrieks optimized (Timwi).html", "<!-- #start -->", "<!-- #end -->", table.ToString());
+                                        var angle =
+                                            mx == -1 ? (my == -1 ? 225 : my == 0 ? 180 : 135) :
+                                            mx == 0 ? (my == -1 ? 270 : my == 0 ? -1 : 90) :
+                                            /*mx == 1 ? */(my == -1 ? 315 : my == 0 ? 0 : 45);
+
+                                        if (angle != -1)
+                                        {
+                                            bool goodAngle(int angl) => angl >= 90 && angl < 270;
+                                            var key = goodAngle(angle) ? (cx + mx, cy + my, (angle + 180) % 360) : (cx, cy, angle);
+                                            var (left, right) = d.Get(key, ("", ""));
+                                            d[key] = (goodAngle(angle) ? left + col : left, goodAngle(angle) ? right : right + col);
+                                        }
+                                    }
+                                }
+
+                            return d.Select(kvp => $@"
+                                <g transform='translate({kvp.Key.x - 2 + .5} {kvp.Key.y - 2 + .5}) rotate({kvp.Key.angle}) translate({(kvp.Key.angle % 90 == 0 ? "-.5 -.5" : "-.49 -.5")})'>
+                                  <path d='{(kvp.Value.left.Length == 0 ? "M1.1,.4 1.2,.5 1.1,.6 .85,.6 .85,.4z" : kvp.Value.right.Length == 0 ? "M1.15,.4 1.15,.6 .9,.6 .8,.5 .9,.4z" : "M1.1,.4 1.2,.5 1.1,.6 .9,.6 .8,.5 .9,.4z")}' />
+                                  <text fill='#000' stroke='none' x='1' y='.54'>{(kvp.Value.left.Length == 0 ? kvp.Value.right : kvp.Value.right.Length == 0 ? kvp.Value.left : $"{kvp.Value.right}\u00a0{kvp.Value.left}")}</text>
+                                </g>
+                            ").JoinString();
+                        })()}
+                    </g>
+                </svg>
+            ";
+
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Simon Shrieks optimized (Timwi).html", "<!-- #start -->", "<!-- #end -->", svg);
         }
     }
 }
