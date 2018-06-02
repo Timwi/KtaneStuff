@@ -122,10 +122,10 @@ namespace KtaneStuff
             var ys = new[] { 2, 2, 8, 8, 5, 5, 5 };
 
             var svg = $@"
-                <svg viewBox='0 0 7 7' text-anchor='middle'>
+                <svg viewBox='-.025 -.025 7.05 7.05' text-anchor='middle'>
 
                     <!-- Frame -->
-                    <rect x='0' y='0' width='7' height='7' stroke-width='.1' fill='none' stroke='#000' />
+                    <rect x='0' y='0' width='7' height='7' stroke-width='.05' fill='none' stroke='#000' />
 
                     <!-- Starting locations -->
                     <g stroke='none' fill='#ccc' font-size='1.2'>
@@ -169,15 +169,15 @@ namespace KtaneStuff
                         ).JoinString()}
                     </g>
 
-                    <!-- Arrows -->
-                    <g fill='#fff' stroke-width='.01' stroke='#000' font-size='.1'>
+                    <!-- Directions -->
+                    <g fill='#000' stroke='none' font-size='.1'>
                         {new Func<string>(() =>
                         {
-                            var d = new Dictionary<(int x, int y, int angle), (string left, string right)>();
-
+                            var results = new List<string>();
                             for (int cx = 2; cx <= 8; cx++)
                                 for (int cy = 2; cy <= 8; cy++)
                                 {
+                                    var d = new Dictionary<(int mx, int my), List<int>>();
                                     foreach (var col in Enumerable.Range(0, 7))
                                     {
                                         int nx = xs[col], ny = ys[col];
@@ -189,27 +189,23 @@ namespace KtaneStuff
                                         if (dx <= dy)
                                             my += sy;
 
-                                        var angle =
-                                            mx == -1 ? (my == -1 ? 225 : my == 0 ? 180 : 135) :
-                                            mx == 0 ? (my == -1 ? 270 : my == 0 ? -1 : 90) :
-                                            /*mx == 1 ? */(my == -1 ? 315 : my == 0 ? 0 : 45);
-
-                                        if (angle != -1)
-                                        {
-                                            bool goodAngle(int angl) => angl >= 90 && angl < 270;
-                                            var key = goodAngle(angle) ? (cx + mx, cy + my, (angle + 180) % 360) : (cx, cy, angle);
-                                            var (left, right) = d.Get(key, ("", ""));
-                                            d[key] = (goodAngle(angle) ? left + col : left, goodAngle(angle) ? right : right + col);
-                                        }
+                                        if (mx != 0 || my != 0)
+                                            d.AddSafe((mx, my), col);
                                     }
+
+                                    var xOffsets = new[] { .05, .5, .95 };
+                                    var yOffsets = new[] { .15, .55, .95 };
+                                    var anchors = new[] { "start", "middle", "end" };
+                                    const double yo = .1;
+                                    for (int mx = -1; mx <= 1; mx++)
+                                        for (int my = -1; my <= 1; my++)
+                                            if (d.ContainsKey((mx, my)))
+                                                results.Add(my == 0
+                                                    ? d[(mx, my)].Select((str, ix) => $"<text x='{cx - 2 + xOffsets[mx + 1]}' y='{cy - 2 + yOffsets[my + 1] - yo * d[(mx, my)].Count / 2 + yo * ix}' text-anchor='{anchors[mx + 1]}'>{str}</text>").JoinString()
+                                                    : $@"<text x='{cx - 2 + xOffsets[mx + 1]}' y='{cy - 2 + yOffsets[my + 1]}' text-anchor='{anchors[mx + 1]}'>{d[(mx, my)].JoinString(" ")}</text>");
                                 }
 
-                            return d.Select(kvp => $@"
-                                <g transform='translate({kvp.Key.x - 2 + .5} {kvp.Key.y - 2 + .5}) rotate({kvp.Key.angle}) translate({(kvp.Key.angle % 90 == 0 ? "-.5 -.5" : "-.49 -.5")})'>
-                                  <path d='{(kvp.Value.left.Length == 0 ? "M1.1,.4 1.2,.5 1.1,.6 .85,.6 .85,.4z" : kvp.Value.right.Length == 0 ? "M1.15,.4 1.15,.6 .9,.6 .8,.5 .9,.4z" : "M1.1,.4 1.2,.5 1.1,.6 .9,.6 .8,.5 .9,.4z")}' />
-                                  <text fill='#000' stroke='none' x='1' y='.54'>{(kvp.Value.left.Length == 0 ? kvp.Value.right : kvp.Value.right.Length == 0 ? kvp.Value.left : $"{kvp.Value.right}\u00a0{kvp.Value.left}")}</text>
-                                </g>
-                            ").JoinString();
+                            return results.JoinString();
                         })()}
                     </g>
                 </svg>
