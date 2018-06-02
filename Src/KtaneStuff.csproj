@@ -81,6 +81,7 @@
     <Compile Include="RubiksCube.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="SimonSends.cs" />
+    <Compile Include="SimonShrieks.cs" />
     <Compile Include="SimonSings.cs" />
     <Compile Include="SymbolCycle.cs" />
     <Compile Include="SymbolicCoordinates.cs" />
