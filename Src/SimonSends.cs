@@ -46,7 +46,7 @@ namespace KtaneStuff
                 pt(0, .5, 0).WithMeshInfo(0, 1, 0),
                 pt(.35, .5, 0).RotateY(i * 360 / num).WithMeshInfo(0, 1, 0),
                 pt(i % 2 != 0 ? .5 : .55, .6, 0).RotateY(i * 360 / num).WithMeshInfo(Normal.Average, Normal.Average, Normal.Mine, Normal.Mine),
-                pt(i % 2 != 0 ? .85 : .9, .1, 0).RotateY(i * 360 / num).WithMeshInfo(Normal.Mine, Normal.Mine, i == 0 ? Normal.Mine : Normal.Average, i == 0? Normal.Mine : Normal.Average),
+                pt(i % 2 != 0 ? .85 : .9, .1, 0).RotateY(i * 360 / num).WithMeshInfo(Normal.Mine, Normal.Mine, i == 0 ? Normal.Mine : Normal.Average, i == 0 ? Normal.Mine : Normal.Average),
                 pt(i == 0 ? 1.25 : i % 2 != 0 ? .85 : .9, 0, 0).RotateY(i * 360 / num).WithMeshInfo(Normal.Mine, Normal.Mine, Normal.Mine, Normal.Mine)
             )).ToArray());
         }
@@ -215,6 +215,12 @@ namespace KtaneStuff
                 // Highlight
                 new[] { rect2(data.Last()).Select(m => m.Location.WithNormal(0, 1, 0)).Reverse().ToArray() }
             );
+        }
+
+        public static void MakeCheatSheet()
+        {
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Simon Sends embellished (Timwi).html", "<!-- start -->", "<!-- end -->",
+                $"<div class='simon-sends-text'>{_text.Select((para, ix) => $"<p class='para{(ix >= 5 && ix <= 7 ? $" para-{ix + 1}" : "")}'>{para.Select((word, wix) => $"<span class='word{(ix >= 5 && ix <= 7 && wix == 25 ? $" word-26" : "")}'>{word}<span class='len'>{word.Length}</span></span>").JoinString(" ")}</p>").JoinString("\n")}</div>");
         }
     }
 }
