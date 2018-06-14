@@ -59,6 +59,7 @@
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="GridMatching.cs" />
     <Compile Include="Ktane.cs" />
+    <Compile Include="Lasers.cs" />
     <Compile Include="Mafia.cs" />
     <Compile Include="Braille.cs" />
     <Compile Include="ColoredSwitches.cs" />
