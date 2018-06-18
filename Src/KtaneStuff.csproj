@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="3DMazeManual.cs" />
     <Compile Include="Astrology.cs" />
+    <Compile Include="BlackHole.cs" />
     <Compile Include="Curriculum.cs" />
     <Compile Include="EitherOr.cs" />
     <Compile Include="ExtendedPassword.cs" />

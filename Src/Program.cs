@@ -30,7 +30,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            Lasers.Analyze();
+            BlackHole.Analyze();
 
             Console.WriteLine("Done.");
             Console.ReadLine();
