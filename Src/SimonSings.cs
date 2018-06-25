@@ -91,6 +91,7 @@ namespace KtaneStuff
             File.WriteAllText($@"D:\c\KTANE\SimonSings\Assets\Models\TorusInner.obj", GenerateObjFile(Torus(.225, .025, 36), "TorusInner"));
             File.WriteAllText($@"D:\c\KTANE\SimonSings\Assets\Models\TorusOuter.obj", GenerateObjFile(Torus(1.275, .05, 72), "TorusOuter"));
             File.WriteAllText($@"D:\c\KTANE\SimonSings\Assets\Models\TorusSmall.obj", GenerateObjFile(Torus(.1, .025, 36), "TorusSmall"));
+            File.WriteAllText($@"D:\c\KTANE\SimonSings\Assets\Models\CenterHighlight.obj", GenerateObjFile(Annulus(.225 / 0.4, .35 / 0.4, 36), "CenterHighlight"));
         }
     }
 }

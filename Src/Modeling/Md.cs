@@ -89,6 +89,20 @@ namespace KtaneStuff.Modeling
                 .ToArray();
         }
 
+        public static VertexInfo[][] Annulus(double innerRadius, double outerRadius, int numVertices = 20, bool reverse = false)
+        {
+            return Enumerable.Range(0, numVertices)
+                .Select(i => new PointD(cos(360.0 * i / numVertices), sin(360.0 * i / numVertices)))
+                .SelectConsecutivePairs(true, (p1, p2) =>
+                {
+                    var arr = new[] { pt(outerRadius * p1.X, 0, outerRadius * p1.Y), pt(outerRadius * p2.X, 0, outerRadius * p2.Y), pt(innerRadius * p2.X, 0, innerRadius * p2.Y), pt(innerRadius * p1.X, 0, innerRadius * p1.Y) };
+                    if (reverse)
+                        arr.ReverseInplace();
+                    return arr.Select(p => p.WithNormal(0, 1, 0)).ToArray();
+                })
+                .ToArray();
+        }
+
         public static VertexInfo[][] Square(bool reverse = false)
         {
             var arr = new[] { pt(-1, 0, -1), pt(-1, 0, 1), pt(1, 0, 1), pt(1, 0, -1) }.Select(p => p.WithNormal(0, 1, 0));
