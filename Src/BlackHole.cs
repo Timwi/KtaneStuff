@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using RT.KitchenSink;
+using RT.Util;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
@@ -15,6 +20,22 @@ namespace KtaneStuff
         {
             const int w = 500;
 
+            var thrs = new List<Thread>();
+
+            void pngcr(string path1, string path2)
+            {
+                var thr = new Thread(() =>
+                {
+                    CommandRunner.Run("pngcr", path1, path2).OutputNothing().Go();
+                    File.Delete(path1);
+                    Console.WriteLine(path2);
+                });
+                thr.Start();
+                thrs.Add(thr);
+            }
+
+            var bhPath1 = @"D:\c\KTANE\BlackHole\Assets\Textures\BlackHole-tmp.png";
+            var bhPath2 = @"D:\c\KTANE\BlackHole\Assets\Textures\BlackHole.png";
             GraphicsUtil.DrawBitmap(w, w, g =>
             {
                 g.Clear(Color.Transparent);
@@ -23,21 +44,73 @@ namespace KtaneStuff
                 var rect = new RectangleF(padding, padding, w - 2 * padding, w - 2 * padding);
                 g.FillEllipse(Brushes.Black, rect);
                 g.DrawEllipse(new Pen(Color.FromArgb(128, Color.CornflowerBlue), 12f), rect);
-            }).Save(@"D:\c\KTANE\BlackHole\Assets\Textures\BlackHole.png");
+            }).Save(bhPath1);
+            pngcr(bhPath1, bhPath2);
 
-            foreach (var color in new(Color color, string name)[] { (Color.Red, "red"), (Color.Orange, "orange"), (Color.Yellow, "yellow"), (Color.Green, "green"), (Color.Cyan, "cyan"), (Color.Blue, "blue"), (Color.Purple, "purple") })
+            var colorInfos = new(string colorCode, string name)[] { ("e70909ff", "red"), ("ed800cff", "orange"), ("deda16ff", "yellow"), ("17b129ff", "green"), ("10a0a8ff", "cyan"), ("2826ffff", "blue"), ("bb0db0ff", "purple") };
+
+            foreach (var (colorCode, name) in colorInfos)
             {
-                GraphicsUtil.DrawBitmap(w, w, g =>
+                var color = Color.FromArgb(128, Convert.ToInt32(colorCode.Substring(0, 2), 16), Convert.ToInt32(colorCode.Substring(2, 2), 16), Convert.ToInt32(colorCode.Substring(4, 2), 16));
+                var path1 = $@"D:\c\KTANE\BlackHole\Assets\Textures\Swirl-{name}-tmp.png";
+                var path2 = $@"D:\c\KTANE\BlackHole\Assets\Textures\Swirl-{name}.png";
+                GraphicsUtil.DrawBitmap(70, 32, g =>
                 {
                     g.Clear(Color.Transparent);
 
-                    var svgData = @"M 240,612.36218 270,612.36218 C 250,587.36218 225,577.36218 200,587.36218 230,582.36218 240,597.36218 240,612.36218 z";
-                    var polygons = DecodeSvgPath.Do(svgData, 1);
-                    foreach (var polygon in polygons)
-                        g.FillPolygon(new SolidBrush(Color.FromArgb(128, color.color)), polygon.Select(p => (p + new PointD(0, -552.36218)).ToPointF()).ToArray());
-
-                }).Save($@"D:\c\KTANE\BlackHole\Assets\Textures\Swirl-{color.name}.png");
+                    using (var sb = new SolidBrush(color))
+                    {
+                        var svgData = @"M 240,612.36218 270,612.36218 C 250,587.36218 225,577.36218 200,587.36218 230,582.36218 240,597.36218 240,612.36218 z";
+                        var polygons = DecodeSvgPath.Do(svgData, 1);
+                        foreach (var polygon in polygons)
+                            g.FillPolygon(sb, polygon.Select(p => (p + new PointD(0, -552.36218) - new PointD(201, 31)).ToPointF()).ToArray());
+                    }
+                }).Save(path1);
+                pngcr(path1, path2);
             }
+
+            using (var bmp = new Bitmap($@"D:\c\KTANE\BlackHole\Data\Symbols-white.png"))
+            {
+                for (int cIx = 0; cIx < colorInfos.Length; cIx++)
+                {
+                    var (colorCode, colorName) = colorInfos[cIx];
+                    var r = Convert.ToInt32(colorCode.Substring(0, 2), 16);
+                    var g = Convert.ToInt32(colorCode.Substring(2, 2), 16);
+                    var b = Convert.ToInt32(colorCode.Substring(4, 2), 16);
+                    var iw = bmp.Width / 5;
+                    var ih = bmp.Height / 3;
+                    for (int sym = 0; sym < 12; sym++)
+                    {
+                        var newBmp = GraphicsUtil.DrawBitmap(iw, ih, gr =>
+                        {
+                            gr.DrawImage(bmp, -iw * (sym % 5), -ih * (2 - sym / 5));
+                        });
+                        unsafe
+                        {
+                            var data = newBmp.LockBits(new Rectangle(0, 0, iw, ih), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                            for (int y = 0; y < ih; y++)
+                            {
+                                var p = (byte*) (data.Scan0 + y * data.Stride);
+                                for (int x = 0; x < iw; x++)
+                                {
+                                    p[4 * x] = (byte) b;
+                                    p[4 * x + 1] = (byte) g;
+                                    p[4 * x + 2] = (byte) r;
+                                    p[4 * x + 3] = (byte) (p[4 * x + 3] >> 1);
+                                }
+                            }
+                            newBmp.UnlockBits(data);
+                        }
+                        var path1 = $@"D:\c\KTANE\BlackHole\Assets\Textures\Symbol-{sym}-{cIx}-tmp.png";
+                        var path2 = $@"D:\c\KTANE\BlackHole\Assets\Textures\Symbol-{sym}-{cIx}.png";
+                        newBmp.Save(path1);
+                        pngcr(path1, path2);
+                    }
+                }
+            }
+
+            foreach (var thr in thrs)
+                thr.Join();
         }
 
         internal static void Analyze()
