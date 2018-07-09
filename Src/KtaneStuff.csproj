@@ -74,6 +74,7 @@
     <Compile Include="EliasCube.cs" />
     <Compile Include="IceCream.cs" />
     <Compile Include="LedEncryption.cs" />
+    <Compile Include="MaritimeFlags.cs" />
     <Compile Include="Modeling\AutoNormal.cs" />
     <Compile Include="Modeling\GaussianBlur.cs" />
     <Compile Include="Neutralization.cs" />
