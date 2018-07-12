@@ -31,22 +31,41 @@ namespace KtaneStuff
                 _transitions.Add((face2, face1, (direction + 6 - orientation) % 4, (4 - orientation) % 4));
         }
 
-        private static int __debug_counter;
-        public static void Experiment()
+        public static void GenerateNets()
         {
-            __debug_counter = 0;
             var results = new HashSet<string>();
             for (int face0Orientation = 0; face0Orientation < 4; face0Orientation++)
                 recurse(results, new List<(int x, int y, int face, int orientation)> { (0, 0, 0, face0Orientation) });
             File.WriteAllText(@"D:\temp\PatternCubeNets.txt", results.JoinString("\n\n"));
-            Console.WriteLine(__debug_counter);
+            Console.WriteLine(@"Nets written to D:\temp\PatternCubeNets.txt.");
             Console.WriteLine(results.Count);
+        }
 
-            var allowableTopCombinations = ",X,Y,XY,XZ,XYZ".Split(',').SelectMany(str => "ABCD".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
-            var allowableBottomCombinations = ",X,Z,XY,YZ,XYZ".Split(',').SelectMany(str => "EFGH".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
+        public static void GenerateManual()
+        {
+            var allowableGroup1Combinations = ",X,Y,XY,XZ,XYZ".Split(',').SelectMany(str => "ABCD".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
+            var allowableGroup2Combinations = ",X,Z,XY,YZ,XYZ".Split(',').SelectMany(str => "EFGH".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
 
-            Console.WriteLine($"{allowableTopCombinations.JoinString(" // ")} = {allowableTopCombinations.Length}");
-            Console.WriteLine($"{allowableBottomCombinations.JoinString(" // ")} = {allowableBottomCombinations.Length}");
+            Console.WriteLine($"Group 1: {allowableGroup1Combinations.JoinString(" // ")} = {allowableGroup1Combinations.Length}");
+            Console.WriteLine($"Group 2: {allowableGroup2Combinations.JoinString(" // ")} = {allowableGroup2Combinations.Length}");
+
+            var rnd = new Random(47);
+            List<((char symbol, int orientation) top, (char symbol, int orientation) left, (char symbol, int orientation) front)> generateCubes(char[][] combinations) =>
+                combinations.Select(combination => ((combination[0], rnd.Next(0, 4)), (combination[1], rnd.Next(0, 4)), (combination[2], rnd.Next(0, 4)))).ToList();
+
+            foreach (var (startTag, endTag, combinations) in new[] { (@"<!-- g1-s -->", @"<!-- g1-e -->", allowableGroup1Combinations), (@"<!-- g2-s -->", @"<!-- g2-e -->", allowableGroup2Combinations) })
+                Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Pattern Cube.html", startTag, endTag,
+                    generateCubes(combinations.Select(c => c.ToArray().Shuffle(rnd)).ToArray().Shuffle(rnd)).ToList().Shuffle(rnd).Select(cube => $@"
+                        <div class='cube-box highlightable'>
+                            <div class='cube-rotation'>
+                                <div class='face front symbol-{cube.front.symbol} or-{cube.front.orientation}'></div>
+                                <div class='face left symbol-{cube.left.symbol} or-{cube.left.orientation}'></div>
+                                <div class='face top symbol-{cube.top.symbol} or-{cube.top.orientation}'></div>
+                            </div>
+                        </div>").Split(6).Select(chunk => $@"
+                    <div class='cube-row'>{chunk.JoinString()}
+                    </div>").JoinString("\n"));
+
         }
 
         private static readonly int[] _xDelta = new[] { 0, 1, 0, -1 };
@@ -73,8 +92,7 @@ namespace KtaneStuff
                         var ix = sofar.IndexOf(tuple => tuple.x == sx && tuple.y == sy);
                         return ix == -1 ? "   " : $"{sofar[ix].face}{"NESW"[sofar[ix].orientation]} ";
                     }).JoinString());
-                if (!results.Add(sb.ToString()))
-                    __debug_counter++;
+                results.Add(sb.ToString());
             }
             else
             {
