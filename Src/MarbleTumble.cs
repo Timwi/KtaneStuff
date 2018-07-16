@@ -102,7 +102,7 @@ namespace KtaneStuff
                 PointD translateTexture(PointD orig) => p((orig.X - txMinX) / (txMaxX - txMinX), (orig.Y - txMinY) / (txMaxY - txMinY));
                 return allFaces.Select(f => f.Select(v => v.WithTexture(translateTexture(v.Texture.Value))).ToArray());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 makeTempPng(topFaceOutline.Select(t => t.p));
                 throw;
