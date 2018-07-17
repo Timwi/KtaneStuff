@@ -92,7 +92,7 @@ namespace KtaneStuff
                 default:
                     back = (fb.symbol, (fb.orientation + 2) % 4);
                     right = (fc.symbol, (fc.orientation + 2) % 4);
-                    bottom = (fa.symbol, (fa.orientation + 3) % 4);
+                    bottom = (fa.symbol, (fa.orientation + 1) % 4);
                     break;
             }
             var faceGivenFully = (new[] { 0, 1, 4 }.Contains(faceGivenByLine) ? new[] { 2, 3, 5 } : new[] { 0, 1, 4 }).PickRandom(puzRnd);
