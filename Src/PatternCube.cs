@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using RT.Util;
@@ -10,6 +9,90 @@ namespace KtaneStuff
 {
     static class PatternCube
     {
+        sealed class FaceSymbol : IEquatable<FaceSymbol>
+        {
+            public char Symbol;
+            public int Orientation;
+            public bool Equals(FaceSymbol other) => other != null && other.Symbol == Symbol && other.Orientation == Orientation;
+        }
+        sealed class HalfCube
+        {
+            public FaceSymbol Top, Left, Front;
+        }
+        sealed class FaceInfo : IEquatable<FaceInfo>
+        {
+            public int Face;
+            public int Orientation;
+            public bool Equals(FaceInfo other) => other != null && other.Face == Face && other.Orientation == Orientation;
+        }
+        sealed class Net : IEquatable<Net>
+        {
+            public FaceInfo[,] Faces;
+
+            public bool Equals(Net other)
+            {
+                if (other == null)
+                    return false;
+                if ((Faces == null) != (other.Faces == null))
+                    return false;
+                if (Faces == null)
+                    return true;
+                if (other.Faces.GetLength(0) != Faces.GetLength(0) || other.Faces.GetLength(1) != Faces.GetLength(1))
+                    return false;
+
+                for (int i = Faces.GetLength(0) - 1; i >= 0; i--)
+                    for (int j = other.Faces.GetLength(1) - 1; j >= 0; j--)
+                        if (!Equals(Faces[i, j], other.Faces[i, j]))
+                            return false;
+                return true;
+            }
+
+            public string ToString((char symbol, int orientation)[] faceInfos, bool[] showSymbol, bool[] showOrientation)
+            {
+                if (faceInfos == null || faceInfos.Length != 6 || showSymbol == null || showSymbol.Length != 6 || showOrientation == null || showOrientation.Length != 6)
+                    throw new ArgumentException();
+                var sb = new StringBuilder();
+                var w = Faces.GetLength(0);
+                var h = Faces.GetLength(1);
+                for (int y = 0; y < 2 * h + 1; y++)
+                {
+                    var fy = y / 2;
+                    for (int x = 0; x < 2 * w + 1; x++)
+                    {
+                        var fx = x / 2;
+                        var i = 0;
+                        if (fx > 0 && fy > 0 && Faces[fx - 1, fy - 1] != null)
+                            i |= 1;
+                        if (fx < w && fy > 0 && Faces[fx, fy - 1] != null)
+                            i |= 2;
+                        if (fx > 0 && fy < h && Faces[fx - 1, fy] != null)
+                            i |= 4;
+                        if (fx < w && fy < h && Faces[fx, fy] != null)
+                            i |= 8;
+                        // Corner
+                        if (x % 2 == 0 && y % 2 == 0)
+                            sb.Append(" ┘└┴┐┤┼┼┌┼├┼┬┼┼┼"[i]);
+                        // Horizontal line
+                        else if (y % 2 == 0)
+                            sb.Append(new string("  ──  ──────────"[i], 4));
+                        // Vertical line
+                        else if (x % 2 == 0)
+                            sb.Append("    ││││││││││││"[i]);
+                        // Face
+                        else
+                            sb.Append(Faces[fx, fy] == null ? "    " : $" {(showSymbol[Faces[fx, fy].Face] ? faceInfos[Faces[fx, fy].Face].symbol : ' ')}{"NESW "[showOrientation[Faces[fx, fy].Face] ? (faceInfos[Faces[fx, fy].Face].orientation + Faces[fx, fy].Orientation) % 4 : 4]} ");
+                    }
+                    sb.Append("\n");
+                }
+                return sb.ToString();
+            }
+        }
+
+        private static readonly HalfCube[] _group1 = /*Diag-g1-start*/@"X2,C2,B1;B0,D1,C2;C2,A3,D1;Z1,D0,X0;X2,C0,A1;A2,C3,Y2;C1,D0,Y2;Y0,D0,X3;X0,Z2,C1;X1,C1,D0;X2,C3,Y0;D3,A0,B3;D1,B2,Y0;Y2,B0,A2;X1,A2,D2;C3,B3,A1;Z1,X3,B1;Y3,C1,B0;X1,A3,B1;Z1,A2,X0;Y0,X1,A1;X1,Y2,B0;A0,Y3,D0;D0,B0,X0"/*Diag-g1-end*/
+            .Split(';').Select(hci => hci.Split(',').Select(fc => new FaceSymbol { Symbol = fc[0], Orientation = fc[1] - '0' }).ToArray()).Select(arr => new HalfCube { Top = arr[0], Left = arr[1], Front = arr[2] }).ToArray();
+        private static readonly HalfCube[] _group2 = /*Diag-g2-start*/@"X0,E3,Y1;G2,E2,Z1;G1,X1,F0;F1,Z1,H2;Z3,F1,E2;H1,G1,F1;Z2,H3,G2;H1,E3,F0;G1,Z1,F1;Y3,Z3,E1;Z3,Y3,H1;G0,Z2,Y0;G1,E2,H3;E0,X2,G1;Y1,X3,G3;X3,H1,F0;Z0,H2,E3;E0,F0,G1;H3,X2,E2;G1,H3,X0;X1,E0,F0;X0,F0,Y2;X3,H3,Y0;F1,Y2,Z0"/*Diag-g2-end*/
+            .Split(';').Select(hci => hci.Split(',').Select(fc => new FaceSymbol { Symbol = fc[0], Orientation = fc[1] - '0' }).ToArray()).Select(arr => new HalfCube { Top = arr[0], Left = arr[1], Front = arr[2] }).ToArray();
+
         private static readonly List<(int face1, int face2, int direction, int orientation)> _transitions;
         static PatternCube()
         {
@@ -103,90 +186,6 @@ namespace KtaneStuff
             Console.ReadLine();
             Console.WriteLine(net.ToString(new[] { top, front, right, back, left, bottom }, Ut.NewArray(6, _ => true), Ut.NewArray(6, _ => true)));
         }
-
-        sealed class FaceSymbol : IEquatable<FaceSymbol>
-        {
-            public char Symbol;
-            public int Orientation;
-            public bool Equals(FaceSymbol other) => other != null && other.Symbol == Symbol && other.Orientation == Orientation;
-        }
-        sealed class HalfCube
-        {
-            public FaceSymbol Top, Left, Front;
-        }
-        sealed class FaceInfo : IEquatable<FaceInfo>
-        {
-            public int Face;
-            public int Orientation;
-            public bool Equals(FaceInfo other) => other != null && other.Face == Face && other.Orientation == Orientation;
-        }
-        sealed class Net : IEquatable<Net>
-        {
-            public FaceInfo[,] Faces;
-
-            public bool Equals(Net other)
-            {
-                if (other == null)
-                    return false;
-                if ((Faces == null) != (other.Faces == null))
-                    return false;
-                if (Faces == null)
-                    return true;
-                if (other.Faces.GetLength(0) != Faces.GetLength(0) || other.Faces.GetLength(1) != Faces.GetLength(1))
-                    return false;
-
-                for (int i = Faces.GetLength(0) - 1; i >= 0; i--)
-                    for (int j = other.Faces.GetLength(1) - 1; j >= 0; j--)
-                        if (!Equals(Faces[i, j], other.Faces[i, j]))
-                            return false;
-                return true;
-            }
-
-            public string ToString((char symbol, int orientation)[] faceInfos, bool[] showSymbol, bool[] showOrientation)
-            {
-                if (faceInfos == null || faceInfos.Length != 6 || showSymbol == null || showSymbol.Length != 6 || showOrientation == null || showOrientation.Length != 6)
-                    throw new ArgumentException();
-                var sb = new StringBuilder();
-                var w = Faces.GetLength(0);
-                var h = Faces.GetLength(1);
-                for (int y = 0; y < 2 * h + 1; y++)
-                {
-                    var fy = y / 2;
-                    for (int x = 0; x < 2 * w + 1; x++)
-                    {
-                        var fx = x / 2;
-                        var i = 0;
-                        if (fx > 0 && fy > 0 && Faces[fx - 1, fy - 1] != null)
-                            i |= 1;
-                        if (fx < w && fy > 0 && Faces[fx, fy - 1] != null)
-                            i |= 2;
-                        if (fx > 0 && fy < h && Faces[fx - 1, fy] != null)
-                            i |= 4;
-                        if (fx < w && fy < h && Faces[fx, fy] != null)
-                            i |= 8;
-                        // Corner
-                        if (x % 2 == 0 && y % 2 == 0)
-                            sb.Append(" ┘└┴┐┤┼┼┌┼├┼┬┼┼┼"[i]);
-                        // Horizontal line
-                        else if (y % 2 == 0)
-                            sb.Append(new string("  ──  ──────────"[i], 4));
-                        // Vertical line
-                        else if (x % 2 == 0)
-                            sb.Append("    ││││││││││││"[i]);
-                        // Face
-                        else
-                            sb.Append(Faces[fx, fy] == null ? "    " : $" {(showSymbol[Faces[fx, fy].Face] ? faceInfos[Faces[fx, fy].Face].symbol : ' ')}{"NESW "[showOrientation[Faces[fx, fy].Face] ? (faceInfos[Faces[fx, fy].Face].orientation + Faces[fx, fy].Orientation) % 4 : 4]} ");
-                    }
-                    sb.Append("\n");
-                }
-                return sb.ToString();
-            }
-        }
-
-        private static readonly HalfCube[] _group1 = /*Diag-g1-start*/@"X2,C2,B1;B0,D1,C2;C2,A3,D1;Z1,D0,X0;X2,C0,A1;A2,C3,Y2;C1,D0,Y2;Y0,D0,X3;X0,Z2,C1;X1,C1,D0;X2,C3,Y0;D3,A0,B3;D1,B2,Y0;Y2,B0,A2;X1,A2,D2;C3,B3,A1;Z1,X3,B1;Y3,C1,B0;X1,A3,B1;Z1,A2,X0;Y0,X1,A1;X1,Y2,B0;A0,Y3,D0;D0,B0,X0"/*Diag-g1-end*/
-            .Split(';').Select(hci => hci.Split(',').Select(fc => new FaceSymbol { Symbol = fc[0], Orientation = fc[1] - '0' }).ToArray()).Select(arr => new HalfCube { Top = arr[0], Left = arr[1], Front = arr[2] }).ToArray();
-        private static readonly HalfCube[] _group2 = /*Diag-g2-start*/@"X0,E3,Y1;G2,E2,Z1;G1,X1,F0;F1,Z1,H2;Z3,F1,E2;H1,G1,F1;Z2,H3,G2;H1,E3,F0;G1,Z1,F1;Y3,Z3,E1;Z3,Y3,H1;G0,Z2,Y0;G1,E2,H3;E0,X2,G1;Y1,X3,G3;X3,H1,F0;Z0,H2,E3;E0,F0,G1;H3,X2,E2;G1,H3,X0;X1,E0,F0;X0,F0,Y2;X3,H3,Y0;F1,Y2,Z0"/*Diag-g2-end*/
-            .Split(';').Select(hci => hci.Split(',').Select(fc => new FaceSymbol { Symbol = fc[0], Orientation = fc[1] - '0' }).ToArray()).Select(arr => new HalfCube { Top = arr[0], Left = arr[1], Front = arr[2] }).ToArray();
 
         private static readonly int[] _xDelta = new[] { 0, 1, 0, -1 };
         private static readonly int[] _yDelta = new[] { -1, 0, 1, 0 };
