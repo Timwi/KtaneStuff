@@ -133,7 +133,7 @@ namespace KtaneStuff
                 // For the “lines” (cheat sheet only) below
                 (labels == null || !highlightCorridors ? null : $"<defs><clipPath id='mainmaze'><rect x='0' y='0' width='{25 * xSize + 5}' height='{25 * ySize + 5}' /></clipPath></defs>") +
                 // Polygons
-                $"<path d='{boolsToPaths(Ut.NewArray(2 * xSize + 1, 2 * ySize + 1, isOn)).Select(poly => poly.Select((p, ix) => (ix == 0 ? "M" : ix == 1 ? "L" : "") + getCoord(p)).JoinString(" ") + "z").JoinString(" ")}' />" +
+                $"<path d='{BoolsToPaths(Ut.NewArray(2 * xSize + 1, 2 * ySize + 1, isOn)).Select(poly => poly.Select((p, ix) => (ix == 0 ? "M" : ix == 1 ? "L" : "") + getCoord(p)).JoinString(" ") + "z").JoinString(" ")}' />" +
                 // “Lines” (cheat sheet only)
                 (labels == null || !highlightCorridors ? null : corridorsSvg()) +
                 // Column headers
@@ -151,15 +151,21 @@ namespace KtaneStuff
 
         private enum Direction { Up, Down, Left, Right }
 
-        /// <summary>Given a <see cref="MoveFinder"/> or <see cref="PushFinder"/>, generates the "outline" of the reachable area.
-        /// If there are several disjoint regions, several separate outlines are generated.</summary>
-        /// <param name="input">The input <see cref="MoveFinder"/> or <see cref="PushFinder"/> to generate the outline from.</param>
-        /// <returns>An array of paths, where each path is an array of points. The co-ordinates of the points are the indexes in the input array.</returns>
+        /// <summary>
+        ///     Generates the "outline" of an area given by a two-dimensional boolean array. If there are several disjoint
+        ///     regions, several separate outlines are generated.</summary>
+        /// <param name="input">
+        ///     The input array to generate the outline from.</param>
+        /// <returns>
+        ///     An array of paths, where each path is an array of points. The co-ordinates of the points are the indexes in
+        ///     the input array.</returns>
         /// <example>
-        /// <para>An input array full of booleans set to false generates an empty output array.</para>
-        /// <para>An input array full of booleans set to true generates a single output path which describes the complete rectangle.</para>
-        /// </example>
-        private static Point[][] boolsToPaths(bool[][] input)
+        ///     <para>
+        ///         An input array full of booleans set to false generates an empty output array.</para>
+        ///     <para>
+        ///         An input array full of booleans set to true generates a single output path which describes the complete
+        ///         rectangle.</para></example>
+        public static Point[][] BoolsToPaths(bool[][] input)
         {
             int width = input.Length;
             int height = input[0].Length;
