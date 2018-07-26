@@ -221,15 +221,15 @@ namespace KtaneStuff.Modeling
             }
         }
 
-        public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, Pt[][] pts)
+        public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, Pt[][] pts, bool flatNormals = false)
         {
             return CreateMesh(closedX, closedY, pts
                 .Select((arr, x, xFirst, xLast) => arr
                     .Select((p, y, yFirst, yLast) => pt(p.X, p.Y, p.Z,
-                        xLast && !closedX ? Normal.Mine : Normal.Average,
-                        xFirst && !closedX ? Normal.Mine : Normal.Average,
-                        yLast && !closedY ? Normal.Mine : Normal.Average,
-                        yFirst && !closedY ? Normal.Mine : Normal.Average).WithTexture((arr.Length - 1 - y) / (double) (arr.Length - 1), x / (double) (pts.Length - 1)))
+                        (xLast && !closedX) || flatNormals ? Normal.Mine : Normal.Average,
+                        (xFirst && !closedX) || flatNormals ? Normal.Mine : Normal.Average,
+                        (yLast && !closedY) || flatNormals ? Normal.Mine : Normal.Average,
+                        (yFirst && !closedY) || flatNormals ? Normal.Mine : Normal.Average).WithTexture((arr.Length - 1 - y) / (double) (arr.Length - 1), x / (double) (pts.Length - 1)))
                     .ToArray())
                 .ToArray());
         }

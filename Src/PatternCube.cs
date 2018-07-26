@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using KtaneStuff.Modeling;
 using RT.Util;
+using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
 
@@ -31,6 +33,38 @@ namespace KtaneStuff
             public static HalfCube Random(char[] combination, Random rnd) =>
                 new HalfCube(new FaceSymbol(combination[0], rnd.Next(0, 4)), new FaceSymbol(combination[1], rnd.Next(0, 4)), new FaceSymbol(combination[2], rnd.Next(0, 4)));
         }
+
+        public static void GeneratePngs()
+        {
+            var tasks = new List<(string from, string to)>();
+            //CommandRunner.Run(@"D:\Tools\pngcrf.bat", @"Symbols.png").WithWorkingDirectory(@"D:\c\KTANE\PatternCube\Data").Go();
+            using (var bmp = new Bitmap(@"D:\c\KTANE\PatternCube\Data\Symbols.png"))
+            {
+                var w = bmp.Width / 4;
+                var h = bmp.Height / 3;
+                for (int y = 0; y < 3; y++)
+                {
+                    for (int x = 0; x < (y == 2 ? 3 : 4); x++)
+                    {
+                        var ch = "ABCDEFGHXYZ"[y * 4 + x];
+                        var path1 = $@"D:\c\KTANE\PatternCube\Assets\Textures\Symbol{ch}-tmp.png";
+                        var path2 = $@"D:\c\KTANE\PatternCube\Assets\Textures\Symbol{ch}.png";
+                        GraphicsUtil.DrawBitmap(w, h, g =>
+                        {
+                            g.Clear(Color.FromArgb(1, 255, 255, 255));
+                            g.DrawImage(bmp, -x * w, -y * h);
+                        }).Save(path1);
+                        tasks.Add((path1, path2));
+                    }
+                }
+            }
+            tasks.ParallelForEach(tsk =>
+            {
+                CommandRunner.Run(@"D:\Tools\pngcr.bat", tsk.from, tsk.to).Go();
+                File.Delete(tsk.from);
+            });
+        }
+
         sealed class FaceInfo : IEquatable<FaceInfo>
         {
             public int Face { get; private set; }
@@ -97,7 +131,7 @@ namespace KtaneStuff
             {
                 get
                 {
-                    return $"new Net(new FaceInfo[{Faces.GetLength(0)}, {Faces.GetLength(1)}] {{ {Enumerable.Range(0, Faces.GetLength(0)).Select(x => $@"{{ {Enumerable.Range(0, Faces.GetLength(1)).Select(y => Faces[x, y] == null ? "null" : $"new FaceInfo({Faces[x, y].Face}, {Faces[x, y].Orientation})").JoinString(", ")} }}").JoinString(", ")} }})";
+                    return $"{Faces.GetLength(0)}|{Faces.GetLength(1)}|{Enumerable.Range(0, Faces.GetLength(1)).Select(y => Enumerable.Range(0, Faces.GetLength(0)).Select(x => Faces[x, y] == null ? "-" : $"{Faces[x, y].Face},{Faces[x, y].Orientation}").JoinString("/")).JoinString(";")}";
                 }
             }
 
@@ -126,7 +160,7 @@ namespace KtaneStuff
                 _transitions.Add((face2, face1, (direction + 6 - orientation) % 4, (4 - orientation) % 4));
         }
 
-        public static void GenerateManualAndCode()
+        public static void GenerateManualCodeAndModels()
         {
             // Generate all the nets
             var nets = new HashSet<Net>();
@@ -156,30 +190,29 @@ namespace KtaneStuff
                             $"<div class='face top symbol-{cube.Top.Symbol} or-{cube.Top.Orientation}'></div>" +
                         $"</div></div>").Split(6).Select(chunk => $@"<div class='cube-row'>{chunk.JoinString()}</div>").JoinString("\n"));
 
-            //// Generate code file
-            //var path = @"D:\c\KTANE\PatternCube\Assets\Data.cs";
-            //Utils.ReplaceInFile(path, "/*Diag-g1-start*/", "/*Diag-g1-end*/", $@"@""{group1Arrangements.Select(halfCube => new[] { halfCube.Top, halfCube.Left, halfCube.Front }.Select(face => face.Symbol + "" + face.Orientation).JoinString(",")).JoinString(";")}""");
-            //Utils.ReplaceInFile(path, "/*Diag-g2-start*/", "/*Diag-g2-end*/", $@"@""{group2Arrangements.Select(halfCube => new[] { halfCube.Top, halfCube.Left, halfCube.Front }.Select(face => face.Symbol + "" + face.Orientation).JoinString(",")).JoinString(";")}""");
-            //Utils.ReplaceInFile(path, "// Nets-start", "// Nets-end", nets.Select(nt => nt.Code).JoinString(",\r\n") + "\r\n");
+            // Generate code file
+            var path = @"D:\c\KTANE\PatternCube\Assets\Data.cs";
+            Utils.ReplaceInFile(path, "/*Diag-g1-start*/", "/*Diag-g1-end*/", $@"@""{group1Arrangements.Select(halfCube => new[] { halfCube.Top, halfCube.Left, halfCube.Front }.Select(face => face.Symbol + "" + face.Orientation).JoinString(",")).JoinString(";")}""");
+            Utils.ReplaceInFile(path, "/*Diag-g2-start*/", "/*Diag-g2-end*/", $@"@""{group2Arrangements.Select(halfCube => new[] { halfCube.Top, halfCube.Left, halfCube.Front }.Select(face => face.Symbol + "" + face.Orientation).JoinString(",")).JoinString(";")}""");
+            Utils.ReplaceInFile(path, "/*Nets-start*/", "/*Nets-end*/", $@"@""{nets.Select(nt => nt.Code).JoinString("&")}""");
 
-            // Generate models
-            // Module backing
+            // Generate module backing models for every unique shape of net
             // (outline vertices are sorted clockwise)
             var outline = @"-0.854439,0.15,-0.256271;-0.854439,0.15,-0.854439;-0.256271,0.15,-0.854439;0.256273,0.15,-0.854439;0.364376,0.15,-0.854439;0.444206,0.15,-0.774025;0.443619,0.15,-0.693596;0.524693,0.15,-0.545002;0.672195,0.15,-0.46653;0.784569,0.15,-0.472279;0.861069,0.15,-0.396061;0.854439,0.15,-0.256271;0.854439,0.15,0.256271;0.854439,0.15,0.854439;0.256273,0.15,0.854439;-0.256273,0.15,0.854439;-0.854439,0.15,0.854439;-0.854439,0.15,0.256271"
                 .Split(';').Select(str => str.Split(',').Select(v => double.Parse(v)).ToArray()).Select((double[] arr) => pt(arr[0], arr[1], arr[2])).ToArray();
 
+            const double x1 = -.8;
+            const double x2 = .8;
+            const double y1 = -.8;
+            const double y2 = .8;
+            const double w = (x2 - x1) / 5.5;
+            const double h = (y2 - y1) / 5.5;
             var already = new HashSet<string>();
             foreach (var net in nets)
             {
                 if (!already.Add(net.ID))
                     continue;
 
-                var x1 = -.8;
-                var x2 = .8;
-                var y1 = -.8;
-                var y2 = .8;
-                var w = (x2 - x1) / 5.5;
-                var h = (y2 - y1) / 5.5;
                 var polygons = new List<PointD[]> { outline.Select(pt => p(pt.X, pt.Z)).ToArray() };
                 var holeSpacing = (y2 - y1 - 5 * h) / 4;
                 for (int i = 0; i < 5; i++)
@@ -194,7 +227,15 @@ namespace KtaneStuff
                 File.WriteAllText($@"D:\c\KTANE\PatternCube\Assets\Models\ModuleFront_{net.ID}.obj", GenerateObjFile(tri, $@"ModuleFront_{net.ID}", AutoNormal.Flat));
             }
 
-            //GeneratePuzzle(nets, group1Arrangements, group2Arrangements);
+            File.WriteAllText(@"D:\c\KTANE\PatternCube\Assets\Models\Frame.obj", GenerateObjFile(frame(w), "Frame"));
+        }
+
+        private static IEnumerable<VertexInfo[]> frame(double w)
+        {
+            var xs = new[] { -w / 2, w / 2, w / 2, -w / 2 };
+            var ys = new[] { -w / 2, -w / 2, w / 2, w / 2 };
+            var coords = Enumerable.Range(0, 4).Reverse().Select(ix => (xs[ix], ys[ix])).Select(m => new(double d, double h)[] { (1, .15), (.95, .155), (.9, .155), (.85, .14) }.Select(tup => pt(m.Item1 * tup.d, tup.h, m.Item2 * tup.d)).ToArray()).ToArray();
+            return CreateMesh(true, false, coords, flatNormals: true);
         }
 
         private static void GeneratePuzzle(HashSet<Net> nets, List<HalfCube> group1Arrangements, List<HalfCube> group2Arrangements)
@@ -246,8 +287,11 @@ namespace KtaneStuff
                 var minY = sofar.Min(k => k.y);
                 var maxY = sofar.Max(k => k.y);
 
-                // Discard nets that are in “landscape mode”
-                if (maxX - minX > maxY - minY)
+                //// Discard nets that are in “landscape mode”
+                //if (maxX - minX > maxY - minY)
+                //    return;
+                // Discard nets that are 5×2
+                if (maxX - minX == 4)
                     return;
 
                 // Discard nets that have four faces in a 2×2 square
