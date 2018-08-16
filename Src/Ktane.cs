@@ -12,7 +12,7 @@ namespace KtaneStuff
     {
         static void KtaneCountWords()
         {
-            var entities = "ensp =\u2002,nbsp=\u00a0,ge=≥,gt=>,lt=<,le=≤,amp=&,shy=\u00ad,mdash=—,trade=™,ohm=Ω,ldquo=“,rdquo=”,horbar=―,rarr=→,times=×"
+            var entities = "ensp=\u2002,emsp=\u2003,nbsp=\u00a0,ge=≥,gt=>,lt=<,le=≤,amp=&,shy=\u00ad,mdash=—,trade=™,ohm=Ω,ldquo=“,rdquo=”,horbar=―,rarr=→,uarr=↑,darr=↓,larr=←,times=×"
                 .Split(',')
                 .Select(p => p.Split('='))
                 .ToDictionary(p => $"&{p[0]};", p => p[1]);
@@ -29,8 +29,10 @@ namespace KtaneStuff
                     .Select(text => text.Replace("Keep Talking and Nobody Explodes Mod", ""))
                     .Select(text => text.Replace("Keep Talking and Nobody Explodes v. 1", ""))
                     .SelectMany(text => Regex.Matches(text, @"[-'’\w]+", RegexOptions.Singleline).Cast<Match>())
-                    .Select(m => m.Value.ToLowerInvariant())
-                    .Where(word => word.Length > 2)
+                    .Where(m => m.Value.All(ch => ch >= 'A' && ch <= 'Z'))
+                    .Select(m => m.Value.ToUpperInvariant())
+                    //.Where(word => word.Length >= 2)
+                    .Where(word => Indicator.WellKnown.Concat(new[] { "NLL" }).Contains(word.ToUpperInvariant()))
                     .GroupBy(word => word, StringComparer.OrdinalIgnoreCase)
                     .ToDictionary(gr => gr.Key, gr => gr.Count(), StringComparer.OrdinalIgnoreCase);
 
@@ -41,6 +43,7 @@ namespace KtaneStuff
                 tt.SetCell(0, row, $"{row + 1}.".ToString().Color(ConsoleColor.Blue), alignment: HorizontalTextAlignment.Right);
                 tt.SetCell(1, row, kvp.Value.ToString().Color(ConsoleColor.White), alignment: HorizontalTextAlignment.Right);
                 tt.SetCell(2, row, kvp.Key.Color(ConsoleColor.Green));
+                tt.SetCell(3, row, new string('█', kvp.Value));
                 row++;
             }
             tt.WriteToConsole();

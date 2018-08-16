@@ -20,7 +20,7 @@ namespace KtaneStuff
 
         private Edgework(Widget[] widgets, string serialNumber) { Widgets = widgets; SerialNumber = serialNumber; }
 
-        public static Edgework Generate(int minWidgets = 5, int maxWidgets = 5, bool allowCustomIndicators = false, Random rnd = null)
+        public static Edgework Generate(int minWidgets = 5, int? maxWidgets = null, bool allowCustomIndicators = false, Random rnd = null)
         {
             int next(int mx) => rnd == null ? Rnd.Next(0, mx) : rnd.Next(0, mx);
 
@@ -45,7 +45,7 @@ namespace KtaneStuff
             return new Edgework(
 
                 // Widgets
-                Enumerable.Range(0, next(maxWidgets - minWidgets + 1) + minWidgets)
+                Enumerable.Range(0, next((maxWidgets ?? minWidgets) - minWidgets + 1) + minWidgets)
                     .Select(i => (WidgetType) next(NumWidgetTypes))
                     .Select(wt => new Widget(
                         batteryType: wt == WidgetType.BatteryHolder ? (BatteryType?) next(NumBatteryTypes) : null,
