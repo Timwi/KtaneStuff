@@ -30,7 +30,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            Console.WriteLine(Edgework.Generate(5, 6));
+            DragonEnergy.MakeSymbols();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

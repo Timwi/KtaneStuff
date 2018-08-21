@@ -54,6 +54,7 @@
     <Compile Include="Astrology.cs" />
     <Compile Include="BlackHole.cs" />
     <Compile Include="Curriculum.cs" />
+    <Compile Include="DragonEnergy.cs" />
     <Compile Include="EitherOr.cs" />
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="GridMatching.cs" />
