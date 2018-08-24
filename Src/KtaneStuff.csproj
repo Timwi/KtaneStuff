@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3DMazeManual.cs" />
+    <Compile Include="3DMaze.cs" />
     <Compile Include="Astrology.cs" />
     <Compile Include="BlackHole.cs" />
     <Compile Include="Curriculum.cs" />

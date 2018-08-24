@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
-    static partial class Ktane
+    static partial class ThreeDMaze
     {
         public static void Do3DMazeManual(bool cheatSheet)
         {

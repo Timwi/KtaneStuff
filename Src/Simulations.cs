@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using RT.Util;
 using RT.Util.Collections;
@@ -8,11 +7,9 @@ using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 
-using static KtaneStuff.Edgework;
-
 namespace KtaneStuff
 {
-    static partial class Ktane
+    static class Simulations
     {
         sealed class Simulatable
         {
@@ -38,7 +35,7 @@ namespace KtaneStuff
             }
         }
 
-        public static void Simulations()
+        public static void RunSimulations()
         {
             const int numIterations = 100000;
 

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using RT.Util;
 using RT.Util.ExtensionMethods;
+using RT.Util.Json;
 using RT.Util.Text;
 
 namespace KtaneStuff
 {
-    partial class Program
+    static class Ktane
     {
-        static void KtaneCountWords()
+        static void CountWords()
         {
             var entities = "ensp=\u2002,emsp=\u2003,nbsp=\u00a0,ge=≥,gt=>,lt=<,le=≤,amp=&,shy=\u00ad,mdash=—,trade=™,ohm=Ω,ldquo=“,rdquo=”,horbar=―,rarr=→,uarr=↑,darr=↓,larr=←,times=×"
                 .Split(',')
@@ -47,6 +50,61 @@ namespace KtaneStuff
                 row++;
             }
             tt.WriteToConsole();
+        }
+
+        public static JsonValue GetLiveJson() => new HClient().Get(@"https://ktane.timwi.de/json/raw").DataJson;
+
+        private static void AllComponentSvgsExperimentForTabletop(IEnumerable<string> moduleNames)
+        {
+            const int w = 348;
+            var chunkIx = 0;
+            foreach (var chunk in moduleNames.Where(m =>
+            {
+                var ex = File.Exists(Path.Combine(@"D:\c\KTANE\Public\HTML\img\Component", $"{m}.svg"));
+                if (!ex)
+                    Console.WriteLine("Skipping: " + m);
+                return ex;
+            }).Split(99))
+            {
+                chunkIx++;
+                var svgs = chunk.Select(m => new { Svg = XDocument.Parse(File.ReadAllText($@"D:\c\KTANE\Public\HTML\img\Component\{m}.svg")).Root, Name = m }).ToArray();
+                var defs = new List<XElement>();
+                foreach (var svg in svgs)
+                    foreach (var def in svg.Svg.ElementsI("defs"))
+                        foreach (var elem in def.Elements())
+                        {
+                            var oldId = elem.AttributeI("id").Value;
+                            var oldVal = $"url(#{oldId})";
+                            var newId = "d" + defs.Count;
+                            var newVal = $"url(#{newId})";
+                            foreach (var elem2 in svg.Svg.Descendants())
+                                foreach (var attr2 in elem2.Attributes())
+                                    attr2.Value = attr2.Value.Replace(oldVal, newVal);
+                            elem.AttributeI("id").Value = newId;
+                            defs.Add(elem);
+                        }
+                XName n(string name) => XName.Get(name, "http://www.w3.org/2000/svg");
+                File.WriteAllText($@"D:\Daten\Upload\Tabletop Simulator\KTANE\Modules-{chunkIx}.svg",
+                    new XElement(n("svg"), new XAttribute("viewBox", $"0 0 {w * 10} {w * 10}"),
+                        new XElement(n("defs"), defs),
+                        svgs.Select((svg, ix) =>
+                        {
+                            var attrs = svg.Svg.Attributes().Where(a => !"xmlns,viewBox".Contains(a.Name.LocalName)).ToList();
+                            var tr = attrs.FirstOrDefault(a => a.Name.LocalName == "transform");
+                            var trV = $"translate({w * (ix % 10)}, {w * (ix / 10)})";
+                            if (tr == null)
+                            {
+                                tr = new XAttribute("transform", trV);
+                                attrs.Add(tr);
+                            }
+                            else
+                                tr.Value = trV + " " + tr.Value;
+                            attrs.Insert(0, new XAttribute("data-name", svg.Name));
+                            return new XElement(n("g"), attrs, svg.Svg.Elements().Where(e => e.Name.LocalName != "defs"));
+                        })
+                    )
+                        .ToString());
+            }
         }
     }
 
