@@ -1,0 +1,43 @@
+<textarea id='xyz_results'></textarea>
+
+if (!document.getElementById('xyz_results')) {
+    var ta = document.createElement('textarea');
+    ta.id = 'xyz_results';
+    var par = document.getElementsByClassName('page-header__title')[0];
+    par.parentNode.insertBefore(ta, par);
+}
+document.getElementById('xyz_results').value = Array.from(document.getElementsByClassName('listofponies')[0].getElementsByTagName('td')).filter(x => x.getAttribute('id') && x.getElementsByTagName('b').length).map(x => x.getAttribute('id').replace(/_/g, ' ') + ' = ' + x.parentNode.children[3].style.backgroundColor).join('\n')
+
+
+
+            var ponyColors = ClassifyJson.DeserializeFile<Dictionary<string, List<string>>>(_poniesJson);
+
+            var count = 0;
+            foreach (var kvp in ponyColors)
+                if (File.Exists(Path.Combine(_poniesDir, $"{kvp.Key}.png")))
+                {
+                    Console.WriteLine($"I have {kvp.Key}.");
+                    count++;
+                }
+            Console.WriteLine(count);
+
+
+
+// Read color codes in rgb() format from ponycolors.txt
+
+var ponyColors = ClassifyJson.DeserializeFile<Dictionary<string, List<string>>>(_poniesJson);
+
+var s = new StringBuilder();
+foreach (var match in File.ReadAllLines(@"D:\temp\ponycolors.txt")
+    .Select(l => Regex.Match(l, @"^(.*) = rgb\((\d+), (\d+), (\d+)\)$"))
+    .Where(m => m.Success)
+    .Select(m => new { Pony = m.Groups[1].Value, Color = $"{int.Parse(m.Groups[2].Value).ToString("X2")}{int.Parse(m.Groups[3].Value).ToString("X2")}{int.Parse(m.Groups[4].Value).ToString("X2")}" }))
+{
+    if (!ponyColors.ContainsKey(match.Pony))
+        ponyColors[match.Pony] = new List<string> { match.Color };
+    else if (ponyColors[match.Pony] != null && !ponyColors[match.Pony].Contains(match.Color))
+        ponyColors[match.Pony].Add(match.Color);
+}
+File.WriteAllText(@"D:\temp\temp.html", $"<table><tr><th>Pony</th><th>Old</th><th>New</th></tr>{s}</table>");
+
+ClassifyJson.SerializeToFile(ponyColors, @"D:\c\KTANE\KtaneStuff\DataFiles\Friendship\Ponies.json");

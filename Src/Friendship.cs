@@ -4,8 +4,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using CsQuery;
 using KtaneStuff.Modeling;
 using RT.Util;
+using RT.Util.Consoles;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
@@ -43,7 +46,7 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSubmitBtn.obj", GenerateObjFile(SubmitBtn(), "SubmitBtn"));
             File.WriteAllText(@"D:\c\KTANE\Friendship\Assets\Models\ModelSelectorBtnHighlight.obj", GenerateObjFile(SelectorBtnHighlight(), "SelectorBtnHighlight"));
         }
-        
+
         public static void SimulateFriendship()
         {
             var ponyNames = new[] {
@@ -148,35 +151,121 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
             Console.WriteLine($"Probability that the special rule applies to the row symbols: {(double) rowHits / attempts * 100:0.#}%");
         }
 
-        private static string _poniesJson = @"D:\c\KTANE\KtaneStuff\DataFiles\Friendship\Ponies.json";
+        const string _poniesJson = @"D:\c\KTANE\KtaneStuff\DataFiles\Friendship\Ponies.json";
+        const string _poniesDir = @"D:\c\KTANE\KtaneStuff\DataFiles\Friendship";
 
         public static void RenderFriendshipSymbols()
         {
-            var ponies = ClassifyJson.DeserializeFile<PonyInfo[]>(_poniesJson);
+            var ponyColors = ClassifyJson.DeserializeFile<Dictionary<string, string>>(_poniesJson);
 
-            Enumerable.Range(0, ponies.Length).ParallelForEach(4, i =>
+            var filesButNoPonyColor = new DirectoryInfo(_poniesDir).EnumerateFiles("*.png").Where(f => !ponyColors.ContainsKey(Path.GetFileNameWithoutExtension(f.Name))).ToArray();
+            if (filesButNoPonyColor.Length > 0)
             {
-                var pony = ponies[i];
-                var newFilename = $"Friendship Symbol {i:00}.png";
-                var color = Color.FromArgb(Convert.ToInt32(pony.Color.Substring(0, 2), 16), Convert.ToInt32(pony.Color.Substring(2, 2), 16), Convert.ToInt32(pony.Color.Substring(4, 2), 16));
+                Console.WriteLine("Files but no pony color:");
+                foreach (var file in filesButNoPonyColor)
+                    Console.WriteLine(Path.GetFileNameWithoutExtension(file.Name));
+                Console.WriteLine();
+            }
+
+            //ClassifyJson.SerializeToFile(ponyColors, _poniesJson);
+
+            ponyColors.Where(kvp => File.Exists(Path.Combine(_poniesDir, "cr", $"{kvp.Key}.png"))).Where(kvp => kvp.Key == "Twist").ParallelForEach(4, kvp =>
+            {
+                var pony = kvp.Key;
+                var newFilename = $"{kvp.Key}.png";
+                lock (ponyColors)
+                    Console.WriteLine("Starting " + newFilename);
+
+                var color = Color.FromArgb(Convert.ToInt32(kvp.Value.Substring(0, 2), 16), Convert.ToInt32(kvp.Value.Substring(2, 2), 16), Convert.ToInt32(kvp.Value.Substring(4, 2), 16));
                 var newCutieMark = GraphicsUtil.MakeSemitransparentImage(200, 200, g => { g.SetHighQuality(); }, g =>
                 {
                     g.Clear(color);
-                    var bmp = new Bitmap(pony.Filename);
-                    g.DrawImage(bmp, GraphicsUtil.FitIntoMaintainAspectRatio(bmp.Size, new Rectangle(20, 20, 160, 160)));
+                    using (var bmp = new Bitmap(Path.Combine(_poniesDir, $"{pony}.png")))
+                    {
+                        var width = bmp.Width;
+                        var height = bmp.Height;
+                        var pts = new List<PointD>();
+                        unsafe
+                        {
+                            var bits = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                            for (int y = 0; y < height; y++)
+                            {
+                                byte* readFrom = (byte*) bits.Scan0 + y * bits.Stride;
+                                for (int x = 0; x < width; x++)
+                                    if (readFrom[4 * x + 3] != 0)
+                                        pts.Add(new PointD(x, y));
+                            }
+                            bmp.UnlockBits(bits);
+                        }
+                        var circum = CircleD.GetCircumscribedCircle(pts);
+                        using (var tr = new GraphicsTransformer(g).Translate(-circum.Center.X, -circum.Center.Y).Scale(90 / circum.Radius, 90 / circum.Radius).Translate(100, 100))
+                        {
+                            g.DrawImage(bmp, 0, 0);
+                            //g.DrawEllipse(Pens.Black, circum.ToRectangle().ToRectangleF());
+                        }
+                    }
                 }, g =>
                 {
                     g.Clear(Color.Transparent);
                     g.FillEllipse(Brushes.Black, 1, 1, 197, 197);
                 });
+
+                //*
                 var tmp = $@"D:\c\KTANE\Friendship\Manual\img\Friendship\tmp_{newFilename}";
                 var final = $@"D:\c\KTANE\Friendship\Manual\img\Friendship\{newFilename}";
                 newCutieMark.Save(tmp, ImageFormat.Png);
                 CommandRunner.Run("pngcr", tmp, final).OutputNothing().Go();
                 File.Delete(tmp);
-                lock (ponies)
+                /*/
+                var final = $@"D:\c\KTANE\Friendship\Manual\img\Friendship\{newFilename}";
+                newCutieMark.Save(final, ImageFormat.Png);
+                /**/
+                lock (ponyColors)
                     Console.WriteLine("Saved " + newFilename);
             });
+        }
+
+        private static void RetrievePonyCoatColorsFromMlpWikia()
+        {
+            var ponyColors = ClassifyJson.DeserializeFile<Dictionary<string, string>>(_poniesJson);
+            ponyColors.Where(kvp => kvp.Value == null).ParallelForEach(kvp =>
+            {
+                var pony = kvp.Key;
+                try
+                {
+                    var client = new HClient();
+                    var response = client.Get(@"http://mlp.wikia.com/wiki/" + pony.Replace(' ', '_'));
+                    var str = response.DataString;
+                    var doc = CQ.CreateDocument(str);
+                    var infoboxes = doc["table.infobox"];
+                    string color = null;
+                    for (int i = 0; i < infoboxes.Length - 1; i++)
+                    {
+                        if (infoboxes[i].Cq()["th[colspan='2']"].FirstOrDefault()?.InnerText.Contains(pony) != true)
+                            continue;
+                        var colorTr = infoboxes[i + 1].Cq().Find("tr").Where(tr => tr.Cq().Find("td>b").Any(td => td.InnerText == "Coat")).ToArray();
+                        if (colorTr.Length == 0 || colorTr[0].Cq().Find("td").Length != 2)
+                            continue;
+                        var colorSpan = colorTr[0].Cq().Find("td>span");
+                        var styleAttr = colorSpan[0]["style"];
+                        var m = Regex.Match(styleAttr, @"background-color\s*:\s*#([A-F0-9]{3,6})");
+                        if (m.Success)
+                            color = m.Groups[1].Value;
+                    }
+                    lock (ponyColors)
+                    {
+                        ConsoleUtil.WriteLine($"{pony.Color(ConsoleColor.Cyan)} = {(color == null ? "<nope>".Color(ConsoleColor.Red) : color.Color(ConsoleColor.Green))}", null);
+                        //if (color != null)
+                        ponyColors[pony] = color ?? "?";
+                    }
+                }
+                catch (Exception e)
+                {
+                    lock (ponyColors)
+                        ConsoleUtil.WriteLine($"{pony.Color(ConsoleColor.Cyan)} = {e.Message.Color(ConsoleColor.Red)} ({e.GetType().FullName.Color(ConsoleColor.DarkRed)})", null);
+                }
+            });
+            ClassifyJson.SerializeToFile(ponyColors, _poniesJson);
         }
 
         private static MeshVertexInfo[] bpa(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) { return new[] { pt(x, y, z, befX, afX, befY, afY) }; }

@@ -1,0 +1,1208 @@
+﻿{
+  "Ace Point": [
+    "F8F4CD",
+    "F5F1CC"
+  ],
+  "Adagio Dazzle": [ "FEEA5E" ],
+  "All Aboard": [ "CACFE9" ],
+  "Aloe Blossom": [ "FDB4DA" ],
+  "Amethyst Maresbury": [
+    "E0CFFC",
+    "D0C9E8"
+  ],
+  "Amethyst Star": [
+    "F5A4F3"
+  ],
+  "Angel Wings": [
+    "EEE1DA",
+    "ECDFD5"
+  ],
+  "Apple Bloom": [ "F8FCA1" ],
+  "Apple Brown Betty": [
+    "D69D46",
+    "CF9A4A"
+  ],
+  "Apple Bumpkin": [
+    "F8EFB4"
+  ],
+  "Apple Cider": [
+    "9DCFF7",
+    "A8DBFF"
+  ],
+  "Apple Cinnamon": [
+    "BC4141"
+  ],
+  "Apple Cobbler": [
+    "E4AB54"
+  ],
+  "Apple Dumpling": [
+    "CEF6B2",
+    "D5F7BB"
+  ],
+  "Apple Flora": [ "E2E197" ],
+  "Apple Fritter": [ "EDEF81" ],
+  "Apple Honey": [
+    "AFDFB8"
+  ],
+  "Apple Leaves": [
+    "F1B750"
+  ],
+  "Apple Munchies": [
+    "A2EC74",
+    "A4DC7A"
+  ],
+  "Apple Rose": [ "F5D3A8" ],
+  "Apple Split": [
+    "6D91AB"
+  ],
+  "Apple Stars": [
+    "DB83D1",
+    "D38DC6"
+  ],
+  "Apple Strudel": [ "C9A84B" ],
+  "Applejack": [
+    "FFC46B"
+  ],
+  "Archer": [ "91B1DE" ],
+  "Aria Blaze": [ "CB91FA" ],
+  "Aunt Orange": [ "FCF7BB" ],
+  "Auntie Applesauce": [ "C3FF8C" ],
+  "Aura": [ "E9D3E8" ],
+  "Autumn Gem": [
+    "ADEFF9",
+    "A7DBE6"
+  ],
+  "B. Sharp": [ "4F4F4F" ],
+  "Babs Seed": [
+    "E2A146"
+  ],
+  "Bags Valet": [ "E7E9E9" ],
+  "Banana Fluff": [
+    "F1FB98"
+  ],
+  "Barber Groomsby": [ "FFFFFF" ],
+  "BeauDe Mane": [ "C96477" ],
+  "Beauty Brass": [
+    "ACEDFC"
+  ],
+  "Berry Dreams": [ "92AACE" ],
+  "Berry Preppy": [ "FCFCFC" ],
+  "Berryshine": [ "DF9BF2" ],
+  "Biff": [ "BBA97D" ],
+  "Big Bucks": [ "D6B4F9" ],
+  "Big Daddy McColt": [ "A3D2C7" ],
+  "Big McIntosh": [
+    "F64A59"
+  ],
+  "Big Shot": [ "977749" ],
+  "Big Top": [ "F8CD68" ],
+  "Big Wig": [ "E4E792" ],
+  "Bill Neigh": [
+    "B3B3B3",
+    "ABABAB"
+  ],
+  "Bittersweet": [ "B7DF34" ],
+  "Blaze": [
+    "F6F165",
+    "FFE852"
+  ],
+  "Blossomforth": [
+    "F2EBEB",
+    "F6F1EE"
+  ],
+  "Blow Dry": [ "8F8A8C" ],
+  "Blue Bobbin": [ "92DEF7" ],
+  "Blue Buck": [ "BCDDE7" ],
+  "Blue Moon": [ "3C629A" ],
+  "Blueberry Curls": [
+    "FBFBDD",
+    "FCFADE"
+  ],
+  "Bluenote": [ "B7D7E1" ],
+  "Bolt": [ "BCC9CD" ],
+  "Bow Hothoof": [ "A9A9F9" ],
+  "Bracer Britches": [ "AC9777" ],
+  "Braeburn": [
+    "F7E37B",
+    "F7E37D"
+  ],
+  "Bright Bulb": [ "6997BF" ],
+  "Bright Mac": [ "F5F399" ],
+  "Bright Smile": [
+    "4FF3E1",
+    "47E6E6"
+  ],
+  "Buddy": [
+    "0DAE9D",
+    "0DAF9F"
+  ],
+  "Bulk Biceps": [
+    "FDFDFD",
+    "FCFCFC"
+  ],
+  "Bumblesweet": [ "EBA826" ],
+  "Buried Lede": [ "F5B451" ],
+  "Burnt Oak": [ "665952" ],
+  "Business Savvy": [ "F2EBD4" ],
+  "Button Mash": [ "AE804C" ],
+  "Cadance": [ "EBAFD1" ],
+  "Candy Apples": [
+    "C6FFCA",
+    "B6F1BC"
+  ],
+  "Candy Caramel Tooth": [ "E9C3CB" ],
+  "Caramel": [
+    "F3D36F",
+    "F3D26D"
+  ],
+  "Caramel Apple": [
+    "F9FA8F",
+    "F8EFB4"
+  ],
+  "Cattail": [ "BF7836" ],
+  "Celestia": [ "FDF5FB" ],
+  "Cerulean Skies": [ "99CFFF" ],
+  "Chancellor Neighsay": [
+    "E7E9EB",
+    "D7D8DA"
+  ],
+  "Charged Up": [ "C9C8B6" ],
+  "Chargrill Breadwinner": [ "45A193" ],
+  "Charity Kindheart": [ "F1EC93" ],
+  "Cheerilee": [
+    "AC4389",
+    "AD4389"
+  ],
+  "Cheese Sandwich": [
+    "FFB33C",
+    "FFB53D"
+  ],
+  "Cherry Berry": [
+    "FF80BF",
+    "FF80C1"
+  ],
+  "Cherry Fizzy": [ "DABA77" ],
+  "Cherry Jubilee": [
+    "FEFEDE",
+    "FFFBE0"
+  ],
+  "Cherry Spices": [
+    "BB9874",
+    "B9986E"
+  ],
+  "Chipcutter": [ "A9A7AA" ],
+  "Cinnamon Chai": [ "F6EED0" ],
+  "Cipher Splash": [ "E6C08E" ],
+  "Claude": [
+    "B1E6DC",
+    "B1E7DD"
+  ],
+  "Clean Sweep": [ "A5D3CF" ],
+  "Clear Skies": [ "F0BEF3" ],
+  "Cloud Chaser": [
+    "555555",
+    "545454"
+  ],
+  "Cloud Kicker": [
+    "C0B5F5",
+    "C1B6F6"
+  ],
+  "Cloudchaser": [ "C1B8FF" ],
+  "Cloudy Quartz": [ "DBE1F0" ],
+  "Coco Pommel": [
+    "FAF3DF",
+    "FAF3E0"
+  ],
+  "Coconut Cream": [ "E9EFF2" ],
+  "Coloratura": [
+    "D3F5E8",
+    "D1F5E7"
+  ],
+  "Comb Over": [ "BAAEBC" ],
+  "Comet Tail": [
+    "ECE977",
+    "ECEA83"
+  ],
+  "Commander Ironhead": [ "7A8AAE" ],
+  "Compass Star": [
+    "836349"
+  ],
+  "Cookie Crumbles": [ "FFB3D9" ],
+  "Coriander Cumin": [ "D6B44C" ],
+  "Cotton Cloudy": [ "EBEBEB" ],
+  "Count Caesar": [
+    "677883"
+  ],
+  "Cozy Glow": [ "F8D4D3" ],
+  "Crafty Crate": [
+    "AF966A",
+    "B6A177"
+  ],
+  "Cratus": [ "A09E9C" ],
+  "Cream Puff": [ "FFFCE6" ],
+  "Crusoe Palm": [
+    "A48262",
+    "866546"
+  ],
+  "Crystal Beau": [
+    "E9F8FB",
+    "D4E5E8"
+  ],
+  "Crystal Hoof": [ "84C9D2" ],
+  "Daisy": [ "FFC2FF" ],
+  "Dance Fever": [
+    "D9D1AD",
+    "D9D2AF"
+  ],
+  "Dandy Grandeur": [ "E7EE96" ],
+  "Dane Tee Dove": [
+    "F8F8F8",
+    "FFFFFF"
+  ],
+  "Daring Do": [
+    "D6C160",
+    "DFCD68"
+  ],
+  "Dark Moon": [
+    "535353",
+    "4A4A4A"
+  ],
+  "Davenport": [
+    "D2C591",
+    "DECE96"
+  ],
+  "Deputy Copper": [ "E7D8EE" ],
+  "Derpy": [
+    "C1C5D3",
+    "C0C4D3"
+  ],
+  "Diamond Cutter": [ "9D9DC3" ],
+  "Diamond Mint": [
+    "9CE4FF",
+    "94E8FF"
+  ],
+  "Diamond Rose": [ "F0EFEA" ],
+  "Diamond Tiara": [
+    "FFC1FF",
+    "F5B9F9"
+  ],
+  "Doctor Horse": [
+    "F8CC6A",
+    "F3D268"
+  ],
+  "Don Neigh": [ "F6F1AC" ],
+  "Double Diamond": [
+    "FFFFFF",
+    "FBF7FC"
+  ],
+  "Dr. Caballeron": [
+    "A4947C",
+    "A1927D"
+  ],
+  "Dr. Fauna": [
+    "E5D466"
+  ],
+  "Dr. Hooves": [
+    "BCAB7C",
+    "C3A97F"
+  ],
+  "Dr. Horse": [
+    "BDA876",
+    "B29E66"
+  ],
+  "Dr. Stable": [ "FCC655" ],
+  "Dumb-Bell": [ "6A5541" ],
+  "Eclair Crème": [ "8FEAFF" ],
+  "Eff Stop": [ "FFFAFA" ],
+  "Elbow Grease": [
+    "E774CD",
+    "DA90C8"
+  ],
+  "Electric Sky": [
+    "F3FAAF",
+    "F2FAAE"
+  ],
+  "Emerald Green": [
+    "EBA05A",
+    "FAA857"
+  ],
+  "Equality": [ "E8EAD5" ],
+  "Fancy Pants": [
+    "F9F9F9",
+    "FAFAFA"
+  ],
+  "Fashion Plate": [ "2B7897" ],
+  "Fast Clip": [ "FCFCFC" ],
+  "Feather Bangs": [
+    "E6DA8A",
+    "E6DA89"
+  ],
+  "Featherweight": [ "F4F4C8" ],
+  "Felix": [
+    "C5C8D3",
+    "D1D7E0"
+  ],
+  "Fiddly Twang": [
+    "FBFA9C",
+    "FCFA9C"
+  ],
+  "Filthy Rich": [
+    "C3B58A",
+    "C2B489"
+  ],
+  "Fine Line": [
+    "F6FDD1",
+    "FCF6BA"
+  ],
+  "Finish Line": [ "B0B0B0" ],
+  "Firecracker Burst": [ "7FC19D" ],
+  "Firelight": [
+    "AB74CB",
+    "AC75CC"
+  ],
+  "Flam": [ "EDF094" ],
+  "Flash Magnus": [
+    "E7C65B",
+    "ECC155"
+  ],
+  "Flash Sentry": [
+    "FCC862",
+    "F9E7A4"
+  ],
+  "Flax Seed": [ "F8C45F" ],
+  "Fleetfoot": [
+    "7ED5E7",
+    "8FDBE0"
+  ],
+  "Fleur de Lis": [
+    "F9F9F9",
+    "FFF5FA"
+  ],
+  "Fleur De Verre": [
+    "F6FDD1",
+    "E1E2C1"
+  ],
+  "Fleur Dis Lee": [ "FFFFFF" ],
+  "Flim": [ "EDF094" ],
+  "Flitter": [
+    "CFC8FD",
+    "D0C9FD"
+  ],
+  "Florina Tart": [
+    "E1FFBC",
+    "C3DDA7"
+  ],
+  "Fluffy Clouds": [ "518AC8" ],
+  "Flurry Heart": [ "F8ECF8" ],
+  "Flutterholly": [ "FCF5A6" ],
+  "Fluttershy": [
+    "FCF4A4",
+    "FCF5A6"
+  ],
+  "Foggy Fleece": [ "EAF3FF" ],
+  "Four Step": [
+    "95D0DF",
+    "84C9E7"
+  ],
+  "Frederick Horseshoepin": [ "BAA773" ],
+  "Full Steam": [ "A1725E" ],
+  "Gala Appleby": [
+    "EFEEA1",
+    "E4E798"
+  ],
+  "Ginger Beard": [ "E6EFB9" ],
+  "Gizmo": [
+    "EAE4CE",
+    "FDF9E7"
+  ],
+  "Gladmane": [
+    "8275C0",
+    "8377C0"
+  ],
+  "Globe Trotter": [
+    "CAB485",
+    "B5A073"
+  ],
+  "Golden Delicious": [
+    "D7BD77",
+    "D6B676"
+  ],
+  "Golden Gavel": [ "CCBE7B" ],
+  "Golden Glitter": [ "E9EEA5" ],
+  "Golden Harvest": [ "F8FB99" ],
+  "Golden Hooves": [ "F4E0A9" ],
+  "Golden Wheat": [ "F2F3E2" ],
+  "Goldengrape": [
+    "F6EFA7",
+    "E7DEA2"
+  ],
+  "Goldie Delicious": [ "EBCD6F" ],
+  "Grand Pear": [ "F4D371" ],
+  "Granny Smith": [ "CFE585" ],
+  "Grape Delight": [ "997DCA" ],
+  "Green Jewel": [
+    "CFFF9D",
+    "BFEA95"
+  ],
+  "Hairpin Turn": [ "BFA782" ],
+  "Half Baked Apple": [
+    "F8CC6A",
+    "CAA458"
+  ],
+  "Hard Hat": [ "8A9AB7" ],
+  "Hayseed Turnip Truck": [
+    "EEEAB0",
+    "F4ECB8"
+  ],
+  "Helia": [
+    "B3F3EC",
+    "99E5EA"
+  ],
+  "High Spirits": [ "FFE97A" ],
+  "High Winds": [
+    "FCFBF0",
+    "F1F0FA"
+  ],
+  "Hinny of the Hills": [ "E3AA54" ],
+  "Hoity Toity": [
+    "7A80A0",
+    "797FA0"
+  ],
+  "Holly Dash": [
+    "E3CFDB",
+    "DECED6"
+  ],
+  "Hondo Flanks": [ "E6E6E6" ],
+  "Honey Rays": [
+    "EAC4C8",
+    "FFD3CC"
+  ],
+  "Honeysparkle": [ "DFE6D0" ],
+  "Hoo'Far": [ "9EA8F0" ],
+  "Hoofdini": [ "FEFEFE" ],
+  "Hoofer Steps": [ "EADEF2" ],
+  "Hoops": [ "E0B569" ],
+  "Horte Cuisine": [ "DCDDC7" ],
+  "Hughbert Jellius": [
+    "C0C0C0",
+    "C9C9C9"
+  ],
+  "Igneous Rock Pie": [
+    "CBAB60"
+  ],
+  "Indigo Zap": [ "FCCE8A" ],
+  "Inky Rose": [ "DDDAF6" ],
+  "Ivory Rook": [
+    "F6E9A0",
+    "E5D594"
+  ],
+  "Jack Hammer": [
+    "C7B47F",
+    "C5AB7D"
+  ],
+  "Jack Pot": [ "6DB2E3" ],
+  "Janine Manewitz": [ "D392CD" ],
+  "Jeff Letrotski": [
+    "DCCDA5",
+    "DACCA4"
+  ],
+  "Jesús Pezuña": [ "9F8465" ],
+  "Jet Set": [ "C7CCC9" ],
+  "Jetstream": [
+    "F9C2FC",
+    "EBBDEB"
+  ],
+  "Joan Pommelway": [ "D9F0F7" ],
+  "Joe": [
+    "FCE190",
+    "FCE292"
+  ],
+  "Jonagold": [
+    "FCFF99",
+    "F1EF8E"
+  ],
+  "Junebug": [
+    "E8E59F",
+    "F4FFB3"
+  ],
+  "Kettle Corn": [ "ECDB7E" ],
+  "King Sombra": [
+    "515151",
+    "525252"
+  ],
+  "Lady Gaval": [
+    "D9F784",
+    "E4FD81"
+  ],
+  "Laurette": [ "FFFFFF" ],
+  "Lavender Bloom": [
+    "F39BF2",
+    "FFC2FF"
+  ],
+  "Lavender Fritter": [
+    "E2E899",
+    "F2ED8C"
+  ],
+  "Leadwing": [ "5B8EBE" ],
+  "Lemon Hearts": [
+    "FAFE57",
+    "FFF761"
+  ],
+  "Lemon Zest": [ "F3ABB1" ],
+  "Lemony Gem": [
+    "ECED82",
+    "E3DE7D"
+  ],
+  "Levon Song": [ "8A776A" ],
+  "Lickety Split": [ "998C66" ],
+  "Lightning Dust": [
+    "91F6D7",
+    "80E0D7"
+  ],
+  "Lilac Hearts": [ "C9A0E3" ],
+  "Lilac Links": [
+    "CA95DC",
+    "C398D2"
+  ],
+  "Lilac Luster": [ "DEAADF" ],
+  "Lilac Sky": [ "C2B1F1" ],
+  "Lily": [ "F2A6BF" ],
+  "Lily Blossom": [ "767AB7" ],
+  "Lily Lace": [ "F4F9B9" ],
+  "Lily Valley": [ "F2A6BF" ],
+  "Limestone Pie": [ "9BA0CA" ],
+  "Liza Doolots": [ "D3F3F3" ],
+  "Long Shot": [ "DCB97A" ],
+  "Lotus Blossom": [ "86D6F3" ],
+  "Luckette": [
+    "EAB8EE",
+    "F4BCF5"
+  ],
+  "Lucky Clover": [
+    "C3C8D2",
+    "C3C7D5"
+  ],
+  "Lucky Star": [ "C185C1" ],
+  "Lucy Packard": [ "F1E3C0" ],
+  "Luna": [ "373A77" ],
+  "Lyra": [ "94FFDC" ],
+  "Lyra Heartstrings": [
+    "94FFDC",
+    "94FFDB"
+  ],
+  "Lyrica Lilac": [
+    "DAC3F8",
+    "CAB4E4"
+  ],
+  "Madden": [ "78A2DE" ],
+  "Mage Meadowbrook": [
+    "6FC0DE",
+    "6EC0DE"
+  ],
+  "Magnet Bolt": [
+    "A7B8CF",
+    "A6B7CE"
+  ],
+  "Mane Moon": [
+    "D9D2AB",
+    "D2CDA7"
+  ],
+  "Mane-iac": [
+    "876EB4",
+    "4D4E99"
+  ],
+  "Manely Gold": [ "FFA857" ],
+  "Marble Pie": [ "BCC9CD" ],
+  "Mare E. Belle": [ "F8FBCB" ],
+  "Mare E. Lynn": [ "5EC5B0" ],
+  "Maud Pie": [
+    "ABAAB2",
+    "C2C0C8"
+  ],
+  "Mayor Baltimare": [ "9990A7" ],
+  "Mayor Cream Cheese": [ "9FBBDF" ],
+  "Mayor Mare": [
+    "DCCDA5",
+    "DBCCA3"
+  ],
+  "Meadow Flower": [
+    "EEADCF",
+    "F6BBCD"
+  ],
+  "Meadow Song": [ "CD8256" ],
+  "Merry": [ "F1F1F3" ],
+  "Merry May": [
+    "CBF4A0",
+    "BDE387"
+  ],
+  "Midnight Fun": [ "4EAFCA" ],
+  "Midnight Strike": [ "333333" ],
+  "Minty": [ "91C99A" ],
+  "Minuette": [
+    "88C8F2",
+    "88C7F2"
+  ],
+  "Mistmane": [
+    "D4BCDE",
+    "D2BADE"
+  ],
+  "Misty Fly": [
+    "FCFDB0",
+    "ECDFA1"
+  ],
+  "Moon Dancer": [ "F7F8D3" ],
+  "Mr. Breezy": [
+    "DCD0B2",
+    "E2D0AB"
+  ],
+  "Mr. Carrot Cake": [ "FFDB3D" ],
+  "Mr. Greenhooves": [ "BB9966" ],
+  "Mr. Paleo": [ "F1EBBB" ],
+  "Mr. Shy": [ "A8E1BC" ],
+  "Mr. Stripes": [ "EFF7EE" ],
+  "Mr. Waddle": [ "D2D5E9" ],
+  "Mrs. Cup Cake": [ "80DFFF" ],
+  "Mrs. Paleo": [ "74D2CC" ],
+  "Mrs. Shy": [ "FCECB0" ],
+  "Mrs. Trotsworth": [ "BCD5F5" ],
+  "Ms. Harshwhinny": [
+    "E89149",
+    "DF924E"
+  ],
+  "Ms. Peachbottom": [
+    "FFF3AB",
+    "FEFAAE"
+  ],
+  "Mudbriar": [
+    "C4C4B6",
+    "C3C3B6"
+  ],
+  "Neigh Sayer": [ "B29462" ],
+  "Neon Brush": [ "EEFFEB" ],
+  "Neon Lights": [
+    "C8E8E5",
+    "B9DFE9"
+  ],
+  "Night Glider": [
+    "4F7EAC",
+    "3B6997"
+  ],
+  "Night Light": [
+    "6A99C9",
+    "589CE9"
+  ],
+  "Night Watch": [ "6B644C" ],
+  "Nightjar": [ "F2F2F2" ],
+  "Non-pony 1": [ "E05252" ],
+  "Non-pony 10": [ "C2E0F0" ],
+  "Non-pony 11": [ "FFCC66" ],
+  "Non-pony 12": [ "FADB9E" ],
+  "Non-pony 13": [ "E6B7B3" ],
+  "Non-pony 14": [ "F2E6D9" ],
+  "Non-pony 2": [ "D1FAD1" ],
+  "Non-pony 3": [ "EBADD6" ],
+  "Non-pony 4": [ "999999" ],
+  "Non-pony 5": [ "993333" ],
+  "Non-pony 6": [ "E6CC99" ],
+  "Non-pony 7": [ "F9D2F2" ],
+  "Non-pony 8": [ "ADA3C2" ],
+  "Non-pony 9": [ "E6E6E6" ],
+  "Noteworthy": [
+    "85ABDF",
+    "84A3D2"
+  ],
+  "Nurse Redheart": [
+    "F9F9F9",
+    "FAFAFA"
+  ],
+  "Nurse Snowheart": [ "FCFDAF" ],
+  "Octavia Melody": [
+    "BAB8AF",
+    "BAB7B0"
+  ],
+  "On Stage": [ "B7DCCB" ],
+  "Open Skies": [ "56B9C2" ],
+  "Orange Slice": [ "F5CF66" ],
+  "Orange Swirl": [
+    "F7E4A3",
+    "F6E19D"
+  ],
+  "Orion": [ "FFFFFF" ],
+  "Pacific Glow": [ "F7B1D4" ],
+  "Parasol": [
+    "FFFA94",
+    "FFF894"
+  ],
+  "Parcel Post": [
+    "C0B894",
+    "CEC6A1"
+  ],
+  "Parish Nandermane": [
+    "8772D2",
+    "8873D3"
+  ],
+  "Party Favor": [
+    "CAF2F3",
+    "C2E9EB"
+  ],
+  "Peachbottom": [ "FFF3AB" ],
+  "Peachy Pie": [ "FFEA70" ],
+  "Peachy Pitt": [
+    "F7FFDF",
+    "F6FFE0"
+  ],
+  "Peachy Sweet": [
+    "D4FA90",
+    "D8F68E"
+  ],
+  "Pear Butter": [ "FEE6C3" ],
+  "Pearly Stitch": [ "EAF3FF" ],
+  "Pegasus Olsen": [ "F6FDD3" ],
+  "Perfect Pace": [
+    "6A99C9",
+    "5899D5"
+  ],
+  "Perfect Pie": [
+    "FDC555",
+    "FCC35A"
+  ],
+  "Periwinkle Pace": [ "F1F1F4" ],
+  "Petunia Paleo": [ "A5E9E5" ],
+  "Photo Finish": [
+    "B3E8F5",
+    "B2E8F5"
+  ],
+  "Pickpocket": [ "839F9B" ],
+  "Picture Frame": [ "FBF6D5" ],
+  "Pinkie Pie": [
+    "FAB3D1",
+    "FAB2D0"
+  ],
+  "Pinny Lane": [ "F9FDD8" ],
+  "Pipsqueak": [ "FFFFFF" ],
+  "Pixel Pizzaz": [ "F8EB8E" ],
+  "Pizzelle": [ "F9F9EB" ],
+  "Plaid Stripes": [ "F2AD64" ],
+  "Pound Cake": [ "FDF7CE" ],
+  "Powder Rouge": [ "F6F8CE" ],
+  "Press Release": [ "F7F8CE" ],
+  "Pretty Vision": [ "84642A" ],
+  "Pretzel": [ "F1B350" ],
+  "Prim Hemline": [
+    "96959A",
+    "959499"
+  ],
+  "Prim Posy": [
+    "C0B6FF",
+    "B4ABF7"
+  ],
+  "Prince Blueblood": [
+    "FBFBFB",
+    "FAFAFA"
+  ],
+  "Prince Hisan": [ "3A609C" ],
+  "Prism Glider": [ "74BDE2" ],
+  "Professor Flintheart": [ "AAA49D" ],
+  "Professor Fossil": [ "C2C2C2" ],
+  "Pumpkin Cake": [ "F5F58F" ],
+  "Purple Wave": [
+    "E5A6F2",
+    "E3B9EF"
+  ],
+  "Pursey Pink": [
+    "FEEC8A",
+    "FEED8B"
+  ],
+  "Quibble Pants": [
+    "D5A04E",
+    "D59F4D"
+  ],
+  "Quick Trim": [ "EFF6E9" ],
+  "Radiant Hope": [ "9F67A4" ],
+  "Rainbow Blaze": [
+    "BAB5EE",
+    "BEC1FE"
+  ],
+  "Rainbow Dash": [
+    "A3DEF8",
+    "9EE7FF"
+  ],
+  "Rainbow Swoop": [
+    "E2D0FF",
+    "DDCBF6"
+  ],
+  "Rainbowshine": [
+    "AF9FED",
+    "A5A0EE"
+  ],
+  "Randolph": [ "BEAEEF" ],
+  "Rarity": [ "F1F1F3" ],
+  "Raspberry Beret": [ "F0A3AB" ],
+  "Raven Inkwell": [
+    "F8F8F8",
+    "F7F7F7"
+  ],
+  "Red Delicious": [
+    "F0EEA6",
+    "F5EDAD"
+  ],
+  "Red Gala": [
+    "F6C6D7",
+    "FBDAE0"
+  ],
+  "Rockhoof": [
+    "9CD5D2",
+    "9CD2D3"
+  ],
+  "Roger Silvermane": [ "B0B8BF" ],
+  "Rogue": [ "587372" ],
+  "Rolling Thunder": [ "66559B" ],
+  "Rooks Rampart": [ "A9EE87" ],
+  "Rose": [ "FCFED7" ],
+  "Rough Tumble": [ "DC9CF2" ],
+  "Roxie Rave": [ "DEF2F2" ],
+  "Royal Pin": [
+    "6A99C9",
+    "6090BE"
+  ],
+  "Royal Ribbon": [
+    "FF7FD2",
+    "FF80D2"
+  ],
+  "Royal Riff": [
+    "A4A1BE",
+    "A4A5C6"
+  ],
+  "Ruby Splash": [
+    "CFF8F2",
+    "CEF8F2"
+  ],
+  "Rumble": [ "DEE2E8" ],
+  "Sable Spirit": [ "F3B87C" ],
+  "Saffron Masala": [ "E69C56" ],
+  "Sand Trap": [ "D0C8A4" ],
+  "Sandbar": [
+    "E6FCB7",
+    "E6FAB7"
+  ],
+  "Sapphire Joy": [
+    "C5B3F5",
+    "B8B2E6"
+  ],
+  "Sapphire Shores": [
+    "FBF3BA",
+    "FBF4BC"
+  ],
+  "Sassaflash": [
+    "9CE4F3",
+    "B1E0E7"
+  ],
+  "Sassy Saddles": [
+    "AEE5FC",
+    "B0E5FC"
+  ],
+  "Savoir Fare": [
+    "ECEACB",
+    "E2DFCA"
+  ],
+  "Scootaloo": [ "FFBF66" ],
+  "Score": [ "9997AB" ],
+  "Screwball": [
+    "DE83E4",
+    "D19ED1"
+  ],
+  "Screwy": [
+    "8EEDFB",
+    "53C0EE"
+  ],
+  "Sea Swirl": [
+    "F2BEFF",
+    "F2BDFF"
+  ],
+  "Sealed Scroll": [
+    "947A61",
+    "856951"
+  ],
+  "Sheriff Silverstar": [
+    "C1B179",
+    "BCA671"
+  ],
+  "Shining Armor": [
+    "FDFDFD",
+    "FBFEFD"
+  ],
+  "Shoeshine": [
+    "90D3F5",
+    "92D7F6"
+  ],
+  "Shooting Star": [
+    "F9F9F9",
+    "FAFAFA"
+  ],
+  "Short Fuse": [ "EF542A" ],
+  "Silver Berry": [
+    "D3D2D7",
+    "D9D7DF"
+  ],
+  "Silver Frames": [ "CCCCCC" ],
+  "Silver Shill": [
+    "ECF6F3",
+    "EEF7F4"
+  ],
+  "Silver Spanner": [
+    "BE7248",
+    "C08059"
+  ],
+  "Silver Spoon": [
+    "AAB6BE",
+    "768798"
+  ],
+  "Silver Zoom": [
+    "9CB7BA",
+    "A0A3A7"
+  ],
+  "Silverspeed": [
+    "ABB7BF",
+    "ADB8BD"
+  ],
+  "Silverstar": [ "C1B179" ],
+  "Skeedaddle": [ "CCD4FA" ],
+  "Sky Stinger": [
+    "1687A5",
+    "1787A6"
+  ],
+  "Snails": [ "DBB243" ],
+  "Snappy Scoop": [ "D9DAE3" ],
+  "Snips": [ "98CDC7" ],
+  "Snowdash": [ "9EE7FF" ],
+  "Snowfall Frost": [ "F5C3F9" ],
+  "Soarin": [
+    "DEF2FF",
+    "E0F3FF"
+  ],
+  "Soigne Folio": [ "E1FCFE" ],
+  "Somnambula": [
+    "FD9F8A",
+    "F39A82"
+  ],
+  "Sonata Dusk": [ "67C3DF" ],
+  "Songbird Serenade": [ "FAFFEB" ],
+  "Sour Sweet": [
+    "E6E2A6",
+    "F1EE93"
+  ],
+  "Spearhead": [
+    "CE8149",
+    "CD8147"
+  ],
+  "Spitfire": [
+    "F6E663",
+    "FFF157"
+  ],
+  "Spoiled Rich": [
+    "F2A7A5",
+    "F2A8A6"
+  ],
+  "Spring Forward": [
+    "DCA1E1",
+    "DEB5DE"
+  ],
+  "Spring Step": [ "56D7CA" ],
+  "Sprinkle Medley": [
+    "9DE4DF",
+    "ADEBE9"
+  ],
+  "Star Hunter": [
+    "21415D",
+    "1D3C5D"
+  ],
+  "Star Spur": [ "839DB9" ],
+  "Star Swirl": [
+    "FCFCFC",
+    "C1C1C3"
+  ],
+  "Star Tracker": [ "656C9F" ],
+  "Starburst": [
+    "FFFFCF",
+    "FDFFCC"
+  ],
+  "Starlight Glimmer": [
+    "EDBBF3",
+    "F5C3F9"
+  ],
+  "Starry Eyes": [
+    "EBEBEB"
+  ],
+  "Starstreak": [ "E4B386" ],
+  "Steam Roller": [ "D9D9D9" ],
+  "Stella Lashes": [ "CFE9B9" ],
+  "Stellar Eclipse": [
+    "B8916A",
+    "B68F68"
+  ],
+  "Stellar Flare": [ "E48C3F" ],
+  "Stinkin' Rich": [ "C3B588" ],
+  "Stinky Bottom": [ "F0C770" ],
+  "Stormbreaker": [ "A7A3D7" ],
+  "Stormfeather": [
+    "9894B8",
+    "9D9BBF"
+  ],
+  "Stormy Flare": [ "EDE15E" ],
+  "Strawberry Ice": [
+    "9BF2E8",
+    "A4F9F1"
+  ],
+  "Strawberry Sunrise": [
+    "FCFF9B",
+    "FEF486"
+  ],
+  "Strike": [ "D9C992" ],
+  "Stygian": [
+    "B7B7B7",
+    "BBB9BA"
+  ],
+  "Sugar Belle": [
+    "FFB8E3",
+    "F5ADD8"
+  ],
+  "Sugar Twist": [ "D3B78D" ],
+  "Sugarcoat": [ "BCC7FF" ],
+  "Sunburst": [
+    "FAB936",
+    "FAB938"
+  ],
+  "Sunny Daze": [ "FFE366" ],
+  "Sunny Flare": [ "CFFCF0" ],
+  "Sunny Rays": [
+    "FFEB83",
+    "FFE085"
+  ],
+  "Sunny Smiles": [ "9E754C" ],
+  "Sunset Shimmer": [
+    "F9CA55",
+    "FADF85"
+  ],
+  "Sunshine Petals": [
+    "FDFDAB",
+    "FDFDAA"
+  ],
+  "Sunshower": [ "F8FAAD" ],
+  "Sunshower Raindrops": [
+    "FAE58A",
+    "FFE96B"
+  ],
+  "Suri Polomare": [ "FFD1FA" ],
+  "Surprise": [
+    "FEFEFE",
+    "ECEAEB"
+  ],
+  "Svengallop": [
+    "F3F6F0",
+    "F0F2ED"
+  ],
+  "Sweetie Belle": [ "F1EEF0" ],
+  "Sweetie Drops": [ "F5F7D9" ],
+  "Symphony Song": [ "E3E68E" ],
+  "Tall Order": [
+    "CBCBCB",
+    "BFBFBF"
+  ],
+  "Tall Tale": [ "F4DF76" ],
+  "Tempest Shadow": [ "54214E" ],
+  "Tender Taps": [ "F4A65D" ],
+  "The Headless Horse": [
+    "15162D",
+    "FFFFFF"
+  ],
+  "Thunderlane": [
+    "636163",
+    "575757"
+  ],
+  "Tight Ship": [ "BAAB82" ],
+  "Timber Spruce": [ "DE9978" ],
+  "Time Turner": [ "BCAB7C" ],
+  "Toe Tapper": [
+    "7AB4E9",
+    "79B2E6"
+  ],
+  "Toola Roola": [ "F2CFE6" ],
+  "Tootsie Flute": [ "CCE2E3" ],
+  "Top Marks": [
+    "8DA7D3",
+    "8DB0E2"
+  ],
+  "Torch Song": [ "F8F8CE" ],
+  "Trapeze Star": [ "F7E58D" ],
+  "Tree Hugger": [ "A5F382" ],
+  "Trenderhoof": [
+    "C49B5E",
+    "C48D4A"
+  ],
+  "Trixie": [
+    "55ACF3",
+    "58AEF3"
+  ],
+  "Tropical Storm": [ "95EE9A" ],
+  "Trouble Shoes": [
+    "924C34",
+    "924C35"
+  ],
+  "Truffle": [ "C8C7CC" ],
+  "Twilight Sky": [ "999999" ],
+  "Twilight Sparkle": [ "D19FE4" ],
+  "Twilight Velvet": [
+    "DDDDDD",
+    "E3E6E8"
+  ],
+  "Twinkleshine": [ "FCFAEF" ],
+  "Twist": [
+    "FDF6E7"
+  ],
+  "Twisty Pop": [ "DFA443" ],
+  "Uncle Orange": [ "FAE475" ],
+  "Unconditioner": [ "EFF3FB" ],
+  "Upper Crust": [ "ECEFB3" ],
+  "Upper East Stride": [ "B2B1B4" ],
+  "Vapor Trail": [ "F4FAEF" ],
+  "Vidala Swoon": [
+    "FFC9F2",
+    "FDD8EB"
+  ],
+  "Vinny": [ "938A8B" ],
+  "Vinyl Scratch": [ "FEFDE7" ],
+  "Violet Blurr": [ "D9E9F2" ],
+  "Walter": [
+    "CABE97",
+    "C9C097"
+  ],
+  "Warm Front": [
+    "F1DD71",
+    "F4D35D"
+  ],
+  "Wave Chill": [ "8293C9" ],
+  "Wensley": [
+    "84D96D",
+    "7CBF69"
+  ],
+  "Wheat Grass": [ "F2DA70" ],
+  "Whinnyfield": [ "5F5458" ],
+  "Whiplash": [ "999999" ],
+  "White Lightning": [
+    "FAFBFF",
+    "FBFCFE"
+  ],
+  "Whitewash": [ "FCFCFC" ],
+  "Wild Fire": [ "F9ECBD" ],
+  "Wind Rider": [
+    "A0DEF3",
+    "98D7F6"
+  ],
+  "Windy Whistles": [ "ADD9F5" ],
+  "Withers": [ "DADDE4" ],
+  "Wolfgang Canter": [ "A99170" ],
+  "Wrangler": [ "EEB5CB" ],
+  "Zephyr Breeze": [ "91E3C7" ],
+  "Zesty Gourmand": [ "D2C6D2" ],
+  "Zipporwhill": [ "FCFCDE" ]
+}
