@@ -73,8 +73,10 @@
     <Compile Include="IceCream.cs" />
     <Compile Include="LedEncryption.cs" />
     <Compile Include="MaritimeFlags.cs" />
+    <Compile Include="Mineseeker.cs" />
     <Compile Include="Modeling\AutoNormal.cs" />
     <Compile Include="Modeling\GaussianBlur.cs" />
+    <Compile Include="MonoRandom.cs" />
     <Compile Include="Neutralization.cs" />
     <Compile Include="PatternCube.cs" />
     <Compile Include="Poker.cs" />
