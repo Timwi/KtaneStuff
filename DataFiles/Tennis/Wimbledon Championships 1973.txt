@@ -1,0 +1,2040 @@
+{{Infobox tennis tournament event|1973|Wimbledon Championships
+ | champ = {{flagicon|TCH}} [[Jan Kodeš]]
+ | runner = {{flagicon|URS|1955}} [[Alex Metreveli]]
+ | score = 6–1, 9–8<sup>(7–5)</sup>, 6–3
+ | draw = 128 (32{{Tooltip| Q | Qualifiers}}) 
+ | seeds = 8
+ | type = grand slam
+}}
+{{Main|1973 Wimbledon Championships}}
+81 of the top [[Association of Tennis Professionals|Association of Tennis Professionals (ATP)]] players, including defending champion [[Stan Smith]], [[1973 Wimbledon Championships#ATP_boycott|boycotted the Wimbledon Championships in 1973]] in protest against the suspension of [[Nikola Pilić]] by the [[Yugoslav Tennis Association]], supported by the [[International Lawn Tennis Federation|International Lawn Tennis Federation (ILTF)]].<ref>{{cite book|title=World of Tennis '74|year=1974|publisher=Queen Anne|location=London|isbn=978-0362001686|pages=15–17, 45–47|editor=John Barrett}}</ref> This resulted in a large number of qualifiers and lucky losers.
+
+[[Jan Kodeš]] defeated [[Alex Metreveli]] in the final, 6–1, 9–8<sup>(7–5)</sup>, 6–3 to win the Gentlemen's Singles tennis title at the 1973 Wimbledon Championships.<ref name="Barrett">{{cite book|last=Barrett|first=John|title=Wimbledon: The Official History|date=2014|publisher=Vision Sports Publishing|isbn=9-781909-534230|edition=4th}}</ref> The final match included a tie-breaker played at 8–8 in the second set; the first ever Wimbledon singles final to include a tie-break.
+
+==Seeds==
+{{Div col}}
+{{seeds|1|1}} {{flagicon|ROM|1965}} [[Ilie Năstase]] ''(Fourth round)''
+{{seeds|2|8}} {{flagicon|TCH}} '''[[Jan Kodeš]] (Champion)'''
+{{seeds|3|6}} {{flagicon|GBR}} [[Roger Taylor (tennis)|Roger Taylor]] ''(Semifinals)''
+{{seeds|4|3}} {{flagicon|URS|1955}} [[Alex Metreveli]] ''(Final)''
+{{seeds|5|4}} {{flagicon|USA}} [[Jimmy Connors]] ''(Quarterfinals)''
+{{seeds|6|5}} {{flagicon|SWE}} [[Björn Borg]] ''(Quarterfinals)''
+{{seeds|7|7}} {{flagicon|AUS}} [[Owen Davidson]] ''(Fourth round)''
+{{seeds|8|2}} {{flagicon|FRG}} [[Jürgen Fassbender]] ''(Quarterfinals)''
+{{Div col end}}
+{{Seeds explanation}}
+
+The original seeding list before the boycott was:
+{{Div col}}
+# {{flagicon|USA}} [[Stan Smith]]
+# {{flagicon|ROM|1965}} [[Ilie Năstase]]
+# {{flagicon|AUS}} [[John Newcombe]]
+# {{flagicon|USA}} [[Arthur Ashe]]
+# {{flagicon|AUS}} [[Ken Rosewall]]
+# {{flagicon|NED}} [[Tom Okker]]
+# {{flagicon|USA}} [[Marty Riessen]]
+# {{flagicon|AUS}} [[Roy Emerson]]
+# {{flagicon|USA}} [[Tom Gorman (tennis)|Tom Gorman]]
+# {{flagicon|USA}} [[Cliff Richey]]
+# {{flagicon|ITA}} [[Adriano Panatta]]
+# {{flagicon|ESP|1945}} [[Manuel Orantes]]
+# {{flagicon|URS|1955}} [[Alex Metreveli]]
+# {{flagicon|USA}} [[Bob Lutz (tennis)|Bob Lutz]]
+# {{flagicon|TCH}} '''[[Jan Kodeš]]'''
+# {{flagicon|GBR}} [[Roger Taylor (tennis)|Roger Taylor]]
+{{Div col end}}
+
+==Draw==
+{{Draw key}}
+
+===Finals===
+{{8TeamBracket-Tennis5
+| RD1=Quarterfinals
+| RD2=Semifinals
+| RD3=Final
+| team-width=180
+
+| RD1-seed1=
+| RD1-team1={{flagicon|USA}} '''[[Sandy Mayer]]'''
+| RD1-score1-1=3
+| RD1-score1-2=4
+| RD1-score1-3='''6'''
+| RD1-score1-4='''6'''
+| RD1-score1-5='''6'''
+| RD1-seed2=8
+| RD1-team2={{flagicon|FRG}} [[Jürgen Fassbender]]
+| RD1-score2-1='''6'''
+| RD1-score2-2='''6'''
+| RD1-score2-3=3
+| RD1-score2-4=4
+| RD1-score2-5=4
+
+| RD1-seed3=4
+| RD1-team3={{flagicon|URS|1955}} '''[[Alex Metreveli]]'''
+| RD1-score3-1='''8'''
+| RD1-score3-2='''6'''
+| RD1-score3-3=5
+| RD1-score3-4='''6'''
+| RD1-score3-5=
+| RD1-seed4=5
+| RD1-team4={{flagicon|USA}} [[Jimmy Connors]]
+| RD1-score4-1=6
+| RD1-score4-2=2
+| RD1-score4-3='''7'''
+| RD1-score4-4=4
+| RD1-score4-5=
+
+| RD1-seed5=6
+| RD1-team5={{flagicon|SWE}} [[Björn Borg]]
+| RD1-score5-1=1
+| RD1-score5-2='''8'''
+| RD1-score5-3='''6'''
+| RD1-score5-4=3
+| RD1-score5-5=5
+| RD1-seed6=3
+| RD1-team6={{flagicon|GBR}} '''[[Roger Taylor (tennis)|Roger Taylor]]'''
+| RD1-score6-1='''6'''
+| RD1-score6-2=6
+| RD1-score6-3=3
+| RD1-score6-4='''6'''
+| RD1-score6-5='''7'''
+
+| RD1-seed7=
+| RD1-team7={{flagicon|IND}} [[Vijay Amritraj]]
+| RD1-score7-1=4
+| RD1-score7-2='''6'''
+| RD1-score7-3='''6'''
+| RD1-score7-4=3
+| RD1-score7-5=5
+| RD1-seed8=2
+| RD1-team8={{flagicon|TCH}} '''[[Jan Kodeš]]'''
+| RD1-score8-1='''6'''
+| RD1-score8-2=3
+| RD1-score8-3=4
+| RD1-score8-4='''6'''
+| RD1-score8-5='''7'''
+
+| RD2-seed1=
+| RD2-team1={{flagicon|USA}} [[Sandy Mayer]]
+| RD2-score1-1=3
+| RD2-score1-2='''6'''
+| RD2-score1-3=3
+| RD2-score1-4=4
+| RD2-score1-5=
+| RD2-seed2=4
+| RD2-team2={{flagicon|URS|1955}} '''[[Alex Metreveli]]'''
+| RD2-score2-1='''6'''
+| RD2-score2-2=3
+| RD2-score2-3='''6'''
+| RD2-score2-4='''6'''
+| RD2-score2-5=
+
+| RD2-seed3=3
+| RD2-team3={{flagicon|GBR}} [[Roger Taylor (tennis)|Roger Taylor]]
+| RD2-score3-1='''9'''
+| RD2-score3-2=7
+| RD2-score3-3='''7'''
+| RD2-score3-4=4
+| RD2-score3-5=5
+| RD2-seed4=2
+| RD2-team4={{flagicon|TCH}} '''[[Jan Kodeš]]'''
+| RD2-score4-1=8
+| RD2-score4-2='''9'''
+| RD2-score4-3=5
+| RD2-score4-4='''6'''
+| RD2-score4-5='''7'''
+
+| RD3-seed1=4
+| RD3-team1={{flagicon|URS|1955}} [[Alex Metreveli]]
+| RD3-score1-1=1
+| RD3-score1-2=8<sup>5</sup>
+| RD3-score1-3=3
+| RD3-score1-4=
+| RD3-score1-5=
+| RD3-seed2=2
+| RD3-team2={{flagicon|TCH}} '''[[Jan Kodeš]]'''
+| RD3-score2-1='''6'''
+| RD3-score2-2='''9<sup>7</sup>'''
+| RD3-score2-3='''6'''
+| RD3-score2-4=
+| RD3-score2-5=
+}}
+
+===Top half===
+
+====Section 1====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=1
+| RD1-team01={{flagicon|ROM|1965}} '''[[Ilie Năstase|I Năstase]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2='''7'''
+| RD1-score01-3='''6'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=Q
+| RD1-team02={{flagicon|FRG}} [[Hans-Joachim Plötz|H-J Plötz]]
+| RD1-score02-1=3
+| RD1-score02-2=5
+| RD1-score02-3=2
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=
+| RD1-team03={{flagicon|COL}} '''[[Iván Molina|I Molina]]'''
+| RD1-score03-1='''6'''
+| RD1-score03-2='''9'''
+| RD1-score03-3=8
+| RD1-score03-4='''6'''
+| RD1-score03-5=
+| RD1-seed04=LL
+| RD1-team04={{flagicon|USA}} [[William Brown (tennis)|W Brown]]
+| RD1-score04-1=4
+| RD1-score04-2=7
+| RD1-score04-3='''9'''
+| RD1-score04-4=3
+| RD1-score04-5=
+
+| RD1-seed05=LL
+| RD1-team05={{flagicon|GBR}} [[Phil Siviter|P Siviter]]
+| RD1-score05-1=4
+| RD1-score05-2='''9'''
+| RD1-score05-3=1
+| RD1-score05-4=2
+| RD1-score05-5=
+| RD1-seed06=
+| RD1-team06={{flagicon|AUT}} '''[[Hans Kary|H Kary]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2=7
+| RD1-score06-3='''6'''
+| RD1-score06-4='''6'''
+| RD1-score06-5=
+
+| RD1-seed07=Q
+| RD1-team07={{flagicon|JPN|1947}} '''[[Toshiro Sakai|T Sakai]]'''
+| RD1-score07-1='''6'''
+| RD1-score07-2=3
+| RD1-score07-3='''9'''
+| RD1-score07-4='''6'''
+| RD1-score07-5=
+| RD1-seed08=LL
+| RD1-team08={{flagicon|USA}} [[Ken McMillan (tennis)|K McMillan]]
+| RD1-score08-1=1
+| RD1-score08-2='''6'''
+| RD1-score08-3=8
+| RD1-score08-4=4
+| RD1-score08-5=
+
+| RD1-seed09=Q
+| RD1-team09={{flagicon|ROM|1965}} [[Ionel Sânteiu|I Sânteiu]]
+| RD1-score09-1='''7'''
+| RD1-score09-2='''6'''
+| RD1-score09-3=4
+| RD1-score09-4=5
+| RD1-score09-5=5
+| RD1-seed10=LL
+| RD1-team10={{flagicon|MEX}} '''[[Roberto Chavez|R Chavez]]'''
+| RD1-score10-1=5
+| RD1-score10-2=4
+| RD1-score10-3='''6'''
+| RD1-score10-4='''7'''
+| RD1-score10-5='''7'''
+
+| RD1-seed11=
+| RD1-team11={{flagicon|USA}} '''[[Sandy Mayer|A Mayer]]'''
+| RD1-score11-1='''7'''
+| RD1-score11-2='''6'''
+| RD1-score11-3='''6'''
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=LL
+| RD1-team12={{flagicon|GBR}} [[Richard Lewis (tennis and rugby league)|R Lewis]]
+| RD1-score12-1=5
+| RD1-score12-2=4
+| RD1-score12-3=3
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=Q
+| RD1-team13={{flagicon|USA}} [[Steve Messmer|S Messmer]]
+| RD1-score13-1=5
+| RD1-score13-2=2
+| RD1-score13-3=4
+| RD1-score13-4=
+| RD1-score13-5=
+| RD1-seed14=LL
+| RD1-team14={{flagicon|GBR}} '''[[Clay Iles|C Iles]]'''
+| RD1-score14-1='''7'''
+| RD1-score14-2='''6'''
+| RD1-score14-3='''6'''
+| RD1-score14-4=
+| RD1-score14-5=
+
+| RD1-seed15=Q
+| RD1-team15={{flagicon|IND}} [[Gaurav Misra|G Misra]]
+| RD1-score15-1=4
+| RD1-score15-2=4
+| RD1-score15-3=1
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=LL
+| RD1-team16={{flagicon|TCH}} '''[[Vladimír Zedník|V Zedník]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=1
+| RD2-team01={{flagicon|ROM|1965}} '''[[Ilie Năstase|I Năstase]]'''
+| RD2-score01-1='''6'''
+| RD2-score01-2=7
+| RD2-score01-3='''7'''
+| RD2-score01-4='''6'''
+| RD2-score01-5=
+| RD2-seed02=
+| RD2-team02={{flagicon|COL}} [[Iván Molina|I Molina]]
+| RD2-score02-1=2
+| RD2-score02-2='''9'''
+| RD2-score02-3=5
+| RD2-score02-4=1
+| RD2-score02-5=
+
+| RD2-seed03=
+| RD2-team03={{flagicon|AUT}} [[Hans Kary|H Kary]]
+| RD2-score03-1=1
+| RD2-score03-2=3
+| RD2-score03-3='''6'''
+| RD2-score03-4=3
+| RD2-score03-5=
+| RD2-seed04=Q
+| RD2-team04={{flagicon|JPN|1947}} '''[[Toshiro Sakai|T Sakai]]'''
+| RD2-score04-1='''6'''
+| RD2-score04-2='''6'''
+| RD2-score04-3=3
+| RD2-score04-4='''6'''
+| RD2-score04-5=
+
+| RD2-seed05=LL
+| RD2-team05={{flagicon|MEX}} [[Roberto Chavez|R Chavez]]
+| RD2-score05-1='''9'''
+| RD2-score05-2=1
+| RD2-score05-3=7
+| RD2-score05-4=2
+| RD2-score05-5=
+| RD2-seed06=
+| RD2-team06={{flagicon|USA}} '''[[Sandy Mayer|A Mayer]]'''
+| RD2-score06-1=7
+| RD2-score06-2='''6'''
+| RD2-score06-3='''9'''
+| RD2-score06-4='''6'''
+| RD2-score06-5=
+
+| RD2-seed07=LL
+| RD2-team07={{flagicon|GBR}} [[Clay Iles|C Iles]]
+| RD2-score07-1=3
+| RD2-score07-2=3
+| RD2-score07-3='''6'''
+| RD2-score07-4=2
+| RD2-score07-5=
+| RD2-seed08=LL
+| RD2-team08={{flagicon|TCH}} '''[[Vladimír Zedník|V Zedník]]'''
+| RD2-score08-1='''6'''
+| RD2-score08-2='''6'''
+| RD2-score08-3=4
+| RD2-score08-4='''6'''
+| RD2-score08-5=
+
+| RD3-seed01=1
+| RD3-team01={{flagicon|ROM|1965}} '''[[Ilie Năstase|I Năstase]]'''
+| RD3-score01-1='''7'''
+| RD3-score01-2='''6'''
+| RD3-score01-3='''6'''
+| RD3-score01-4=
+| RD3-score01-5=
+| RD3-seed02=Q
+| RD3-team02={{flagicon|JPN|1947}} [[Toshiro Sakai|T Sakai]]
+| RD3-score02-1=5
+| RD3-score02-2=2
+| RD3-score02-3=4
+| RD3-score02-4=
+| RD3-score02-5=
+
+| RD3-seed03=
+| RD3-team03={{flagicon|USA}} '''[[Sandy Mayer|A Mayer]]'''
+| RD3-score03-1='''8'''
+| RD3-score03-2='''7'''
+| RD3-score03-3='''6'''
+| RD3-score03-4=
+| RD3-score03-5=
+| RD3-seed04=LL
+| RD3-team04={{flagicon|TCH}} [[Vladimír Zedník|V Zedník]]
+| RD3-score04-1=6
+| RD3-score04-2=5
+| RD3-score04-3=0
+| RD3-score04-4=
+| RD3-score04-5=
+
+| RD4-seed01=1
+| RD4-team01={{flagicon|ROM|1965}} [[Ilie Năstase|I Năstase]]
+| RD4-score01-1=4
+| RD4-score01-2=6
+| RD4-score01-3='''8'''
+| RD4-score01-4=4
+| RD4-score01-5=
+| RD4-seed02=
+| RD4-team02={{flagicon|USA}} '''[[Sandy Mayer|A Mayer]]'''
+| RD4-score02-1='''6'''
+| RD4-score02-2='''8'''
+| RD4-score02-3=6
+| RD4-score02-4='''6'''
+| RD4-score02-5=
+}}
+
+====Section 2====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=8
+| RD1-team01={{flagicon|FRG}} '''[[Jürgen Fassbender|J Fassbender]]'''
+| RD1-score01-1='''8'''
+| RD1-score01-2=6
+| RD1-score01-3='''6'''
+| RD1-score01-4='''6'''
+| RD1-score01-5=
+| RD1-seed02=
+| RD1-team02={{flagicon|HUN}} [[István Gulyás|I Gulyás]]
+| RD1-score02-1=6
+| RD1-score02-2='''8'''
+| RD1-score02-3=3
+| RD1-score02-4=3
+| RD1-score02-5=
+
+| RD1-seed03=LL
+| RD1-team03={{flagicon|ESP|1945}} '''[[José Moreno (tennis)|J Moreno]]'''
+| RD1-score03-1='''6'''
+| RD1-score03-2='''6'''
+| RD1-score03-3='''6'''
+| RD1-score03-4=
+| RD1-score03-5=
+| RD1-seed04=LL
+| RD1-team04={{flagicon|GBR}} [[Michael Collins (tennis)|M Collins]]
+| RD1-score04-1=4
+| RD1-score04-2=3
+| RD1-score04-3=3
+| RD1-score04-4=
+| RD1-score04-5=
+
+| RD1-seed05=
+| RD1-team05={{flagicon|AUS}} '''[[Ray Keldie|R Keldie]]'''
+| RD1-score05-1='''7'''
+| RD1-score05-2='''6'''
+| RD1-score05-3=4
+| RD1-score05-4='''6'''
+| RD1-score05-5=
+| RD1-seed06=LL
+| RD1-team06={{flagicon|USA}} [[Dick R. Bohrnstedt|R Bohrnstedt]]
+| RD1-score06-1=5
+| RD1-score06-2=3
+| RD1-score06-3='''6'''
+| RD1-score06-4=3
+| RD1-score06-5=
+
+| RD1-seed07=Q
+| RD1-team07={{flagicon|FRG}} [[Frank Gebert|F Gebert]]
+| RD1-score07-1='''8'''
+| RD1-score07-2=8
+| RD1-score07-3=5
+| RD1-score07-4=7
+| RD1-score07-5=
+| RD1-seed08=Q
+| RD1-team08={{flagicon|SWE}} '''[[Tenny Svensson|T Svensson]]'''
+| RD1-score08-1=6
+| RD1-score08-2='''9'''
+| RD1-score08-3='''7'''
+| RD1-score08-4='''9'''
+| RD1-score08-5=
+
+| RD1-seed09=
+| RD1-team09={{flagicon|ITA}} [[Nicola Pietrangeli|N Pietrangeli]]
+| RD1-score09-1=6
+| RD1-score09-2='''6'''
+| RD1-score09-3=5
+| RD1-score09-4=2
+| RD1-score09-5=
+| RD1-seed10=LL
+| RD1-team10={{flagicon|NZL}} '''[[Jeff Simpson|J Simpson]]'''
+| RD1-score10-1='''8'''
+| RD1-score10-2=2
+| RD1-score10-3='''7'''
+| RD1-score10-4='''6'''
+| RD1-score10-5=
+
+| RD1-seed11=
+| RD1-team11={{flagicon|AUS}} [[Neale Fraser|N Fraser]]
+| RD1-score11-1=4
+| RD1-score11-2=5
+| RD1-score11-3=6
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=LL
+| RD1-team12={{flagicon|USA}} '''[[Chico Hagey|J Hagey]]'''
+| RD1-score12-1='''6'''
+| RD1-score12-2='''7'''
+| RD1-score12-3='''8'''
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|GBR}} [[John Paish|J Paish]]
+| RD1-score13-1='''7'''
+| RD1-score13-2=4
+| RD1-score13-3=5
+| RD1-score13-4=2
+| RD1-score13-5=
+| RD1-seed14=Q
+| RD1-team14={{flagicon|MEX}} '''[[Marcello Lara|M Lara]]'''
+| RD1-score14-1=5
+| RD1-score14-2='''6'''
+| RD1-score14-3='''7'''
+| RD1-score14-4='''6'''
+| RD1-score14-5=
+
+| RD1-seed15=LL
+| RD1-team15={{flagicon|GBR}} [[Colin McHugo|C McHugo]]
+| RD1-score15-1=3
+| RD1-score15-2=4
+| RD1-score15-3=4
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=
+| RD1-team16={{flagicon|FRG}} '''[[Hans-Jürgen Pohmann|H-J Pohmann]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=8
+| RD2-team01={{flagicon|FRG}} '''[[Jürgen Fassbender|J Fassbender]]'''
+| RD2-score01-1='''6'''
+| RD2-score01-2='''6'''
+| RD2-score01-3='''6'''
+| RD2-score01-4=
+| RD2-score01-5=
+| RD2-seed02=LL
+| RD2-team02={{flagicon|ESP|1945}} [[José Moreno (tennis)|J Moreno]]
+| RD2-score02-1=3
+| RD2-score02-2=4
+| RD2-score02-3=4
+| RD2-score02-4=
+| RD2-score02-5=
+
+| RD2-seed03=
+| RD2-team03={{flagicon|AUS}} '''[[Ray Keldie|R Keldie]]'''
+| RD2-score03-1='''6'''
+| RD2-score03-2=8
+| RD2-score03-3='''6'''
+| RD2-score03-4='''6'''
+| RD2-score03-5=
+| RD2-seed04=Q
+| RD2-team04={{flagicon|SWE}} [[Tenny Svensson|T Svensson]]
+| RD2-score04-1=4
+| RD2-score04-2='''9'''
+| RD2-score04-3=0
+| RD2-score04-4=4
+| RD2-score04-5=
+
+| RD2-seed05=LL
+| RD2-team05={{flagicon|NZL}} '''[[Jeff Simpson|J Simpson]]'''
+| RD2-score05-1='''8'''
+| RD2-score05-2='''6'''
+| RD2-score05-3=8
+| RD2-score05-4='''6'''
+| RD2-score05-5=
+| RD2-seed06=LL
+| RD2-team06={{flagicon|USA}} [[Chico Hagey|J Hagey]]
+| RD2-score06-1=6
+| RD2-score06-2=4
+| RD2-score06-3='''9'''
+| RD2-score06-4=3
+| RD2-score06-5=
+
+| RD2-seed07=Q
+| RD2-team07={{flagicon|MEX}} [[Marcello Lara|M Lara]]
+| RD2-score07-1='''6'''
+| RD2-score07-2=5
+| RD2-score07-3='''6'''
+| RD2-score07-4=1
+| RD2-score07-5=5
+| RD2-seed08=
+| RD2-team08={{flagicon|FRG}} '''[[Hans-Jürgen Pohmann|H-J Pohmann]]'''
+| RD2-score08-1=2
+| RD2-score08-2='''7'''
+| RD2-score08-3=2
+| RD2-score08-4='''6'''
+| RD2-score08-5='''7'''
+
+| RD3-seed01=8
+| RD3-team01={{flagicon|FRG}} '''[[Jürgen Fassbender|J Fassbender]]'''
+| RD3-score01-1='''6'''
+| RD3-score01-2=5
+| RD3-score01-3=4
+| RD3-score01-4='''7'''
+| RD3-score01-5='''15'''
+| RD3-seed02=
+| RD3-team02={{flagicon|AUS}} [[Ray Keldie|R Keldie]]
+| RD3-score02-1=2
+| RD3-score02-2='''7'''
+| RD3-score02-3='''6'''
+| RD3-score02-4=5
+| RD3-score02-5=13
+
+| RD3-seed03=LL
+| RD3-team03={{flagicon|NZL}} [[Jeff Simpson|J Simpson]]
+| RD3-score03-1='''6'''
+| RD3-score03-2=5
+| RD3-score03-3=3
+| RD3-score03-4=4
+| RD3-score03-5=
+| RD3-seed04=
+| RD3-team04={{flagicon|FRG}} '''[[Hans-Jürgen Pohmann|H-J Pohmann]]'''
+| RD3-score04-1=4
+| RD3-score04-2='''7'''
+| RD3-score04-3='''6'''
+| RD3-score04-4='''6'''
+| RD3-score04-5=
+
+| RD4-seed01=8
+| RD4-team01={{flagicon|FRG}} '''[[Jürgen Fassbender|J Fassbender]]'''
+| RD4-score01-1='''6'''
+| RD4-score01-2='''7'''
+| RD4-score01-3='''6'''
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=
+| RD4-team02={{flagicon|FRG}} [[Hans-Jürgen Pohmann|H-J Pohmann]]
+| RD4-score02-1=2
+| RD4-score02-2=5
+| RD4-score02-3=3
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+====Section 3====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=4
+| RD1-team01={{flagicon|URS|1955}} '''[[Alex Metreveli|A Metreveli]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2='''6'''
+| RD1-score01-3='''9'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=LL
+| RD1-team02={{flagicon|GBR}} [[Stanley Matthews (tennis)|S Matthews]]
+| RD1-score02-1=3
+| RD1-score02-2=4
+| RD1-score02-3=8
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=Q
+| RD1-team03={{flagicon|AUS}} '''[[Bob Giltinan|R Giltinan]]'''
+| RD1-score03-1='''6'''
+| RD1-score03-2='''6'''
+| RD1-score03-3='''6'''
+| RD1-score03-4=
+| RD1-score03-5=
+| RD1-seed04=LL
+| RD1-team04={{flagicon|HUN}} [[Róbert Machán|R Machán]]
+| RD1-score04-1=3
+| RD1-score04-2=4
+| RD1-score04-3=3
+| RD1-score04-4=
+| RD1-score04-5=
+
+| RD1-seed05=LL
+| RD1-team05={{flagicon|AUS}} [[Greg Braun|G Braun]]
+| RD1-score05-1=4
+| RD1-score05-2=4
+| RD1-score05-3=2
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06=Q
+| RD1-team06={{flagicon|AUS}} '''[[Allan McDonald (tennis)|A McDonald]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2='''6'''
+| RD1-score06-3='''6'''
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=
+| RD1-team07={{flagicon|AUS}} '''[[John Cooper (tennis)|J Cooper]]'''
+| RD1-score07-1='''6'''
+| RD1-score07-2=8
+| RD1-score07-3='''6'''
+| RD1-score07-4='''9'''
+| RD1-score07-5=
+| RD1-seed08=
+| RD1-team08={{flagicon|USA}} [[Herb Fitzgibbon|H Fitzgibbon]]
+| RD1-score08-1=3
+| RD1-score08-2='''9'''
+| RD1-score08-3=3
+| RD1-score08-4=7
+| RD1-score08-5=
+
+| RD1-seed09=LL
+| RD1-team09={{flagicon|USA}} '''[[Pancho Walthall|F Walthall]]'''
+| RD1-score09-1='''6'''
+| RD1-score09-2=3
+| RD1-score09-3=6
+| RD1-score09-4='''6'''
+| RD1-score09-5='''6'''
+| RD1-seed10=
+| RD1-team10={{flagicon|POL|1928}} [[Tadeusz Nowicki|T Nowicki]]
+| RD1-score10-1=4
+| RD1-score10-2='''6'''
+| RD1-score10-3='''8'''
+| RD1-score10-4=3
+| RD1-score10-5=2
+
+| RD1-seed11=LL
+| RD1-team11={{flagicon|IND}} '''[[Chiradip Mukerjea|C Mukerjea]]'''
+| RD1-score11-1='''6'''
+| RD1-score11-2='''7'''
+| RD1-score11-3=8
+| RD1-score11-4='''6'''
+| RD1-score11-5=
+| RD1-seed12=Q
+| RD1-team12={{flagicon|FRG}} [[Hans Engert|H Engert]]
+| RD1-score12-1=4
+| RD1-score12-2=5
+| RD1-score12-3='''9'''
+| RD1-score12-4=4
+| RD1-score12-5=
+
+| RD1-seed13=Q
+| RD1-team13={{flagicon|USA}} [[Gene Scott (tennis)|E Scott]]
+| RD1-score13-1='''9'''
+| RD1-score13-2=3
+| RD1-score13-3='''8'''
+| RD1-score13-4=4
+| RD1-score13-5=4
+| RD1-seed14=
+| RD1-team14={{flagicon|GBR}} '''[[John Feaver|J Feaver]]'''
+| RD1-score14-1=8
+| RD1-score14-2='''6'''
+| RD1-score14-3=6
+| RD1-score14-4='''6'''
+| RD1-score14-5='''6'''
+
+| RD1-seed15=LL
+| RD1-team15={{flagicon|AUS}} '''[[Cliff Letcher|C Letcher]]'''
+| RD1-score15-1=5
+| RD1-score15-2='''6'''
+| RD1-score15-3='''6'''
+| RD1-score15-4='''6'''
+| RD1-score15-5=
+| RD1-seed16=LL
+| RD1-team16={{flagicon|USA}} [[Robert Stock (tennis)|R Stock]]
+| RD1-score16-1='''7'''
+| RD1-score16-2=4
+| RD1-score16-3=3
+| RD1-score16-4=1
+| RD1-score16-5=
+
+| RD2-seed01=4
+| RD2-team01={{flagicon|URS|1955}} '''[[Alex Metreveli|A Metreveli]]'''
+| RD2-score01-1='''6'''
+| RD2-score01-2='''6'''
+| RD2-score01-3='''7'''
+| RD2-score01-4=
+| RD2-score01-5=
+| RD2-seed02=Q
+| RD2-team02={{flagicon|AUS}} [[Bob Giltinan|R Giltinan]]
+| RD2-score02-1=4
+| RD2-score02-2=2
+| RD2-score02-3=5
+| RD2-score02-4=
+| RD2-score02-5=
+
+| RD2-seed03=Q
+| RD2-team03={{flagicon|AUS}} [[Allan McDonald (tennis)|A McDonald]]
+| RD2-score03-1=4
+| RD2-score03-2='''6'''
+| RD2-score03-3='''6'''
+| RD2-score03-4=5
+| RD2-score03-5=7
+| RD2-seed04=
+| RD2-team04={{flagicon|AUS}} '''[[John Cooper (tennis)|J Cooper]]'''
+| RD2-score04-1='''6'''
+| RD2-score04-2=4
+| RD2-score04-3=4
+| RD2-score04-4='''7'''
+| RD2-score04-5='''9'''
+
+| RD2-seed05=LL
+| RD2-team05={{flagicon|USA}} '''[[Pancho Walthall|F Walthall]]'''
+| RD2-score05-1=3
+| RD2-score05-2='''6'''
+| RD2-score05-3='''6'''
+| RD2-score05-4='''9'''
+| RD2-score05-5=
+| RD2-seed06=LL
+| RD2-team06={{flagicon|IND}} [[Chiradip Mukerjea|C Mukerjea]]
+| RD2-score06-1='''6'''
+| RD2-score06-2=1
+| RD2-score06-3=1
+| RD2-score06-4=8
+| RD2-score06-5=
+
+| RD2-seed07=
+| RD2-team07={{flagicon|GBR}} '''[[John Feaver|J Feaver]]'''
+| RD2-score07-1='''9'''
+| RD2-score07-2='''6'''
+| RD2-score07-3='''9'''
+| RD2-score07-4=
+| RD2-score07-5=
+| RD2-seed08=LL
+| RD2-team08={{flagicon|AUS}} [[Cliff Letcher|C Letcher]]
+| RD2-score08-1=8
+| RD2-score08-2=4
+| RD2-score08-3=8
+| RD2-score08-4=
+| RD2-score08-5=
+
+| RD3-seed01=4
+| RD3-team01={{flagicon|URS|1955}} '''[[Alex Metreveli|A Metreveli]]'''
+| RD3-score01-1='''6'''
+| RD3-score01-2='''6'''
+| RD3-score01-3='''6'''
+| RD3-score01-4=
+| RD3-score01-5=
+| RD3-seed02=
+| RD3-team02={{flagicon|AUS}} [[John Cooper (tennis)|J Cooper]]
+| RD3-score02-1=2
+| RD3-score02-2=3
+| RD3-score02-3=1
+| RD3-score02-4=
+| RD3-score02-5=
+
+| RD3-seed03=LL
+| RD3-team03={{flagicon|USA}} [[Pancho Walthall|F Walthall]]
+| RD3-score03-1=5
+| RD3-score03-2=1
+| RD3-score03-3=8
+| RD3-score03-4=
+| RD3-score03-5=
+| RD3-seed04=
+| RD3-team04={{flagicon|GBR}} '''[[John Feaver|J Feaver]]'''
+| RD3-score04-1='''7'''
+| RD3-score04-2='''6'''
+| RD3-score04-3='''9'''
+| RD3-score04-4=
+| RD3-score04-5=
+
+| RD4-seed01=4
+| RD4-team01={{flagicon|URS|1955}} '''[[Alex Metreveli|A Metreveli]]'''
+| RD4-score01-1='''8'''
+| RD4-score01-2='''6'''
+| RD4-score01-3='''6'''
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=
+| RD4-team02={{flagicon|GBR}} [[John Feaver|J Feaver]]
+| RD4-score02-1=6
+| RD4-score02-2=4
+| RD4-score02-3=1
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+====Section 4====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=5
+| RD1-team01={{flagicon|USA}} '''[[Jimmy Connors|J Connors]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2='''6'''
+| RD1-score01-3='''6'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=LL
+| RD1-team02={{flagicon|GBR}} [[Mark Farrell (tennis)|M Farrell]]
+| RD1-score02-1=4
+| RD1-score02-2=3
+| RD1-score02-3=4
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=
+| RD1-team03={{flagicon|GBR}} '''[[David Lloyd (tennis)|D Lloyd]]'''
+| RD1-score03-1='''6'''
+| RD1-score03-2=0
+| RD1-score03-3='''6'''
+| RD1-score03-4='''6'''
+| RD1-score03-5=
+| RD1-seed04=
+| RD1-team04={{flagicon|ITA}} [[Corrado Barazzutti|C Barazzutti]]
+| RD1-score04-1=2
+| RD1-score04-2='''6'''
+| RD1-score04-3=1
+| RD1-score04-4=1
+| RD1-score04-5=
+
+| RD1-seed05=
+| RD1-team05={{flagicon|URS|1955}} [[Sergei Likhachev|S Likhachev]]
+| RD1-score05-1=3
+| RD1-score05-2=4
+| RD1-score05-3='''6'''
+| RD1-score05-4=4
+| RD1-score05-5=
+| RD1-seed06=Q
+| RD1-team06={{flagicon|AUS}} '''[[Bill Durham|W Durham]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2='''6'''
+| RD1-score06-3=3
+| RD1-score06-4='''6'''
+| RD1-score06-5=
+
+| RD1-seed07=LL
+| RD1-team07={{flagicon|USA}} [[Tom Karp|T Karp]]
+| RD1-score07-1=4
+| RD1-score07-2=6
+| RD1-score07-3=3
+| RD1-score07-4=
+| RD1-score07-5=
+| RD1-seed08=LL
+| RD1-team08={{flagicon|NZL}} '''[[Russell Simpson (tennis)|R Simpson]]'''
+| RD1-score08-1='''6'''
+| RD1-score08-2='''8'''
+| RD1-score08-3='''6'''
+| RD1-score08-4=
+| RD1-score08-5=
+
+| RD1-seed09=Q
+| RD1-team09={{flagicon|GBR}} [[John Clifton (tennis)|J Clifton]]
+| RD1-score09-1=4
+| RD1-score09-2='''6'''
+| RD1-score09-3='''6'''
+| RD1-score09-4=4
+| RD1-score09-5=3
+| RD1-seed10=
+| RD1-team10={{flagicon|CHI}} '''[[Jaime Pinto Bravo|J Pinto Bravo]]'''
+| RD1-score10-1='''6'''
+| RD1-score10-2=3
+| RD1-score10-3=2
+| RD1-score10-4='''6'''
+| RD1-score10-5='''6'''
+
+| RD1-seed11=Q
+| RD1-team11={{flagicon|RHO}} [[Colin Dowdeswell|C Dowdeswell]]
+| RD1-score11-1=3
+| RD1-score11-2='''6'''
+| RD1-score11-3=4
+| RD1-score11-4=5
+| RD1-score11-5=
+| RD1-seed12=LL
+| RD1-team12={{flagicon|RSA|1928}} '''[[Deon Joubert|D Joubert]]'''
+| RD1-score12-1='''6'''
+| RD1-score12-2=4
+| RD1-score12-3='''6'''
+| RD1-score12-4='''7'''
+| RD1-score12-5=
+
+| RD1-seed13=LL
+| RD1-team13={{flagicon|FRA}} [[Thierry Bernasconi|T Bernasconi]]
+| RD1-score13-1=6
+| RD1-score13-2=1
+| RD1-score13-3=3
+| RD1-score13-4=
+| RD1-score13-5=
+| RD1-seed14=LL
+| RD1-team14={{flagicon|RSA|1928}} '''[[Bernard Mitton|B Mitton]]'''
+| RD1-score14-1='''8'''
+| RD1-score14-2='''6'''
+| RD1-score14-3='''6'''
+| RD1-score14-4=
+| RD1-score14-5=
+
+| RD1-seed15=Q
+| RD1-team15={{flagicon|NED}} [[Jan Hordijk|J Hordijk]]
+| RD1-score15-1=7
+| RD1-score15-2=2
+| RD1-score15-3=2
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=
+| RD1-team16={{flagicon|USA}} '''[[Zan Guerry|A Guerry]]'''
+| RD1-score16-1='''9'''
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=5
+| RD2-team01={{flagicon|USA}} '''[[Jimmy Connors|J Connors]]'''
+| RD2-score01-1='''6'''
+| RD2-score01-2='''6'''
+| RD2-score01-3=5
+| RD2-score01-4='''6'''
+| RD2-score01-5=
+| RD2-seed02=
+| RD2-team02={{flagicon|GBR}} [[David Lloyd (tennis)|D Lloyd]]
+| RD2-score02-1=4
+| RD2-score02-2=3
+| RD2-score02-3='''7'''
+| RD2-score02-4=2
+| RD2-score02-5=
+
+| RD2-seed03=Q
+| RD2-team03={{flagicon|AUS}} [[Bill Durham|W Durham]]
+| RD2-score03-1=8
+| RD2-score03-2='''9'''
+| RD2-score03-3=5
+| RD2-score03-4='''6'''
+| RD2-score03-5=2
+| RD2-seed04=LL
+| RD2-team04={{flagicon|NZL}} '''[[Russell Simpson (tennis)|R Simpson]]'''
+| RD2-score04-1='''9'''
+| RD2-score04-2=7
+| RD2-score04-3='''7'''
+| RD2-score04-4=3
+| RD2-score04-5='''6'''
+
+| RD2-seed05=
+| RD2-team05={{flagicon|CHI}} [[Jaime Pinto Bravo|J Pinto Bravo]]
+| RD2-score05-1='''6'''
+| RD2-score05-2=2
+| RD2-score05-3=2
+| RD2-score05-4='''6'''
+| RD2-score05-5=3
+| RD2-seed06=LL
+| RD2-team06={{flagicon|RSA|1928}} '''[[Deon Joubert|D Joubert]]'''
+| RD2-score06-1=4
+| RD2-score06-2='''6'''
+| RD2-score06-3='''6'''
+| RD2-score06-4=2
+| RD2-score06-5='''6'''
+
+| RD2-seed07=LL
+| RD2-team07={{flagicon|RSA|1928}} '''[[Bernard Mitton|B Mitton]]'''
+| RD2-score07-1='''7'''
+| RD2-score07-2=2
+| RD2-score07-3=4
+| RD2-score07-4='''7'''
+| RD2-score07-5='''7'''
+| RD2-seed08=
+| RD2-team08={{flagicon|USA}} [[Zan Guerry|A Guerry]]
+| RD2-score08-1=5
+| RD2-score08-2='''6'''
+| RD2-score08-3='''6'''
+| RD2-score08-4=5
+| RD2-score08-5=5
+
+| RD3-seed01=5
+| RD3-team01={{flagicon|USA}} '''[[Jimmy Connors|J Connors]]'''
+| RD3-score01-1='''6'''
+| RD3-score01-2='''6'''
+| RD3-score01-3='''6'''
+| RD3-score01-4=
+| RD3-score01-5=
+| RD3-seed02=LL
+| RD3-team02={{flagicon|NZL}} [[Russell Simpson (tennis)|R Simpson]]
+| RD3-score02-1=2
+| RD3-score02-2=1
+| RD3-score02-3=2
+| RD3-score02-4=
+| RD3-score02-5=
+
+| RD3-seed03=LL
+| RD3-team03={{flagicon|RSA|1928}} [[Deon Joubert|D Joubert]]
+| RD3-score03-1='''6'''
+| RD3-score03-2='''9'''
+| RD3-score03-3=4
+| RD3-score03-4=1
+| RD3-score03-5=7
+| RD3-seed04=LL
+| RD3-team04={{flagicon|RSA|1928}} '''[[Bernard Mitton|B Mitton]]'''
+| RD3-score04-1=4
+| RD3-score04-2=8
+| RD3-score04-3='''6'''
+| RD3-score04-4='''6'''
+| RD3-score04-5='''9'''
+
+| RD4-seed01=5
+| RD4-team01={{flagicon|USA}} '''[[Jimmy Connors|J Connors]]'''
+| RD4-score01-1='''6'''
+| RD4-score01-2='''6'''
+| RD4-score01-3='''6'''
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=LL
+| RD4-team02={{flagicon|RSA|1928}} [[Bernard Mitton|B Mitton]]
+| RD4-score02-1=3
+| RD4-score02-2=3
+| RD4-score02-3=2
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+===Bottom half===
+
+====Section 5====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=
+| RD1-team01={{flagicon|YUG}} [[Boro Jovanović|B Jovanović]]
+| RD1-score01-1=5
+| RD1-score01-2=6
+| RD1-score01-3=3
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=Q
+| RD1-team02={{flagicon|AUS}} '''[[Syd Ball|S Ball]]'''
+| RD1-score02-1='''7'''
+| RD1-score02-2='''8'''
+| RD1-score02-3='''6'''
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=
+| RD1-team03={{flagicon|FRA}} [[Jean-Loup Rouyer|J-L Rouyer]]
+| RD1-score03-1=0
+| RD1-score03-2=2
+| RD1-score03-3=2
+| RD1-score03-4=
+| RD1-score03-5=
+| RD1-seed04=
+| RD1-team04={{flagicon|HUN}} '''[[Szabolcs Baranyi|S Baranyi]]'''
+| RD1-score04-1='''6'''
+| RD1-score04-2='''6'''
+| RD1-score04-3='''6'''
+| RD1-score04-4=
+| RD1-score04-5=
+
+| RD1-seed05=LL
+| RD1-team05={{flagicon|JPN|1947}} [[Kiyoshi Tanabe (tennis)|K Tanabe]]
+| RD1-score05-1=4
+| RD1-score05-2=3
+| RD1-score05-3=4
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06=LL
+| RD1-team06={{flagicon|SUI}} '''[[Petr Kanderal|P Kanderal]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2='''6'''
+| RD1-score06-3='''6'''
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=
+| RD1-team07={{flagicon|URS|1955}} [[Teimuraz Kakulia|T Kakulia]]
+| RD1-score07-1='''6'''
+| RD1-score07-2='''6'''
+| RD1-score07-3=3
+| RD1-score07-4=0
+| RD1-score07-5=4
+| RD1-seed08=
+| RD1-team08={{flagicon|USA}} '''[[Jeff Austin (tennis)|J Austin]]'''
+| RD1-score08-1=3
+| RD1-score08-2=4
+| RD1-score08-3='''6'''
+| RD1-score08-4='''6'''
+| RD1-score08-5='''6'''
+
+| RD1-seed09=LL
+| RD1-team09={{flagicon|USA}} [[Greg Peebles|G Peebles]]
+| RD1-score09-1=7
+| RD1-score09-2=4
+| RD1-score09-3=2
+| RD1-score09-4=
+| RD1-score09-5=
+| RD1-seed10=
+| RD1-team10={{flagicon|FRG}} '''[[Karl Meiler|K Meiler]]'''
+| RD1-score10-1='''9'''
+| RD1-score10-2='''6'''
+| RD1-score10-3='''6'''
+| RD1-score10-4=
+| RD1-score10-5=
+
+| RD1-seed11=LL
+| RD1-team11={{flagicon|IND}} [[Jasjit Singh (tennis)|J Singh]]
+| RD1-score11-1=3
+| RD1-score11-2=7
+| RD1-score11-3='''6'''
+| RD1-score11-4=3
+| RD1-score11-5=
+| RD1-seed12=Q
+| RD1-team12={{flagicon|USA}} '''[[Billy Martin (tennis)|W Martin]]'''
+| RD1-score12-1='''6'''
+| RD1-score12-2='''9'''
+| RD1-score12-3=2
+| RD1-score12-4='''6'''
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|BEL}} '''[[Patrick Hombergen|P Hombergen]]'''
+| RD1-score13-1='''6'''
+| RD1-score13-2='''6'''
+| RD1-score13-3='''6'''
+| RD1-score13-4=
+| RD1-score13-5=
+| RD1-seed14=
+| RD1-team14={{flagicon|AUS}} [[Stephen Myers (tennis)|S Myers]]
+| RD1-score14-1=3
+| RD1-score14-2=3
+| RD1-score14-3=1
+| RD1-score14-4=
+| RD1-score14-5=
+
+| RD1-seed15=Q
+| RD1-team15={{flagicon|IND}} [[Premjit Lall|P Lall]]
+| RD1-score15-1=3
+| RD1-score15-2=4
+| RD1-score15-3=8
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=6
+| RD1-team16={{flagicon|SWE}} '''[[Björn Borg|B Borg]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2='''6'''
+| RD1-score16-3='''9'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=Q
+| RD2-team01={{flagicon|AUS}} [[Syd Ball|S Ball]]
+| RD2-score01-1=0<sup>r</sup>
+| RD2-score01-2=
+| RD2-score01-3=
+| RD2-score01-4=
+| RD2-score01-5=
+| RD2-seed02=
+| RD2-team02={{flagicon|HUN}} '''[[Szabolcs Baranyi|S Baranyi]]'''
+| RD2-score02-1=1
+| RD2-score02-2=
+| RD2-score02-3=
+| RD2-score02-4=
+| RD2-score02-5=
+
+| RD2-seed03=LL
+| RD2-team03={{flagicon|SUI}} [[Petr Kanderal|P Kanderal]]
+| RD2-score03-1=8
+| RD2-score03-2=3
+| RD2-score03-3=3
+| RD2-score03-4=
+| RD2-score03-5=
+| RD2-seed04=
+| RD2-team04={{flagicon|USA}} '''[[Jeff Austin (tennis)|J Austin]]'''
+| RD2-score04-1='''9'''
+| RD2-score04-2='''6'''
+| RD2-score04-3='''6'''
+| RD2-score04-4=
+| RD2-score04-5=
+
+| RD2-seed05=
+| RD2-team05={{flagicon|FRG}} '''[[Karl Meiler|K Meiler]]'''
+| RD2-score05-1='''6'''
+| RD2-score05-2='''6'''
+| RD2-score05-3='''9'''
+| RD2-score05-4=
+| RD2-score05-5=
+| RD2-seed06=Q
+| RD2-team06={{flagicon|USA}} [[Billy Martin (tennis)|W Martin]]
+| RD2-score06-1=1
+| RD2-score06-2=4
+| RD2-score06-3=8
+| RD2-score06-4=
+| RD2-score06-5=
+
+| RD2-seed07=
+| RD2-team07={{flagicon|BEL}} [[Patrick Hombergen|P Hombergen]]
+| RD2-score07-1=4
+| RD2-score07-2=2
+| RD2-score07-3=4
+| RD2-score07-4=
+| RD2-score07-5=
+| RD2-seed08=6
+| RD2-team08={{flagicon|SWE}} '''[[Björn Borg|B Borg]]'''
+| RD2-score08-1='''6'''
+| RD2-score08-2='''6'''
+| RD2-score08-3='''6'''
+| RD2-score08-4=
+| RD2-score08-5=
+
+| RD3-seed01=
+| RD3-team01={{flagicon|HUN}} '''[[Szabolcs Baranyi|S Baranyi]]'''
+| RD3-score01-1=2
+| RD3-score01-2=5
+| RD3-score01-3='''6'''
+| RD3-score01-4='''6'''
+| RD3-score01-5='''6'''
+| RD3-seed02=
+| RD3-team02={{flagicon|USA}} [[Jeff Austin (tennis)|J Austin]]
+| RD3-score02-1='''6'''
+| RD3-score02-2='''7'''
+| RD3-score02-3=3
+| RD3-score02-4=4
+| RD3-score02-5=4
+
+| RD3-seed03=
+| RD3-team03={{flagicon|FRG}} [[Karl Meiler|K Meiler]]
+| RD3-score03-1=4
+| RD3-score03-2=4
+| RD3-score03-3='''6'''
+| RD3-score03-4='''6'''
+| RD3-score03-5=3
+| RD3-seed04=6
+| RD3-team04={{flagicon|SWE}} '''[[Björn Borg|B Borg]]'''
+| RD3-score04-1='''6'''
+| RD3-score04-2='''6'''
+| RD3-score04-3=3
+| RD3-score04-4=2
+| RD3-score04-5='''6'''
+
+| RD4-seed01=
+| RD4-team01={{flagicon|HUN}} [[Szabolcs Baranyi|S Baranyi]]
+| RD4-score01-1=3
+| RD4-score01-2=2
+| RD4-score01-3='''8'''
+| RD4-score01-4='''7'''
+| RD4-score01-5=1
+| RD4-seed02=6
+| RD4-team02={{flagicon|SWE}} '''[[Björn Borg|B Borg]]'''
+| RD4-score02-1='''6'''
+| RD4-score02-2='''6'''
+| RD4-score02-3=6
+| RD4-score02-4=5
+| RD4-score02-5='''6'''
+}}
+
+====Section 6====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=
+| RD1-team01={{flagicon|TCH}} '''[[František Pála|F Pála]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2=1
+| RD1-score01-3='''6'''
+| RD1-score01-4='''7'''
+| RD1-score01-5=
+| RD1-seed02=LL
+| RD1-team02={{flagicon|USA}} [[Dan Bleckinger|D Bleckinger]]
+| RD1-score02-1=3
+| RD1-score02-2='''6'''
+| RD1-score02-3=3
+| RD1-score02-4=5
+| RD1-score02-5=
+
+| RD1-seed03=LL
+| RD1-team03={{flagicon|USA}} [[Doug Crawford|D Crawford]]
+| RD1-score03-1=4
+| RD1-score03-2=2
+| RD1-score03-3=4
+| RD1-score03-4=
+| RD1-score03-5=
+| RD1-seed04=LL
+| RD1-team04={{flagicon|USA}} '''[[Norman Holmes (tennis)|N Holmes]]'''
+| RD1-score04-1='''6'''
+| RD1-score04-2='''6'''
+| RD1-score04-3='''6'''
+| RD1-score04-4=
+| RD1-score04-5=
+
+| RD1-seed05=
+| RD1-team05={{flagicon|USA}} '''[[Robert McKinley (tennis)|R McKinley]]'''
+| RD1-score05-1='''6'''
+| RD1-score05-2='''6'''
+| RD1-score05-3='''6'''
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06=LL
+| RD1-team06={{flagicon|AUS}} [[Paul McNamee|P McNamee]]
+| RD1-score06-1=4
+| RD1-score06-2=1
+| RD1-score06-3=0
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=Q
+| RD1-team07={{flagicon|USA}} [[Eugene Russo|E Russo]]
+| RD1-score07-1='''6'''
+| RD1-score07-2=2
+| RD1-score07-3='''9'''
+| RD1-score07-4=4
+| RD1-score07-5=7
+| RD1-seed08=LL
+| RD1-team08={{flagicon|JPN|1947}} '''[[Jun Kuki|J Kuki]]'''
+| RD1-score08-1=1
+| RD1-score08-2='''6'''
+| RD1-score08-3=8
+| RD1-score08-4='''6'''
+| RD1-score08-5='''9'''
+
+| RD1-seed09=
+| RD1-team09={{flagicon|TCH}} '''[[Jiří Hřebec|J Hřebec]]'''
+| RD1-score09-1='''6'''
+| RD1-score09-2='''6'''
+| RD1-score09-3='''7'''
+| RD1-score09-4=
+| RD1-score09-5=
+| RD1-seed10=
+| RD1-team10={{flagicon|AUS}} [[Frank Sedgman|F Sedgman]]
+| RD1-score10-1=0
+| RD1-score10-2=4
+| RD1-score10-3=5
+| RD1-score10-4=
+| RD1-score10-5=
+
+| RD1-seed11=
+| RD1-team11={{flagicon|ITA}} '''[[Antonio Zugarelli|A Zugarelli]]
+| RD1-score11-1='''6'''
+| RD1-score11-2='''6'''
+| RD1-score11-3='''6'''
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=LL
+| RD1-team12={{flagicon|YUG}} [[Dragan Stojović|D Stojović]]
+| RD1-score12-1=3
+| RD1-score12-2=2
+| RD1-score12-3=4
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=LL
+| RD1-team13={{flagicon|AUS}} [[John James (tennis)|J James]]
+| RD1-score13-1='''7'''
+| RD1-score13-2=2
+| RD1-score13-3='''6'''
+| RD1-score13-4=6
+| RD1-score13-5=2
+| RD1-seed14=
+| RD1-team14={{flagicon|FRG}} '''[[Harald Elschenbroich|H Elschenbroich]]'''
+| RD1-score14-1=5
+| RD1-score14-2='''6'''
+| RD1-score14-3=3
+| RD1-score14-4='''8'''
+| RD1-score14-5='''6'''
+
+| RD1-seed15=Q
+| RD1-team15={{flagicon|FRA}} [[Jean-Louis Haillet|J-L Haillet]]
+| RD1-score15-1=2
+| RD1-score15-2=3
+| RD1-score15-3=3
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=3
+| RD1-team16={{flagicon|GBR}} '''[[Roger Taylor (tennis)|R Taylor]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=
+| RD2-team01={{flagicon|TCH}} [[František Pála|F Pála]]
+| RD2-score01-1=6
+| RD2-score01-2='''6'''
+| RD2-score01-3=0
+| RD2-score01-4='''6'''
+| RD2-score01-5=5
+| RD2-seed02=LL
+| RD2-team02={{flagicon|USA}} '''[[Norman Holmes (tennis)|N Holmes]]'''
+| RD2-score02-1='''8'''
+| RD2-score02-2=2
+| RD2-score02-3='''6'''
+| RD2-score02-4=1
+| RD2-score02-5='''7'''
+
+| RD2-seed03=
+| RD2-team03={{flagicon|USA}} '''[[Robert McKinley (tennis)|R McKinley]]'''
+| RD2-score03-1='''6'''
+| RD2-score03-2=3
+| RD2-score03-3='''6'''
+| RD2-score03-4='''6'''
+| RD2-score03-5=
+| RD2-seed04=LL
+| RD2-team04={{flagicon|JPN|1947}} [[Jun Kuki|J Kuki]]
+| RD2-score04-1=4
+| RD2-score04-2='''6'''
+| RD2-score04-3=2
+| RD2-score04-4=2
+| RD2-score04-5=
+
+| RD2-seed05=
+| RD2-team05={{flagicon|TCH}} '''[[Jiří Hřebec|J Hřebec]]'''
+| RD2-score05-1='''7'''
+| RD2-score05-2=1
+| RD2-score05-3=4
+| RD2-score05-4='''7'''
+| RD2-score05-5='''6'''
+| RD2-seed06=
+| RD2-team06={{flagicon|ITA}} [[Antonio Zugarelli|A Zugarelli]]
+| RD2-score06-1=5
+| RD2-score06-2='''6'''
+| RD2-score06-3='''6'''
+| RD2-score06-4=5
+| RD2-score06-5=2
+
+| RD2-seed07=
+| RD2-team07={{flagicon|FRG}} [[Harald Elschenbroich|H Elschenbroich]]
+| RD2-score07-1=3
+| RD2-score07-2=2
+| RD2-score07-3=2
+| RD2-score07-4=
+| RD2-score07-5=
+| RD2-seed08=3
+| RD2-team08={{flagicon|GBR}} '''[[Roger Taylor (tennis)|R Taylor]]'''
+| RD2-score08-1='''6'''
+| RD2-score08-2='''6'''
+| RD2-score08-3='''6'''
+| RD2-score08-4=
+| RD2-score08-5=
+
+| RD3-seed01=LL
+| RD3-team01={{flagicon|USA}} [[Norman Holmes (tennis)|N Holmes]]
+| RD3-score01-1=2
+| RD3-score01-2='''6'''
+| RD3-score01-3=5
+| RD3-score01-4=5
+| RD3-score01-5=
+| RD3-seed02=
+| RD3-team02={{flagicon|USA}} '''[[Robert McKinley (tennis)|R McKinley]]'''
+| RD3-score02-1='''6'''
+| RD3-score02-2=3
+| RD3-score02-3='''7'''
+| RD3-score02-4='''7'''
+| RD3-score02-5=
+
+| RD3-seed03=
+| RD3-team03={{flagicon|TCH}} [[Jiří Hřebec|J Hřebec]]
+| RD3-score03-1=1
+| RD3-score03-2='''7'''
+| RD3-score03-3=4
+| RD3-score03-4=2
+| RD3-score03-5=
+| RD3-seed04=3
+| RD3-team04={{flagicon|GBR}} '''[[Roger Taylor (tennis)|R Taylor]]'''
+| RD3-score04-1='''6'''
+| RD3-score04-2=5
+| RD3-score04-3='''6'''
+| RD3-score04-4='''6'''
+| RD3-score04-5=
+
+| RD4-seed01=
+| RD4-team01={{flagicon|USA}} [[Robert McKinley (tennis)|R McKinley]]
+| RD4-score01-1=1
+| RD4-score01-2=5
+| RD4-score01-3='''8'''
+| RD4-score01-4=5
+| RD4-score01-5=
+| RD4-seed02=3
+| RD4-team02={{flagicon|GBR}} '''[[Roger Taylor (tennis)|R Taylor]]'''
+| RD4-score02-1='''6'''
+| RD4-score02-2='''7'''
+| RD4-score02-3=6
+| RD4-score02-4='''7'''
+| RD4-score02-5=
+}}
+
+====Section 7====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=
+| RD1-team01={{flagicon|GBR}} '''[[John Lloyd (tennis)|J Lloyd]]'''
+| RD1-score01-1=8
+| RD1-score01-2=4
+| RD1-score01-3='''6'''
+| RD1-score01-4='''6'''
+| RD1-score01-5='''6'''
+| RD1-seed02=LL
+| RD1-team02={{flagicon|FRA}} [[Jean-François Caujolle|J-F Caujolle]]
+| RD1-score02-1='''9'''
+| RD1-score02-2='''6'''
+| RD1-score02-3=3
+| RD1-score02-4=4
+| RD1-score02-5=3
+
+| RD1-seed03=LL
+| RD1-team03={{flagicon|AUS}} [[Paul Kronk|P Kronk]]'''
+| RD1-score03-1='''7'''
+| RD1-score03-2=5
+| RD1-score03-3=4
+| RD1-score03-4='''6'''
+| RD1-score03-5=4
+| RD1-seed04=Q
+| RD1-team04={{flagicon|AUS}} '''[[Keith Hancock (tennis)|K Hancock]]'''
+| RD1-score04-1=5
+| RD1-score04-2='''7'''
+| RD1-score04-3='''6'''
+| RD1-score04-4=3
+| RD1-score04-5='''6'''
+
+| RD1-seed05=
+| RD1-team05={{flagicon|BEL}} '''[[Bernard Mignot|B Mignot]]'''
+| RD1-score05-1='''6'''
+| RD1-score05-2='''6'''
+| RD1-score05-3='''6'''
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06=Q
+| RD1-team06={{flagicon|AUT}} [[Peter Pokorny|P Pokorny]]
+| RD1-score06-1=1
+| RD1-score06-2=1
+| RD1-score06-3=3
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=
+| RD1-team07={{flagicon|IND}} '''[[Vijay Amritraj|V Amritraj]]'''
+| RD1-score07-1='''6'''
+| RD1-score07-2='''6'''
+| RD1-score07-3='''6'''
+| RD1-score07-4=
+| RD1-score07-5=
+| RD1-seed08=LL
+| RD1-team08={{flagicon|AUS}} [[Harold Turnbull|H Turnbull]]
+| RD1-score08-1=4
+| RD1-score08-2=2
+| RD1-score08-3=4
+| RD1-score08-4=
+| RD1-score08-5=
+
+| RD1-seed09=LL
+| RD1-team09={{flagicon|URS|1955}} [[Konstantin Pugaev|K Pugaev]]
+| RD1-score09-1='''6'''
+| RD1-score09-2=1
+| RD1-score09-3=5
+| RD1-score09-4=8
+| RD1-score09-5=
+| RD1-seed10=LL
+| RD1-team10={{flagicon|AUS}} '''[[Ernie Ewert|E Ewert]]'''
+| RD1-score10-1=3
+| RD1-score10-2='''6'''
+| RD1-score10-3='''7'''
+| RD1-score10-4='''9'''
+| RD1-score10-5=
+
+| RD1-seed11=
+| RD1-team11={{flagicon|USA}} '''[[Mike Machette|M Machette]]'''
+| RD1-score11-1=3
+| RD1-score11-2='''6'''
+| RD1-score11-3='''6'''
+| RD1-score11-4='''6'''
+| RD1-score11-5=
+| RD1-seed12=Q
+| RD1-team12={{flagicon|NZL}} [[Tony Parun|A Parun]]
+| RD1-score12-1='''6'''
+| RD1-score12-2=4
+| RD1-score12-3=3
+| RD1-score12-4=1
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|AUS}} '''[[Barry Phillips-Moore|B Phillips-Moore]]'''
+| RD1-score13-1='''6'''
+| RD1-score13-2='''9'''
+| RD1-score13-3='''7'''
+| RD1-score13-4=
+| RD1-score13-5=
+| RD1-seed14=Q
+| RD1-team14={{flagicon|GBR}} [[Robin Drysdale|R Drysdale]]
+| RD1-score14-1=3
+| RD1-score14-2=7
+| RD1-score14-3=5
+| RD1-score14-4=
+| RD1-score14-5=
+
+| RD1-seed15=LL
+| RD1-team15={{flagicon|FRA}} [[Pierre Joly|P Joly]]
+| RD1-score15-1=4
+| RD1-score15-2=4
+| RD1-score15-3=4
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=7
+| RD1-team16={{flagicon|AUS}} '''[[Owen Davidson|O Davidson]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=
+| RD2-team01={{flagicon|GBR}} '''[[John Lloyd (tennis)|J Lloyd]]'''
+| RD2-score01-1='''7'''
+| RD2-score01-2='''6'''
+| RD2-score01-3='''6'''
+| RD2-score01-4=
+| RD2-score01-5=
+| RD2-seed02=Q
+| RD2-team02={{flagicon|AUS}} [[Keith Hancock (tennis)|K Hancock]]
+| RD2-score02-1=5
+| RD2-score02-2=4
+| RD2-score02-3=4
+| RD2-score02-4=
+| RD2-score02-5=
+
+| RD2-seed03=
+| RD2-team03={{flagicon|BEL}} [[Bernard Mignot|B Mignot]]
+| RD2-score03-1=1
+| RD2-score03-2=1
+| RD2-score03-3=2
+| RD2-score03-4=
+| RD2-score03-5=
+| RD2-seed04=
+| RD2-team04={{flagicon|IND}} '''[[Vijay Amritraj|V Amritraj]]'''
+| RD2-score04-1='''6'''
+| RD2-score04-2='''6'''
+| RD2-score04-3='''6'''
+| RD2-score04-4=
+| RD2-score04-5=
+
+| RD2-seed05=LL
+| RD2-team05={{flagicon|AUS}} '''[[Ernie Ewert|E Ewert]]'''
+| RD2-score05-1='''7'''
+| RD2-score05-2='''6'''
+| RD2-score05-3='''6'''
+| RD2-score05-4=
+| RD2-score05-5=
+| RD2-seed06=
+| RD2-team06={{flagicon|USA}} [[Mike Machette|M Machette]]
+| RD2-score06-1=5
+| RD2-score06-2=2
+| RD2-score06-3=3
+| RD2-score06-4=
+| RD2-score06-5=
+
+| RD2-seed07=
+| RD2-team07={{flagicon|AUS}} [[Barry Phillips-Moore|B Phillips-Moore]]
+| RD2-score07-1=3
+| RD2-score07-2=4
+| RD2-score07-3=3
+| RD2-score07-4=
+| RD2-score07-5=
+| RD2-seed08=7
+| RD2-team08={{flagicon|AUS}} '''[[Owen Davidson|O Davidson]]'''
+| RD2-score08-1='''6'''
+| RD2-score08-2='''6'''
+| RD2-score08-3='''6'''
+| RD2-score08-4=
+| RD2-score08-5=
+
+| RD3-seed01=
+| RD3-team01={{flagicon|GBR}} [[John Lloyd (tennis)|J Lloyd]]
+| RD3-score01-1=5
+| RD3-score01-2=4
+| RD3-score01-3='''6'''
+| RD3-score01-4='''6'''
+| RD3-score01-5=5
+| RD3-seed02=
+| RD3-team02={{flagicon|IND}} '''[[Vijay Amritraj|V Amritraj]]'''
+| RD3-score02-1='''7'''
+| RD3-score02-2='''6'''
+| RD3-score02-3=3
+| RD3-score02-4=2
+| RD3-score02-5='''7'''
+
+| RD3-seed03=LL
+| RD3-team03={{flagicon|AUS}} [[Ernie Ewert|E Ewert]]
+| RD3-score03-1=1
+| RD3-score03-2=4
+| RD3-score03-3='''6'''
+| RD3-score03-4=3
+| RD3-score03-5=
+| RD3-seed04=7
+| RD3-team04={{flagicon|AUS}} '''[[Owen Davidson|O Davidson]]'''
+| RD3-score04-1='''6'''
+| RD3-score04-2='''6'''
+| RD3-score04-3=3
+| RD3-score04-4='''6'''
+| RD3-score04-5=
+
+| RD4-seed01=
+| RD4-team01={{flagicon|IND}} '''[[Vijay Amritraj|V Amritraj]]'''
+| RD4-score01-1='''7'''
+| RD4-score01-2=8
+| RD4-score01-3='''6'''
+| RD4-score01-4='''6'''
+| RD4-seed02=7
+| RD4-team02={{flagicon|AUS}} [[Owen Davidson|O Davidson]]
+| RD4-score02-1=5
+| RD4-score02-2='''9'''
+| RD4-score02-3=3
+| RD4-score02-4=4
+}}
+
+====Section 8====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=
+| RD1-team01={{flagicon|IND}} '''[[Anand Amritraj|A Amritraj]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2='''6'''
+| RD1-score01-3='''9'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=LL
+| RD1-team02={{flagicon|PAK}} [[Saeed Meer|S Meer]]
+| RD1-score02-1=4
+| RD1-score02-2=4
+| RD1-score02-3=8
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=LL
+| RD1-team03={{flagicon|IND}} '''[[Jaidip Mukerjea|J Mukerjea]]'''
+| RD1-score03-1='''7'''
+| RD1-score03-2='''6'''
+| RD1-score03-3='''6'''
+| RD1-score03-4=
+| RD1-score03-5=
+| RD1-seed04=LL
+| RD1-team04={{flagicon|ECU}} [[Eduardo Zuleta|E Zuleta]]
+| RD1-score04-1=5
+| RD1-score04-2=1
+| RD1-score04-3=3
+| RD1-score04-4=
+| RD1-score04-5=
+
+| RD1-seed05=Q
+| RD1-team05={{flagicon|RSA|1928}} '''[[Richard Buwalda|R Buwalda]]'''
+| RD1-score05-1=5
+| RD1-score05-2='''6'''
+| RD1-score05-3='''6'''
+| RD1-score05-4='''6'''
+| RD1-score05-5=
+| RD1-seed06=Q
+| RD1-team06={{flagicon|PAK}} [[Munawar Iqbal|M Iqbal]]
+| RD1-score06-1='''7'''
+| RD1-score06-2=3
+| RD1-score06-3=2
+| RD1-score06-4=4
+| RD1-score06-5=
+
+| RD1-seed07=LL
+| RD1-team07={{flagicon|AUS}} '''[[Greg Perkins|G Perkins]]'''
+| RD1-score07-1='''6'''
+| RD1-score07-2='''6'''
+| RD1-score07-3=3
+| RD1-score07-4='''9'''
+| RD1-score07-5=
+| RD1-seed08=
+| RD1-team08={{flagicon|JPN|1947}} [[Jun Kamiwazumi|J Kamiwazumi]]
+| RD1-score08-1=4
+| RD1-score08-2=4
+| RD1-score08-3='''6'''
+| RD1-score08-4=7
+| RD1-score08-5=
+
+| RD1-seed09=
+| RD1-team09={{flagicon|GBR}} [[Stephen Warboys|S Warboys]]
+| RD1-score09-1=2
+| RD1-score09-2='''6'''
+| RD1-score09-3=7
+| RD1-score09-4='''6'''
+| RD1-score09-5=4
+| RD1-seed10=Q
+| RD1-team10={{flagicon|RSA|1928}} '''[[John Yuill (tennis)|J Yuill]]'''
+| RD1-score10-1='''6'''
+| RD1-score10-2=4
+| RD1-score10-3='''9'''
+| RD1-score10-4=4
+| RD1-score10-5='''6'''
+
+| RD1-seed11=LL
+| RD1-team11={{flagicon|GBR}} '''[[Peter Curtis (tennis)|P Curtis]]'''
+| RD1-score11-1='''6'''
+| RD1-score11-2='''6'''
+| RD1-score11-3='''6'''
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=Q
+| RD1-team12={{flagicon|AUS}} [[Graeme Thomson (tennis)|G Thomson]]
+| RD1-score12-1=4
+| RD1-score12-2=4
+| RD1-score12-3=2
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=LL
+| RD1-team13={{flagicon|ITA}} '''[[Pietro Marzano|P Marzano]]'''
+| RD1-score13-1='''6'''
+| RD1-score13-2='''6'''
+| RD1-score13-3=2
+| RD1-score13-4='''6'''
+| RD1-score13-5=
+| RD1-seed14=
+| RD1-team14={{flagicon|MEX}} [[Raúl Ramírez|R Ramírez]]
+| RD1-score14-1=3
+| RD1-score14-2=4
+| RD1-score14-3='''6'''
+| RD1-score14-4=2
+| RD1-score14-5=
+
+| RD1-seed15=LL
+| RD1-team15={{flagicon|JPN|1947}} [[Kenichi Hirai|K Hirai]]
+| RD1-score15-1='''6'''
+| RD1-score15-2=4
+| RD1-score15-3=1
+| RD1-score15-4=3
+| RD1-score15-5=
+| RD1-seed16=2
+| RD1-team16={{flagicon|TCH}} '''[[Jan Kodeš|J Kodeš]]'''
+| RD1-score16-1=4
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4='''6'''
+| RD1-score16-5=
+
+| RD2-seed01=
+| RD2-team01={{flagicon|IND}} [[Anand Amritraj|A Amritraj]]
+| RD2-score01-1='''6'''
+| RD2-score01-2=3
+| RD2-score01-3=2
+| RD2-score01-4=4
+| RD2-score01-5=
+| RD2-seed02=LL
+| RD2-team02={{flagicon|IND}} '''[[Jaidip Mukerjea|J Mukerjea]]'''
+| RD2-score02-1=3
+| RD2-score02-2='''6'''
+| RD2-score02-3='''6'''
+| RD2-score02-4='''6'''
+| RD2-score02-5=
+
+| RD2-seed03=Q
+| RD2-team03={{flagicon|RSA|1928}} [[Richard Buwalda|R Buwalda]]
+| RD2-score03-1='''6'''
+| RD2-score03-2=3
+| RD2-score03-3='''6'''
+| RD2-score03-4=1
+| RD2-score03-5=8
+| RD2-seed04=LL
+| RD2-team04={{flagicon|AUS}} '''[[Greg Perkins|G Perkins]]'''
+| RD2-score04-1=4
+| RD2-score04-2='''6'''
+| RD2-score04-3=3
+| RD2-score04-4='''6'''
+| RD2-score04-5='''10'''
+
+| RD2-seed05=Q
+| RD2-team05={{flagicon|RSA|1928}} '''[[John Yuill (tennis)|J Yuill]]'''
+| RD2-score05-1=4
+| RD2-score05-2='''6'''
+| RD2-score05-3=1
+| RD2-score05-4='''6'''
+| RD2-score05-5='''6'''
+| RD2-seed06=LL
+| RD2-team06={{flagicon|GBR}} [[Peter Curtis (tennis)|P Curtis]]
+| RD2-score06-1='''6'''
+| RD2-score06-2=3
+| RD2-score06-3='''6'''
+| RD2-score06-4=2
+| RD2-score06-5=3
+
+| RD2-seed07=LL
+| RD2-team07={{flagicon|ITA}} [[Pietro Marzano|P Marzano]]
+| RD2-score07-1=0
+| RD2-score07-2=4
+| RD2-score07-3=3
+| RD2-score07-4=
+| RD2-score07-5=
+| RD2-seed08=2
+| RD2-team08={{flagicon|TCH}} '''[[Jan Kodeš|J Kodeš]]'''
+| RD2-score08-1='''6'''
+| RD2-score08-2='''6'''
+| RD2-score08-3='''6'''
+| RD2-score08-4=
+| RD2-score08-5=
+
+| RD3-seed01=LL
+| RD3-team01={{flagicon|IND}} '''[[Jaidip Mukerjea|J Mukerjea]]'''
+| RD3-score01-1='''9'''
+| RD3-score01-2='''6'''
+| RD3-score01-3='''6'''
+| RD3-score01-4=
+| RD3-score01-5=
+| RD3-seed02=LL
+| RD3-team02={{flagicon|AUS}} [[Greg Perkins|G Perkins]]
+| RD3-score02-1=8
+| RD3-score02-2=4
+| RD3-score02-3=3
+| RD3-score02-4=
+| RD3-score02-5=
+
+| RD3-seed03=Q
+| RD3-team03={{flagicon|RSA|1928}} [[John Yuill (tennis)|J Yuill]]
+| RD3-score03-1=1
+| RD3-score03-2=5
+| RD3-score03-3=2
+| RD3-score03-4=
+| RD3-score03-5=
+| RD3-seed04=2
+| RD3-team04={{flagicon|TCH}} '''[[Jan Kodeš|J Kodeš]]'''
+| RD3-score04-1='''6'''
+| RD3-score04-2='''7'''
+| RD3-score04-3='''6'''
+| RD3-score04-4=
+| RD3-score04-5=
+
+| RD4-seed01=LL
+| RD4-team01={{flagicon|IND}} [[Jaidip Mukerjea|J Mukerjea]]
+| RD4-score01-1=4
+| RD4-score01-2='''6'''
+| RD4-score01-3=4
+| RD4-score01-4=3
+| RD4-score01-5=
+| RD4-seed02=2
+| RD4-team02={{flagicon|TCH}} '''[[Jan Kodeš|J Kodeš]]'''
+| RD4-score02-1='''6'''
+| RD4-score02-2=3
+| RD4-score02-3='''6'''
+| RD4-score02-4='''6'''
+| RD4-score02-5=
+}}
+
+==References==
+{{reflist}}
+
+==External links==
+*{{Wimbledondraws|1973|MS}}
+*{{cite web|title=Wimbledon 1973 – Singles Draw|url=http://www.atpworldtour.com/en/scores/archive/wimbledon/540/1973/draws?matchType=singles|website=atpworldtour.com|publisher=[[Association of Tennis Professionals|ATP World Tour]]|accessdate=10 November 2017}}
+
+{{Wimbledon men's singles drawsheets}}
+
+{{DEFAULTSORT:1973 Wimbledon Championships - Men's Singles}}
+[[Category:1973 Wimbledon Championships|Men's Singles]]
+[[Category:Wimbledon Championship by year – Gentlemen's Singles]]

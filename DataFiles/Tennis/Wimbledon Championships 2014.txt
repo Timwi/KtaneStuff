@@ -1,0 +1,2056 @@
+{{Infobox tennis tournament event|2014|Wimbledon Championships
+ | champ = {{flagicon|SRB}} [[Novak Djokovic]]
+ | runner = {{flagicon|SUI}} [[Roger Federer]]
+ | score = 6–7<sup>(7–9)</sup>, 6–4, 7–6<sup>(7–4)</sup>, 5–7, 6–4
+ | draw = 128 (16{{Tooltip| Q | Qualifiers}} / 5{{Tooltip| WC | Wildcards}}) 
+ | seeds = 32
+ | before_name = Wimbledon Championships – Men's Singles
+ | after_name = Wimbledon Championships – Men's Singles
+}}
+{{main|2014 Wimbledon Championships}}
+[[Andy Murray]] was the defending champion but lost to [[Grigor Dimitrov]] in the quarterfinals.
+
+[[Novak Djokovic]] defeated [[Roger Federer]] in the [[2014 Wimbledon Championships – Men's singles final|final]] in five sets, 6–7<sup>(7–9)</sup>, 6–4, 7–6<sup>(7–4)</sup>, 5–7, 6–4 to win the Gentlemen's Singles tennis title at the 2014 Wimbledon Championships. It was his second Wimbledon and seventh [[Grand Slam (tennis)|Grand Slam]] title; it was also his first win at a major since the [[2013 Australian Open]].
+
+19-year-old [[Nick Kyrgios]] became the first player to reach the quarterfinals on his Wimbledon debut since [[Florian Mayer]] in 2004. Kyrgios also became the lowest-ranked player to defeat the World No. 1 at a Grand Slam by defeating [[Rafael Nadal]] in the fourth round since 1992, when [[Andrei Olhovskiy]] defeated then World No. 1 [[Jim Courier]] in the third round of the [[1992 Wimbledon Championships – Men's Singles|1992 Wimbledon Championships]]. The final was the first Grand Slam men's singles final since the [[2009 US Open (tennis)|2009 US Open]] to feature neither Murray nor Nadal.
+
+Although Nadal was World No. 1 entering the tournament the Spaniard was seeded second behind Novak Djokovic due to his recent poor performances on grass.<ref>{{cite web|url=https://www.bloomberg.com/news/articles/2014-06-18/djokovic-wimbledon-top-seed-as-no-1-nadal-relegated|title=Djokovic Wimbledon Top Seed as No. 1 Nadal Relegated|publisher=Bloomberg|first=Danielle|last=Rossingh|date=18 June 2014|accessdate=23 January 2016}}</ref> After claiming the title Djokovic replaced Nadal as the [[List of ATP number 1 ranked singles tennis players|World No. 1]], taking the top position for the first time since October 2013.
+
+==Seeds==
+{{Div col}}
+{{seeds|1|1}} {{flagicon|SRB}} '''[[Novak Djokovic]] (Champion)'''
+{{seeds|2|8}} {{flagicon|ESP}} [[Rafael Nadal]] ''(Fourth round)''
+{{seeds|3|3}} {{flagicon|GBR}} [[Andy Murray]] ''(Quarterfinals)''
+{{seeds|4|6}} {{flagicon|SUI}} [[Roger Federer]] ''(Final)''
+{{seeds|5|5}} {{flagicon|SUI}} [[Stan Wawrinka]] ''(Quarterfinals)''
+{{seeds|6|2}} {{flagicon|CZE}} [[Tomáš Berdych]] ''(Third round)''
+{{seeds|7|4}} {{flagicon|ESP}} [[David Ferrer]] ''(Second round)''
+{{seeds|8|7}} {{flagicon|CAN}} [[Milos Raonic]] ''(Semifinals)''
+{{seeds|9|5}} {{flagicon|USA}} [[John Isner]] ''(Third round)''
+{{seeds|10|7}} {{flagicon|JPN}} [[Kei Nishikori]] ''(Fourth round)''
+{{seeds|11|4}} {{flagicon|BUL}} [[Grigor Dimitrov]] ''(Semifinals)''
+{{seeds|12|2}} {{flagicon|LAT}} [[Ernests Gulbis]] ''(Second round)''
+{{seeds|13|8}} {{flagicon|FRA}} [[Richard Gasquet]] ''(Second round)''
+{{seeds|14|1}} {{flagicon|FRA}} [[Jo-Wilfried Tsonga]] ''(Fourth round)''
+{{seeds|15|6}} {{flagicon|POL}} [[Jerzy Janowicz]] ''(Third round)''
+{{seeds|16|3}} {{flagicon|ITA}} [[Fabio Fognini]] ''(Third round)''
+{{seeds|17|1}} {{flagicon|RUS}} [[Mikhail Youzhny]] ''(Second round)''
+{{seeds|18|2}} {{flagicon|ESP}} [[Fernando Verdasco]] ''(First round)''
+{{seeds|19|5}} {{flagicon|ESP}} [[Feliciano López]] ''(Fourth round)''
+{{seeds|20|3}} {{flagicon|RSA}} [[Kevin Anderson (tennis)|Kevin Anderson]] ''(Fourth round)''
+{{seeds|21|4}} {{flagicon|UKR}} [[Alexandr Dolgopolov]] ''(Third round)''
+{{seeds|22|7}} {{flagicon|GER}} [[Philipp Kohlschreiber]] ''(Second round)''
+{{seeds|23|6}} {{flagicon|ESP}} [[Tommy Robredo]] ''(Fourth round)''
+{{seeds|24|8}} {{flagicon|FRA}} [[Gaël Monfils]] ''(Second round)''
+{{seeds|25|4}} {{flagicon|ITA}} [[Andreas Seppi]] ''(First round)''
+{{seeds|26|2}} {{flagicon|CRO}} [[Marin Čilić]] ''(Quarterfinals)''
+{{seeds|27|3}} {{flagicon|ESP}} [[Roberto Bautista Agut]] ''(Third round)''
+{{seeds|28|7}} {{flagicon|ESP}} [[Guillermo García-López]] ''(First round)''
+{{seeds|29|8}} {{flagicon|CRO}} [[Ivo Karlović]] ''(First round)''
+{{seeds|30|6}} {{flagicon|ESP}} [[Marcel Granollers]] ''(Second round)''
+{{seeds|31|1}} {{flagicon|CAN}} [[Vasek Pospisil]] ''(First round)''
+{{seeds|32|5}} {{flagicon|RUS}} [[Dmitry Tursunov]] ''(First round)''
+{{Div col end}}
+{{Seeds explanation}}
+
+==Qualifying==
+{{main|2014 Wimbledon Championships – Men's Singles Qualifying}}
+
+==Draw==
+{{draw key}}
+
+===Finals===
+{{8TeamBracket-Tennis5
+| RD1=Quarterfinals
+| RD2=Semifinals
+| RD3='''[[2014 Wimbledon Championships – Men's singles final|Final]]
+| team-width=180
+
+| RD1-seed1=1
+| RD1-team1={{flagicon|SRB}} '''[[Novak Djokovic]]'''
+| RD1-score1-1='''6'''
+| RD1-score1-2=3
+| RD1-score1-3=6<sup>4</sup>
+| RD1-score1-4='''6'''
+| RD1-score1-5='''6'''
+| RD1-seed2=26
+| RD1-team2={{flagicon|CRO}} [[Marin Čilić]]
+| RD1-score2-1=1
+| RD1-score2-2='''6'''
+| RD1-score2-3='''7<sup>7</sup>'''
+| RD1-score2-4=2
+| RD1-score2-5=2
+
+| RD1-seed3=3
+| RD1-team3={{flagicon|GBR}} [[Andy Murray]]
+| RD1-score3-1=1
+| RD1-score3-2=6<sup>4</sup>
+| RD1-score3-3=2
+| RD1-score3-4=
+| RD1-score3-5=
+| RD1-seed4=11
+| RD1-team4={{flagicon|BUL}} '''[[Grigor Dimitrov]]'''
+| RD1-score4-1='''6'''
+| RD1-score4-2='''7<sup>7</sup>'''
+| RD1-score4-3='''6'''
+| RD1-score4-4=
+| RD1-score4-5=
+
+| RD1-seed5=5
+| RD1-team5={{flagicon|SUI}} [[Stan Wawrinka]]
+| RD1-score5-1='''6'''
+| RD1-score5-2=6<sup>5</sup>
+| RD1-score5-3=4
+| RD1-score5-4=4
+| RD1-score5-5=
+| RD1-seed6=4
+| RD1-team6={{flagicon|SUI}} '''[[Roger Federer]]'''
+| RD1-score6-1=3
+| RD1-score6-2='''7<sup>7</sup>'''
+| RD1-score6-3='''6'''
+| RD1-score6-4='''6'''
+| RD1-score6-5=
+
+| RD1-seed7=8
+| RD1-team7={{flagicon|CAN}} '''[[Milos Raonic]]'''
+| RD1-score7-1=6<sup>4</sup>
+| RD1-score7-2='''6'''
+| RD1-score7-3='''6'''
+| RD1-score7-4='''7<sup>7</sup>'''
+| RD1-score7-5=
+| RD1-seed8=WC
+| RD1-team8={{flagicon|AUS}} [[Nick Kyrgios]]
+| RD1-score8-1='''7<sup>7</sup>'''
+| RD1-score8-2=2
+| RD1-score8-3=4
+| RD1-score8-4=6<sup>4</sup>
+| RD1-score8-5=
+
+| RD2-seed1=1
+| RD2-team1={{flagicon|SRB}} '''[[Novak Djokovic]]'''
+| RD2-score1-1='''6'''
+| RD2-score1-2=3
+| RD2-score1-3='''7<sup>7</sup>'''
+| RD2-score1-4='''7<sup>9</sup>'''
+| RD2-score1-5=
+| RD2-seed2=11
+| RD2-team2={{flagicon|BUL}} [[Grigor Dimitrov]]
+| RD2-score2-1=4
+| RD2-score2-2='''6'''
+| RD2-score2-3=6<sup>2</sup>
+| RD2-score2-4=6<sup>7</sup>
+| RD2-score2-5=
+
+| RD2-seed3=4
+| RD2-team3={{flagicon|SUI}} '''[[Roger Federer]]'''
+| RD2-score3-1='''6'''
+| RD2-score3-2='''6'''
+| RD2-score3-3='''6'''
+| RD2-score3-4=
+| RD2-score3-5=
+| RD2-seed4=8
+| RD2-team4={{flagicon|CAN}} [[Milos Raonic]]
+| RD2-score4-1=4
+| RD2-score4-2=4
+| RD2-score4-3=4
+| RD2-score4-4=
+| RD2-score4-5=
+
+| RD3-seed1=1
+| RD3-team1={{flagicon|SRB}} '''[[Novak Djokovic]]'''
+| RD3-score1-1=6<sup>7</sup>
+| RD3-score1-2='''6'''
+| RD3-score1-3='''7<sup>7</sup>'''
+| RD3-score1-4=5
+| RD3-score1-5='''6'''
+| RD3-seed2=4
+| RD3-team2={{flagicon|SUI}} [[Roger Federer]]
+| RD3-score2-1='''7<sup>9</sup>'''
+| RD3-score2-2=4
+| RD3-score2-3=6<sup>4</sup>
+| RD3-score2-4='''7'''
+| RD3-score2-5=4
+}}
+
+===Top half===
+
+====Section 1====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=1
+| RD1-team01={{flagicon|SRB}} '''[[Novak Djokovic|N Djokovic]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2='''6'''
+| RD1-score01-3='''6'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=
+| RD1-team02={{flagicon|KAZ}} [[Andrey Golubev|A Golubev]]
+| RD1-score02-1=0
+| RD1-score02-2=1
+| RD1-score02-3=4
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=
+| RD1-team03={{flagicon|CZE}} '''[[Radek Štěpánek|R Štěpánek]]'''
+| RD1-score03-1='''6'''
+| RD1-score03-2='''6'''
+| RD1-score03-3='''6'''
+| RD1-score03-4=
+| RD1-score03-5=
+| RD1-seed04=PR
+| RD1-team04={{flagicon|URY}} [[Pablo Cuevas|P Cuevas]]
+| RD1-score04-1=2
+| RD1-score04-2=4
+| RD1-score04-3=4
+| RD1-score04-4=
+| RD1-score04-5=
+
+| RD1-seed05=Q
+| RD1-team05={{flagicon|RUS}} [[Konstantin Kravchuk|K Kravchuk]]
+| RD1-score05-1=2
+| RD1-score05-2=6<sup>4</sup>
+| RD1-score05-3=5
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06=
+| RD1-team06={{flagicon|FRA}} '''[[Gilles Simon|G Simon]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2='''7<sup>7</sup>'''
+| RD1-score06-3='''7'''
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=
+| RD1-team07={{flagicon|NED}} '''[[Robin Haase|R Haase]]'''
+| RD1-score07-1='''7<sup>8</sup>'''
+| RD1-score07-2=4
+| RD1-score07-3='''7'''
+| RD1-score07-4='''6'''
+| RD1-score07-5=
+| RD1-seed08=31
+| RD1-team08={{flagicon|CAN}} [[Vasek Pospisil|V Pospisil]]
+| RD1-score08-1=6<sup>6</sup>
+| RD1-score08-2='''6'''
+| RD1-score08-3=5
+| RD1-score08-4=3
+| RD1-score08-5=
+
+| RD1-seed09=17
+| RD1-team09={{flagicon|RUS}} '''[[Mikhail Youzhny|M Youzhny]]'''
+| RD1-score09-1='''6'''
+| RD1-score09-2='''6'''
+| RD1-score09-3='''6'''
+| RD1-score09-4=
+| RD1-score09-5=
+| RD1-seed10=WC
+| RD1-team10={{flagicon|GBR}} [[James Ward (tennis)|J Ward]]
+| RD1-score10-1=2
+| RD1-score10-2=2
+| RD1-score10-3=1
+| RD1-score10-4=
+| RD1-score10-5=
+
+| RD1-seed11=Q
+| RD1-team11={{flagicon|TPE}} '''[[Jimmy Wang (tennis)|J Wang]]'''
+| RD1-score11-1='''6'''
+| RD1-score11-2='''6'''
+| RD1-score11-3='''6'''
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=
+| RD1-team12={{flagicon|COL}} [[Alejandro González (tennis)|A González]]
+| RD1-score12-1=3
+| RD1-score12-2=3
+| RD1-score12-3=2
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|USA}} [[Bradley Klahn|B Klahn]]
+| RD1-score13-1='''7<sup>7</sup>'''
+| RD1-score13-2=4
+| RD1-score13-3=1
+| RD1-score13-4=5
+| RD1-score13-5=
+| RD1-seed14=
+| RD1-team14={{flagicon|USA}} '''[[Sam Querrey|S Querrey]]'''
+| RD1-score14-1=6<sup>5</sup>
+| RD1-score14-2='''6'''
+| RD1-score14-3='''6'''
+| RD1-score14-4='''7'''
+| RD1-score14-5=
+
+| RD1-seed15=
+| RD1-team15={{flagicon|AUT}} [[Jürgen Melzer|J Melzer]]
+| RD1-score15-1=1
+| RD1-score15-2='''6'''
+| RD1-score15-3='''6'''
+| RD1-score15-4=2
+| RD1-score15-5=4
+| RD1-seed16=14
+| RD1-team16={{flagicon|FRA}} '''[[Jo-Wilfried Tsonga|J-W Tsonga]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2=3
+| RD1-score16-3=3
+| RD1-score16-4='''6'''
+| RD1-score16-5='''6'''
+
+| RD2-seed01=1
+| RD2-team01={{flagicon|SRB}} '''[[Novak Djokovic|N Djokovic]]'''
+| RD2-score01-1='''6'''
+| RD2-score01-2='''6'''
+| RD2-score01-3=6<sup>5</sup>
+| RD2-score01-4='''7<sup>7</sup>'''
+| RD2-score01-5=
+| RD2-seed02=
+| RD2-team02={{flagicon|CZE}} [[Radek Štěpánek|R Štěpánek]]
+| RD2-score02-1=4
+| RD2-score02-2=3
+| RD2-score02-3='''7<sup>7</sup>'''
+| RD2-score02-4=6<sup>5</sup>
+| RD2-score02-5=
+
+| RD2-seed03=
+| RD2-team03={{flagicon|FRA}} '''[[Gilles Simon|G Simon]]'''
+| RD2-score03-1='''7<sup>7</sup>'''
+| RD2-score03-2='''6'''
+| RD2-score03-3='''6'''
+| RD2-score03-4=
+| RD2-score03-5=
+| RD2-seed04=
+| RD2-team04={{flagicon|NED}} [[Robin Haase|R Haase]]
+| RD2-score04-1=6<sup>1</sup>
+| RD2-score04-2=4
+| RD2-score04-3=4
+| RD2-score04-4=
+| RD2-score04-5=
+
+| RD2-seed05=17
+| RD2-team05={{flagicon|RUS}} [[Mikhail Youzhny|M Youzhny]]
+| RD2-score05-1=6<sup>1</sup>
+| RD2-score05-2=2
+| RD2-score05-3='''7<sup>7</sup>'''
+| RD2-score05-4=3
+| RD2-score05-5=
+| RD2-seed06=Q
+| RD2-team06={{flagicon|TPE}} '''[[Jimmy Wang (tennis)|J Wang]]'''
+| RD2-score06-1='''7<sup>7</sup>'''
+| RD2-score06-2='''6'''
+| RD2-score06-3=6<sup>5</sup>
+| RD2-score06-4='''6'''
+| RD2-score06-5=
+
+| RD2-seed07=
+| RD2-team07={{flagicon|USA}} [[Sam Querrey|S Querrey]]
+| RD2-score07-1='''6'''
+| RD2-score07-2=6<sup>2</sup>
+| RD2-score07-3='''7<sup>7</sup>'''
+| RD2-score07-4=3
+| RD2-score07-5=12
+| RD2-seed08=14
+| RD2-team08={{flagicon|FRA}} '''[[Jo-Wilfried Tsonga|J-W Tsonga]]'''
+| RD2-score08-1=4
+| RD2-score08-2='''7<sup>7</sup>'''
+| RD2-score08-3=6<sup>4</sup>
+| RD2-score08-4='''6'''
+| RD2-score08-5='''14'''
+
+| RD3-seed01=1
+| RD3-team01={{flagicon|SRB}} '''[[Novak Djokovic|N Djokovic]]'''
+| RD3-score01-1='''6'''
+| RD3-score01-2='''6'''
+| RD3-score01-3='''6'''
+| RD3-score01-4=
+| RD3-score01-5=
+| RD3-seed02=
+| RD3-team02={{flagicon|FRA}} [[Gilles Simon|G Simon]]
+| RD3-score02-1=4
+| RD3-score02-2=2
+| RD3-score02-3=4
+| RD3-score02-4=
+| RD3-score02-5=
+
+| RD3-seed03=Q
+| RD3-team03={{flagicon|TPE}} [[Jimmy Wang (tennis)|J Wang]]
+| RD3-score03-1=2
+| RD3-score03-2=2
+| RD3-score03-3=5
+| RD3-score03-4=
+| RD3-score03-5=
+| RD3-seed04=14
+| RD3-team04={{flagicon|FRA}} '''[[Jo-Wilfried Tsonga|J-W Tsonga]]'''
+| RD3-score04-1='''6'''
+| RD3-score04-2='''6'''
+| RD3-score04-3='''7'''
+| RD3-score04-4=
+| RD3-score04-5=
+
+| RD4-seed01=1
+| RD4-team01={{flagicon|SRB}} '''[[Novak Djokovic|N Djokovic]]'''
+| RD4-score01-1='''6'''
+| RD4-score01-2='''6'''
+| RD4-score01-3='''7<sup>7</sup>'''
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=14
+| RD4-team02={{flagicon|FRA}} [[Jo-Wilfried Tsonga|J-W Tsonga]]
+| RD4-score02-1=3
+| RD4-score02-2=4
+| RD4-score02-3=6<sup>5</sup>
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+====Section 2====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=12
+| RD1-team01={{flagicon|LAT}} '''[[Ernests Gulbis|E Gulbis]]'''
+| RD1-score01-1='''7<sup>9</sup>'''
+| RD1-score01-2='''7'''
+| RD1-score01-3='''7<sup>12</sup>'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=PR
+| RD1-team02={{flagicon|EST}} [[Jürgen Zopp|J Zopp]]
+| RD1-score02-1=6<sup>7</sup>
+| RD1-score02-2=5
+| RD1-score02-3=6<sup>10</sup>
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=
+| RD1-team03={{flagicon|UKR}} '''[[Sergiy Stakhovsky|S Stakhovsky]]'''
+| RD1-score03-1='''6'''
+| RD1-score03-2='''6'''
+| RD1-score03-3='''6'''
+| RD1-score03-4=
+| RD1-score03-5=
+| RD1-seed04=
+| RD1-team04={{flagicon|ARG}} [[Carlos Berlocq|C Berlocq]]
+| RD1-score04-1=3
+| RD1-score04-2=3
+| RD1-score04-3=3
+| RD1-score04-4=
+| RD1-score04-5=
+
+| RD1-seed05=
+| RD1-team05={{flagicon|FRA}} '''[[Jérémy Chardy|J Chardy]]'''
+| RD1-score05-1='''6'''
+| RD1-score05-2='''7<sup>7</sup>'''
+| RD1-score05-3=6<sup>6</sup>
+| RD1-score05-4='''6'''
+| RD1-score05-5=
+| RD1-seed06=WC
+| RD1-team06={{flagicon|GBR}} [[Daniel Cox|D Cox]]
+| RD1-score06-1=2
+| RD1-score06-2=6<sup>3</sup>
+| RD1-score06-3='''7<sup>8</sup>'''
+| RD1-score06-4=3
+| RD1-score06-5=
+
+| RD1-seed07= 
+| RD1-team07={{flagicon|AUS}} '''[[Marinko Matosevic|M Matosevic]]'''
+| RD1-score07-1='''6'''
+| RD1-score07-2=4
+| RD1-score07-3='''6'''
+| RD1-score07-4='''6'''
+| RD1-score07-5=
+| RD1-seed08=18
+| RD1-team08={{flagicon|ESP}} [[Fernando Verdasco|F Verdasco]]
+| RD1-score08-1=4
+| RD1-score08-2='''6'''
+| RD1-score08-3=4
+| RD1-score08-4=2
+| RD1-score08-5=
+
+| RD1-seed09=26
+| RD1-team09={{flagicon|CRO}} '''[[Marin Čilić|M Čilić]]'''
+| RD1-score09-1='''6'''
+| RD1-score09-2=6<sup>2</sup>
+| RD1-score09-3='''6'''
+| RD1-score09-4='''6'''
+| RD1-score09-5=
+| RD1-seed10=
+| RD1-team10={{flagicon|FRA}} [[Paul-Henri Mathieu|P-H Mathieu]]
+| RD1-score10-1=4
+| RD1-score10-2='''7<sup>7</sup>'''
+| RD1-score10-3=2
+| RD1-score10-4=1
+| RD1-score10-5=
+
+| RD1-seed11=
+| RD1-team11={{flagicon|AUT}} '''[[Andreas Haider-Maurer|A Haider-Maurer]]'''
+| RD1-score11-1='''6'''
+| RD1-score11-2='''7<sup>7</sup>'''
+| RD1-score11-3='''6'''
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=WC
+| RD1-team12={{flagicon|GBR}} [[Kyle Edmund|K Edmund]]
+| RD1-score12-1=3
+| RD1-score12-2=6<sup>4</sup>
+| RD1-score12-3=2
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|AUS}} '''[[Bernard Tomic|B Tomic]]'''
+| RD1-score13-1='''6'''
+| RD1-score13-2='''6'''
+| RD1-score13-3='''6'''
+| RD1-score13-4=
+| RD1-score13-5=
+| RD1-seed14=
+| RD1-team14={{flagicon|RUS}} [[Evgeny Donskoy|E Donskoy]]
+| RD1-score14-1=4
+| RD1-score14-2=3
+| RD1-score14-3=2
+| RD1-score14-4=
+| RD1-score14-5=
+
+| RD1-seed15=
+| RD1-team15={{flagicon|ROM}} [[Victor Hănescu|V Hănescu]]
+| RD1-score15-1='''7<sup>7</sup>'''
+| RD1-score15-2=1
+| RD1-score15-3=4
+| RD1-score15-4=3
+| RD1-score15-5=
+| RD1-seed16=6
+| RD1-team16={{flagicon|CZE}} '''[[Tomáš Berdych|T Berdych]]'''
+| RD1-score16-1=6<sup>5</sup>
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4='''6'''
+| RD1-score16-5=
+
+| RD2-seed01=12
+| RD2-team01={{flagicon|LAT}} [[Ernests Gulbis|E Gulbis]]
+| RD2-score01-1=4
+| RD2-score01-2=3
+| RD2-score01-3=6<sup>5</sup>
+| RD2-score01-4=
+| RD2-score01-5=
+| RD2-seed02=
+| RD2-team02={{flagicon|UKR}} '''[[Sergiy Stakhovsky|S Stakhovsky]]'''
+| RD2-score02-1='''6'''
+| RD2-score02-2='''6'''
+| RD2-score02-3='''7<sup>7</sup>'''
+| RD2-score02-4=
+| RD2-score02-5=
+
+| RD2-seed03=
+| RD2-team03={{flagicon|FRA}} '''[[Jérémy Chardy|J Chardy]]'''
+| RD2-score03-1=6<sup>5</sup>
+| RD2-score03-2='''7<sup>9</sup>'''
+| RD2-score03-3='''7<sup>11</sup>'''
+| RD2-score03-4=4
+| RD2-score03-5='''7'''
+| RD2-seed04=
+| RD2-team04={{flagicon|AUS}} [[Marinko Matosevic|M Matosevic]]
+| RD2-score04-1='''7<sup>7</sup>'''
+| RD2-score04-2=6<sup>7</sup>
+| RD2-score04-3=6<sup>9</sup>
+| RD2-score04-4='''6'''
+| RD2-score04-5=5
+
+| RD2-seed05=26
+| RD2-team05={{flagicon|CRO}} '''[[Marin Čilić|M Čilić]]'''
+| RD2-score05-1=3
+| RD2-score05-2='''6'''
+| RD2-score05-3='''6'''
+| RD2-score05-4='''6'''
+| RD2-score05-5=
+| RD2-seed06=
+| RD2-team06={{flagicon|AUT}} [[Andreas Haider-Maurer|A Haider-Maurer]]
+| RD2-score06-1='''6'''
+| RD2-score06-2=1
+| RD2-score06-3=4
+| RD2-score06-4=4
+| RD2-score06-5=
+
+| RD2-seed07=
+| RD2-team07={{flagicon|AUS}} [[Bernard Tomic|B Tomic]]
+| RD2-score07-1='''6'''
+| RD2-score07-2=6<sup>5</sup>
+| RD2-score07-3=6<sup>3</sup>
+| RD2-score07-4=1
+| RD2-score07-5=
+| RD2-seed08=6
+| RD2-team08={{flagicon|CZE}} '''[[Tomáš Berdych|T Berdych]]'''
+| RD2-score08-1=4
+| RD2-score08-2='''7<sup>7</sup>'''
+| RD2-score08-3='''7<sup>7</sup>'''
+| RD2-score08-4='''6'''
+| RD2-score08-5=
+
+| RD3-seed01=
+| RD3-team01={{flagicon|UKR}} [[Sergiy Stakhovsky|S Stakhovsky]]
+| RD3-score01-1=3
+| RD3-score01-2='''7<sup>7</sup>'''
+| RD3-score01-3=3
+| RD3-score01-4=0
+| RD3-score01-5=
+| RD3-seed02=
+| RD3-team02={{flagicon|FRA}} '''[[Jérémy Chardy|J Chardy]]'''
+| RD3-score02-1='''6'''
+| RD3-score02-2=6<sup>4</sup>
+| RD3-score02-3='''6'''
+| RD3-score02-4='''6'''
+| RD3-score02-5=
+
+| RD3-seed03=26
+| RD3-team03={{flagicon|CRO}} '''[[Marin Čilić|M Čilić]]'''
+| RD3-score03-1='''7<sup>7</sup>'''
+| RD3-score03-2='''6'''
+| RD3-score03-3='''7<sup>8</sup>'''
+| RD3-score03-4=
+| RD3-score03-5=
+| RD3-seed04=6
+| RD3-team04={{flagicon|CZE}} [[Tomáš Berdych|T Berdych]]
+| RD3-score04-1=6<sup>5</sup>
+| RD3-score04-2=4
+| RD3-score04-3=6<sup>6</sup>
+| RD3-score04-4=
+| RD3-score04-5=
+
+| RD4-seed01=
+| RD4-team01={{flagicon|FRA}} [[Jérémy Chardy|J Chardy]]
+| RD4-score01-1=6<sup>8</sup>
+| RD4-score01-2=4
+| RD4-score01-3=4
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=26
+| RD4-team02={{flagicon|CRO}} '''[[Marin Čilić|M Čilić]]'''
+| RD4-score02-1='''7<sup>10</sup>'''
+| RD4-score02-2='''6'''
+| RD4-score02-3='''6'''
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+====Section 3====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=3
+| RD1-team01={{flagicon|GBR}} '''[[Andy Murray|A Murray]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2='''6'''
+| RD1-score01-3='''7'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=
+| RD1-team02= {{flagicon|BEL}} [[David Goffin|D Goffin]]
+| RD1-score02-1=1
+| RD1-score02-2=4
+| RD1-score02-3=5
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=
+| RD1-team03= {{flagicon|ESP}} [[Pablo Andújar|P Andújar]]
+| RD1-score03-1=3
+| RD1-score03-2=1
+| RD1-score03-3=4
+| RD1-score03-4=
+| RD1-score03-5=
+| RD1-seed04=
+| RD1-team04={{flagicon|SLO}} '''[[Blaž Rola|B Rola]]'''
+| RD1-score04-1='''6'''
+| RD1-score04-2='''6'''
+| RD1-score04-3='''6'''
+| RD1-score04-4=
+| RD1-score04-5=
+
+| RD1-seed05=
+| RD1-team05= {{flagicon|GER}} [[Tobias Kamke|T Kamke]]
+| RD1-score05-1=3
+| RD1-score05-2='''7<sup>7</sup>'''
+| RD1-score05-3=3
+| RD1-score05-4='''7'''
+| RD1-score05-5=4
+| RD1-seed06=Q
+| RD1-team06= {{flagicon|CZE}} '''[[Jan Hernych|J Hernych]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2=6<sup>5</sup>
+| RD1-score06-3='''6'''
+| RD1-score06-4=5
+| RD1-score06-5='''6'''
+
+| RD1-seed07=
+| RD1-team07= {{flagicon|USA}} [[Steve Johnson (tennis)|S Johnson]]
+| RD1-score07-1=3
+| RD1-score07-2='''7<sup>7</sup>'''
+| RD1-score07-3=4
+| RD1-score07-4=5
+| RD1-score07-5=
+| RD1-seed08=27
+| RD1-team08= {{flagicon|ESP}} '''[[Roberto Bautista Agut|R Bautista Agut]]'''
+| RD1-score08-1='''6'''
+| RD1-score08-2=6<sup>3</sup>
+| RD1-score08-3='''6'''
+| RD1-score08-4='''7'''
+| RD1-score08-5=
+
+| RD1-seed09=20
+| RD1-team09= {{flagicon|RSA}} '''[[Kevin Anderson (tennis)|K Anderson]]'''
+| RD1-score09-1='''6'''
+| RD1-score09-2='''7'''
+| RD1-score09-3='''6'''
+| RD1-score09-4=
+| RD1-score09-5=
+| RD1-seed10=LL
+| RD1-team10= {{flagicon|SLO}} [[Aljaž Bedene|A Bedene]]
+| RD1-score10-1=3
+| RD1-score10-2=5
+| RD1-score10-3=2
+| RD1-score10-4=
+| RD1-score10-5=
+
+| RD1-seed11=
+| RD1-team11={{flagicon|ITA}} [[Filippo Volandri|F Volandri]]
+| RD1-score11-1=6<sup>1</sup>
+| RD1-score11-2=2
+| RD1-score11-3=4
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=
+| RD1-team12={{flagicon|FRA}} '''[[Édouard Roger-Vasselin|É Roger-Vasselin]]'''
+| RD1-score12-1='''7<sup>7</sup>'''
+| RD1-score12-2='''6'''
+| RD1-score12-3='''6'''
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|RUS}} [[Teymuraz Gabashvili|T Gabashvili]]
+| RD1-score13-1='''6'''
+| RD1-score13-2=4
+| RD1-score13-3=2
+| RD1-score13-4=2
+| RD1-score13-5=
+| RD1-seed14=Q
+| RD1-team14= {{flagicon|GER}} '''[[Tim Pütz|T Pütz]]'''
+| RD1-score14-1=2
+| RD1-score14-2='''6'''
+| RD1-score14-3='''6'''
+| RD1-score14-4='''6'''
+| RD1-score14-5=
+
+| RD1-seed15=Q
+| RD1-team15= {{flagicon|USA}} [[Alex Kuznetsov|Al Kuznetsov]]
+| RD1-score15-1='''6'''
+| RD1-score15-2='''6'''
+| RD1-score15-3=4
+| RD1-score15-4=1
+| RD1-score15-5=7
+| RD1-seed16=16
+| RD1-team16= {{flagicon|ITA}} '''[[Fabio Fognini|F Fognini]]'''
+| RD1-score16-1=2
+| RD1-score16-2=1
+| RD1-score16-3='''6'''
+| RD1-score16-4='''6'''
+| RD1-score16-5='''9'''
+
+| RD2-seed01=3
+| RD2-team01={{flagicon|GBR}} '''[[Andy Murray|A Murray]]'''
+| RD2-score01-1='''6'''
+| RD2-score01-2='''6'''
+| RD2-score01-3='''6'''
+| RD2-score01-4=
+| RD2-score01-5=
+| RD2-seed02=
+| RD2-team02={{flagicon|SLO}} [[Blaž Rola|B Rola]]
+| RD2-score02-1=1
+| RD2-score02-2=1
+| RD2-score02-3=0
+| RD2-score02-4=
+| RD2-score02-5=
+
+| RD2-seed03=Q
+| RD2-team03={{flagicon|CZE}} [[Jan Hernych|J Hernych]]
+| RD2-score03-1=5
+| RD2-score03-2='''6'''
+| RD2-score03-3=2
+| RD2-score03-4=2
+| RD2-score03-5=
+| RD2-seed04=27
+| RD2-team04={{flagicon|ESP}} '''[[Roberto Bautista Agut|R Bautista Agut]]'''
+| RD2-score04-1='''7'''
+| RD2-score04-2=4
+| RD2-score04-3='''6'''
+| RD2-score04-4='''6'''
+| RD2-score04-5=
+
+| RD2-seed05=20
+| RD2-team05={{flagicon|RSA}} '''[[Kevin Anderson (tennis)|K Anderson]]'''
+| RD2-score05-1='''7<sup>7</sup>'''
+| RD2-score05-2=1
+| RD2-score05-3='''6'''
+| RD2-score05-4='''6'''
+| RD2-score05-5=
+| RD2-seed06=
+| RD2-team06={{flagicon|FRA}} [[Édouard Roger-Vasselin|É Roger-Vasselin]]
+| RD2-score06-1=6<sup>0</sup>
+| RD2-score06-2='''6'''
+| RD2-score06-3=3
+| RD2-score06-4=4
+| RD2-score06-5=
+
+| RD2-seed07=Q
+| RD2-team07={{flagicon|GER}} [[Tim Pütz|T Pütz]]
+| RD2-score07-1='''6'''
+| RD2-score07-2=4
+| RD2-score07-3=6<sup>6</sup>
+| RD2-score07-4=3
+| RD2-score07-5=
+| RD2-seed08=16
+| RD2-team08={{flagicon|ITA}} '''[[Fabio Fognini|F Fognini]]'''
+| RD2-score08-1=2
+| RD2-score08-2='''6'''
+| RD2-score08-3='''7<sup>8</sup>'''
+| RD2-score08-4='''6'''
+| RD2-score08-5=
+
+| RD3-seed01=3
+| RD3-team01={{flagicon|GBR}} '''[[Andy Murray|A Murray]]'''
+| RD3-score01-1='''6'''
+| RD3-score01-2='''6'''
+| RD3-score01-3='''6'''
+| RD3-score01-4=
+| RD3-score01-5=
+| RD3-seed02=27
+| RD3-team02={{flagicon|ESP}} [[Roberto Bautista Agut|R Bautista Agut]]
+| RD3-score02-1=2
+| RD3-score02-2=3
+| RD3-score02-3=2
+| RD3-score02-4=
+| RD3-score02-5=
+
+| RD3-seed03=20
+| RD3-team03={{flagicon|RSA}} '''[[Kevin Anderson (tennis)|K Anderson]]'''
+| RD3-score03-1=4
+| RD3-score03-2='''6'''
+| RD3-score03-3=2
+| RD3-score03-4='''6'''
+| RD3-score03-5='''6'''
+| RD3-seed04=16
+| RD3-team04={{flagicon|ITA}} [[Fabio Fognini|F Fognini]]
+| RD3-score04-1='''6'''
+| RD3-score04-2=4
+| RD3-score04-3='''6'''
+| RD3-score04-4=2
+| RD3-score04-5=1
+
+| RD4-seed01=3
+| RD4-team01={{flagicon|GBR}} '''[[Andy Murray|A Murray]]'''
+| RD4-score01-1='''6'''
+| RD4-score01-2='''6'''
+| RD4-score01-3='''7<sup>8</sup>'''
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=20
+| RD4-team02={{flagicon|RSA}} [[Kevin Anderson (tennis)|K Anderson]]
+| RD4-score02-1=4
+| RD4-score02-2=3
+| RD4-score02-3=6<sup>6</sup>
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+====Section 4====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=11
+| RD1-team01={{flagicon|BUL}} '''[[Grigor Dimitrov|G Dimitrov]]'''
+| RD1-score01-1='''7<sup>7</sup>'''
+| RD1-score01-2='''6'''
+| RD1-score01-3='''6'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=Q
+| RD1-team02={{flagicon|USA}} [[Ryan Harrison (tennis)|R Harrison]]
+| RD1-score02-1=6<sup>1</sup>
+| RD1-score02-2=3
+| RD1-score02-3=2
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=Q
+| RD1-team03={{flagicon|AUS}} '''[[Luke Saville|L Saville]]'''
+| RD1-score03-1='''7'''
+| RD1-score03-2='''6'''
+| RD1-score03-3=3
+| RD1-score03-4='''6'''
+| RD1-score03-5=
+| RD1-seed04=
+| RD1-team04={{flagicon|AUT}} [[Dominic Thiem|D Thiem]]
+| RD1-score04-1=5
+| RD1-score04-2=4
+| RD1-score04-3='''6'''
+| RD1-score04-4=4
+| RD1-score04-5=
+
+| RD1-seed05=
+| RD1-team05={{flagicon|USA}} [[Donald Young (tennis)|D Young]]
+| RD1-score05-1=4
+| RD1-score05-2=3
+| RD1-score05-3=4
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06=
+| RD1-team06={{flagicon|GER}} '''[[Benjamin Becker|B Becker]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2='''6'''
+| RD1-score06-3='''6'''
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=Q
+| RD1-team07={{flagicon|AUS}} [[Sam Groth|S Groth]]
+| RD1-score07-1=5
+| RD1-score07-2=6<sup>2</sup>
+| RD1-score07-3=6<sup>5</sup>
+| RD1-score07-4=
+| RD1-score07-5=
+| RD1-seed08=21
+| RD1-team08={{flagicon|UKR}} '''[[Alexandr Dolgopolov|A Dolgopolov]]'''
+| RD1-score08-1='''7'''
+| RD1-score08-2='''7<sup>7</sup>'''
+| RD1-score08-3='''7<sup>7</sup>'''
+| RD1-score08-4=
+| RD1-score08-5=
+
+| RD1-seed09=25
+| RD1-team09={{flagicon|ITA}} [[Andreas Seppi|A Seppi]]
+| RD1-score09-1=3
+| RD1-score09-2='''6'''
+| RD1-score09-3='''6'''
+| RD1-score09-4=6<sup>5</sup>
+| RD1-score09-5=4
+| RD1-seed10=
+| RD1-team10={{flagicon|ARG}} '''[[Leonardo Mayer|L Mayer]]'''
+| RD1-score10-1='''6'''
+| RD1-score10-2=2
+| RD1-score10-3=4
+| RD1-score10-4='''7<sup>7</sup>'''
+| RD1-score10-5='''6'''
+
+| RD1-seed11=
+| RD1-team11={{flagicon|GER}} [[Dustin Brown (tennis)|D Brown]]
+| RD1-score11-1=4
+| RD1-score11-2=5
+| RD1-score11-3='''6'''
+| RD1-score11-4=6<sup>4</sup>
+| RD1-score11-5=
+| RD1-seed12=WC
+| RD1-team12={{flagicon|CYP}} '''[[Marcos Baghdatis|M Baghdatis]]'''
+| RD1-score12-1='''6'''
+| RD1-score12-2='''7'''
+| RD1-score12-3=2
+| RD1-score12-4='''7<sup>7</sup>'''
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|RUS}} '''[[Andrey Kuznetsov (tennis)|An Kuznetsov]]'''
+| RD1-score13-1='''6'''
+| RD1-score13-2='''7'''
+| RD1-score13-3=3
+| RD1-score13-4='''7<sup>7</sup>'''
+| RD1-score13-5=
+| RD1-seed14=WC
+| RD1-team14={{flagicon|GBR}} [[Dan Evans (tennis)|D Evans]]
+| RD1-score14-1=1
+| RD1-score14-2=5
+| RD1-score14-3='''6'''
+| RD1-score14-4=6<sup>5</sup>
+| RD1-score14-5=
+
+| RD1-seed15=
+| RD1-team15={{flagicon|ESP}} [[Pablo Carreño Busta|P Carreño Busta]]
+| RD1-score15-1=0
+| RD1-score15-2='''7<sup>7</sup>'''
+| RD1-score15-3=1
+| RD1-score15-4=1
+| RD1-score15-5=
+| RD1-seed16=7
+| RD1-team16={{flagicon|ESP}} '''[[David Ferrer|D Ferrer]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2=6<sup>3</sup>
+| RD1-score16-3='''6'''
+| RD1-score16-4='''6'''
+| RD1-score16-5=
+
+| RD2-seed01=11
+| RD2-team01={{flagicon|BUL}} '''[[Grigor Dimitrov|G Dimitrov]]'''
+| RD2-score01-1='''6'''
+| RD2-score01-2='''6'''
+| RD2-score01-3='''6'''
+| RD2-score01-4=
+| RD2-score01-5=
+| RD2-seed02=Q
+| RD2-team02={{flagicon|AUS}} [[Luke Saville|L Saville]]
+| RD2-score02-1=3
+| RD2-score02-2=2
+| RD2-score02-3=4
+| RD2-score02-4=
+| RD2-score02-5=
+
+| RD2-seed03=
+| RD2-team03={{flagicon|GER}} [[Benjamin Becker|B Becker]]
+| RD2-score03-1='''7<sup>7</sup>'''
+| RD2-score03-2=6<sup>0</sup>
+| RD2-score03-3=3
+| RD2-score03-4=4
+| RD2-score03-5=
+| RD2-seed04=21
+| RD2-team04={{flagicon|UKR}} '''[[Alexandr Dolgopolov|A Dolgopolov]]'''
+| RD2-score04-1=6<sup>4</sup>
+| RD2-score04-2='''7<sup>7</sup>'''
+| RD2-score04-3='''6'''
+| RD2-score04-4='''6'''
+| RD2-score04-5=
+
+| RD2-seed05=
+| RD2-team05={{flagicon|ARG}} '''[[Leonardo Mayer|L Mayer]]'''
+| RD2-score05-1='''7<sup>7</sup>'''
+| RD2-score05-2=4
+| RD2-score05-3='''6'''
+| RD2-score05-4='''6'''
+| RD2-score05-5=
+| RD2-seed06=WC
+| RD2-team06={{flagicon|CYP}} [[Marcos Baghdatis|M Baghdatis]]
+| RD2-score06-1=6<sup>4</sup>
+| RD2-score06-2='''6'''
+| RD2-score06-3=1
+| RD2-score06-4=4
+| RD2-score06-5=
+
+| RD2-seed07=
+| RD2-team07={{flagicon|RUS}} '''[[Andrey Kuznetsov (tennis)|An Kuznetsov]]'''
+| RD2-score07-1=6<sup>5</sup>
+| RD2-score07-2='''6'''
+| RD2-score07-3=3
+| RD2-score07-4='''6'''
+| RD2-score07-5='''6'''
+| RD2-seed08=7
+| RD2-team08={{flagicon|ESP}} [[David Ferrer|D Ferrer]]
+| RD2-score08-1='''7<sup>7</sup>'''
+| RD2-score08-2=0
+| RD2-score08-3='''6'''
+| RD2-score08-4=3
+| RD2-score08-5=2
+
+| RD3-seed01=11
+| RD3-team01={{flagicon|BUL}} '''[[Grigor Dimitrov|G Dimitrov]]'''
+| RD3-score01-1=6<sup>3</sup>
+| RD3-score01-2='''6'''
+| RD3-score01-3=2
+| RD3-score01-4='''6'''
+| RD3-score01-5='''6'''
+| RD3-seed02=21
+| RD3-team02={{flagicon|UKR}} [[Alexandr Dolgopolov|A Dolgopolov]]
+| RD3-score02-1='''7<sup>7</sup>'''
+| RD3-score02-2=4
+| RD3-score02-3='''6'''
+| RD3-score02-4=4
+| RD3-score02-5=1
+
+| RD3-seed03=
+| RD3-team03={{flagicon|ARG}} '''[[Leonardo Mayer|L Mayer]]'''
+| RD3-score03-1='''6'''
+| RD3-score03-2='''7<sup>7</sup>'''
+| RD3-score03-3='''6'''
+| RD3-score03-4=
+| RD3-score03-5=
+| RD3-seed04=
+| RD3-team04={{flagicon|RUS}} [[Andrey Kuznetsov (tennis)|An Kuznetsov]]
+| RD3-score04-1=4
+| RD3-score04-2=6<sup>1</sup>
+| RD3-score04-3=3
+| RD3-score04-4=
+| RD3-score04-5=
+
+| RD4-seed01=11
+| RD4-team01={{flagicon|BUL}} '''[[Grigor Dimitrov|G Dimitrov]]'''
+| RD4-score01-1='''6'''
+| RD4-score01-2='''7<sup>8</sup>'''
+| RD4-score01-3='''6'''
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=
+| RD4-team02={{flagicon|ARG}} [[Leonardo Mayer|L Mayer]]
+| RD4-score02-1=4
+| RD4-score02-2=6<sup>6</sup>
+| RD4-score02-3=2
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+===Bottom half===
+
+====Section 5====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=5
+| RD1-team01={{flagicon|SUI}} '''[[Stan Wawrinka|S Wawrinka]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2='''6'''
+| RD1-score01-3='''6'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=
+| RD1-team02={{flagicon|POR}} [[João Sousa|J Sousa]]
+| RD1-score02-1=3
+| RD1-score02-2=4
+| RD1-score02-3=3
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=
+| RD1-team03={{flagicon|TPE}} '''[[Lu Yen-hsun|Y-h Lu]]'''
+| RD1-score03-1='''6'''
+| RD1-score03-2=4
+| RD1-score03-3='''6'''
+| RD1-score03-4=1
+| RD1-score03-5='''6'''
+| RD1-seed04=
+| RD1-team04={{flagicon|KAZ}} [[Aleksandr Nedovyesov|A Nedovyesov]]
+| RD1-score04-1=4
+| RD1-score04-2='''6'''
+| RD1-score04-3=4
+| RD1-score04-4='''6'''
+| RD1-score04-5=1
+
+| RD1-seed05=
+| RD1-team05={{flagicon|USA}} [[Michael Russell (tennis)|M Russell]]
+| RD1-score05-1=4
+| RD1-score05-2=4
+| RD1-score05-3='''7<sup>7</sup>'''
+| RD1-score05-4='''6'''
+| RD1-score05-5=5
+| RD1-seed06=
+| RD1-team06={{flagicon|GER}} '''[[Julian Reister|J Reister]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2='''6'''
+| RD1-score06-3=6<sup>5</sup>
+| RD1-score06-4=4
+| RD1-score06-5='''7'''
+
+| RD1-seed07=
+| RD1-team07={{flagicon|UZB}} '''[[Denis Istomin|D Istomin]]'''
+| RD1-score07-1='''7'''
+| RD1-score07-2='''6'''
+| RD1-score07-3=3
+| RD1-score07-4='''6'''
+| RD1-score07-5=
+| RD1-seed08=32
+| RD1-team08={{flagicon|RUS}} [[Dmitry Tursunov|D Tursunov]]
+| RD1-score08-1=5
+| RD1-score08-2=4
+| RD1-score08-3='''6'''
+| RD1-score08-4=2
+| RD1-score08-5=
+
+| RD1-seed09=19
+| RD1-team09={{flagicon|ESP}} '''[[Feliciano López|F López]]'''
+| RD1-score09-1='''7<sup>8</sup>'''
+| RD1-score09-2='''7<sup>8</sup>'''
+| RD1-score09-3='''7<sup>9</sup>'''
+| RD1-score09-4=
+| RD1-score09-5=
+| RD1-seed10=Q
+| RD1-team10={{flagicon|JPN}} [[Yūichi Sugita|Y Sugita]]
+| RD1-score10-1=6<sup>6</sup>
+| RD1-score10-2=6<sup>6</sup>
+| RD1-score10-3=6<sup>7</sup>
+| RD1-score10-4=
+| RD1-score10-5=
+
+| RD1-seed11=
+| RD1-team11={{flagicon|COL}} [[Alejandro Falla|A Falla]]
+| RD1-score11-1=4
+| RD1-score11-2=3
+| RD1-score11-3=5
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=Q
+| RD1-team12={{flagicon|CRO}} '''[[Ante Pavić|A Pavić]]'''
+| RD1-score12-1='''6'''
+| RD1-score12-2='''6'''
+| RD1-score12-3='''7'''
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|FIN}} '''[[Jarkko Nieminen|J Nieminen]]'''
+| RD1-score13-1='''6'''
+| RD1-score13-2='''7<sup>7</sup>'''
+| RD1-score13-3='''7'''
+| RD1-score13-4=
+| RD1-score13-5=
+| RD1-seed14=
+| RD1-team14={{flagicon|ARG}} [[Federico Delbonis|F Delbonis]]
+| RD1-score14-1=3
+| RD1-score14-2=6<sup>3</sup>
+| RD1-score14-3=5
+| RD1-score14-4=
+| RD1-score14-5=
+
+| RD1-seed15=WC
+| RD1-team15={{flagicon|GBR}} [[Daniel Smethurst|D Smethurst]]
+| RD1-score15-1=5
+| RD1-score15-2=3
+| RD1-score15-3=4
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=9
+| RD1-team16={{flagicon|USA}} '''[[John Isner|J Isner]]'''
+| RD1-score16-1='''7'''
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=5
+| RD2-team01={{flagicon|SUI}} '''[[Stan Wawrinka|S Wawrinka]]'''
+| RD2-score01-1='''7<sup>8</sup>'''
+| RD2-score01-2='''6'''
+| RD2-score01-3=3
+| RD2-score01-4='''7'''
+| RD2-score01-5=
+| RD2-seed02=
+| RD2-team02={{flagicon|TPE}} [[Lu Yen-hsun|Y-h Lu]]
+| RD2-score02-1=6<sup>6</sup>
+| RD2-score02-2=3
+| RD2-score02-3='''6'''
+| RD2-score02-4=5
+| RD2-score02-5=
+
+| RD2-seed03=
+| RD2-team03={{flagicon|GER}} [[Julian Reister|J Reister]]
+| RD2-score03-1=6<sup>7</sup>
+| RD2-score03-2=4
+| RD2-score03-3=4
+| RD2-score03-4=
+| RD2-score03-5=
+| RD2-seed04=
+| RD2-team04={{flagicon|UZB}} '''[[Denis Istomin|D Istomin]]'''
+| RD2-score04-1='''7<sup>9</sup>'''
+| RD2-score04-2='''6'''
+| RD2-score04-3='''6'''
+| RD2-score04-4=
+| RD2-score04-5=
+
+| RD2-seed05=19
+| RD2-team05={{flagicon|ESP}} '''[[Feliciano López|F López]]'''
+| RD2-score05-1='''6'''
+| RD2-score05-2='''7<sup>7</sup>'''
+| RD2-score05-3='''7'''
+| RD2-score05-4=
+| RD2-score05-5=
+| RD2-seed06=Q
+| RD2-team06={{flagicon|CRO}} [[Ante Pavić|A Pavić]]
+| RD2-score06-1=4
+| RD2-score06-2=6<sup>4</sup>
+| RD2-score06-3=5
+| RD2-score06-4=
+| RD2-score06-5=
+
+| RD2-seed07=
+| RD2-team07={{flagicon|FIN}} [[Jarkko Nieminen|J Nieminen]]
+| RD2-score07-1=6<sup>17</sup>
+| RD2-score07-2=6<sup>3</sup>
+| RD2-score07-3=5
+| RD2-score07-4=
+| RD2-score07-5=
+| RD2-seed08=9
+| RD2-team08={{flagicon|USA}} '''[[John Isner|J Isner]]'''
+| RD2-score08-1='''7<sup>19</sup>'''
+| RD2-score08-2='''7<sup>7</sup>'''
+| RD2-score08-3='''7'''
+| RD2-score08-4=
+| RD2-score08-5=
+
+| RD3-seed01=5
+| RD3-team01={{flagicon|SUI}} '''[[Stan Wawrinka|S Wawrinka]]'''
+| RD3-score01-1='''6'''
+| RD3-score01-2='''6'''
+| RD3-score01-3='''6'''
+| RD3-score01-4=
+| RD3-score01-5=
+| RD3-seed02=
+| RD3-team02={{flagicon|UZB}} [[Denis Istomin|D Istomin]]
+| RD3-score02-1=3
+| RD3-score02-2=3
+| RD3-score02-3=4
+| RD3-score02-4=
+| RD3-score02-5=
+
+| RD3-seed03=19
+| RD3-team03={{flagicon|ESP}} '''[[Feliciano López|F López]]'''
+| RD3-score03-1=6<sup>8</sup>
+| RD3-score03-2='''7<sup>8</sup>'''
+| RD3-score03-3='''7<sup>7</sup>'''
+| RD3-score03-4='''7'''
+| RD3-score03-5=
+| RD3-seed04=9
+| RD3-team04={{flagicon|USA}} [[John Isner|J Isner]]
+| RD3-score04-1='''7<sup>10</sup>'''
+| RD3-score04-2=6<sup>6</sup>
+| RD3-score04-3=6<sup>3</sup>
+| RD3-score04-4=5
+| RD3-score04-5=
+
+| RD4-seed01=5
+| RD4-team01={{flagicon|SUI}} '''[[Stan Wawrinka|S Wawrinka]]'''
+| RD4-score01-1='''7<sup>7</sup>'''
+| RD4-score01-2='''7<sup>9</sup>'''
+| RD4-score01-3='''6'''
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=19
+| RD4-team02={{flagicon|ESP}} [[Feliciano López|F López]]
+| RD4-score02-1=6<sup>5</sup>
+| RD4-score02-2=6<sup>7</sup>
+| RD4-score02-3=3
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+====Section 6====
+ {{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=15
+| RD1-team01={{flagicon|POL}} '''[[Jerzy Janowicz|J Janowicz]]'''
+| RD1-score01-1=4
+| RD1-score01-2='''6'''
+| RD1-score01-3='''6'''
+| RD1-score01-4=3
+| RD1-score01-5='''6'''
+| RD1-seed02=
+| RD1-team02={{flagicon|IND}} [[Somdev Devvarman|S Devvarman]]
+| RD1-score02-1='''6'''
+| RD1-score02-2=3
+| RD1-score02-3=3
+| RD1-score02-4='''6'''
+| RD1-score02-5=3
+
+| RD1-seed03=
+| RD1-team03={{flagicon|AUS}} '''[[Lleyton Hewitt|L Hewitt]]'''
+| RD1-score03-1='''6'''
+| RD1-score03-2=6<sup>14</sup>
+| RD1-score03-3='''6'''
+| RD1-score03-4='''6'''
+| RD1-score03-5=
+| RD1-seed04=
+| RD1-team04={{flagicon|POL}} [[Michał Przysiężny|M Przysiężny]]
+| RD1-score04-1=2
+| RD1-score04-2='''7<sup>16</sup>'''
+| RD1-score04-3=1
+| RD1-score04-4=4
+| RD1-score04-5=
+
+| RD1-seed05=
+| RD1-team05={{flagicon|ESP}} [[Pere Riba|P Riba]]
+| RD1-score05-1=2
+| RD1-score05-2=3
+| RD1-score05-3=4
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06=
+| RD1-team06={{flagicon|FRA}} '''[[Adrian Mannarino|A Mannarino]]'''
+| RD1-score06-1='''6'''
+| RD1-score06-2='''6'''
+| RD1-score06-3='''6'''
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=
+| RD1-team07={{flagicon|SVK}} [[Lukáš Lacko|L Lacko]]
+| RD1-score07-1=6<sup>5</sup>
+| RD1-score07-2='''6'''
+| RD1-score07-3=2
+| RD1-score07-4=4
+| RD1-score07-5=
+| RD1-seed08=23
+| RD1-team08={{flagicon|ESP}} '''[[Tommy Robredo|T Robredo]]'''
+| RD1-score08-1='''7<sup>7</sup>'''
+| RD1-score08-2=1
+| RD1-score08-3='''6'''
+| RD1-score08-4='''6'''
+| RD1-score08-5=
+
+| RD1-seed09=30
+| RD1-team09={{flagicon|ESP}} '''[[Marcel Granollers|M Granollers]]'''
+| RD1-score09-1='''6'''
+| RD1-score09-2='''7<sup>8</sup>'''
+| RD1-score09-3=6<sup>7</sup>
+| RD1-score09-4='''6'''
+| RD1-score09-5=
+| RD1-seed10=
+| RD1-team10={{flagicon|FRA}} [[Nicolas Mahut|N Mahut]]
+| RD1-score10-1=4
+| RD1-score10-2=6<sup>6</sup>
+| RD1-score10-3='''7<sup>9</sup>'''
+| RD1-score10-4=4
+| RD1-score10-5=
+
+| RD1-seed11=
+| RD1-team11={{flagicon|ESP}} [[Daniel Gimeno Traver|D Gimeno Traver]]
+| RD1-score11-1=1
+| RD1-score11-2=5
+| RD1-score11-3=0
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=
+| RD1-team12={{flagicon|COL}} '''[[Santiago Giraldo|S Giraldo]]'''
+| RD1-score12-1='''6'''
+| RD1-score12-2='''7'''
+| RD1-score12-3='''6'''
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=Q
+| RD1-team13={{flagicon|LUX}} '''[[Gilles Müller|G Müller]]'''
+| RD1-score13-1='''6'''
+| RD1-score13-2='''7<sup>8</sup>'''
+| RD1-score13-3='''7<sup>7</sup>'''
+| RD1-score13-4=
+| RD1-score13-5=
+| RD1-seed14=
+| RD1-team14={{flagicon|FRA}} [[Julien Benneteau|J Benneteau]]
+| RD1-score14-1=4
+| RD1-score14-2=6<sup>6</sup>
+| RD1-score14-3=6<sup>5</sup>
+| RD1-score14-4=
+| RD1-score14-5=
+
+| RD1-seed15=
+| RD1-team15= {{flagicon|ITA}} [[Paolo Lorenzi|P Lorenzi]]
+| RD1-score15-1=1
+| RD1-score15-2=1
+| RD1-score15-3=3
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=4
+| RD1-team16={{flagicon|SUI}} '''[[Roger Federer|R Federer]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=15
+| RD2-team01={{flagicon|POL}} '''[[Jerzy Janowicz|J Janowicz]]'''
+| RD2-score01-1='''7'''
+| RD2-score01-2='''6'''
+| RD2-score01-3=6<sup>7</sup>
+| RD2-score01-4=4
+| RD2-score01-5='''6'''
+| RD2-seed02=
+| RD2-team02={{flagicon|AUS}} [[Lleyton Hewitt|L Hewitt]]
+| RD2-score02-1=5
+| RD2-score02-2=4
+| RD2-score02-3='''7<sup>9</sup>'''
+| RD2-score02-4='''6'''
+| RD2-score02-5=3
+
+| RD2-seed03=
+| RD2-team03={{flagicon|FRA}} [[Adrian Mannarino|A Mannarino]]
+| RD2-score03-1=4
+| RD2-score03-2=1
+| RD2-score03-3=6<sup>5</sup>
+| RD2-score03-4=
+| RD2-score03-5=
+| RD2-seed04=23
+| RD2-team04={{flagicon|ESP}} '''[[Tommy Robredo|T Robredo]]'''
+| RD2-score04-1='''6'''
+| RD2-score04-2='''6'''
+| RD2-score04-3='''7<sup>7</sup>'''
+| RD2-score04-4=
+| RD2-score04-5=
+
+| RD2-seed05=30
+| RD2-team05={{flagicon|ESP}} [[Marcel Granollers|M Granollers]]
+| RD2-score05-1='''6'''
+| RD2-score05-2=6<sup>2</sup>
+| RD2-score05-3='''6'''
+| RD2-score05-4=1
+| RD2-score05-5=5
+| RD2-seed06=
+| RD2-team06={{flagicon|COL}} '''[[Santiago Giraldo|S Giraldo]]'''
+| RD2-score06-1=4
+| RD2-score06-2='''7<sup>7</sup>'''
+| RD2-score06-3=1
+| RD2-score06-4='''6'''
+| RD2-score06-5='''7'''
+
+| RD2-seed07=Q
+| RD2-team07={{flagicon|LUX}} [[Gilles Müller|G Müller]]
+| RD2-score07-1=3
+| RD2-score07-2=5
+| RD2-score07-3=3
+| RD2-score07-4=
+| RD2-score07-5=
+| RD2-seed08=4
+| RD2-team08={{flagicon|SUI}} '''[[Roger Federer|R Federer]]'''
+| RD2-score08-1='''6'''
+| RD2-score08-2='''7'''
+| RD2-score08-3='''6'''
+| RD2-score08-4=
+| RD2-score08-5=
+
+| RD3-seed01=15
+| RD3-team01={{flagicon|POL}} [[Jerzy Janowicz|J Janowicz]]
+| RD3-score01-1=2
+| RD3-score01-2=4
+| RD3-score01-3='''7<sup>7</sup>'''
+| RD3-score01-4='''6'''
+| RD3-score01-5=3
+| RD3-seed02=23
+| RD3-team02={{flagicon|ESP}} '''[[Tommy Robredo|T Robredo]]'''
+| RD3-score02-1='''6'''
+| RD3-score02-2='''6'''
+| RD3-score02-3=6<sup>5</sup>
+| RD3-score02-4=4
+| RD3-score02-5='''6'''
+
+| RD3-seed03=
+| RD3-team03={{flagicon|COL}} [[Santiago Giraldo|S Giraldo]]
+| RD3-score03-1=3
+| RD3-score03-2=1
+| RD3-score03-3=3
+| RD3-score03-4=
+| RD3-score03-5=
+| RD3-seed04=4
+| RD3-team04={{flagicon|SUI}} '''[[Roger Federer|R Federer]]'''
+| RD3-score04-1='''6'''
+| RD3-score04-2='''6'''
+| RD3-score04-3='''6'''
+| RD3-score04-4=
+| RD3-score04-5=
+
+| RD4-seed01=23
+| RD4-team01={{flagicon|ESP}} [[Tommy Robredo|T Robredo]]
+| RD4-score01-1=1
+| RD4-score01-2=4
+| RD4-score01-3=4
+| RD4-score01-4=
+| RD4-score01-5=
+| RD4-seed02=4
+| RD4-team02={{flagicon|SUI}} '''[[Roger Federer|R Federer]]'''
+| RD4-score02-1='''6'''
+| RD4-score02-2='''6'''
+| RD4-score02-3='''6'''
+| RD4-score02-4=
+| RD4-score02-5=
+}}
+
+====Section 7====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=8
+| RD1-team01={{flagicon|CAN}} '''[[Milos Raonic|M Raonic]]'''
+| RD1-score01-1='''6'''
+| RD1-score01-2='''6'''
+| RD1-score01-3='''6'''
+| RD1-score01-4=
+| RD1-score01-5=
+| RD1-seed02=
+| RD1-team02={{flagicon|AUS}} [[Matthew Ebden|M Ebden]]
+| RD1-score02-1=2
+| RD1-score02-2=4
+| RD1-score02-3=4
+| RD1-score02-4=
+| RD1-score02-5=
+
+| RD1-seed03=Q
+| RD1-team03={{flagicon|FRA}} [[Pierre-Hugues Herbert|P-H Herbert]]
+| RD1-score03-1='''7<sup>7</sup>'''
+| RD1-score03-2=2
+| RD1-score03-3=6<sup>5</sup>
+| RD1-score03-4=4
+| RD1-score03-5=
+| RD1-seed04=
+| RD1-team04={{flagicon|USA}} '''[[Jack Sock|J Sock]]'''
+| RD1-score04-1=6<sup>5</sup>
+| RD1-score04-2='''6'''
+| RD1-score04-3='''7<sup>7</sup>'''
+| RD1-score04-4='''6'''
+| RD1-score04-5=
+
+| RD1-seed05=
+| RD1-team05={{flagicon|POL}} '''[[Łukasz Kubot|Ł Kubot]]'''
+| RD1-score05-1='''7<sup>8</sup>'''
+| RD1-score05-2='''6'''
+| RD1-score05-3='''6'''
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06=
+| RD1-team06={{flagicon|GER}} [[Jan-Lennard Struff|J-L Struff]]
+| RD1-score06-1=6<sup>6</sup>
+| RD1-score06-2=4
+| RD1-score06-3=4
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=
+| RD1-team07={{flagicon|SRB}} '''[[Dušan Lajović|D Lajović]]'''
+| RD1-score07-1='''7<sup>7</sup>'''
+| RD1-score07-2='''6'''
+| RD1-score07-3=3
+| RD1-score07-4=3
+| RD1-score07-5='''6'''
+| RD1-seed08=28
+| RD1-team08={{flagicon|ESP}} [[Guillermo García López|G García López]]
+| RD1-score08-1=6<sup>5</sup>
+| RD1-score08-2=2
+| RD1-score08-3='''6'''
+| RD1-score08-4='''6'''
+| RD1-score08-5=3
+
+| RD1-seed09=22
+| RD1-team09={{flagicon|GER}} '''[[Philipp Kohlschreiber|P Kohlschreiber]]'''
+| RD1-score09-1='''6'''
+| RD1-score09-2='''6'''
+| RD1-score09-3='''6'''
+| RD1-score09-4=
+| RD1-score09-5=
+| RD1-seed10=
+| RD1-team10={{flagicon|NED}} [[Igor Sijsling|I Sijsling]]
+| RD1-score10-1=4
+| RD1-score10-2=4
+| RD1-score10-3=2
+| RD1-score10-4=
+| RD1-score10-5=
+
+| RD1-seed11=Q
+| RD1-team11={{flagicon|JPN}} [[Tatsuma Ito|T Ito]]
+| RD1-score11-1=5
+| RD1-score11-2=6<sup>3</sup>
+| RD1-score11-3='''6'''
+| RD1-score11-4=6<sup>5</sup>
+| RD1-score11-5=
+| RD1-seed12=LL
+| RD1-team12={{flagicon|ITA}} '''[[Simone Bolelli|S Bolelli]]'''
+| RD1-score12-1='''7'''
+| RD1-score12-2='''7<sup>7</sup>'''
+| RD1-score12-3=3
+| RD1-score12-4='''7<sup>7</sup>'''
+| RD1-score12-5=
+
+| RD1-seed13=Q
+| RD1-team13={{flagicon|TUR}} [[Marsel İlhan|M İlhan]]
+| RD1-score13-1=6<sup>3</sup>
+| RD1-score13-2=4
+| RD1-score13-3='''6'''
+| RD1-score13-4=5
+| RD1-score13-5=
+| RD1-seed14=Q
+| RD1-team14={{flagicon|USA}} '''[[Denis Kudla|D Kudla]]'''
+| RD1-score14-1='''7<sup>7</sup>'''
+| RD1-score14-2='''6'''
+| RD1-score14-3=4
+| RD1-score14-4='''7'''
+| RD1-score14-5=
+
+| RD1-seed15=
+| RD1-team15={{flagicon|FRA}} [[Kenny de Schepper|K de Schepper]]
+| RD1-score15-1=4
+| RD1-score15-2=6<sup>5</sup>
+| RD1-score15-3=5
+| RD1-score15-4=
+| RD1-score15-5=
+| RD1-seed16=10
+| RD1-team16={{flagicon|JPN}} '''[[Kei Nishikori|K Nishikori]]'''
+| RD1-score16-1='''6'''
+| RD1-score16-2='''7<sup>7</sup>'''
+| RD1-score16-3='''7'''
+| RD1-score16-4=
+| RD1-score16-5=
+
+| RD2-seed01=8
+| RD2-team01={{flagicon|CAN}} '''[[Milos Raonic|M Raonic]]'''
+| RD2-score01-1='''6'''
+| RD2-score01-2='''6'''
+| RD2-score01-3='''6'''
+| RD2-score01-4=
+| RD2-score01-5=
+| RD2-seed02=
+| RD2-team02={{flagicon|USA}} [[Jack Sock|J Sock]]
+| RD2-score02-1=3
+| RD2-score02-2=4
+| RD2-score02-3=4
+| RD2-score02-4=
+| RD2-score02-5=
+
+| RD2-seed03=
+| RD2-team03={{flagicon|POL}} '''[[Łukasz Kubot|Ł Kubot]]'''
+| RD2-score03-1=6<sup>4</sup>
+| RD2-score03-2='''7<sup>7</sup>'''
+| RD2-score03-3='''6'''
+| RD2-score03-4='''7<sup>7</sup>'''
+| RD2-score03-5=
+| RD2-seed04=
+| RD2-team04={{flagicon|SRB}} [[Dušan Lajović|D Lajović]]
+| RD2-score04-1='''7<sup>7</sup>'''
+| RD2-score04-2=6<sup>4</sup>
+| RD2-score04-3=3
+| RD2-score04-4=6<sup>3</sup>
+| RD2-score04-5=
+
+| RD2-seed05=22
+| RD2-team05={{flagicon|GER}} [[Philipp Kohlschreiber|P Kohlschreiber]]
+| RD2-score05-1='''6'''
+| RD2-score05-2=4
+| RD2-score05-3=3
+| RD2-score05-4='''6'''
+| RD2-score05-5=5
+| RD2-seed06=LL
+| RD2-team06={{flagicon|ITA}} '''[[Simone Bolelli|S Bolelli]]'''
+| RD2-score06-1=4
+| RD2-score06-2='''6'''
+| RD2-score06-3='''6'''
+| RD2-score06-4=2
+| RD2-score06-5='''7'''
+
+| RD2-seed07=Q
+| RD2-team07={{flagicon|USA}} [[Denis Kudla|D Kudla]]
+| RD2-score07-1=3
+| RD2-score07-2=2
+| RD2-score07-3=1
+| RD2-score07-4=
+| RD2-score07-5=
+| RD2-seed08=10
+| RD2-team08={{flagicon|JPN}} '''[[Kei Nishikori|K Nishikori]]'''
+| RD2-score08-1='''6'''
+| RD2-score08-2='''6'''
+| RD2-score08-3='''6'''
+| RD2-score08-4=
+| RD2-score08-5=
+
+| RD3-seed01=8
+| RD3-team01={{flagicon|CAN}} '''[[Milos Raonic|M Raonic]]'''
+| RD3-score01-1='''7<sup>7</sup>'''
+| RD3-score01-2='''7<sup>7</sup>'''
+| RD3-score01-3='''6'''
+| RD3-score01-4=
+| RD3-score01-5=
+| RD3-seed02=
+| RD3-team02={{flagicon|POL}} [[Łukasz Kubot|Ł Kubot]]
+| RD3-score02-1=6<sup>2</sup>
+| RD3-score02-2=6<sup>4</sup>
+| RD3-score02-3=2
+| RD3-score02-4=
+| RD3-score02-5=
+
+| RD3-seed03=LL
+| RD3-team03={{flagicon|ITA}} [[Simone Bolelli|S Bolelli]]
+| RD3-score03-1='''6'''
+| RD3-score03-2=3
+| RD3-score03-3='''6'''
+| RD3-score03-4=6<sup>4</sup>
+| RD3-score03-5=4
+| RD3-seed04=10
+| RD3-team04={{flagicon|JPN}} '''[[Kei Nishikori|K Nishikori]]'''
+| RD3-score04-1=3
+| RD3-score04-2='''6'''
+| RD3-score04-3=4
+| RD3-score04-4='''7<sup>7</sup>'''
+| RD3-score04-5='''6'''
+
+| RD4-seed01=8
+| RD4-team01={{flagicon|CAN}} '''[[Milos Raonic|M Raonic]]'''
+| RD4-score01-1=4
+| RD4-score01-2='''6'''
+| RD4-score01-3='''7<sup>7</sup>'''
+| RD4-score01-4='''6'''
+| RD4-score01-5=
+| RD4-seed02=10
+| RD4-team02={{flagicon|JPN}} [[Kei Nishikori|K Nishikori]]
+| RD4-score02-1='''6'''
+| RD4-score02-2=1
+| RD4-score02-3=6<sup>4</sup>
+| RD4-score02-4=3
+| RD4-score02-5=
+}}
+
+====Section 8====
+{{16TeamBracket-Compact-Tennis5
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+| RD1-seed01=13
+| RD1-team01={{flagicon|FRA}} '''[[Richard Gasquet|R Gasquet]]'''
+| RD1-score01-1=6<sup>3</sup>
+| RD1-score01-2='''6'''
+| RD1-score01-3=3
+| RD1-score01-4='''6'''
+| RD1-score01-5='''6'''
+| RD1-seed02=Q
+| RD1-team02={{flagicon|AUS}} [[James Duckworth (tennis)|J Duckworth]]
+| RD1-score02-1='''7<sup>7</sup>'''
+| RD1-score02-2=3
+| RD1-score02-3='''6'''
+| RD1-score02-4=0
+| RD1-score02-5=1
+
+| RD1-seed03=WC
+| RD1-team03={{flagicon|AUS}} '''[[Nick Kyrgios|N Kyrgios]]'''
+| RD1-score03-1='''7<sup>7</sup>'''
+| RD1-score03-2='''7<sup>7</sup>'''
+| RD1-score03-3=6<sup>6</sup>
+| RD1-score03-4='''6'''
+| RD1-score03-5=
+| RD1-seed04=
+| RD1-team04={{flagicon|FRA}} [[Stéphane Robert|S Robert]]
+| RD1-score04-1=6<sup>2</sup>
+| RD1-score04-2=6<sup>1</sup>
+| RD1-score04-3='''7<sup>8</sup>'''
+| RD1-score04-4=2
+| RD1-score04-5=
+
+| RD1-seed05=WC
+| RD1-team05={{flagicon|CZE}} '''[[Jiří Veselý|J Veselý]]'''
+| RD1-score05-1=5
+| RD1-score05-2=
+| RD1-score05-3=
+| RD1-score05-4=
+| RD1-score05-5=
+| RD1-seed06= 
+| RD1-team06={{flagicon|DOM}} [[Víctor Estrella Burgos|V Estrella Burgos]]
+| RD1-score06-1=1<sup>r</sup>
+| RD1-score06-2=
+| RD1-score06-3=
+| RD1-score06-4=
+| RD1-score06-5=
+
+| RD1-seed07=LL
+| RD1-team07={{flagicon|TUN}} [[Malek Jaziri|M Jaziri]]
+| RD1-score07-1=6<sup>5</sup>
+| RD1-score07-2=5
+| RD1-score07-3=4
+| RD1-score07-4=
+| RD1-score07-5=
+| RD1-seed08=24
+| RD1-team08={{flagicon|FRA}} '''[[Gaël Monfils|G Monfils]]'''
+| RD1-score08-1='''7<sup>7</sup>'''
+| RD1-score08-2='''7'''
+| RD1-score08-3='''6'''
+| RD1-score08-4=
+| RD1-score08-5=
+
+| RD1-seed09=29
+| RD1-team09={{flagicon|CRO}} [[Ivo Karlović|I Karlović]]
+| RD1-score09-1=4
+| RD1-score09-2=6<sup>5</sup>
+| RD1-score09-3=6<sup>4</sup>
+| RD1-score09-4=
+| RD1-score09-5=
+| RD1-seed10=LL
+| RD1-team10={{flagicon|CAN}} '''[[Frank Dancevic|F Dancevic]]'''
+| RD1-score10-1='''6'''
+| RD1-score10-2='''7<sup>7</sup>'''
+| RD1-score10-3='''7<sup>7</sup>'''
+| RD1-score10-4=
+| RD1-score10-5=
+
+| RD1-seed11=
+| RD1-team11={{flagicon|ISR}} [[Dudi Sela|D Sela]]
+| RD1-score11-1=4
+| RD1-score11-2=4
+| RD1-score11-3=4
+| RD1-score11-4=
+| RD1-score11-5=
+| RD1-seed12=
+| RD1-team12={{flagicon|KAZ}} '''[[Mikhail Kukushkin|M Kukushkin]]'''
+| RD1-score12-1='''6'''
+| RD1-score12-2='''6'''
+| RD1-score12-3='''6'''
+| RD1-score12-4=
+| RD1-score12-5=
+
+| RD1-seed13=
+| RD1-team13={{flagicon|FRA}} [[Benoît Paire|B Paire]]
+| RD1-score13-1=3
+| RD1-score13-2='''6'''
+| RD1-score13-3=6<sup>5</sup>
+| RD1-score13-4=4
+| RD1-score13-5=
+| RD1-seed14=
+| RD1-team14={{flagicon|CZE}} '''[[Lukáš Rosol|L Rosol]]'''
+| RD1-score14-1='''6'''
+| RD1-score14-2=3
+| RD1-score14-3='''7<sup>7</sup>'''
+| RD1-score14-4='''6'''
+| RD1-score14-5=
+
+| RD1-seed15=
+| RD1-team15={{flagicon|SVK}} [[Martin Kližan|M Kližan]]
+| RD1-score15-1='''6'''
+| RD1-score15-2=3
+| RD1-score15-3=3
+| RD1-score15-4=3
+| RD1-score15-5=
+| RD1-seed16=2
+| RD1-team16={{flagicon|ESP}} '''[[Rafael Nadal|R Nadal]]'''
+| RD1-score16-1=4
+| RD1-score16-2='''6'''
+| RD1-score16-3='''6'''
+| RD1-score16-4='''6'''
+| RD1-score16-5=
+
+| RD2-seed01=13
+| RD2-team01={{flagicon|FRA}} [[Richard Gasquet|R Gasquet]]
+| RD2-score01-1='''6'''
+| RD2-score01-2='''7<sup>7</sup>'''
+| RD2-score01-3=4
+| RD2-score01-4=5
+| RD2-score01-5=8
+| RD2-seed02=WC
+| RD2-team02={{flagicon|AUS}} '''[[Nick Kyrgios|N Kyrgios]]'''
+| RD2-score02-1=3
+| RD2-score02-2=6<sup>4</sup>
+| RD2-score02-3='''6'''
+| RD2-score02-4='''7'''
+| RD2-score02-5='''10'''
+
+| RD2-seed03=WC
+| RD2-team03={{flagicon|CZE}} '''[[Jiří Veselý|J Veselý]]'''
+| RD2-score03-1='''7<sup>7</sup>'''
+| RD2-score03-2='''6'''
+| RD2-score03-3=6<sup>1</sup>
+| RD2-score03-4=6<sup>3</sup>
+| RD2-score03-5='''6'''
+| RD2-seed04=24
+| RD2-team04={{flagicon|FRA}} [[Gaël Monfils|G Monfils]]
+| RD2-score04-1=6<sup>3</sup>
+| RD2-score04-2=3
+| RD2-score04-3='''7<sup>7</sup>'''
+| RD2-score04-4='''7<sup>7</sup>'''
+| RD2-score04-5=4
+
+| RD2-seed05=LL
+| RD2-team05={{flagicon|CAN}} [[Frank Dancevic|F Dancevic]]
+| RD2-score05-1=3
+| RD2-score05-2=3
+| RD2-score05-3=2
+| RD2-score05-4=
+| RD2-score05-5=
+| RD2-seed06=
+| RD2-team06={{flagicon|KAZ}} '''[[Mikhail Kukushkin|M Kukushkin]]'''
+| RD2-score06-1='''6'''
+| RD2-score06-2='''6'''
+| RD2-score06-3='''6'''
+| RD2-score06-4=
+| RD2-score06-5=
+
+| RD2-seed07=
+| RD2-team07={{flagicon|CZE}} [[Lukáš Rosol|L Rosol]]
+| RD2-score07-1='''6'''
+| RD2-score07-2=6<sup>6</sup>
+| RD2-score07-3=4
+| RD2-score07-4=4
+| RD2-score07-5=
+| RD2-seed08=2
+| RD2-team08={{flagicon|ESP}} '''[[Rafael Nadal|R Nadal]]'''
+| RD2-score08-1=4
+| RD2-score08-2='''7<sup>8</sup>'''
+| RD2-score08-3='''6'''
+| RD2-score08-4='''6'''
+| RD2-score08-5=
+
+| RD3-seed01=WC
+| RD3-team01={{flagicon|AUS}} '''[[Nick Kyrgios|N Kyrgios]]'''
+| RD3-score01-1=3
+| RD3-score01-2='''6'''
+| RD3-score01-3='''7'''
+| RD3-score01-4='''6'''
+| RD3-score01-5=
+| RD3-seed02=WC
+| RD3-team02={{flagicon|CZE}} [[Jiří Veselý|J Veselý]]
+| RD3-score02-1='''6'''
+| RD3-score02-2=3
+| RD3-score02-3=5
+| RD3-score02-4=2
+| RD3-score02-5=
+
+| RD3-seed03=
+| RD3-team03={{flagicon|KAZ}} [[Mikhail Kukushkin|M Kukushkin]]
+| RD3-score03-1='''7<sup>7</sup>'''
+| RD3-score03-2=1
+| RD3-score03-3=1
+| RD3-score03-4=1
+| RD3-score03-5=
+| RD3-seed04=2
+| RD3-team04={{flagicon|ESP}} '''[[Rafael Nadal|R Nadal]]'''
+| RD3-score04-1=6<sup>4</sup>
+| RD3-score04-2='''6'''
+| RD3-score04-3='''6'''
+| RD3-score04-4='''6'''
+| RD3-score04-5=
+
+| RD4-seed01=WC
+| RD4-team01={{flagicon|AUS}} '''[[Nick Kyrgios|N Kyrgios]]'''
+| RD4-score01-1='''7<sup>7</sup>'''
+| RD4-score01-2=5
+| RD4-score01-3='''7<sup>7</sup>'''
+| RD4-score01-4='''6'''
+| RD4-score01-5=
+| RD4-seed02=2
+| RD4-team02={{flagicon|ESP}} [[Rafael Nadal|R Nadal]]
+| RD4-score02-1=6<sup>5</sup>
+| RD4-score02-2='''7'''
+| RD4-score02-3=6<sup>5</sup>
+| RD4-score02-4=3
+| RD4-score02-5=
+}}
+
+==References==
+{{reflist}}
+
+==External links==
+*{{Wimbledondraws|2014|MS}}
+*{{cite web|title=Wimbledon 2014 – Singles Draw|url=http://www.atpworldtour.com/en/scores/archive/wimbledon/540/2014/draws?matchType=singles|website=atpworldtour.com|publisher=[[Association of Tennis Professionals|ATP World Tour]]|accessdate=4 July 2018}}
+*{{cite web|title=Wimbledon 2014|url=https://www.itftennis.com/procircuit/tournaments/men's-tournament/info.aspx?tournamentid=1100032174|website=itftennis.com|publisher=[[International Tennis Federation]]|accessdate=4 July 2018}}
+
+{{Wimbledon men's singles drawsheets}}
+{{2014 ATP World Tour}}
+
+{{DEFAULTSORT:2014 Wimbledon Championships - Men's Singles}}
+[[Category:2014 Wimbledon Championships|Men's Singles]]
+[[Category:Wimbledon Championship by year – Gentlemen's Singles]]

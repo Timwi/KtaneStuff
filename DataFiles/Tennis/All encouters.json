@@ -1,0 +1,2427 @@
+﻿{
+  "French Open": {
+    "Men": {
+      "Adriano Panatta": {
+        "Björn Borg": 1,
+        "Eddie Dibbs": 1,
+        "Harold Solomon": 1,
+        "John Andrews": 1,
+        "Tom Okker": 1
+      },
+      "Albert Costa": {
+        "Àlex Corretja": 1,
+        "Guillermo Cañas": 1,
+        "Juan Carlos Ferrero": 1,
+        "Tommy Robredo": 1
+      },
+      "Alberto Berasategui": {
+        "Goran Ivanišević": 1,
+        "Magnus Larsson": 1
+      },
+      "Àlex Corretja": {
+        "Andrei Pavel": 1,
+        "Cédric Pioline": 1,
+        "Filip Dewulf": 1,
+        "Roger Federer": 1,
+        "Sébastien Grosjean": 1
+      },
+      "Alex Metreveli": { "Adriano Panatta": 1 },
+      "Andre Agassi": {
+        "Andriy Medvedev": 1,
+        "Boris Becker": 1,
+        "Dominik Hrbatý": 1,
+        "Guillermo Pérez Roldán": 1,
+        "Jakob Hlasek": 1,
+        "Jonas Svensson": 1,
+        "Marcelo Filippini": 1,
+        "Michael Chang": 1,
+        "Pete Sampras": 1
+      },
+      "Andrei Chesnokov": { "Mats Wilander": 1 },
+      "Andrei Medvedev": { "Stefan Edberg": 1 },
+      "Andrés Gimeno": {
+        "Alex Metreveli": 1,
+        "Boro Jovanović": 1,
+        "Patrick Proisy": 1,
+        "Stan Smith": 1
+      },
+      "Andrés Gómez": {
+        "Andre Agassi": 1,
+        "Thierry Champion": 1,
+        "Thomas Muster": 1
+      },
+      "Andriy Medvedev": {
+        "Fernando Meligeni": 1,
+        "Gustavo Kuerten": 1
+      },
+      "Andy Murray": {
+        "David Ferrer": 1,
+        "Gaël Monfils": 1,
+        "Juan Ignacio Chela": 1,
+        "Kei Nishikori": 1,
+        "Richard Gasquet": 1,
+        "Stan Wawrinka": 1
+      },
+      "Björn Borg": {
+        "Adriano Panatta": 1,
+        "Balázs Taróczy": 1,
+        "Corrado Barazzutti": 2,
+        "Guillermo Vilas": 2,
+        "Hans Gildemeister": 1,
+        "Harold Solomon": 3,
+        "Ivan Lendl": 1,
+        "Manuel Orantes": 1,
+        "Raúl Ramírez": 2,
+        "Víctor Pecci": 2,
+        "Vitas Gerulaitis": 2
+      },
+      "Boris Becker": {
+        "Jay Berger": 1,
+        "Jimmy Connors": 1,
+        "Michael Chang": 1
+      },
+      "Brian Gottfried": {
+        "Ilie Năstase": 1,
+        "Phil Dent": 1
+      },
+      "Carlos Moyà": {
+        "Àlex Corretja": 1,
+        "Félix Mantilla Botella": 1,
+        "Marcelo Ríos": 1
+      },
+      "Cédric Pioline": { "Hicham Arazi": 1 },
+      "Cliff Richey": { "Ilie Năstase": 1 },
+      "Corrado Barazzutti": { "Eddie Dibbs": 1 },
+      "David Ferrer": {
+        "Andy Murray": 1,
+        "Jo-Wilfried Tsonga": 1,
+        "Tommy Robredo": 1
+      },
+      "David Nalbandian": {
+        "Gustavo Kuerten": 1,
+        "Nikolay Davydenko": 1
+      },
+      "Dick Stockton": { "Manuel Orantes": 1 },
+      "Dominic Thiem": {
+        "David Goffin": 1,
+        "Novak Djokovic": 1
+      },
+      "Dominik Hrbatý": { "Marcelo Ríos": 1 },
+      "Eddie Dibbs": {
+        "Manuel Orantes": 1,
+        "Raúl Ramírez": 1
+      },
+      "Ernests Gulbis": { "Tomáš Berdych": 1 },
+      "Félix Mantilla Botella": { "Thomas Muster": 1 },
+      "Fernando González": { "Andy Murray": 1 },
+      "Fernando Meligeni": { "Àlex Corretja": 1 },
+      "Filip Dewulf": { "Magnus Norman": 1 },
+      "Franco Squillari": { "Albert Costa": 1 },
+      "Frank Froehling": { "Arthur Ashe": 1 },
+      "Gaël Monfils": { "David Ferrer": 1 },
+      "Gastón Gaudio": {
+        "David Nalbandian": 1,
+        "Guillermo Coria": 1,
+        "Lleyton Hewitt": 1
+      },
+      "Georges Goven": { "François Jauffret": 1 },
+      "Guillermo Coria": {
+        "Andre Agassi": 1,
+        "Carlos Moyà": 1,
+        "Tim Henman": 1
+      },
+      "Guillermo Vilas": {
+        "Brian Gottfried": 1,
+        "Dick Stockton": 1,
+        "Eddie Dibbs": 1,
+        "Hans Gildemeister": 1,
+        "José Higueras": 1,
+        "Onny Parun": 1,
+        "Raúl Ramírez": 1,
+        "Wojciech Fibak": 1,
+        "Yannick Noah": 1
+      },
+      "Gustavo Kuerten": {
+        "Àlex Corretja": 1,
+        "Filip Dewulf": 1,
+        "Juan Carlos Ferrero": 2,
+        "Magnus Norman": 1,
+        "Sergi Bruguera": 1,
+        "Yevgeny Kafelnikov": 3
+      },
+      "Harold Solomon": {
+        "Guillermo Vilas": 2,
+        "Ilie Năstase": 1,
+        "Raúl Ramírez": 1
+      },
+      "Henri Leconte": {
+        "Andrei Chesnokov": 2,
+        "Jonas Svensson": 1,
+        "Nicklas Kulti": 1
+      },
+      "Ilie Năstase": {
+        "Frank Froehling": 1,
+        "Nikola Pilić": 1,
+        "Roger Taylor": 1,
+        "Stan Smith": 1,
+        "Tom Gorman": 1
+      },
+      "Ivan Lendl": {
+        "Andrés Gómez": 3,
+        "Jimmy Connors": 1,
+        "Johan Kriek": 1,
+        "John McEnroe": 2,
+        "José Luis Clerc": 1,
+        "Martín Jaite": 1,
+        "Mats Wilander": 2,
+        "Mikael Pernfors": 1,
+        "Miloslav Mečíř": 1
+      },
+      "Ivan Ljubičić": { "Julien Benneteau": 1 },
+      "Jan Kodeš": {
+        "Georges Goven": 1,
+        "Ilie Năstase": 1,
+        "Martin Mulligan": 1,
+        "Patrick Proisy": 1,
+        "Željko Franulović": 2
+      },
+      "Jim Courier": {
+        "Andre Agassi": 2,
+        "Goran Ivanišević": 1,
+        "Goran Prpić": 1,
+        "Michael Stich": 1,
+        "Pete Sampras": 1,
+        "Petr Korda": 1,
+        "Richard Krajicek": 1,
+        "Stefan Edberg": 1
+      },
+      "Jimmy Connors": {
+        "Eddie Dibbs": 1,
+        "Hans Gildemeister": 1,
+        "Henrik Sundström": 1,
+        "Stefan Edberg": 1
+      },
+      "Johan Kriek": { "Guillermo Vilas": 1 },
+      "John McEnroe": {
+        "Jimmy Arias": 1,
+        "Jimmy Connors": 1,
+        "Joakim Nyström": 1
+      },
+      "Jonas Svensson": {
+        "Henri Leconte": 1,
+        "Ivan Lendl": 1
+      },
+      "José Higueras": {
+        "Guillermo Vilas": 1,
+        "Jimmy Connors": 1
+      },
+      "José Luis Clerc": {
+        "Jimmy Connors": 1,
+        "Peter McNamara": 1
+      },
+      "Jo-Wilfried Tsonga": {
+        "Kei Nishikori": 1,
+        "Roger Federer": 1
+      },
+      "Juan Carlos Ferrero": {
+        "Albert Costa": 1,
+        "Àlex Corretja": 1,
+        "Andre Agassi": 1,
+        "Fernando González": 1,
+        "Lleyton Hewitt": 1,
+        "Marat Safin": 1,
+        "Martin Verkerk": 1
+      },
+      "Juan Martín del Potro": { "Tommy Robredo": 1 },
+      "Jürgen Melzer": { "Novak Djokovic": 1 },
+      "Ken Rosewall": {
+        "Andrés Gimeno": 1,
+        "Fred Stolle": 1,
+        "Rod Laver": 1,
+        "Thomaz Koch": 1,
+        "Tony Roche": 1
+      },
+      "Magnus Larsson": { "Hendrik Dreekmann": 1 },
+      "Magnus Norman": {
+        "Franco Squillari": 1,
+        "Marat Safin": 1
+      },
+      "Manuel Orantes": {
+        "François Jauffret": 1,
+        "Harold Solomon": 1,
+        "Patricio Cornejo": 1
+      },
+      "Marat Safin": { "Sébastien Grosjean": 1 },
+      "Marc Rosset": { "Bernd Karbacher": 1 },
+      "Mariano Puerta": {
+        "Guillermo Cañas": 1,
+        "Nikolay Davydenko": 1
+      },
+      "Martin Verkerk": {
+        "Carlos Moyà": 1,
+        "Guillermo Coria": 1
+      },
+      "Mats Wilander": {
+        "Andre Agassi": 1,
+        "Boris Becker": 1,
+        "Emilio Sánchez": 1,
+        "Guillermo Vilas": 1,
+        "Henri Leconte": 2,
+        "Ivan Lendl": 1,
+        "John McEnroe": 2,
+        "José Higueras": 1,
+        "José Luis Clerc": 1,
+        "Vitas Gerulaitis": 1,
+        "Yannick Noah": 2
+      },
+      "Michael Chang": {
+        "Adrian Voinea": 1,
+        "Andrei Chesnokov": 1,
+        "Ronald Agénor": 1,
+        "Sergi Bruguera": 1,
+        "Stefan Edberg": 1
+      },
+      "Michael Stich": {
+        "Cédric Pioline": 1,
+        "Franco Davín": 1,
+        "Marc Rosset": 1
+      },
+      "Mikael Pernfors": {
+        "Boris Becker": 1,
+        "Henri Leconte": 1
+      },
+      "Miloslav Mečíř": { "Karel Nováček": 1 },
+      "Nikola Pilić": {
+        "Adriano Panatta": 1,
+        "Paolo Bertolucci": 1
+      },
+      "Nikolay Davydenko": {
+        "Guillermo Cañas": 1,
+        "Tommy Robredo": 1
+      },
+      "Novak Djokovic": {
+        "Andy Murray": 2,
+        "Dominic Thiem": 1,
+        "Ernests Gulbis": 2,
+        "Fabio Fognini": 1,
+        "Igor Andreev": 1,
+        "Jo-Wilfried Tsonga": 1,
+        "Milos Raonic": 1,
+        "Rafael Nadal": 1,
+        "Roger Federer": 1,
+        "Tomáš Berdych": 1,
+        "Tommy Haas": 1
+      },
+      "Pancho Gonzales": { "Roy Emerson": 1 },
+      "Patrick Proisy": {
+        "Jan Kodeš": 1,
+        "Manuel Orantes": 1
+      },
+      "Patrick Rafter": { "Galo Blanco": 1 },
+      "Pete Sampras": { "Jim Courier": 1 },
+      "Petr Korda": {
+        "Andrei Cherkasov": 1,
+        "Henri Leconte": 1
+      },
+      "Phil Dent": { "José Higueras": 1 },
+      "Rafael Nadal": {
+        "Andy Murray": 2,
+        "Carlos Moyà": 1,
+        "David Ferrer": 4,
+        "Dominic Thiem": 1,
+        "Ivan Ljubičić": 1,
+        "Jürgen Melzer": 1,
+        "Mariano Puerta": 1,
+        "Nicolás Almagro": 3,
+        "Novak Djokovic": 6,
+        "Pablo Carreño Busta": 1,
+        "Robin Söderling": 2,
+        "Roger Federer": 5,
+        "Stan Wawrinka": 1,
+        "Stanislas Wawrinka": 1
+      },
+      "Raúl Ramírez": {
+        "Adriano Panatta": 1,
+        "Balázs Taróczy": 1
+      },
+      "Richard Krajicek": { "Karel Nováček": 1 },
+      "Robin Söderling": {
+        "Fernando González": 1,
+        "Nikolay Davydenko": 1,
+        "Roger Federer": 1,
+        "Tomáš Berdych": 1
+      },
+      "Rod Laver": {
+        "Andrés Gimeno": 1,
+        "Ion Țiriac": 1,
+        "Ken Rosewall": 1,
+        "Pancho Gonzales": 1,
+        "Tom Okker": 1
+      },
+      "Roger Federer": {
+        "David Nalbandian": 1,
+        "Fernando González": 1,
+        "Gaël Monfils": 3,
+        "Juan Martín del Potro": 2,
+        "Mario Ančić": 1,
+        "Nikolay Davydenko": 1,
+        "Novak Djokovic": 1,
+        "Robin Söderling": 1,
+        "Tommy Robredo": 1,
+        "Victor Hănescu": 1
+      },
+      "Sébastien Grosjean": { "Andre Agassi": 1 },
+      "Sergi Bruguera": {
+        "Alberto Berasategui": 1,
+        "Andrei Medvedev": 2,
+        "Hicham Arazi": 1,
+        "Jim Courier": 2,
+        "Patrick Rafter": 1,
+        "Pete Sampras": 1,
+        "Renzo Furlan": 1
+      },
+      "Stan Wawrinka": {
+        "Albert Ramos-Viñolas": 1,
+        "Andy Murray": 1,
+        "Jo-Wilfried Tsonga": 1,
+        "Marin Čilić": 1,
+        "Novak Djokovic": 1,
+        "Roger Federer": 1
+      },
+      "Stefan Edberg": {
+        "Alberto Mancini": 1,
+        "Boris Becker": 1
+      },
+      "Thomas Muster": {
+        "Albert Costa": 1,
+        "Goran Ivanišević": 1,
+        "Michael Chang": 1,
+        "Yevgeny Kafelnikov": 1
+      },
+      "Tim Henman": { "Juan Ignacio Chela": 1 },
+      "Tom Gorman": { "Jan Kodeš": 1 },
+      "Tom Okker": { "John Newcombe": 1 },
+      "Tomáš Berdych": { "Mikhail Youzhny": 1 },
+      "Tony Roche": { "Željko Franulović": 1 },
+      "Víctor Pecci": {
+        "Guillermo Vilas": 1,
+        "Jimmy Connors": 1,
+        "Yannick Noah": 1
+      },
+      "Vitas Gerulaitis": {
+        "Jimmy Connors": 1,
+        "José Higueras": 1,
+        "Wojciech Fibak": 1
+      },
+      "Yannick Noah": {
+        "Ivan Lendl": 1,
+        "Mats Wilander": 1
+      },
+      "Yevgeny Kafelnikov": {
+        "Andre Agassi": 1,
+        "Michael Stich": 1,
+        "Pete Sampras": 1,
+        "Richard Krajicek": 1
+      },
+      "Željko Franulović": {
+        "Arthur Ashe": 1,
+        "Cliff Richey": 1,
+        "István Gulyás": 1
+      }
+    },
+    "Women": {
+      "Amanda Coetzer": { "Steffi Graf": 1 },
+      "Ana Ivanovic": {
+        "Dinara Safina": 1,
+        "Elina Svitolina": 1,
+        "Jelena Janković": 1,
+        "Maria Sharapova": 1,
+        "Patty Schnyder": 1,
+        "Svetlana Kuznetsova": 1
+      },
+      "Anastasia Myskina": {
+        "Elena Dementieva": 1,
+        "Jennifer Capriati": 1,
+        "Venus Williams": 1
+      },
+      "Andrea Jaeger": {
+        "Chris Evert": 1,
+        "Gretchen Rush": 1,
+        "Mima Jaušovec": 1,
+        "Virginia Ruzici": 1
+      },
+      "Andrea Petkovic": { "Sara Errani": 1 },
+      "Anke Huber": { "Conchita Martínez": 1 },
+      "Ann Haydon-Jones": {
+        "Lesley Bowrey": 1,
+        "Rosemary Casals": 1
+      },
+      "Ann Jones": {
+        "Annette Van Zyl": 1,
+        "Vlasta Vopičková": 1
+      },
+      "Annette Van Zyl": { "Gail Chanfreau": 1 },
+      "Arantxa Sánchez": {
+        "Chanda Rubin": 1,
+        "Conchita Martínez": 1,
+        "Jana Novotná": 3,
+        "Julie Halard": 1,
+        "Karina Habšudová": 1,
+        "Kimiko Date": 1,
+        "Lindsay Davenport": 1,
+        "Manon Bollegraf": 1,
+        "Mary Joe Fernández": 2,
+        "Mary Pierce": 1,
+        "Monica Seles": 1,
+        "Patty Schnyder": 1,
+        "Steffi Graf": 2,
+        "Sylvia Plischke": 1,
+        "Venus Williams": 1
+      },
+      "Billie Jean King": {
+        "Evonne Goolagong": 1,
+        "Helga Niessen": 1,
+        "Maria Bueno": 1,
+        "Virginia Wade": 1
+      },
+      "Brigitte Simon": { "Miroslava Bendlova": 1 },
+      "Camille Benjamin": { "Lisa Bonder": 1 },
+      "Chris Evert": {
+        "Andrea Jaeger": 1,
+        "Camille Benjamin": 1,
+        "Carling Bassett": 2,
+        "Dianne Fromholtz": 1,
+        "Françoise Dürr": 1,
+        "Gabriela Sabatini": 1,
+        "Hana Mandlíková": 3,
+        "Helga Masthoff": 2,
+        "Julie Heldman": 1,
+        "Kathy Jordan": 1,
+        "Kazuko Sawamatsu": 1,
+        "Lucia Romanov": 1,
+        "Martina Navratilova": 3,
+        "Mima Jaušovec": 1,
+        "Olga Morozova": 2,
+        "Raffaella Reggi": 1,
+        "Ruta Gerulaitis": 1,
+        "Terry Phelps": 1,
+        "Virginia Ruzici": 2,
+        "Wendy Turnbull": 1
+      },
+      "Clarisa Fernández": { "Paola Suárez": 1 },
+      "Claudia Kohde-Kilsch": { "Hana Mandlíková": 1 },
+      "Conchita Martínez": {
+        "Arantxa Sánchez": 1,
+        "Lindsay Davenport": 1,
+        "Marta Marrero": 1,
+        "Sabine Hack": 1,
+        "Virginia Ruano Pascual": 1
+      },
+      "Dianne Fromholtz": {
+        "Billie Jean King": 1,
+        "Virginia Ruzici": 1
+      },
+      "Dinara Safina": {
+        "Dominika Cibulková": 1,
+        "Elena Dementieva": 1,
+        "Svetlana Kuznetsova": 1,
+        "Victoria Azarenka": 1
+      },
+      "Dominika Cibulková": { "Maria Sharapova": 1 },
+      "Elena Dementieva": {
+        "Amélie Mauresmo": 1,
+        "Nadia Petrova": 1,
+        "Paola Suárez": 1
+      },
+      "Elena Likhovtseva": { "Sesil Karatantcheva": 1 },
+      "Eugenie Bouchard": { "Carla Suárez Navarro": 1 },
+      "Evonne Goolagong": {
+        "Corinne Molesworth": 1,
+        "Françoise Dürr": 2,
+        "Helen Gourlay": 1,
+        "Marijke Schaar": 1,
+        "Martina Navratilova": 1
+      },
+      "Florența Mihai": {
+        "Janet Newberry": 1,
+        "Kathy Kuykendall": 1,
+        "Linky Boshoff": 1
+      },
+      "Francesca Schiavone": {
+        "Caroline Wozniacki": 1,
+        "Elena Dementieva": 1,
+        "Marion Bartoli": 1,
+        "Samantha Stosur": 1
+      },
+      "Françoise Dürr": {
+        "Odile de Roubin": 1,
+        "Olga Morozova": 1
+      },
+      "Gabriela Sabatini": {
+        "Arantxa Sánchez": 1,
+        "Conchita Martínez": 1,
+        "Helen Kelesi": 1,
+        "Jana Novotná": 1,
+        "Manuela Maleeva": 1
+      },
+      "Garbiñe Muguruza": {
+        "Samantha Stosur": 1,
+        "Serena Williams": 1,
+        "Shelby Rogers": 1
+      },
+      "Hana Mandlíková": {
+        "Chris Evert": 1,
+        "Ivanna Madruga": 1,
+        "Kathy Rinaldi": 1,
+        "Melissa Brown": 1,
+        "Steffi Graf": 1,
+        "Sylvia Hanika": 1,
+        "Tracy Austin": 1
+      },
+      "Helen Gourlay": {
+        "Gail Chanfreau": 1,
+        "Nancy Richey": 1
+      },
+      "Helena Suková": { "Mary Joe Fernández": 1 },
+      "Helga Masthoff": { "Martina Navratilova": 1 },
+      "Helga Niessen": {
+        "Billie Jean King": 1,
+        "Karen Krantzcke": 1,
+        "Katja Ebbinghaus": 1
+      },
+      "Iva Majoli": {
+        "Amanda Coetzer": 1,
+        "Martina Hingis": 1,
+        "Ruxandra Dragomir": 1
+      },
+      "Jana Novotná": {
+        "Katerina Maleeva": 1,
+        "Monica Seles": 1
+      },
+      "Janet Newberry": {
+        "Éva Szabó": 1,
+        "Kathy May": 1
+      },
+      "Jelena Janković": {
+        "Carla Suárez Navarro": 1,
+        "Nicole Vaidišová": 1,
+        "Yaroslava Shvedova": 1
+      },
+      "Jeļena Ostapenko": {
+        "Caroline Wozniacki": 1,
+        "Simona Halep": 1,
+        "Timea Bacsinszky": 1
+      },
+      "Jennifer Capriati": {
+        "Jelena Dokić": 1,
+        "Kim Clijsters": 1,
+        "Martina Hingis": 1,
+        "Mary Joe Fernández": 1,
+        "Serena Williams": 2
+      },
+      "Jo Durie": { "Tracy Austin": 1 },
+      "Julie Heldman": { "Vlasta Vopičková": 1 },
+      "Justine Henin": {
+        "Ana Ivanovic": 1,
+        "Anna-Lena Grönefeld": 1,
+        "Chanda Rubin": 1,
+        "Jelena Janković": 1,
+        "Kim Clijsters": 2,
+        "Maria Sharapova": 1,
+        "Mary Pierce": 1,
+        "Nadia Petrova": 1,
+        "Serena Williams": 2,
+        "Svetlana Kuznetsova": 1
+      },
+      "Karen Krantzcke": { "Virginia Wade": 1 },
+      "Karolína Plíšková": { "Caroline Garcia": 1 },
+      "Kiki Bertens": { "Timea Bacsinszky": 1 },
+      "Kim Clijsters": {
+        "Conchita Martínez": 1,
+        "Justine Henin": 1,
+        "Martina Hingis": 1,
+        "Nadia Petrova": 1,
+        "Petra Mandula": 1
+      },
+      "Kimiko Date": { "Iva Majoli": 1 },
+      "Lesley Bowrey": { "Billie Jean King": 1 },
+      "Li Na": {
+        "Francesca Schiavone": 1,
+        "Maria Sharapova": 1,
+        "Victoria Azarenka": 1
+      },
+      "Lindsay Davenport": { "Iva Majoli": 1 },
+      "Lucie Šafářová": {
+        "Ana Ivanovic": 1,
+        "Garbiñe Muguruza": 1
+      },
+      "Margaret Court": {
+        "Ann Haydon-Jones": 1,
+        "Chris Evert": 1,
+        "Evonne Goolagong": 1,
+        "Helga Niessen": 1,
+        "Julie Heldman": 1,
+        "Katja Ebbinghaus": 1,
+        "Kerry Reid": 1,
+        "Nancy Richey": 1,
+        "Rosemary Casals": 1
+      },
+      "Maria Sharapova": {
+        "Andrea Petkovic": 1,
+        "Anna Chakvetadze": 1,
+        "Eugenie Bouchard": 1,
+        "Garbiñe Muguruza": 1,
+        "Jelena Janković": 1,
+        "Kaia Kanepi": 1,
+        "Petra Kvitová": 1,
+        "Sara Errani": 1,
+        "Simona Halep": 1,
+        "Victoria Azarenka": 1
+      },
+      "Marijke Schaar": { "Linda Tuero": 1 },
+      "Marion Bartoli": { "Svetlana Kuznetsova": 1 },
+      "Martina Hingis": {
+        "Arantxa Sánchez": 2,
+        "Barbara Schwartz": 1,
+        "Chanda Rubin": 1,
+        "Francesca Schiavone": 1,
+        "Monica Seles": 1,
+        "Venus Williams": 1
+      },
+      "Martina Navratilova": {
+        "Andrea Jaeger": 1,
+        "Chris Evert": 2,
+        "Claudia Kohde-Kilsch": 2,
+        "Donna Ganz": 1,
+        "Hana Mandlíková": 2,
+        "Helena Suková": 1,
+        "Janet Newberry": 1,
+        "Kathy Horvath": 1,
+        "Kathy Rinaldi": 1,
+        "Sandra Cecchini": 1,
+        "Zina Garrison": 1
+      },
+      "Mary Joe Fernández": {
+        "Arantxa Sánchez": 1,
+        "Gabriela Sabatini": 1,
+        "Helen Kelesi": 1
+      },
+      "Mary Pierce": {
+        "Conchita Martínez": 1,
+        "Elena Likhovtseva": 1,
+        "Lindsay Davenport": 1,
+        "Martina Hingis": 1,
+        "Monica Seles": 1,
+        "Petra Ritter": 1,
+        "Steffi Graf": 1
+      },
+      "Mima Jaušovec": {
+        "Florența Mihai": 1,
+        "Jo Durie": 1,
+        "Kathy Horvath": 1,
+        "Kathy May": 1,
+        "Pam Teeguarden": 1,
+        "Regina Maršíková": 2
+      },
+      "Monica Seles": {
+        "Arantxa Sánchez": 1,
+        "Conchita Martínez": 2,
+        "Gabriela Sabatini": 2,
+        "Jana Novotná": 1,
+        "Jennifer Capriati": 2,
+        "Manuela Maleeva": 2,
+        "Martina Hingis": 1,
+        "Mary Joe Fernández": 1,
+        "Steffi Graf": 2
+      },
+      "Nadia Petrova": {
+        "Ana Ivanovic": 1,
+        "Vera Zvonareva": 1
+      },
+      "Nancy Richey": {
+        "Ann Jones": 1,
+        "Billie Jean King": 1,
+        "Elena Subirats": 1,
+        "Julie Heldman": 1,
+        "Lesley Bowrey": 1
+      },
+      "Natasha Zvereva": {
+        "Helena Suková": 1,
+        "Nicole Provis": 1
+      },
+      "Nicole Provis": { "Arantxa Sánchez": 1 },
+      "Nicole Vaidišová": { "Venus Williams": 1 },
+      "Olga Morozova": {
+        "Marie Pinterova": 1,
+        "Raquel Giscafré": 2
+      },
+      "Paola Suárez": { "Maria Sharapova": 1 },
+      "Petra Kvitová": { "Yaroslava Shvedova": 1 },
+      "Raquel Giscafré": { "Katja Ebbinghaus": 1 },
+      "Regina Maršíková": {
+        "Helga Masthoff": 1,
+        "Renáta Tomanová": 2
+      },
+      "Renáta Tomanová": {
+        "Florența Mihai": 1,
+        "Helga Masthoff": 1
+      },
+      "Samantha Stosur": {
+        "Dominika Cibulková": 1,
+        "Jelena Janković": 1,
+        "Serena Williams": 1,
+        "Sorana Cîrstea": 1,
+        "Tsvetana Pironkova": 1
+      },
+      "Sara Errani": {
+        "Agnieszka Radwańska": 1,
+        "Angelique Kerber": 1,
+        "Samantha Stosur": 1
+      },
+      "Serena Williams": {
+        "Amélie Mauresmo": 1,
+        "Jennifer Capriati": 1,
+        "Kiki Bertens": 1,
+        "Lucie Šafářová": 1,
+        "Maria Sharapova": 1,
+        "Mary Pierce": 1,
+        "Sara Errani": 2,
+        "Svetlana Kuznetsova": 1,
+        "Timea Bacsinszky": 1,
+        "Venus Williams": 1,
+        "Yulia Putintseva": 1
+      },
+      "Simona Halep": {
+        "Andrea Petkovic": 1,
+        "Elina Svitolina": 1,
+        "Karolína Plíšková": 1,
+        "Svetlana Kuznetsova": 1
+      },
+      "Steffi Graf": {
+        "Anke Huber": 1,
+        "Arantxa Sánchez": 3,
+        "Bettina Fulco": 1,
+        "Conchita Martínez": 4,
+        "Gabriela Sabatini": 3,
+        "Inés Gorrochategui": 1,
+        "Iva Majoli": 1,
+        "Jana Novotná": 1,
+        "Jennifer Capriati": 1,
+        "Lindsay Davenport": 1,
+        "Manuela Maleeva": 1,
+        "Martina Hingis": 1,
+        "Martina Navratilova": 1,
+        "Mary Joe Fernández": 1,
+        "Monica Seles": 2,
+        "Natasha Zvereva": 2,
+        "Nathalie Tauziat": 1
+      },
+      "Sue Barker": {
+        "Regina Maršíková": 1,
+        "Renáta Tomanová": 1,
+        "Virginia Ruzici": 1
+      },
+      "Svetlana Kuznetsova": {
+        "Dinara Safina": 2,
+        "Kaia Kanepi": 1,
+        "Nicole Vaidišová": 1,
+        "Samantha Stosur": 1,
+        "Serena Williams": 1
+      },
+      "Sylvia Hanika": {
+        "Andrea Jaeger": 1,
+        "Martina Navratilova": 1
+      },
+      "Timea Bacsinszky": {
+        "Alison Van Uytvanck": 1,
+        "Kristina Mladenovic": 1
+      },
+      "Venus Williams": {
+        "Clarisa Fernández": 1,
+        "Monica Seles": 1
+      },
+      "Victoria Azarenka": { "Maria Kirilenko": 1 },
+      "Virginia Ruzici": {
+        "Brigitte Simon": 1,
+        "Dianne Fromholtz": 1,
+        "Fiorella Bonicelli": 1,
+        "Mima Jaušovec": 1,
+        "Miroslava Holubova": 1,
+        "Wendy Turnbull": 1
+      },
+      "Wendy Turnbull": {
+        "Hana Mandlíková": 1,
+        "Regina Maršíková": 1
+      }
+    }
+  },
+  "US Open": {
+    "Men": {
+      "Aaron Krickstein": { "Jay Berger": 1 },
+      "Alexander Volkov": { "Thomas Muster": 1 },
+      "Andre Agassi": {
+        "Andrei Cherkasov": 1,
+        "Boris Becker": 2,
+        "Guillermo Coria": 1,
+        "James Blake": 1,
+        "Jimmy Connors": 2,
+        "Lleyton Hewitt": 1,
+        "Max Mirnyi": 1,
+        "Michael Stich": 1,
+        "Nicolas Escudé": 1,
+        "Petr Korda": 1,
+        "Robby Ginepri": 1,
+        "Thomas Muster": 2,
+        "Todd Martin": 2,
+        "Yevgeny Kafelnikov": 1
+      },
+      "Andy Murray": {
+        "John Isner": 1,
+        "Juan Martín del Potro": 1,
+        "Marin Čilić": 1,
+        "Novak Djokovic": 1,
+        "Rafael Nadal": 1,
+        "Tomáš Berdych": 1
+      },
+      "Andy Roddick": {
+        "David Nalbandian": 1,
+        "Juan Carlos Ferrero": 1,
+        "Lleyton Hewitt": 1,
+        "Mikhail Youzhny": 1,
+        "Sjeng Schalken": 1
+      },
+      "Arthur Ashe": {
+        "Clark Graebner": 1,
+        "Cliff Drysdale": 1,
+        "Cliff Richey": 1,
+        "Ken Rosewall": 1,
+        "Manuel Orantes": 1,
+        "Stan Smith": 1,
+        "Tom Okker": 1
+      },
+      "Bill Scanlon": { "Mark Dickson": 1 },
+      "Björn Borg": {
+        "Eddie Dibbs": 1,
+        "Ilie Năstase": 1,
+        "Jimmy Connors": 1,
+        "Johan Kriek": 1,
+        "Manuel Orantes": 1,
+        "Raúl Ramírez": 1,
+        "Roscoe Tanner": 2,
+        "Vitas Gerulaitis": 1
+      },
+      "Boris Becker": {
+        "Aaron Krickstein": 2,
+        "Ivan Lendl": 1,
+        "Milan Šrejber": 1,
+        "Patrick McEnroe": 1,
+        "Yannick Noah": 1
+      },
+      "Carlos Moyà": { "Magnus Larsson": 1 },
+      "Cédric Pioline": {
+        "Andrei Medvedev": 1,
+        "Gustavo Kuerten": 1,
+        "Wally Masur": 1
+      },
+      "Clark Graebner": { "John Newcombe": 1 },
+      "Cliff Richey": {
+        "Dennis Ralston": 1,
+        "Frew McMillan": 1
+      },
+      "Corrado Barazzutti": { "Brian Gottfried": 1 },
+      "Darren Cahill": { "Aaron Krickstein": 1 },
+      "David Ferrer": {
+        "Janko Tipsarević": 1,
+        "Juan Ignacio Chela": 1
+      },
+      "David Nalbandian": { "Younes El Aynaoui": 1 },
+      "Gaël Monfils": { "Lucas Pouille": 1 },
+      "Goran Ivanišević": { "Stefan Edberg": 1 },
+      "Greg Rusedski": {
+        "Jonas Björkman": 1,
+        "Richard Krajicek": 1
+      },
+      "Guillermo Vilas": {
+        "Eddie Dibbs": 1,
+        "Harold Solomon": 1,
+        "Jaime Fillol": 1,
+        "Jimmy Connors": 1,
+        "Raymond Moore": 1,
+        "Tom Gullikson": 1
+      },
+      "Harold Solomon": { "Dick Stockton": 1 },
+      "Ilie Năstase": {
+        "Arthur Ashe": 1,
+        "Dick Stockton": 1,
+        "Fred Stolle": 1,
+        "Tom Gorman": 1
+      },
+      "Ivan Lendl": {
+        "Andre Agassi": 2,
+        "Andrés Gómez": 1,
+        "Derrick Rostagno": 1,
+        "Henri Leconte": 1,
+        "Jimmy Arias": 1,
+        "Jimmy Connors": 2,
+        "John McEnroe": 3,
+        "Kim Warwick": 1,
+        "Mats Wilander": 2,
+        "Michael Stich": 1,
+        "Miloslav Mečíř": 1,
+        "Pat Cash": 1,
+        "Stefan Edberg": 1,
+        "Tim Mayotte": 1,
+        "Yannick Noah": 1
+      },
+      "Jan Kodeš": {
+        "Arthur Ashe": 1,
+        "Frank Froehling": 1,
+        "Nikola Pilić": 1,
+        "Stan Smith": 1
+      },
+      "Jim Courier": {
+        "Andre Agassi": 1,
+        "Jimmy Connors": 1,
+        "Michael Chang": 1,
+        "Pete Sampras": 1
+      },
+      "Jimmy Arias": { "Yannick Noah": 1 },
+      "Jimmy Connors": {
+        "Alex Metreveli": 1,
+        "Andrew Pattison": 1,
+        "Bill Scanlon": 1,
+        "Björn Borg": 3,
+        "Brad Gilbert": 1,
+        "Brian Gottfried": 1,
+        "Corrado Barazzutti": 1,
+        "Eliot Teltscher": 3,
+        "Guillermo Vilas": 2,
+        "Heinz Günthardt": 1,
+        "Ivan Lendl": 2,
+        "Jan Kodeš": 1,
+        "John Lloyd": 1,
+        "John McEnroe": 1,
+        "Ken Rosewall": 1,
+        "Manuel Orantes": 1,
+        "Pat Dupre": 1,
+        "Paul Haarhuis": 1,
+        "Rodney Harmon": 1,
+        "Roscoe Tanner": 1
+      },
+      "Joachim Johansson": { "Andy Roddick": 1 },
+      "Johan Kriek": { "Wojciech Fibak": 1 },
+      "John McEnroe": {
+        "Björn Borg": 2,
+        "Butch Walts": 1,
+        "David Wheaton": 1,
+        "Eddie Dibbs": 1,
+        "Gene Mayer": 2,
+        "Ivan Lendl": 2,
+        "Jimmy Connors": 3,
+        "Joakim Nyström": 1,
+        "Mats Wilander": 1,
+        "Ramesh Krishnan": 1,
+        "Vitas Gerulaitis": 2
+      },
+      "John Newcombe": {
+        "Arthur Ashe": 2,
+        "Fred Stolle": 1,
+        "Jan Kodeš": 1,
+        "Jimmy Connors": 1,
+        "Ken Rosewall": 1
+      },
+      "Jonas Björkman": { "Petr Korda": 1 },
+      "Juan Carlos Ferrero": {
+        "Andre Agassi": 1,
+        "Lleyton Hewitt": 1
+      },
+      "Juan Martín del Potro": {
+        "Marin Čilić": 1,
+        "Rafael Nadal": 1,
+        "Roger Federer": 2
+      },
+      "Karel Nováček": { "Jaime Yzaga": 1 },
+      "Kei Nishikori": {
+        "Andy Murray": 1,
+        "Novak Djokovic": 1,
+        "Stan Wawrinka": 1
+      },
+      "Ken Rosewall": {
+        "Dennis Ralston": 1,
+        "John Newcombe": 2,
+        "Stan Smith": 1,
+        "Tony Roche": 1,
+        "Vijay Amritraj": 2
+      },
+      "Kevin Anderson": {
+        "Pablo Carreño Busta": 1,
+        "Sam Querrey": 1
+      },
+      "Lleyton Hewitt": {
+        "Andy Roddick": 1,
+        "Arnaud Clément": 1,
+        "Jarkko Nieminen": 1,
+        "Joachim Johansson": 1,
+        "Pete Sampras": 1,
+        "Tommy Haas": 1,
+        "Yevgeny Kafelnikov": 1,
+        "Younes El Aynaoui": 1
+      },
+      "Manuel Orantes": {
+        "Guillermo Vilas": 1,
+        "Ilie Năstase": 1,
+        "Jimmy Connors": 1
+      },
+      "Marat Safin": {
+        "Mariano Zabaleta": 1,
+        "Nicolas Kiefer": 1,
+        "Pete Sampras": 1,
+        "Todd Martin": 1
+      },
+      "Marin Čilić": {
+        "Jo-Wilfried Tsonga": 1,
+        "Kei Nishikori": 1,
+        "Roger Federer": 1,
+        "Tomáš Berdych": 1
+      },
+      "Mark Philippoussis": {
+        "Carlos Moyà": 1,
+        "Thomas Johansson": 1
+      },
+      "Mats Wilander": {
+        "Anders Järryd": 1,
+        "Darren Cahill": 1,
+        "Emilio Sánchez": 1,
+        "Ivan Lendl": 1,
+        "Miloslav Mečíř": 1,
+        "Stefan Edberg": 1
+      },
+      "Michael Chang": {
+        "Andre Agassi": 1,
+        "Javier Sánchez": 1,
+        "Marcelo Ríos": 1,
+        "Wayne Ferreira": 1
+      },
+      "Michael Stich": {
+        "Jonas Björkman": 1,
+        "Karel Nováček": 1
+      },
+      "Mikhail Youzhny": {
+        "Rafael Nadal": 1,
+        "Stan Wawrinka": 1
+      },
+      "Miloslav Mečíř": {
+        "Boris Becker": 1,
+        "Joakim Nyström": 1
+      },
+      "Nikolay Davydenko": { "Tommy Haas": 2 },
+      "Novak Djokovic": {
+        "Andy Murray": 1,
+        "Andy Roddick": 1,
+        "Carlos Moyà": 1,
+        "David Ferrer": 2,
+        "Feliciano López": 1,
+        "Fernando Verdasco": 1,
+        "Gaël Monfils": 2,
+        "Janko Tipsarević": 1,
+        "Jo-Wilfried Tsonga": 1,
+        "Juan Martín del Potro": 1,
+        "Marin Čilić": 1,
+        "Mikhail Youzhny": 1,
+        "Rafael Nadal": 1,
+        "Roger Federer": 3,
+        "Stan Wawrinka": 1
+      },
+      "Pablo Carreño Busta": { "Diego Schwartzman": 1 },
+      "Pat Cash": { "Mats Wilander": 1 },
+      "Patrick Rafter": {
+        "Greg Rusedski": 1,
+        "Jonas Björkman": 1,
+        "Magnus Larsson": 1,
+        "Mark Philippoussis": 1,
+        "Michael Chang": 1,
+        "Pete Sampras": 1
+      },
+      "Pete Sampras": {
+        "Àlex Corretja": 1,
+        "Alexander Volkov": 2,
+        "Andre Agassi": 4,
+        "Andy Roddick": 1,
+        "Byron Black": 1,
+        "Cédric Pioline": 1,
+        "Goran Ivanišević": 1,
+        "Ivan Lendl": 1,
+        "Jim Courier": 2,
+        "John McEnroe": 1,
+        "Karol Kučera": 1,
+        "Lleyton Hewitt": 1,
+        "Marat Safin": 1,
+        "Michael Chang": 2,
+        "Richard Krajicek": 1,
+        "Sjeng Schalken": 1
+      },
+      "Rafael Nadal": {
+        "Andrey Rublev": 1,
+        "Andy Murray": 1,
+        "Andy Roddick": 1,
+        "Fernando González": 1,
+        "Fernando Verdasco": 1,
+        "Juan Martín del Potro": 1,
+        "Kevin Anderson": 1,
+        "Mardy Fish": 1,
+        "Mikhail Youzhny": 1,
+        "Novak Djokovic": 2,
+        "Richard Gasquet": 1,
+        "Tommy Robredo": 1
+      },
+      "Richard Gasquet": { "David Ferrer": 1 },
+      "Robby Ginepri": { "Guillermo Coria": 1 },
+      "Rod Laver": {
+        "Arthur Ashe": 1,
+        "Roy Emerson": 1,
+        "Tony Roche": 1
+      },
+      "Roger Federer": {
+        "Andre Agassi": 2,
+        "Andy Murray": 1,
+        "Andy Roddick": 2,
+        "David Nalbandian": 1,
+        "Gaël Monfils": 1,
+        "Gilles Müller": 1,
+        "James Blake": 1,
+        "Jo-Wilfried Tsonga": 1,
+        "Lleyton Hewitt": 2,
+        "Nikolay Davydenko": 2,
+        "Novak Djokovic": 3,
+        "Richard Gasquet": 1,
+        "Robin Söderling": 2,
+        "Stan Wawrinka": 1,
+        "Tim Henman": 1
+      },
+      "Roscoe Tanner": {
+        "Björn Borg": 1,
+        "Stan Smith": 1
+      },
+      "Sjeng Schalken": { "Fernando González": 1 },
+      "Stan Smith": {
+        "Jan Kodeš": 1,
+        "Marty Riessen": 1,
+        "Onny Parun": 1,
+        "Tom Okker": 1
+      },
+      "Stan Wawrinka": {
+        "Andy Murray": 1,
+        "Juan Martín del Potro": 1,
+        "Kei Nishikori": 1,
+        "Kevin Anderson": 1,
+        "Novak Djokovic": 1
+      },
+      "Stefan Edberg": {
+        "Ivan Lendl": 2,
+        "Javier Sánchez": 1,
+        "Jim Courier": 1,
+        "Michael Chang": 1,
+        "Pete Sampras": 1,
+        "Ramesh Krishnan": 1,
+        "Tim Wilkison": 1
+      },
+      "Tim Henman": { "Dominik Hrbatý": 1 },
+      "Todd Martin": {
+        "Bernd Karbacher": 1,
+        "Cédric Pioline": 1,
+        "Slava Doseděl": 1,
+        "Thomas Johansson": 1
+      },
+      "Tom Gorman": { "Roscoe Tanner": 1 },
+      "Tom Okker": {
+        "Clark Graebner": 1,
+        "Ken Rosewall": 1,
+        "Pancho Gonzales": 1
+      },
+      "Tomáš Berdych": { "Roger Federer": 1 },
+      "Tony Roche": {
+        "Brian Fairlie": 1,
+        "Cliff Richey": 1,
+        "Earl Butch Buchholz": 1,
+        "John Newcombe": 1
+      },
+      "Vitas Gerulaitis": {
+        "Bruce Manson": 1,
+        "Johan Kriek": 2,
+        "Roscoe Tanner": 1
+      },
+      "Wally Masur": { "Magnus Larsson": 1 },
+      "Yevgeny Kafelnikov": {
+        "Gustavo Kuerten": 1,
+        "Richard Krajicek": 1
+      }
+    },
+    "Women": {
+      "Amélie Mauresmo": {
+        "Dinara Safina": 1,
+        "Jennifer Capriati": 1
+      },
+      "Andrea Jaeger": {
+        "Gretchen Rush": 1,
+        "Ivanna Madruga": 1
+      },
+      "Angelique Kerber": {
+        "Caroline Wozniacki": 1,
+        "Flavia Pennetta": 1,
+        "Karolína Plíšková": 1,
+        "Roberta Vinci": 1
+      },
+      "Ann Haydon-Jones": { "Peaches Bartkowicz": 1 },
+      "Anna Chakvetadze": { "Shahar Pe’er": 1 },
+      "Arantxa Sánchez": {
+        "Gabriela Sabatini": 1,
+        "Kimiko Date": 1,
+        "Manuela Maleeva": 1,
+        "Natasha Zvereva": 1,
+        "Steffi Graf": 2,
+        "Zina Garrison": 1
+      },
+      "Barbara Potter": { "Barbara Gerken": 1 },
+      "Betty Stöve": { "Tracy Austin": 1 },
+      "Billie Jean King": {
+        "Chris Evert": 1,
+        "Evonne Goolagong": 1,
+        "Julie Heldman": 1,
+        "Kerry Reid": 1,
+        "Laura duPont": 1,
+        "Margaret Court": 1,
+        "Maria Bueno": 1,
+        "Maryna Godwin": 1,
+        "Rosemary Casals": 2,
+        "Virginia Wade": 2
+      },
+      "Carling Bassett": { "Hana Mandlíková": 1 },
+      "Caroline Wozniacki": {
+        "Anastasija Sevastova": 1,
+        "Andrea Petkovic": 1,
+        "Dominika Cibulková": 1,
+        "Melanie Oudin": 1,
+        "Peng Shuai": 1,
+        "Sara Errani": 1,
+        "Yanina Wickmayer": 1
+      },
+      "Chris Evert": {
+        "Andrea Jaeger": 1,
+        "Betty Stöve": 1,
+        "Billie Jean King": 2,
+        "Bonnie Gadusek": 1,
+        "Carling Bassett": 1,
+        "Claudia Kohde-Kilsch": 1,
+        "Evonne Cawley": 1,
+        "Evonne Goolagong": 2,
+        "Hana Mandlíková": 4,
+        "Jo Durie": 1,
+        "Kerry Reid": 1,
+        "Lesley Hunt": 2,
+        "Manuela Maleeva": 2,
+        "Martina Navratilova": 1,
+        "Mima Jaušovec": 2,
+        "Natasha Chmyreva": 1,
+        "Olga Morozova": 1,
+        "Pam Shriver": 1,
+        "Rosemary Casals": 1,
+        "Sylvia Hanika": 1,
+        "Tracy Austin": 2,
+        "Wendy Turnbull": 2
+      },
+      "CoCo Vandeweghe": { "Karolína Plíšková": 1 },
+      "Conchita Martínez": { "Linda Wild": 1 },
+      "Dianne Fromholtz": { "Zenda Liess": 1 },
+      "Dinara Safina": { "Flavia Pennetta": 1 },
+      "Ekaterina Makarova": { "Victoria Azarenka": 1 },
+      "Elena Dementieva": {
+        "Amélie Mauresmo": 1,
+        "Anke Huber": 1,
+        "Jennifer Capriati": 1,
+        "Lindsay Davenport": 1,
+        "Patty Schnyder": 1
+      },
+      "Evonne Cawley": {
+        "Kazuko Sawamatsu": 1,
+        "Virginia Wade": 1
+      },
+      "Evonne Goolagong": {
+        "Chris Evert": 1,
+        "Dianne Fromholtz": 1,
+        "Helga Masthoff": 1,
+        "Kerry Reid": 2,
+        "Rosemary Casals": 1
+      },
+      "Flavia Pennetta": {
+        "Petra Kvitová": 1,
+        "Roberta Vinci": 2,
+        "Simona Halep": 1
+      },
+      "Gabriela Sabatini": {
+        "Arantxa Sánchez": 1,
+        "Gigi Fernández": 1,
+        "Larisa Savchenko": 1,
+        "Leila Meskhi": 1,
+        "Mary Joe Fernández": 2,
+        "Steffi Graf": 1,
+        "Zina Garrison": 1
+      },
+      "Hana Mandlíková": {
+        "Andrea Jaeger": 1,
+        "Barbara Hallquist": 1,
+        "Chris Evert": 1,
+        "Helena Suková": 1,
+        "Martina Navratilova": 1,
+        "Pam Shriver": 1,
+        "Tracy Austin": 1
+      },
+      "Helena Suková": {
+        "Arantxa Sánchez": 1,
+        "Chris Evert": 1,
+        "Claudia Kohde-Kilsch": 1,
+        "Katerina Maleeva": 1,
+        "Wendy Turnbull": 1
+      },
+      "Helga Masthoff": { "Julie Heldman": 1 },
+      "Irina Spîrlea": { "Monica Seles": 1 },
+      "Jana Novotná": {
+        "Mary Pierce": 1,
+        "Patty Schnyder": 1
+      },
+      "Jelena Janković": {
+        "Elena Dementieva": 2,
+        "Sybille Bammer": 1
+      },
+      "Jennifer Capriati": {
+        "Amélie Mauresmo": 1,
+        "Francesca Schiavone": 1,
+        "Gabriela Sabatini": 1,
+        "Serena Williams": 1
+      },
+      "Jo Durie": { "Ivanna Madruga": 1 },
+      "Julie Heldman": { "Nancy Richey Gunter": 1 },
+      "Justine Henin": {
+        "Anastasia Myskina": 1,
+        "Jelena Janković": 1,
+        "Jennifer Capriati": 1,
+        "Kim Clijsters": 1,
+        "Lindsay Davenport": 1,
+        "Serena Williams": 1,
+        "Svetlana Kuznetsova": 1,
+        "Venus Williams": 1
+      },
+      "Karolína Plíšková": {
+        "Ana Konjuh": 1,
+        "Serena Williams": 1
+      },
+      "Kerry Reid": {
+        "Chris Evert": 1,
+        "Judy Tegart": 1,
+        "Pam Teeguarden": 1
+      },
+      "Kim Clijsters": {
+        "Amélie Mauresmo": 1,
+        "Caroline Wozniacki": 1,
+        "Li Na": 1,
+        "Lindsay Davenport": 1,
+        "Maria Sharapova": 1,
+        "Mary Pierce": 1,
+        "Samantha Stosur": 1,
+        "Serena Williams": 1,
+        "Venus Williams": 2,
+        "Vera Zvonareva": 1
+      },
+      "Li Na": { "Ekaterina Makarova": 1 },
+      "Lindsay Davenport": {
+        "Amanda Coetzer": 1,
+        "Elena Bovina": 1,
+        "Elena Dementieva": 1,
+        "Jana Novotná": 1,
+        "Martina Hingis": 1,
+        "Mary Pierce": 1,
+        "Paola Suárez": 1,
+        "Serena Williams": 1,
+        "Shinobu Asagoe": 1,
+        "Venus Williams": 1
+      },
+      "Lori McNeil": { "Chris Evert": 1 },
+      "Madison Keys": {
+        "CoCo Vandeweghe": 1,
+        "Kaia Kanepi": 1
+      },
+      "Manuela Maleeva": {
+        "Kimiko Date": 1,
+        "Magdalena Maleeva": 1
+      },
+      "Margaret Court": {
+        "Chris Evert": 1,
+        "Evonne Goolagong": 1,
+        "Helen Gourlay": 1,
+        "Karen Krantzcke": 1,
+        "Nancy Richey": 2,
+        "Rosemary Casals": 2,
+        "Virginia Wade": 2
+      },
+      "Maria Bueno": { "Margaret Court": 1 },
+      "Maria Sharapova": {
+        "Amélie Mauresmo": 1,
+        "Justine Henin": 1,
+        "Marion Bartoli": 1,
+        "Nadia Petrova": 1,
+        "Tatiana Golovin": 1
+      },
+      "Martina Hingis": {
+        "Anke Huber": 1,
+        "Arantxa Sánchez": 1,
+        "Dája Bedáňová": 1,
+        "Jana Novotná": 2,
+        "Lindsay Davenport": 1,
+        "Monica Seles": 2,
+        "Venus Williams": 2
+      },
+      "Martina Navratilova": {
+        "Anne Smith": 1,
+        "Arantxa Sánchez": 1,
+        "Chris Evert": 3,
+        "Gabriela Sabatini": 1,
+        "Helena Suková": 3,
+        "Kerry Reid": 1,
+        "Manuela Maleeva": 1,
+        "Margaret Court": 1,
+        "Mima Jaušovec": 1,
+        "Pam Shriver": 2,
+        "Steffi Graf": 4,
+        "Sylvia Hanika": 1,
+        "Virginia Ruzici": 1,
+        "Wendy Turnbull": 1,
+        "Zina Garrison": 2
+      },
+      "Mary Joe Fernández": {
+        "Gabriela Sabatini": 1,
+        "Manuela Maleeva": 1
+      },
+      "Mary Pierce": {
+        "Amélie Mauresmo": 1,
+        "Elena Dementieva": 1
+      },
+      "Mima Jaušovec": { "Virginia Ruzici": 1 },
+      "Monica Seles": {
+        "Amanda Coetzer": 1,
+        "Arantxa Sánchez": 1,
+        "Conchita Martínez": 2,
+        "Gigi Fernández": 1,
+        "Jana Novotná": 1,
+        "Jennifer Capriati": 1,
+        "Martina Navratilova": 1,
+        "Mary Joe Fernández": 1,
+        "Patricia Hy": 1
+      },
+      "Nancy Richey": {
+        "Billie Jean King": 1,
+        "Lesley Hunt": 1,
+        "Rosemary Casals": 1
+      },
+      "Pam Shriver": {
+        "Andrea Jaeger": 1,
+        "Lesley Hunt": 1,
+        "Martina Navratilova": 2
+      },
+      "Peng Shuai": { "Belinda Bencic": 1 },
+      "Roberta Vinci": {
+        "Kristina Mladenovic": 1,
+        "Serena Williams": 1
+      },
+      "Rosemary Casals": {
+        "Joyce Williams": 1,
+        "Kerry Reid": 2,
+        "Peaches Bartkowicz": 1,
+        "Virginia Wade": 1
+      },
+      "Samantha Stosur": {
+        "Angelique Kerber": 1,
+        "Serena Williams": 1,
+        "Vera Zvonareva": 1
+      },
+      "Sara Errani": { "Roberta Vinci": 1 },
+      "Serena Williams": {
+        "Ana Ivanovic": 1,
+        "Carla Suárez Navarro": 1,
+        "Caroline Wozniacki": 2,
+        "Daniela Hantuchová": 1,
+        "Dinara Safina": 1,
+        "Ekaterina Makarova": 1,
+        "Flavia Pennetta": 2,
+        "Jelena Janković": 1,
+        "Li Na": 1,
+        "Lindsay Davenport": 3,
+        "Martina Hingis": 2,
+        "Monica Seles": 1,
+        "Sara Errani": 1,
+        "Simona Halep": 1,
+        "Venus Williams": 3,
+        "Victoria Azarenka": 2
+      },
+      "Simona Halep": { "Victoria Azarenka": 1 },
+      "Sloane Stephens": {
+        "Anastasija Sevastova": 1,
+        "Madison Keys": 1,
+        "Venus Williams": 1
+      },
+      "Steffi Graf": {
+        "Amanda Coetzer": 1,
+        "Amy Frazier": 1,
+        "Arantxa Sánchez": 1,
+        "Bonnie Gadusek": 1,
+        "Chris Evert": 1,
+        "Conchita Martínez": 1,
+        "Gabriela Sabatini": 4,
+        "Helena Suková": 2,
+        "Jana Novotná": 2,
+        "Judith Wiesner": 1,
+        "Katerina Maleeva": 1,
+        "Lori McNeil": 1,
+        "Manuela Maleeva": 1,
+        "Martina Hingis": 1,
+        "Martina Navratilova": 1,
+        "Monica Seles": 2,
+        "Pam Shriver": 2
+      },
+      "Svetlana Kuznetsova": {
+        "Ágnes Szávay": 1,
+        "Anna Chakvetadze": 1,
+        "Elena Dementieva": 1,
+        "Lindsay Davenport": 1,
+        "Nadia Petrova": 1
+      },
+      "Tracy Austin": {
+        "Barbara Potter": 1,
+        "Chris Evert": 1,
+        "Martina Navratilova": 2,
+        "Pam Shriver": 1,
+        "Sylvia Hanika": 2
+      },
+      "Venus Williams": {
+        "Amélie Mauresmo": 1,
+        "Arantxa Sánchez": 1,
+        "Barbara Schett": 1,
+        "Francesca Schiavone": 1,
+        "Irina Spîrlea": 1,
+        "Jelena Janković": 1,
+        "Jennifer Capriati": 1,
+        "Kim Clijsters": 1,
+        "Lindsay Davenport": 1,
+        "Martina Hingis": 1,
+        "Monica Seles": 1,
+        "Nathalie Tauziat": 1,
+        "Petra Kvitová": 1,
+        "Sandrine Testud": 1,
+        "Serena Williams": 1
+      },
+      "Vera Zvonareva": {
+        "Caroline Wozniacki": 1,
+        "Kaia Kanepi": 1
+      },
+      "Victoria Azarenka": {
+        "Daniela Hantuchová": 1,
+        "Flavia Pennetta": 1,
+        "Maria Sharapova": 1,
+        "Samantha Stosur": 1
+      },
+      "Virginia Wade": {
+        "Ann Haydon-Jones": 1,
+        "Billie Jean King": 1,
+        "Françoise Dürr": 1,
+        "Judy Tegart": 1,
+        "Julie Heldman": 1,
+        "Katja Ebbinghaus": 1
+      },
+      "Wendy Turnbull": {
+        "Kathy May": 1,
+        "Martina Navratilova": 1,
+        "Pam Shriver": 1,
+        "Virginia Wade": 1
+      },
+      "Yanina Wickmayer": { "Kateryna Bondarenko": 1 },
+      "Zina Garrison": {
+        "Chris Evert": 1,
+        "Martina Navratilova": 1
+      }
+    }
+  },
+  "Wimbledon Championships": {
+    "Men": {
+      "Alex Metreveli": {
+        "Jimmy Connors": 1,
+        "Sandy Mayer": 1
+      },
+      "Anders Järryd": { "Heinz Günthardt": 1 },
+      "Andre Agassi": {
+        "Boris Becker": 1,
+        "Goran Ivanišević": 1,
+        "Gustavo Kuerten": 1,
+        "Jacco Eltingh": 1,
+        "John McEnroe": 1,
+        "Mark Philippoussis": 1,
+        "Nicolas Escudé": 1,
+        "Pat Rafter": 1
+      },
+      "Andrés Gimeno": { "Bob Carmichael": 1 },
+      "Andy Murray": {
+        "David Ferrer": 1,
+        "Feliciano López": 1,
+        "Fernando Verdasco": 1,
+        "Jerzy Janowicz": 1,
+        "Jo-Wilfried Tsonga": 3,
+        "Juan Carlos Ferrero": 1,
+        "Milos Raonic": 1,
+        "Novak Djokovic": 1,
+        "Tomáš Berdych": 1,
+        "Vasek Pospisil": 1
+      },
+      "Andy Roddick": {
+        "Andy Murray": 1,
+        "Jonas Björkman": 1,
+        "Lleyton Hewitt": 1,
+        "Mario Ančić": 1,
+        "Sébastien Grosjean": 1,
+        "Sjeng Schalken": 1,
+        "Thomas Johansson": 1
+      },
+      "Arthur Ashe": {
+        "Björn Borg": 1,
+        "Jimmy Connors": 1,
+        "Robert Lutz": 1,
+        "Tom Okker": 1,
+        "Tony Roche": 1
+      },
+      "Björn Borg": {
+        "Brian Gottfried": 1,
+        "Gene Mayer": 1,
+        "Guillermo Vilas": 1,
+        "Ilie Năstase": 2,
+        "Jimmy Connors": 4,
+        "John McEnroe": 1,
+        "Peter McNamara": 1,
+        "Roscoe Tanner": 2,
+        "Sandy Mayer": 1,
+        "Tom Okker": 2,
+        "Vitas Gerulaitis": 1
+      },
+      "Boris Becker": {
+        "Anders Järryd": 1,
+        "Andre Agassi": 1,
+        "Brad Gilbert": 1,
+        "Cédric Pioline": 1,
+        "Christian Bergström": 1,
+        "David Wheaton": 1,
+        "Goran Ivanišević": 1,
+        "Guy Forget": 1,
+        "Henri Leconte": 2,
+        "Ivan Lendl": 3,
+        "Kevin Curren": 1,
+        "Michael Stich": 1,
+        "Miloslav Mečíř": 1,
+        "Pat Cash": 1,
+        "Paul Chamberlin": 1,
+        "Stefan Edberg": 1
+      },
+      "Brian Gottfried": { "Wojciech Fibak": 1 },
+      "Cédric Pioline": {
+        "Greg Rusedski": 1,
+        "Michael Stich": 1
+      },
+      "Chris Lewis": {
+        "Kevin Curren": 1,
+        "Mel Purcell": 1
+      },
+      "Clark Graebner": { "Raymond Moore": 1 },
+      "David Nalbandian": {
+        "Nicolás Lapentti": 1,
+        "Xavier Malisse": 1
+      },
+      "David Wheaton": { "Andre Agassi": 1 },
+      "Dick Stockton": { "Alex Metreveli": 1 },
+      "Goran Ivanišević": {
+        "Boris Becker": 1,
+        "Guy Forget": 1,
+        "Jan Siemerink": 1,
+        "Kevin Curren": 1,
+        "Marat Safin": 1,
+        "Pat Rafter": 1,
+        "Pete Sampras": 1,
+        "Richard Krajicek": 1,
+        "Stefan Edberg": 1,
+        "Tim Henman": 1,
+        "Yevgeny Kafelnikov": 1
+      },
+      "Grigor Dimitrov": { "Andy Murray": 1 },
+      "Henri Leconte": { "Pat Cash": 1 },
+      "Ilie Năstase": {
+        "Charlie Pasarell": 1,
+        "Jimmy Connors": 1,
+        "Manuel Orantes": 1,
+        "Raúl Ramírez": 1
+      },
+      "Ivan Lendl": {
+        "Brad Pearce": 1,
+        "Dan Goldie": 1,
+        "Henri Leconte": 1,
+        "Roscoe Tanner": 1,
+        "Slobodan Živojinović": 1,
+        "Stefan Edberg": 1,
+        "Tim Mayotte": 2,
+        "Tomáš Šmíd": 1
+      },
+      "Jan Kodeš": {
+        "Alex Metreveli": 1,
+        "Onny Parun": 1,
+        "Roger Taylor": 1,
+        "Vijay Amritraj": 1
+      },
+      "Jason Stoltenberg": { "Goran Ivanišević": 1 },
+      "Jerzy Janowicz": { "Łukasz Kubot": 1 },
+      "Jim Courier": {
+        "Stefan Edberg": 1,
+        "Todd Martin": 1
+      },
+      "Jimmy Connors": {
+        "Bill Scanlon": 1,
+        "Byron Bertram": 1,
+        "Dick Stockton": 1,
+        "Gene Mayer": 1,
+        "Ivan Lendl": 1,
+        "Jan Kodeš": 1,
+        "John McEnroe": 2,
+        "Ken Rosewall": 1,
+        "Mark Edmondson": 1,
+        "Paul Annacone": 1,
+        "Raúl Ramírez": 2,
+        "Ricardo Acuña": 1,
+        "Roscoe Tanner": 2,
+        "Slobodan Živojinović": 1,
+        "Vijay Amritraj": 1,
+        "Vitas Gerulaitis": 1
+      },
+      "John McEnroe": {
+        "Björn Borg": 1,
+        "Chris Lewis": 1,
+        "Guy Forget": 1,
+        "Ivan Lendl": 1,
+        "Jimmy Connors": 2,
+        "Johan Kriek": 2,
+        "John Sadri": 1,
+        "Mats Wilander": 1,
+        "Pat Cash": 1,
+        "Peter Fleming": 1,
+        "Phil Dent": 1,
+        "Rod Frawley": 1,
+        "Sandy Mayer": 1,
+        "Tim Mayotte": 1
+      },
+      "John Newcombe": {
+        "Andrés Gimeno": 1,
+        "Colin Dibley": 1,
+        "Ken Rosewall": 2,
+        "Roy Emerson": 1,
+        "Stan Smith": 1,
+        "Tom Okker": 1,
+        "Tony Roche": 1
+      },
+      "Jonas Björkman": { "Radek Štěpánek": 1 },
+      "Jo-Wilfried Tsonga": {
+        "Philipp Kohlschreiber": 1,
+        "Roger Federer": 1
+      },
+      "Juan Martín del Potro": { "David Ferrer": 1 },
+      "Ken Rosewall": {
+        "Cliff Richey": 1,
+        "John Newcombe": 1,
+        "Roger Taylor": 1,
+        "Stan Smith": 1,
+        "Tony Roche": 1
+      },
+      "Kevin Curren": {
+        "Jimmy Connors": 1,
+        "John McEnroe": 1,
+        "Tim Mayotte": 1
+      },
+      "Lleyton Hewitt": {
+        "David Nalbandian": 1,
+        "Feliciano López": 1,
+        "Sjeng Schalken": 1,
+        "Tim Henman": 1
+      },
+      "MaliVai Washington": {
+        "Alex Rădulescu": 1,
+        "Todd Martin": 1
+      },
+      "Manuel Orantes": { "Colin Dibley": 1 },
+      "Marat Safin": { "Feliciano López": 1 },
+      "Marcos Baghdatis": { "Lleyton Hewitt": 1 },
+      "Marin Čilić": {
+        "Gilles Müller": 1,
+        "Sam Querrey": 1
+      },
+      "Mario Ančić": { "Tim Henman": 1 },
+      "Mark Edmondson": { "Vitas Gerulaitis": 1 },
+      "Mark Philippoussis": {
+        "Alexander Popp": 1,
+        "Sébastien Grosjean": 1
+      },
+      "Michael Stich": {
+        "Boris Becker": 1,
+        "Jim Courier": 1,
+        "Stefan Edberg": 1,
+        "Tim Henman": 1
+      },
+      "Milos Raonic": {
+        "Nick Kyrgios": 1,
+        "Roger Federer": 1,
+        "Sam Querrey": 1
+      },
+      "Miloslav Mečíř": { "Mats Wilander": 1 },
+      "Novak Djokovic": {
+        "Bernard Tomic": 1,
+        "Florian Mayer": 1,
+        "Grigor Dimitrov": 1,
+        "Jo-Wilfried Tsonga": 1,
+        "Juan Martín del Potro": 1,
+        "Lu Yen-hsun": 1,
+        "Marcos Baghdatis": 1,
+        "Marin Čilić": 2,
+        "Rafael Nadal": 1,
+        "Richard Gasquet": 1,
+        "Roger Federer": 2,
+        "Tomáš Berdych": 1
+      },
+      "Pat Cash": {
+        "Andrés Gómez": 1,
+        "Ivan Lendl": 1,
+        "Jimmy Connors": 1,
+        "Mats Wilander": 1
+      },
+      "Pat DuPré": { "Adriano Panatta": 1 },
+      "Pat Rafter": {
+        "Alexander Popp": 1,
+        "Andre Agassi": 2,
+        "Thomas Enqvist": 1,
+        "Todd Martin": 1
+      },
+      "Pete Sampras": {
+        "Andre Agassi": 2,
+        "Boris Becker": 3,
+        "Cédric Pioline": 1,
+        "Goran Ivanišević": 3,
+        "Jan-Michael Gambill": 1,
+        "Jim Courier": 1,
+        "Mark Philippoussis": 2,
+        "Michael Chang": 1,
+        "Michael Stich": 1,
+        "Pat Rafter": 1,
+        "Shuzo Matsuoka": 1,
+        "Tim Henman": 2,
+        "Todd Martin": 1,
+        "Todd Woodbridge": 1,
+        "Vladimir Voltchkov": 1
+      },
+      "Rafael Nadal": {
+        "Andy Murray": 3,
+        "Jarkko Nieminen": 1,
+        "Marcos Baghdatis": 1,
+        "Mardy Fish": 1,
+        "Novak Djokovic": 1,
+        "Rainer Schüttler": 1,
+        "Robin Söderling": 1,
+        "Roger Federer": 1,
+        "Tomáš Berdych": 2
+      },
+      "Rainer Schüttler": { "Arnaud Clément": 1 },
+      "Raúl Ramírez": { "Vitas Gerulaitis": 1 },
+      "Richard Gasquet": {
+        "Andy Roddick": 1,
+        "Stan Wawrinka": 1
+      },
+      "Richard Krajicek": {
+        "Davide Sanguinetti": 1,
+        "Jason Stoltenberg": 1,
+        "MaliVai Washington": 1,
+        "Pete Sampras": 1
+      },
+      "Rod Frawley": { "Tim Mayotte": 1 },
+      "Rod Laver": {
+        "Arthur Ashe": 2,
+        "Cliff Drysdale": 1,
+        "Dennis Ralston": 1,
+        "John Newcombe": 1,
+        "Tony Roche": 1
+      },
+      "Roger Federer": {
+        "Andy Murray": 2,
+        "Andy Roddick": 4,
+        "Fernando González": 1,
+        "Gilles Simon": 1,
+        "Ivo Karlović": 1,
+        "Jonas Björkman": 1,
+        "Juan Carlos Ferrero": 1,
+        "Lleyton Hewitt": 2,
+        "Marat Safin": 1,
+        "Marin Čilić": 2,
+        "Mario Ančić": 2,
+        "Mark Philippoussis": 1,
+        "Mikhail Youzhny": 1,
+        "Milos Raonic": 2,
+        "Novak Djokovic": 1,
+        "Rafael Nadal": 2,
+        "Richard Gasquet": 1,
+        "Sébastien Grosjean": 1,
+        "Sjeng Schalken": 1,
+        "Stan Wawrinka": 1,
+        "Tomáš Berdych": 1,
+        "Tommy Haas": 1
+      },
+      "Roger Taylor": {
+        "Björn Borg": 1,
+        "Clark Graebner": 1
+      },
+      "Roscoe Tanner": {
+        "Guillermo Vilas": 1,
+        "Jimmy Connors": 1,
+        "Pat DuPré": 1,
+        "Tim Gullikson": 1
+      },
+      "Sam Querrey": { "Andy Murray": 1 },
+      "Sandy Mayer": { "Jürgen Fassbender": 1 },
+      "Sébastien Grosjean": {
+        "Florian Mayer": 1,
+        "Tim Henman": 1
+      },
+      "Slobodan Živojinović": { "Ramesh Krishnan": 1 },
+      "Stan Smith": {
+        "Alex Metreveli": 1,
+        "Ilie Năstase": 1,
+        "Ismail El Shafei": 1,
+        "Jan Kodeš": 1,
+        "Onny Parun": 1,
+        "Tom Gorman": 1
+      },
+      "Stefan Edberg": {
+        "Anders Järryd": 1,
+        "Boris Becker": 2,
+        "Cédric Pioline": 1,
+        "Christian Bergström": 1,
+        "Ivan Lendl": 1,
+        "John McEnroe": 1,
+        "Miloslav Mečíř": 1,
+        "Patrik Kühnen": 1,
+        "Thierry Champion": 1,
+        "Tim Mayotte": 1
+      },
+      "Thomas Johansson": { "David Nalbandian": 1 },
+      "Tim Henman": {
+        "André Sá": 1,
+        "Cédric Pioline": 1,
+        "Petr Korda": 1,
+        "Roger Federer": 1
+      },
+      "Tim Mayotte": { "Brian Teacher": 1 },
+      "Todd Martin": {
+        "Tim Henman": 1,
+        "Wayne Ferreira": 1
+      },
+      "Todd Woodbridge": { "Nicolas Kiefer": 1 },
+      "Tom Gorman": { "Rod Laver": 1 },
+      "Tom Okker": { "Ilie Năstase": 1 },
+      "Tomáš Berdych": {
+        "Lucas Pouille": 1,
+        "Novak Djokovic": 2,
+        "Roger Federer": 1
+      },
+      "Tommy Haas": { "Novak Djokovic": 1 },
+      "Tony Roche": {
+        "Butch Buchholz": 1,
+        "Clark Graebner": 2,
+        "Tom Okker": 1
+      },
+      "Vitas Gerulaitis": {
+        "Billy Martin": 1,
+        "Brian Gottfried": 1
+      },
+      "Vladimir Voltchkov": { "Byron Black": 1 },
+      "Xavier Malisse": { "Richard Krajicek": 1 }
+    },
+    "Women": {
+      "Agnieszka Radwańska": {
+        "Angelique Kerber": 1,
+        "Li Na": 1,
+        "Madison Keys": 1,
+        "Maria Kirilenko": 1
+      },
+      "Alexandra Stevenson": { "Jelena Dokic": 1 },
+      "Amélie Mauresmo": {
+        "Anastasia Myskina": 2,
+        "Jennifer Capriati": 1,
+        "Justine Henin": 1,
+        "Maria Sharapova": 1,
+        "Paola Suárez": 1
+      },
+      "Ana Ivanovic": { "Nicole Vaidišová": 1 },
+      "Andrea Jaeger": {
+        "Barbara Potter": 1,
+        "Billie Jean King": 1
+      },
+      "Angelique Kerber": {
+        "Sabine Lisicki": 1,
+        "Simona Halep": 1,
+        "Venus Williams": 1
+      },
+      "Ann Jones": {
+        "Billie Jean King": 1,
+        "Françoise Dürr": 1,
+        "Margaret Court": 1,
+        "Nancy Richey": 1
+      },
+      "Anna Kournikova": { "Iva Majoli": 1 },
+      "Arantxa Sánchez": {
+        "Conchita Martínez": 1,
+        "Judith Wiesner": 1,
+        "Meredith McGrath": 1,
+        "Nathalie Tauziat": 1
+      },
+      "Bettina Bunge": { "Anne Smith": 1 },
+      "Betty Stöve": {
+        "Martina Navratilova": 1,
+        "Sue Barker": 1
+      },
+      "Billie Jean King": {
+        "Ann Jones": 1,
+        "Chris Evert": 2,
+        "Evonne Goolagong": 3,
+        "Françoise Dürr": 2,
+        "Judy Tegart": 2,
+        "Karen Krantzcke": 1,
+        "Kathy Jordan": 1,
+        "Kerry Reid": 1,
+        "Lesley Turner Bowrey": 1,
+        "Olga Morozova": 1,
+        "Rosemary Casals": 2,
+        "Tracy Austin": 1,
+        "Virginia Wade": 1
+      },
+      "Catarina Lindqvist": { "Rosalyn Fairbank": 1 },
+      "Chris Evert": {
+        "Andrea Jaeger": 1,
+        "Barbara Potter": 2,
+        "Betty Stöve": 1,
+        "Billie Jean King": 3,
+        "Carina Karlsson": 1,
+        "Claudia Kohde-Kilsch": 1,
+        "Evonne Goolagong": 2,
+        "Hana Mandlíková": 2,
+        "Helena Suková": 2,
+        "Helga Niessen": 1,
+        "Kathy Rinaldi": 1,
+        "Kerry Reid": 1,
+        "Laura Golarsa": 1,
+        "Margaret Court": 1,
+        "Martina Navratilova": 2,
+        "Mima Jaušovec": 1,
+        "Olga Morozova": 2,
+        "Pam Shriver": 1,
+        "Patti Hogan": 1,
+        "Rosemary Casals": 1,
+        "Virginia Wade": 1,
+        "Wendy Turnbull": 1
+      },
+      "Conchita Martínez": {
+        "Gabriela Sabatini": 1,
+        "Helena Suková": 1,
+        "Lindsay Davenport": 1,
+        "Lori McNeil": 1,
+        "Martina Navratilova": 1
+      },
+      "Dinara Safina": { "Sabine Lisicki": 1 },
+      "Elena Dementieva": {
+        "Francesca Schiavone": 1,
+        "Nadia Petrova": 1
+      },
+      "Elena Vesnina": { "Dominika Cibulková": 1 },
+      "Eugenie Bouchard": {
+        "Angelique Kerber": 1,
+        "Simona Halep": 1
+      },
+      "Evonne Goolagong": {
+        "Billie Jean King": 1,
+        "Chris Evert": 2,
+        "Françoise Dürr": 1,
+        "Margaret Court": 2,
+        "Nancy Richey": 1,
+        "Rosemary Casals": 1,
+        "Tracy Austin": 1,
+        "Virginia Ruzici": 1,
+        "Virginia Wade": 4,
+        "Wendy Turnbull": 1
+      },
+      "Françoise Dürr": { "Cici Martinez": 1 },
+      "Gabriela Sabatini": {
+        "Catarina Lindqvist": 1,
+        "Jennifer Capriati": 2,
+        "Laura Arraya": 1,
+        "Natasha Zvereva": 1
+      },
+      "Garbiñe Muguruza": {
+        "Agnieszka Radwańska": 1,
+        "Svetlana Kuznetsova": 1,
+        "Timea Bacsinszky": 1,
+        "Venus Williams": 1
+      },
+      "Gigi Fernández": { "Zina Garrison": 1 },
+      "Hana Mandlíková": {
+        "Chris Evert": 1,
+        "Jo Durie": 1,
+        "Lori McNeil": 1,
+        "Martina Navratilova": 1,
+        "Wendy Turnbull": 1
+      },
+      "Jana Novotná": {
+        "Arantxa Sánchez": 1,
+        "Gabriela Sabatini": 1,
+        "Kimiko Date": 1,
+        "Martina Hingis": 1,
+        "Martina Navratilova": 1,
+        "Nathalie Tauziat": 1,
+        "Venus Williams": 1,
+        "Yayuk Basuki": 1
+      },
+      "Jelena Dokic": { "Magüi Serna": 1 },
+      "Jennifer Capriati": {
+        "Martina Navratilova": 1,
+        "Serena Williams": 1
+      },
+      "Johanna Konta": { "Simona Halep": 1 },
+      "Judy Tegart": {
+        "Kerry Reid": 1,
+        "Margaret Court": 1,
+        "Nancy Richey": 1
+      },
+      "Justine Henin": {
+        "Conchita Martínez": 1,
+        "Jennifer Capriati": 1,
+        "Kim Clijsters": 1,
+        "Monica Seles": 1,
+        "Serena Williams": 1,
+        "Séverine Beltrame": 1,
+        "Svetlana Kuznetsova": 1
+      },
+      "Kathy Jordan": { "Pam Shriver": 1 },
+      "Kathy Rinaldi": { "Helena Suková": 1 },
+      "Kerry Reid": { "Evonne Goolagong": 1 },
+      "Kim Clijsters": {
+        "Li Na": 1,
+        "Silvia Farina Elia": 1
+      },
+      "Kimiko Date": { "Mary Pierce": 1 },
+      "Kirsten Flipkens": { "Petra Kvitová": 1 },
+      "Lindsay Davenport": {
+        "Alexandra Stevenson": 1,
+        "Amélie Mauresmo": 1,
+        "Jana Novotná": 1,
+        "Jelena Dokic": 1,
+        "Karolina Šprem": 1,
+        "Kim Clijsters": 1,
+        "Monica Seles": 1,
+        "Steffi Graf": 1,
+        "Svetlana Kuznetsova": 1
+      },
+      "Lori McNeil": { "Larisa Neiland": 1 },
+      "Lucie Šafářová": { "Ekaterina Makarova": 1 },
+      "Margaret Court": {
+        "Billie Jean King": 1,
+        "Helga Niessen": 1,
+        "Judy Tegart": 1,
+        "Julie Heldman": 1,
+        "Martina Navratilova": 1,
+        "Olga Morozova": 1,
+        "Rosemary Casals": 1,
+        "Winnie Shaw": 1
+      },
+      "Maria Sharapova": {
+        "Ai Sugiyama": 1,
+        "CoCo Vandeweghe": 1,
+        "Dominika Cibulková": 1,
+        "Elena Dementieva": 1,
+        "Lindsay Davenport": 1,
+        "Nadia Petrova": 1,
+        "Sabine Lisicki": 1,
+        "Serena Williams": 1
+      },
+      "Marion Bartoli": {
+        "Justine Henin": 1,
+        "Kirsten Flipkens": 1,
+        "Michaëlla Krajicek": 1,
+        "Sabine Lisicki": 1,
+        "Sloane Stephens": 1
+      },
+      "Martina Hingis": {
+        "Anna Kournikova": 1,
+        "Arantxa Sánchez": 1,
+        "Denisa Chládková": 1,
+        "Jana Novotná": 1
+      },
+      "Martina Navratilova": {
+        "Andrea Jaeger": 1,
+        "Bettina Bunge": 2,
+        "Billie Jean King": 1,
+        "Catarina Lindqvist": 1,
+        "Chris Evert": 7,
+        "Dianne Fromholtz": 2,
+        "Evonne Goolagong": 1,
+        "Gabriela Sabatini": 2,
+        "Gigi Fernández": 1,
+        "Gretchen Rush": 1,
+        "Hana Mandlíková": 1,
+        "Jana Novotná": 1,
+        "Jennifer Mundel": 1,
+        "JoAnne Russell": 1,
+        "Katerina Maleeva": 2,
+        "Kathy Jordan": 1,
+        "Manuela Maleeva": 1,
+        "Marise Kruger": 1,
+        "Natasha Zvereva": 1,
+        "Pam Shriver": 1,
+        "Rosalyn Fairbank": 1,
+        "Steffi Graf": 1,
+        "Sue Barker": 1,
+        "Tracy Austin": 1,
+        "Virginia Ruzici": 1,
+        "Yvonne Vermaak": 1,
+        "Zina Garrison": 2
+      },
+      "Mary Joe Fernández": { "Arantxa Sánchez": 1 },
+      "Meredith McGrath": { "Mary Joe Fernández": 1 },
+      "Mirjana Lučić-Baroni": { "Nathalie Tauziat": 1 },
+      "Monica Seles": {
+        "Martina Navratilova": 1,
+        "Nathalie Tauziat": 1
+      },
+      "Nancy Richey": { "Maria Bueno": 1 },
+      "Natasha Zvereva": { "Monica Seles": 1 },
+      "Nathalie Tauziat": {
+        "Lindsay Davenport": 1,
+        "Natasha Zvereva": 1
+      },
+      "Olga Morozova": {
+        "Billie Jean King": 1,
+        "Virginia Wade": 1
+      },
+      "Pam Shriver": {
+        "Helena Suková": 1,
+        "Tracy Austin": 1,
+        "Zina Garrison": 1
+      },
+      "Petra Kvitová": {
+        "Barbora Strýcová": 1,
+        "Eugenie Bouchard": 1,
+        "Kaia Kanepi": 1,
+        "Lucie Šafářová": 1,
+        "Maria Sharapova": 1,
+        "Tsvetana Pironkova": 1,
+        "Victoria Azarenka": 1
+      },
+      "Rosemary Casals": {
+        "Lesley Turner Bowrey": 1,
+        "Nancy Richey": 1,
+        "Winnie Shaw": 1
+      },
+      "Sabine Lisicki": {
+        "Agnieszka Radwańska": 1,
+        "Kaia Kanepi": 1,
+        "Marion Bartoli": 1
+      },
+      "Serena Williams": {
+        "Agnieszka Radwańska": 2,
+        "Amélie Mauresmo": 2,
+        "Angelique Kerber": 1,
+        "Daniela Hantuchová": 1,
+        "Elena Dementieva": 1,
+        "Elena Vesnina": 1,
+        "Garbiñe Muguruza": 1,
+        "Jennifer Capriati": 2,
+        "Justine Henin": 1,
+        "Li Na": 1,
+        "Lisa Raymond": 1,
+        "Maria Sharapova": 1,
+        "Petra Kvitová": 2,
+        "Venus Williams": 3,
+        "Vera Zvonareva": 1,
+        "Victoria Azarenka": 3,
+        "Zheng Jie": 1
+      },
+      "Simona Halep": { "Sabine Lisicki": 1 },
+      "Steffi Graf": {
+        "Arantxa Sánchez": 3,
+        "Chris Evert": 1,
+        "Conchita Martínez": 1,
+        "Gabriela Sabatini": 3,
+        "Jana Novotná": 4,
+        "Jennifer Capriati": 1,
+        "Kimiko Date": 1,
+        "Martina Navratilova": 2,
+        "Mary Joe Fernández": 2,
+        "Mirjana Lučić-Baroni": 1,
+        "Monica Seles": 1,
+        "Natasha Zvereva": 1,
+        "Pam Shriver": 2,
+        "Pascale Paradis": 1,
+        "Venus Williams": 1,
+        "Zina Garrison": 1
+      },
+      "Sue Barker": { "Kerry Reid": 1 },
+      "Tracy Austin": {
+        "Billie Jean King": 1,
+        "Greer Stevens": 1
+      },
+      "Tsvetana Pironkova": { "Venus Williams": 1 },
+      "Venus Williams": {
+        "Agnieszka Radwańska": 1,
+        "Ana Ivanovic": 1,
+        "Dinara Safina": 1,
+        "Elena Dementieva": 1,
+        "Elena Likhovtseva": 1,
+        "Jeļena Ostapenko": 1,
+        "Johanna Konta": 1,
+        "Justine Henin": 2,
+        "Kim Clijsters": 1,
+        "Lindsay Davenport": 4,
+        "Maria Sharapova": 1,
+        "Marion Bartoli": 1,
+        "Martina Hingis": 1,
+        "Mary Pierce": 1,
+        "Nathalie Tauziat": 1,
+        "Serena Williams": 2,
+        "Svetlana Kuznetsova": 1,
+        "Tamarine Tanasugarn": 1,
+        "Yaroslava Shvedova": 1
+      },
+      "Vera Zvonareva": {
+        "Kim Clijsters": 1,
+        "Tsvetana Pironkova": 1
+      },
+      "Victoria Azarenka": { "Tamira Paszek": 2 },
+      "Virginia Wade": {
+        "Betty Stöve": 1,
+        "Chris Evert": 1,
+        "Kerry Reid": 1,
+        "Linky Boshoff": 1,
+        "Mima Jaušovec": 1,
+        "Rosemary Casals": 1
+      },
+      "Yvonne Vermaak": { "Virginia Wade": 1 },
+      "Zheng Jie": { "Nicole Vaidišová": 1 },
+      "Zina Garrison": {
+        "Molly Van Nostrand": 1,
+        "Monica Seles": 1,
+        "Steffi Graf": 1
+      }
+    }
+  }
+}

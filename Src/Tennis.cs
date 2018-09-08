@@ -1,162 +1,162 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using RT.Util;
+using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
-using RT.Util.Text;
+using RT.Util.Serialization;
 
 namespace KtaneStuff
 {
     static class Tennis
     {
-        sealed class SetScores
+        public static void GetPlayers()
         {
-            public int Player1Score { get; private set; }
-            public int Player2Score { get; private set; }
-            public SetScores() { Player1Score = 0; Player2Score = 0; }
-            public SetScores(int player1Score, int player2Score) { Player1Score = player1Score; Player2Score = player2Score; }
-            public int ScoreOf(bool player1) { return player1 ? Player1Score : Player2Score; }
-            public SetScores Inc(bool player1) { return new SetScores(Player1Score + (player1 ? 1 : 0), Player2Score + (player1 ? 0 : 1)); }
-            public override string ToString() { return $"[{Player1Score}-{Player2Score}]"; }
-        }
-        abstract class GameState
-        {
-            public static GameState GetInitial(bool isMensPlay, bool isWimbledon) { return new GameStateScores(isMensPlay, isWimbledon, new SetScores[] { new SetScores() }); }
-        }
-        sealed class GameStateScores : GameState
-        {
-            public SetScores[] Sets { get; private set; }
-
-            // In normal play: [0,2] = 0–30; or [3,3] = 40–40; [4,3] = advantage Player 1; [4,4] = deuce
-            // In tie break: normal tiebreak scores
-            public int Player1Score { get; private set; }
-            public int Player2Score { get; private set; }
-            public bool IsTieBreak { get; private set; }
-
-            public bool IsMensPlay { get; private set; }
-            public bool IsWimbledon { get; private set; }
-
-            public GameStateScores(bool isMensPlay, bool isWimbledon, SetScores[] sets) { IsMensPlay = isMensPlay; IsWimbledon = isWimbledon; Sets = sets; }
-            public GameStateScores(bool isMensPlay, bool isWimbledon, SetScores[] sets, int player1Score, int player2Score, bool tiebreak = false) { IsMensPlay = isMensPlay; IsWimbledon = isWimbledon; Sets = sets; Player1Score = player1Score; Player2Score = player2Score; IsTieBreak = tiebreak; }
-
-            public bool IsPlayer1Serving
+            var h = new HClient();
+            var allData = new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, int>>>>();
+            foreach (var tournament in new[] { "Wimbledon Championships", "US Open", "French Open" })
             {
-                get
+                foreach (var isMale in new[] { true, false })
                 {
-                    return (Sets.Sum(set => set.Player1Score + set.Player2Score) % 2 == 0) ^ (IsTieBreak && (Player1Score + Player2Score + 1) % 4 >= 2);
-                }
-            }
-            public GameState PlayerScores(bool server)
-            {
-                var isPlayer1 = !(server ^ IsPlayer1Serving);
-                var thisPlayer = isPlayer1 ? Player1Score : Player2Score;
-                var otherPlayer = isPlayer1 ? Player2Score : Player1Score;
-
-                // Does player win a game?
-                if ((IsTieBreak && thisPlayer >= 6 && thisPlayer > otherPlayer) ||  // winning a tie break
-                    (!IsTieBreak && thisPlayer == 3 && otherPlayer < 3) ||  // winning from 40–0 to 40–30
-                    (!IsTieBreak && thisPlayer == 4 && otherPlayer == 3))   // winning from Advantage
-                {
-                    // Does player win a set?
-                    var thisPlayerSet = isPlayer1 ? Sets.Last().Player1Score : Sets.Last().Player2Score;
-                    var otherPlayerSet = isPlayer1 ? Sets.Last().Player2Score : Sets.Last().Player1Score;
-                    if ((thisPlayerSet >= 5 && thisPlayerSet > otherPlayerSet) || IsTieBreak)
+                    foreach (var year in Enumerable.Range(1968, 2017 - 1968 + 1))
                     {
-                        // Does player win the match?
-                        if (Sets.Take(Sets.Length - 1).Count(set => thisPlayerSet > otherPlayerSet) + 1 >= (IsMensPlay ? 3 : 2))
-                            return new GameStateVictory { Player1Wins = isPlayer1 };
+                        var path = $@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\{tournament} {year}{(isMale ? "" : " (W)")}.txt";
+                        var write = false;
+                        string data;
+                        if (File.Exists(path))
+                            data = File.ReadAllText(path);
+                        else
+                        {
+                            try
+                            {
+                                Console.WriteLine($"Downloading: {tournament} {year} ({(isMale ? "M" : "W")})");
+                                var raw = h.Get($@"https://en.wikipedia.org/w/index.php?title={year}_{tournament.Replace(' ', '_')}_%E2%80%93_{(isMale ? "Men" : "Women")}%27s_Singles&action=raw");
+                                data = raw.DataString;
+                                write = true;
+                            }
+                            catch (Exception e)
+                            {
+                                ConsoleUtil.WriteLine($"{year.ToString().Color(ConsoleColor.Green)} {tournament.Color(ConsoleColor.Green)}: {e.Message.Color(ConsoleColor.Magenta)} {e.GetType().FullName.Color(ConsoleColor.Red)}", ConsoleColor.DarkRed);
+                                continue;
+                            }
+                        }
 
-                        // Just the set
-                        return new GameStateScores(IsMensPlay, IsWimbledon, Sets.Take(Sets.Length - 1).Concat(new[] { Sets.Last().Inc(isPlayer1), new SetScores() }).ToArray());
-                    }
-
-                    // Just the game.
-                    // Does this start a tie break?
-                    if ((!IsWimbledon || Sets.Length < (IsMensPlay ? 5 : 3)) && thisPlayerSet + 1 == 6 && otherPlayerSet == 6)
-                        return new GameStateScores(IsMensPlay, IsWimbledon, Sets.Take(Sets.Length - 1).Concat(new[] { Sets.Last().Inc(isPlayer1) }).ToArray(), 0, 0, tiebreak: true);
-                    return new GameStateScores(IsMensPlay, IsWimbledon, Sets.Take(Sets.Length - 1).Concat(new[] { Sets.Last().Inc(isPlayer1) }).ToArray());
-                }
-
-                // Just a point. Are we going from Deuce to Advantage?
-                if (thisPlayer == 4 && otherPlayer == 4 && !IsTieBreak)
-                    return new GameStateScores(IsMensPlay, IsWimbledon, Sets, isPlayer1 ? 4 : 3, isPlayer1 ? 3 : 4);
-                return new GameStateScores(IsMensPlay, IsWimbledon, Sets, Player1Score + (isPlayer1 ? 1 : 0), Player2Score + (isPlayer1 ? 0 : 1), IsTieBreak);
-            }
-
-            private static readonly string[] ScoreNames = new[] { "0", "15", "30", "40" };
-            public override string ToString()
-            {
-                if (IsTieBreak)
-                    return $"•P{(IsPlayer1Serving ? "1" : "2")} {Sets.JoinString(" ")} Tie break {Player1Score}-{Player2Score}";
-                if (Player1Score == 4 && Player2Score == 4)
-                    return $"•P{(IsPlayer1Serving ? "1" : "2")} {Sets.JoinString(" ")} Deuce";
-                if (Player1Score == 4)
-                    return $"•P{(IsPlayer1Serving ? "1" : "2")} {Sets.JoinString(" ")} Advantage Player 1";
-                if (Player2Score == 4)
-                    return $"•P{(IsPlayer1Serving ? "1" : "2")} {Sets.JoinString(" ")} Advantage Player 2";
-                return $"•P{(IsPlayer1Serving ? "1" : "2")} {Sets.JoinString(" ")} {ScoreNames[Player1Score]}-{ScoreNames[Player2Score]}";
-            }
-        }
-        sealed class GameStateVictory : GameState
-        {
-            public bool Player1Wins;
-            public override string ToString()
-            {
-                return $"Player {(Player1Wins ? 1 : 2)} wins.";
-            }
-        }
-
-        public static void Play()
-        {
-            var tt = new TextTable { ColumnSpacing = 2 };
-            var victories = 0;
-            var isMensPlay = true;
-            for (int seed = 0; seed < 1; seed++)
-            {
-                var rnd = new Random(seed);
-
-                // Generate random starting point
-                var max = isMensPlay ? rnd.Next(110, 150) : rnd.Next(65, 80);
-                tryAgain:
-                var initialState = GameState.GetInitial(isMensPlay: isMensPlay, isWimbledon: true);
-                for (int i = 0; i < max; i++)
-                {
-                    initialState = ((GameStateScores) initialState).PlayerScores(rnd.Next(0, 2) == 1);
-                    if (initialState is GameStateVictory)
-                    {
-                        max /= 2;
-                        goto tryAgain;
+                        var m = Regex.Match(data, @"^===.*(Finals|Final Eight).*===", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                        if (!m.Success)
+                        {
+                            ConsoleUtil.WriteLine($"{year.ToString().Color(ConsoleColor.Cyan)} {tournament.Color(ConsoleColor.Cyan)}: {"Finals section not found".Color(ConsoleColor.Magenta)}", ConsoleColor.Cyan);
+                            continue;
+                        }
+                        var subdata = data.Substring(m.Index);
+                        m = Regex.Match(subdata, @"^\}\}", RegexOptions.Multiline);
+                        if (!m.Success)
+                        {
+                            ConsoleUtil.WriteLine($"{year.ToString().Color(ConsoleColor.Cyan)} {tournament.Color(ConsoleColor.Cyan)}: {"Could not find end of table.".Color(ConsoleColor.Magenta)}", ConsoleColor.Cyan);
+                            continue;
+                        }
+                        subdata = subdata.Substring(0, m.Index);
+                        foreach (var encounter in subdata.Replace("\r", "").Split('\n')
+                            .Select(line => new { Line = line, Match = Regex.Match(line, @"^\|\s*RD(\d+)-team(\d+)\s*=\s*(?:\{\{flagicon\|[ \w]+(?:\|\d+)?\}\}\s*|'''|\{\{nowrap\|)*(?:\[\[)?(.*?)((?:\]\]\s*|'''\s*|\}\}\s*)*)$", RegexOptions.IgnoreCase) })
+                            .Where(line => line.Match.Success)
+                            .Select(line => new { line.Line, Round = int.Parse(line.Match.Groups[1].Value), Place = int.Parse(line.Match.Groups[2].Value) - 1, Name = line.Match.Groups[3].Value, Suffix = line.Match.Groups[4].Value, IsWinner = line.Match.Groups[4].Value.Contains("'''") })
+                            .Select(line => new { line.Line, line.Round, line.Place, Name = (line.Name.Contains('|') ? line.Name.Remove(line.Name.IndexOf('|')) : line.Name).Replace(" (tennis)", "").Replace(" (tennis player)", ""), line.Suffix, line.IsWinner })
+                            .GroupBy(line => line.Round * 100 + (line.Place >> 1)))
+                        {
+                            Clipboard.SetText($@"https://en.wikipedia.org/w/index.php?title={year}_{tournament.Replace(' ', '_')}_%E2%80%93_{(isMale ? "Men" : "Women")}%27s_Singles&action=edit&section=4");
+                            var winner = modify(encounter.First(g => g.IsWinner).Name);
+                            var loser = modify(encounter.First(g => !g.IsWinner).Name);
+                            if (winner == null || loser == null)
+                                continue;
+                            allData.IncSafe(tournament, isMale ? "Men" : "Women", winner, loser);
+                        }
+                        if (write)
+                            File.WriteAllText(path, data);
                     }
                 }
-
-                var state = initialState;
-                var edgework = Edgework.Generate(rnd: rnd);
-                var binary = new List<bool>();
-                for (int i = 0; i < edgework.SerialNumber.Length; i++)
-                {
-                    var ch = edgework.SerialNumber[i];
-                    int num;
-                    if (ch >= '0' && ch <= '9')
-                        num = ch - '0';
-                    else
-                        num = 6 + ch - 'A';
-                    binary.AddRange(Enumerable.Range(0, 5).Select(j => ((1 << (4 - j)) & num) != 0));
-                }
-                for (int i = 0; i < binary.Count && !(state is GameStateVictory); i++)
-                {
-                    state = ((GameStateScores) state).PlayerScores(binary[i]);
-                    Console.WriteLine($"{(binary[i] ? "Ser" : "Opp")} → {state}");
-                }
-                if (state is GameStateVictory)
-                    victories++;
-
-                tt.SetCell(0, seed, max.ToString().Color(ConsoleColor.DarkGreen), alignment: HorizontalTextAlignment.Right);
-                tt.SetCell(1, seed, initialState.ToString().Color(ConsoleColor.Magenta));
-                tt.SetCell(2, seed, edgework.SerialNumber.Color(ConsoleColor.Cyan));
-                tt.SetCell(3, seed, binary.Select(b => b ? "1" : "0").JoinString().Color(ConsoleColor.Blue));
-                tt.SetCell(4, seed, state.ToString().Color(ConsoleColor.Green));
             }
-            tt.WriteToConsole();
-            Console.WriteLine($"{victories} victories");
+
+            Utils.ReplaceInFile(@"D:\c\KTANE\Tennis\Assets\Data.cs", "// Start auto-generated", "// End auto-generated",
+                new[] { ("Wimbledon Championships", "wimbledon"), ("US Open", "usOpen"), ("French Open", "frenchOpen") }.SelectMany(tournament =>
+                    new[] { ("Men", "Mens"), ("Women", "Womens") }.Select(gender => $@"
+static Dictionary<string, Dictionary<string, int>> {tournament.Item2}{gender.Item2}()
+{{
+    return new Dictionary<string, Dictionary<string, int>>
+    {{
+        {allData[tournament.Item1][gender.Item1].Select(kvp => $@"{{ ""{kvp.Key}"", new Dictionary<string, int> {{ {kvp.Value.Select(kvp2 => $@"{{ ""{kvp2.Key}"", {kvp2.Value} }}").JoinString(", ")} }} }}").JoinString(",\r\n        ")}
+    }};
+}}
+")).JoinString());
+
+            ClassifyJson.SerializeToFile(allData, $@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All encouters.json");
+            var allPlayers = allData.SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value.Keys)
+                .Concat(allData.SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value.Keys))
+                .Distinct().Order().ToArray();
+            File.WriteAllText($@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All names2.txt", allPlayers.Select(p => { Match m; return $"{p}={((m = Regex.Match(p, @" (\p{Lu}[-\p{L}]+)$")).Success ? m.Groups[1].Value : p)}"; }).JoinString(Environment.NewLine));
+        }
+
+        private static string modify(string name)
+        {
+            switch (name)
+            {
+                case "Alexander Vladimirovich Volkov": return "Alexander Volkov";
+                case "Christophe Roger-Vasselin": return null;
+                case "Magdaléna Rybáriková": return null;
+                case "Chris Evert-Lloyd": return "Chris Evert";
+                case "Arantxa Sánchez Vicario": return "Arantxa Sánchez";
+                case "Evonne Goolagong Cawley": return "Evonne Goolagong";
+                case "Helga Niessen Masthoff": return "Helga Niessen";
+                case "Justine Henin-Hardenne": return "Justine Henin";
+                case "Mary Joe Fernandez": return "Mary Joe Fernández";
+                case "Rosie Casals": return "Rosemary Casals";
+                case "Víctor Pecci, Sr.": return "Víctor Pecci";
+                case "Anastasia Pavlyuchenkova": return null;
+                case "Coco Vandeweghe": return "CoCo Vandeweghe";
+                case "Brenda Schultz-McCarthy": return null;
+                case "Hans-Jürgen Pohmann": return null;
+                case "Jaime Fillol Sr.": return "Jaime Fillol";
+                case "Judy Tegart Dalton": return "Judy Tegart";
+                case "Judy Tegart-Dalton": return "Judy Tegart";
+                case "Kerry Melville Reid": return "Kerry Reid";
+                case "Kerry Melville": return "Kerry Reid";
+                case "Lina Krasnoroutskaya": return null;
+                case "Odile De Roubin": return "Odile de Roubin";
+                case "Richard Pancho Gonzales": return "Pancho Gonzales";
+                case "Wojtek Fibak": return "Wojciech Fibak";
+            }
+            return name.Replace("'", "’");
+        }
+
+        static int IncSafe<K1, K2, K3, K4>(this IDictionary<K1, Dictionary<K2, Dictionary<K3, Dictionary<K4, int>>>> dic, K1 key1, K2 key2, K3 key3, K4 key4, int amount = 1)
+        {
+            if (dic == null)
+                throw new ArgumentNullException("dic");
+            if (key1 == null)
+                throw new ArgumentNullException(nameof(key1), "Null values cannot be used for keys in dictionaries.");
+            if (key2 == null)
+                throw new ArgumentNullException(nameof(key2), "Null values cannot be used for keys in dictionaries.");
+            if (key3 == null)
+                throw new ArgumentNullException(nameof(key3), "Null values cannot be used for keys in dictionaries.");
+            if (key4 == null)
+                throw new ArgumentNullException(nameof(key4), "Null values cannot be used for keys in dictionaries.");
+            if (!dic.ContainsKey(key1))
+                dic[key1] = new Dictionary<K2, Dictionary<K3, Dictionary<K4, int>>>();
+            if (!dic[key1].ContainsKey(key2))
+                dic[key1][key2] = new Dictionary<K3, Dictionary<K4, int>>();
+            if (!dic[key1][key2].ContainsKey(key3))
+                dic[key1][key2][key3] = new Dictionary<K4, int>();
+            if (!dic[key1][key2][key3].ContainsKey(key4))
+                return (dic[key1][key2][key3][key4] = amount);
+            else
+                return (dic[key1][key2][key3][key4] = dic[key1][key2][key3][key4] + amount);
+        }
+
+        public static void TryNames()
+        {
+            var allNames = File.ReadAllLines(@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All names.txt").Select(l => l.Split('=')).Select(arr => arr[0]).OrderByDescending(l => l.Length).ToArray();
+            Console.WriteLine(allNames.Take(20).JoinString("\n"));
         }
     }
 }
