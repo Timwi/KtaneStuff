@@ -91,6 +91,7 @@
     <Compile Include="SimonSings.cs" />
     <Compile Include="SymbolCycle.cs" />
     <Compile Include="SymbolicCoordinates.cs" />
+    <Compile Include="Tennis.cs" />
     <Compile Include="TheGamepad.cs" />
     <Compile Include="Translatable.cs" />
     <Compile Include="MarbleTumble.cs" />
