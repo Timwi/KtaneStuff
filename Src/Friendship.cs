@@ -211,8 +211,8 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 });
 
                 //*
-                var tmp = $@"D:\c\KTANE\Friendship\Manual\img\Friendship\tmp_{newFilename}";
-                var final = $@"D:\c\KTANE\Friendship\Manual\img\Friendship\{newFilename}";
+                var tmp = $@"D:\c\KTANE\Public\HTML\img\Friendship\tmp_{newFilename}";
+                var final = $@"D:\c\KTANE\Public\HTML\img\Friendship\{newFilename}";
                 newCutieMark.Save(tmp, ImageFormat.Png);
                 CommandRunner.Run("pngcr", tmp, final).OutputNothing().Go();
                 File.Delete(tmp);
