@@ -169,7 +169,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
 
             //ClassifyJson.SerializeToFile(ponyColors, _poniesJson);
 
-            ponyColors.Where(kvp => File.Exists(Path.Combine(_poniesDir, "cr", $"{kvp.Key}.png"))).Where(kvp => kvp.Key == "Twist").ParallelForEach(4, kvp =>
+            ponyColors.Where(kvp => File.Exists(Path.Combine(_poniesDir, $"{kvp.Key}.png"))).ParallelForEach(4, kvp =>
             {
                 var pony = kvp.Key;
                 var newFilename = $"{kvp.Key}.png";
@@ -201,8 +201,8 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                         using (var tr = new GraphicsTransformer(g).Translate(-circum.Center.X, -circum.Center.Y).Scale(90 / circum.Radius, 90 / circum.Radius).Translate(100, 100))
                         {
                             g.DrawImage(bmp, 0, 0);
-                            //g.DrawEllipse(Pens.Black, circum.ToRectangle().ToRectangleF());
-                        }
+                             //g.DrawEllipse(Pens.Black, circum.ToRectangle().ToRectangleF());
+                         }
                     }
                 }, g =>
                 {
