@@ -21,7 +21,7 @@ namespace KtaneStuff
             {
                 foreach (var isMale in new[] { true, false })
                 {
-                    foreach (var year in Enumerable.Range(1968, 2017 - 1968 + 1))
+                    foreach (var year in Enumerable.Range(1968, 2018 - 1968 + 1))
                     {
                         var path = $@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\{tournament} {year}{(isMale ? "" : " (W)")}.txt";
                         var write = false;
@@ -59,7 +59,7 @@ namespace KtaneStuff
                         }
                         subdata = subdata.Substring(0, m.Index);
                         foreach (var encounter in subdata.Replace("\r", "").Split('\n')
-                            .Select(line => new { Line = line, Match = Regex.Match(line, @"^\|\s*RD(\d+)-team(\d+)\s*=\s*(?:\{\{flagicon\|[ \w]+(?:\|\d+)?\}\}\s*|'''|\{\{nowrap\|)*(?:\[\[)?(.*?)((?:\]\]\s*|'''\s*|\}\}\s*)*)$", RegexOptions.IgnoreCase) })
+                            .Select(line => new { Line = line, Match = Regex.Match(line, @"^\|\s*RD(\d+)-team(\d+)\s*=\s*(?:\{\{flagicon\|[ \w]+(?:\|\d+)?\}\}\s*|'''|\{\{nowrap\|)*(?:\[\[)?(.*?)((?:\]\]\s*|'''\s*|\}\}\s*)*)( \(''\[\[|$)", RegexOptions.IgnoreCase) })
                             .Where(line => line.Match.Success)
                             .Select(line => new { line.Line, Round = int.Parse(line.Match.Groups[1].Value), Place = int.Parse(line.Match.Groups[2].Value) - 1, Name = line.Match.Groups[3].Value, Suffix = line.Match.Groups[4].Value, IsWinner = line.Match.Groups[4].Value.Contains("'''") })
                             .Select(line => new { line.Line, line.Round, line.Place, Name = (line.Name.Contains('|') ? line.Name.Remove(line.Name.IndexOf('|')) : line.Name).Replace(" (tennis)", "").Replace(" (tennis player)", ""), line.Suffix, line.IsWinner })
@@ -94,7 +94,7 @@ static Dictionary<string, Dictionary<string, int>> {tournament.Item2}{gender.Ite
             var allPlayers = allData.SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value.Keys)
                 .Concat(allData.SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value.Keys))
                 .Distinct().Order().ToArray();
-            File.WriteAllText($@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All names2.txt", allPlayers.Select(p => { Match m; return $"{p}={((m = Regex.Match(p, @" (\p{Lu}[-\p{L}]+)$")).Success ? m.Groups[1].Value : p)}"; }).JoinString(Environment.NewLine));
+            File.WriteAllText($@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All names.txt", allPlayers.Select(p => { Match m; return $"{p}={((m = Regex.Match(p, @" (\p{Lu}[-\p{L}]+)$")).Success ? m.Groups[1].Value : p)}"; }).JoinString(Environment.NewLine));
         }
 
         private static string modify(string name)

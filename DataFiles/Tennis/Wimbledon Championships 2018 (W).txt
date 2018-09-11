@@ -1,0 +1,1547 @@
+{{Infobox Tennis Grand Slam events|2018|Wimbledon Championships|
+ |champ = {{flagicon|GER}} [[Angelique Kerber]]
+ |runner ={{flagicon|USA}} [[Serena Williams]]
+ |score = 6–3, 6–3
+ |draw = 128 (12{{Tooltip| Q | Qualifiers}} / 8{{Tooltip| WC | Wild Cards}}) 
+ |seeds = 32
+|before_name = Wimbledon Championships – Women's Singles
+|after_name = Wimbledon Championships – Women's Singles
+}}
+{{main|2018 Wimbledon Championships}}
+
+[[Garbiñe Muguruza]] was the defending champion, but lost in the second round to [[Alison Van Uytvanck]]. Muguruza's defeat marked the earliest exit of the defending champion at Wimbledon since [[Steffi Graf]]'s first round defeat in [[1994 Wimbledon Championships – Women's Singles|1994]].<ref>{{cite web|url=https://www.bbc.co.uk/sport/tennis/44729958 |title=Wimbledon 2018: Champion Garbine Muguruza beaten by Alison van Uytvanck |publisher=BBC Sport|date=5 July 2018|accessdate=6 July 2018}}</ref>
+
+[[Angelique Kerber]] won her third Grand Slam singles title, defeating [[Serena Williams]] in the [[2016 Wimbledon Championships – Women's Singles|rematch of the 2016 final]], 6–3, 6–3. Kerber became the first German since Graf in [[1996 Wimbledon Championships|1996]] to lift the trophy.<ref>{{cite web|url=http://www.wtatennis.com/news/kerber-claims-third-major-crown-shocks-serena-wimbledon |title=Kerber claims third major crown, shocks Serena at Wimbledon |publisher=wtatennis.com|date=14 July 2018|accessdate=14 July 2018}}</ref><ref>{{citeweb|url=https://www.theguardian.com/sport/2018/jul/14/angelique-kerber-wins-wimbledon-title-serena-williams |title =Angelique Kerber powers past Serena Williams to claim first Wimbledon title|date=14 July 2018|work=Guardian|accessdate=17 July 2018}}</ref>	
+
+[[Simona Halep]], [[Caroline Wozniacki]] and [[Sloane Stephens]] were in contention for the [[List of WTA number 1 ranked tennis players|WTA No. 1 singles ranking]] at the start of the tournament. Halep retained the No. 1 ranking after Wozniacki and Stephens lost in the second and first rounds, respectively.<ref>{{cite web|url=http://www.wtatennis.com/news/wimbledon-draw-insider-analysis-serena-emerges-big-winner |title=Wimbledon Draw Insider Analysis: Serena emerges as big winner |publisher=WTA Tennis |date=29 June 2018|accessdate=1 July 2018}}</ref>
+
+With all top ten seeds losing before the quarterfinals, it was the worst overall Wimbledon performance of the top ten women's seeds in the [[Open Era]].<ref>{{cite web|url=https://www.theguardian.com/sport/2018/jul/07/wimbledon-2018-seeds-exodus-questions |title=Federer and Serena Williams remain but exodus of seeds raises questions |publisher=The Observer |author=Simon Cambers|date=7 July 2018|accessdate=8 July 2018}}</ref><ref>{{cite web|url=https://www.bbc.co.uk/sport/tennis/44737632 |title=Wimbledon 2018: Why are so many seeds out already? |publisher=BBC Sport |author=Sonia Oxley|date=7 July 2018|accessdate=8 July 2018}}</ref> This was also the first time in the Open Era that none of the top four women's singles seeds reached the fourth round at Wimbledon.
+
+==Seeds==
+{{columns-list|colwidth=27em|
+{{seeds|1|1}} {{flagicon|ROU}} [[Simona Halep]] ''(Third round)''
+{{seeds|2|8}} {{flagicon|DEN}} [[Caroline Wozniacki]] ''(Second round)''
+{{seeds|3|3}} {{flagicon|ESP}} [[Garbiñe Muguruza]] ''(Second round)''
+{{seeds|4|6}} {{flagicon|USA}} [[Sloane Stephens]] ''(First round)''
+{{seeds|5|7}} {{flagicon|UKR}} [[Elina Svitolina]] ''(First round)''
+{{seeds|6|4}} {{flagicon|FRA}} [[Caroline Garcia]] ''(First round)''
+{{seeds|7|5}} {{flagicon|CZE}} [[Karolína Plíšková]] ''(Fourth round)'' 
+{{seeds|8|2}} {{flagicon|CZE}} [[Petra Kvitová]] ''(First round)''
+{{seeds|9|5}} {{flagicon|USA}} [[Venus Williams]] ''(Third round)''
+{{seeds|10|7}} {{flagicon|USA}} [[Madison Keys]] ''(Third round)''
+{{seeds|11|4}} {{flagicon|GER}} '''[[Angelique Kerber]] (Champion)'''
+{{seeds|12|2}} {{flagicon|LAT}} [[Jeļena Ostapenko]] ''(Semifinals)''
+{{seeds|13|6}} {{flagicon|GER}} [[Julia Görges]] ''(Semifinals)''
+{{seeds|14|3}} {{flagicon|RUS}} [[Daria Kasatkina]] ''(Quarterfinals)''
+{{seeds|15|1}} {{flagicon|BEL}} [[Elise Mertens]] ''(Third round)''
+{{seeds|16|8}} {{flagicon|USA}} [[CoCo Vandeweghe]] ''(First round)''
+
+{{seeds|17|3}} {{flagicon|AUS}} [[Ashleigh Barty]] ''(Third round)''
+{{seeds|18|4}} {{flagicon|JPN}} [[Naomi Osaka]] ''(Third round)''
+{{seeds|19|7}} {{flagicon|SVK}} [[Magdaléna Rybáriková]] ''(First round)''
+{{seeds|20|5}} {{flagicon|NED}} [[Kiki Bertens]] ''(Quarterfinals)''
+{{seeds|21|8}} {{flagicon|LAT}} [[Anastasija Sevastova]] ''(First round)''
+{{seeds|22|1}} {{flagicon|GBR}} [[Johanna Konta]] ''(Second round)''
+{{seeds|23|6}} {{flagicon|CZE}} [[Barbora Strýcová]] ''(Third round)''
+{{seeds|24|2}} {{flagicon|RUS}} [[Maria Sharapova]] ''(First round)''
+{{seeds|25|7}} {{flagicon|USA}} [[Serena Williams]] ''(Final)''
+{{seeds|26|2}} {{flagicon|AUS}} [[Daria Gavrilova]] ''(Third round)
+{{seeds|27|4}} {{flagicon|ESP}} [[Carla Suárez Navarro]] ''(Third round)''
+{{seeds|28|3}} {{flagicon|EST}} [[Anett Kontaveit]] ''(Third round)''
+{{seeds|29|5}} {{flagicon|ROU}} [[Mihaela Buzărnescu]] ''(Third round)''
+{{seeds|30|1}} {{flagicon|RUS}} [[Anastasia Pavlyuchenkova]] ''(First round)'' 
+{{seeds|31|6}} {{flagicon|CHN}} [[Zhang Shuai (tennis)|Zhang Shuai]] ''(First round)''
+{{seeds|32|8}} {{flagicon|POL}} [[Agnieszka Radwańska]] ''(Second round)''
+}}
+{{Seeds explanation}}
+
+==Qualifying==
+{{Main|2018 Wimbledon Championships – Women's Singles Qualifying}}
+
+==Draw==
+{{Draw key}}
+
+===Finals===
+
+{{8TeamBracket-Tennis3
+|RD1=Quarterfinals
+|RD2=Semifinals
+|RD3=Final
+|team-width=175
+
+|RD1-seed1=  
+|RD1-team1={{flagicon|SVK}} [[Dominika Cibulková]]
+|RD1-score1-1=5
+|RD1-score1-2=4
+|RD1-score1-3=
+|RD1-seed2=12
+|RD1-team2='''{{flagicon|LAT}} [[Jeļena Ostapenko]]'''
+|RD1-score2-1='''7'''
+|RD1-score2-2='''6'''
+|RD1-score2-3=
+
+|RD1-seed3=14
+|RD1-team3={{flagicon|RUS}} [[Daria Kasatkina]]
+|RD1-score3-1=3
+|RD1-score3-2=5
+|RD1-score3-3=
+|RD1-seed4=11
+|RD1-team4='''{{flagicon|GER}} [[Angelique Kerber]]'''
+|RD1-score4-1='''6'''
+|RD1-score4-2='''7'''
+|RD1-score4-3=
+
+|RD1-seed5=20
+|RD1-team5={{flagicon|NED}} [[Kiki Bertens]]
+|RD1-score5-1='''6'''
+|RD1-score5-2=5
+|RD1-score5-3=1
+|RD1-seed6=13
+|RD1-team6='''{{flagicon|GER}} [[Julia Görges]]'''
+|RD1-score6-1=3
+|RD1-score6-2='''7'''
+|RD1-score6-3='''6'''
+
+|RD1-seed7=<small>25/PR</small>
+|RD1-team7='''{{flagicon|USA}} [[Serena Williams]]'''
+|RD1-score7-1=3
+|RD1-score7-2='''6'''
+|RD1-score7-3='''6'''
+|RD1-seed8=
+|RD1-team8={{flagicon|ITA}} [[Camila Giorgi]]
+|RD1-score8-1='''6'''
+|RD1-score8-2=3
+|RD1-score8-3=4
+
+|RD2-seed1=12
+|RD2-team1={{flagicon|LAT}} [[Jeļena Ostapenko]]
+|RD2-score1-1=3
+|RD2-score1-2=3
+|RD2-score1-3=
+|RD2-seed2=11
+|RD2-team2='''{{flagicon|GER}} [[Angelique Kerber]]'''
+|RD2-score2-1='''6'''
+|RD2-score2-2='''6'''
+|RD2-score2-3=
+
+|RD2-seed3=13
+|RD2-team3={{flagicon|GER}} [[Julia Görges]]
+|RD2-score3-1=2
+|RD2-score3-2=4
+|RD2-score3-3=
+|RD2-seed4=<small>25/PR</small>
+|RD2-team4='''{{flagicon|USA}} [[Serena Williams]]'''
+|RD2-score4-1='''6'''
+|RD2-score4-2='''6'''
+|RD2-score4-3=
+
+|RD3-seed1=11
+|RD3-team1='''{{flagicon|GER}} [[Angelique Kerber]]'''
+|RD3-score1-1='''6'''
+|RD3-score1-2='''6'''
+|RD3-score1-3=
+|RD3-seed2=<small>25/PR</small>
+|RD3-team2={{flagicon|USA}} [[Serena Williams]]
+|RD3-score2-1=3
+|RD3-score2-2=3
+|RD3-score2-3=
+}}
+
+===Top half===
+
+====Section 1====
+{{16TeamBracket-Compact-Tennis3
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+|RD1-seed01=1
+|RD1-team01='''{{flagicon|ROU}} [[Simona Halep|S Halep]]'''
+|RD1-score01-1='''6'''
+|RD1-score01-2='''6'''
+|RD1-score01-3=
+|RD1-seed02=
+|RD1-team02={{flagicon|JPN}} [[Kurumi Nara|K Nara]]
+|RD1-score02-1=2
+|RD1-score02-2=4
+|RD1-score02-3=
+
+|RD1-seed03=PR
+|RD1-team03='''{{flagicon|CHN}} [[Zheng Saisai|S Zheng]]'''
+|RD1-score03-1='''6'''
+|RD1-score03-2=4
+|RD1-score03-3='''6'''
+|RD1-seed04=
+|RD1-team04={{flagicon|CHN}} [[Wang Qiang (tennis)|Q Wang]]
+|RD1-score04-1=3
+|RD1-score04-2='''6'''
+|RD1-score04-3=1
+
+|RD1-seed05=
+|RD1-team05={{flagicon|ROU}} [[Ana Bogdan|A Bogdan]]
+|RD1-score05-1=1
+|RD1-score05-2='''6'''
+|RD1-score05-3=6
+|RD1-seed06=
+|RD1-team06='''{{flagicon|ESP}} [[Lara Arruabarrena|L Arruabarrena]]'''
+|RD1-score06-1='''6'''
+|RD1-score06-2=3
+|RD1-score06-3='''8'''
+
+|RD1-seed07=
+|RD1-team07='''{{flagicon|TPE}} [[Hsieh Su-wei|S-w Hsieh]]'''
+|RD1-score07-1='''6'''
+|RD1-score07-2=4
+|RD1-score07-3='''6'''
+|RD1-seed08=30
+|RD1-team08={{flagicon|RUS}} [[Anastasia Pavlyuchenkova|A Pavlyuchenkova]]
+|RD1-score08-1=4
+|RD1-score08-2='''6'''
+|RD1-score08-3=3
+
+|RD1-seed09=22
+|RD1-team09='''{{flagicon|GBR}} [[Johanna Konta|J Konta]]'''
+|RD1-score09-1='''7'''
+|RD1-score09-2='''7<sup>9</sup>'''
+|RD1-score09-3=
+|RD1-seed10=
+|RD1-team10={{flagicon|RUS}} [[Natalia Vikhlyantseva|N Vikhlyantseva]]
+|RD1-score10-1=5
+|RD1-score10-2=6<sup>7</sup>
+|RD1-score10-3=
+
+|RD1-seed11=
+|RD1-team11={{flagicon|FRA}} [[Alizé Cornet|A Cornet]]
+|RD1-score11-1=6<sup>3</sup>
+|RD1-score11-2=1
+|RD1-score11-3=
+|RD1-seed12=
+|RD1-team12='''{{flagicon|SVK}} [[Dominika Cibulková|D Cibulková]]'''
+|RD1-score12-1='''7<sup>7</sup>'''
+|RD1-score12-2='''6'''
+|RD1-score12-3=
+
+|RD1-seed13=
+|RD1-team13={{flagicon|CZE}} [[Markéta Vondroušová|M Vondroušová]]
+|RD1-score13-1=1
+|RD1-score13-2=2
+|RD1-score13-3=
+|RD1-seed14=
+|RD1-team14='''{{flagicon|USA}} [[Sachia Vickery|S Vickery]]'''
+|RD1-score14-1='''6'''
+|RD1-score14-2='''6'''
+|RD1-score14-3=
+
+|RD1-seed15=
+|RD1-team15={{flagicon|USA}} [[Danielle Collins|D Collins]]
+|RD1-score15-1=3
+|RD1-score15-2=2
+|RD1-score15-3=
+|RD1-seed16=15
+|RD1-team16='''{{flagicon|BEL}} [[Elise Mertens|E Mertens]]'''
+|RD1-score16-1='''6'''
+|RD1-score16-2='''6'''
+|RD1-score16-3=
+
+|RD2-seed01=1
+|RD2-team01='''{{flagicon|ROU}} [[Simona Halep|S Halep]]'''
+|RD2-score01-1='''7'''
+|RD2-score01-2='''6'''
+|RD2-score01-3=
+|RD2-seed02=PR
+|RD2-team02={{flagicon|CHN}} [[Zheng Saisai|S Zheng]]
+|RD2-score02-1=5
+|RD2-score02-2=0
+|RD2-score02-3=
+
+|RD2-seed03=
+|RD2-team03={{flagicon|ESP}} [[Lara Arruabarrena|L Arruabarrena]]
+|RD2-score03-1=3
+|RD2-score03-2=3
+|RD2-score03-3=
+|RD2-seed04=
+|RD2-team04='''{{flagicon|TPE}} [[Hsieh Su-wei|S-w Hsieh]]'''
+|RD2-score04-1='''6'''
+|RD2-score04-2='''6'''
+|RD2-score04-3=
+
+|RD2-seed05=22
+|RD2-team05={{flagicon|GBR}} [[Johanna Konta|J Konta]]
+|RD2-score05-1=3
+|RD2-score05-2=4
+|RD2-score05-3=
+|RD2-seed06=
+|RD2-team06='''{{flagicon|SVK}} [[Dominika Cibulková|D Cibulková]]'''
+|RD2-score06-1='''6'''
+|RD2-score06-2='''6'''
+|RD2-score06-3=
+
+|RD2-seed07=
+|RD2-team07={{flagicon|USA}} [[Sachia Vickery|S Vickery]]
+|RD2-score07-1=1
+|RD2-score07-2=3
+|RD2-score07-3=
+|RD2-seed08=15
+|RD2-team08='''{{flagicon|BEL}} [[Elise Mertens|E Mertens]]'''
+|RD2-score08-1='''6'''
+|RD2-score08-2='''6'''
+|RD2-score08-3=
+
+|RD3-seed01=1
+|RD3-team01={{flagicon|ROU}} [[Simona Halep|S Halep]]
+|RD3-score01-1='''6'''
+|RD3-score01-2=4
+|RD3-score01-3=5
+|RD3-seed02=
+|RD3-team02='''{{flagicon|TPE}} [[Hsieh Su-wei|S-w Hsieh]]'''
+|RD3-score02-1=3
+|RD3-score02-2='''6'''
+|RD3-score02-3='''7'''
+
+|RD3-seed03=
+|RD3-team03='''{{flagicon|SVK}} [[Dominika Cibulková|D Cibulková]]'''
+|RD3-score03-1='''6'''
+|RD3-score03-2='''6'''
+|RD3-score03-3=
+|RD3-seed04=15
+|RD3-team04={{flagicon|BEL}} [[Elise Mertens|E Mertens]]
+|RD3-score04-1=2
+|RD3-score04-2=2
+|RD3-score04-3=
+
+|RD4-seed01=
+|RD4-team01={{flagicon|TPE}} [[Hsieh Su-wei|S-w Hsieh]]
+|RD4-score01-1=4
+|RD4-score01-2=1
+|RD4-score01-3=
+|RD4-seed02=
+|RD4-team02='''{{flagicon|SVK}} [[Dominika Cibulková|D Cibulková]]'''
+|RD4-score02-1='''6'''
+|RD4-score02-2='''6'''
+|RD4-score02-3=
+}}
+
+====Section 2====
+{{16TeamBracket-Compact-Tennis3
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+|RD1-seed01=12
+|RD1-team01='''{{flagicon|LAT}} [[Jeļena Ostapenko|J Ostapenko]]'''
+|RD1-score01-1='''6'''
+|RD1-score01-2='''7<sup>7</sup>'''
+|RD1-score01-3=
+|RD1-seed02=WC
+|RD1-team02={{flagicon|GBR}} [[Katy Dunne|K Dunne]]
+|RD1-score02-1=3
+|RD1-score02-2=6<sup>5</sup>
+|RD1-score02-3=
+
+|RD1-seed03=
+|RD1-team03={{flagicon|GBR}} [[Heather Watson|H Watson]]
+|RD1-score03-1=4
+|RD1-score03-2=5
+|RD1-score03-3=
+|RD1-seed04=
+|RD1-team04='''{{flagicon|BEL}} [[Kirsten Flipkens|K Flipkens]]'''
+|RD1-score04-1='''6'''
+|RD1-score04-2='''7'''
+|RD1-score04-3=
+
+|RD1-seed05=
+|RD1-team05='''{{flagicon|USA}} [[Sofia Kenin|S Kenin]]'''
+|RD1-score05-1='''6'''
+|RD1-score05-2=1
+|RD1-score05-3='''6'''
+|RD1-seed06=
+|RD1-team06={{flagicon|GRE}} [[Maria Sakkari|M Sakkari]]
+|RD1-score06-1=4
+|RD1-score06-2='''6'''
+|RD1-score06-3=1
+
+|RD1-seed07=Q
+|RD1-team07='''{{flagicon|RUS}} [[Vitalia Diatchenko|V Diatchenko]]'''
+|RD1-score07-1=6<sup>3</sup>
+|RD1-score07-2='''7<sup>7</sup>'''
+|RD1-score07-3='''6'''
+|RD1-seed08=24
+|RD1-team08={{flagicon|RUS}} [[Maria Sharapova|M Sharapova]]
+|RD1-score08-1='''7<sup>7</sup>'''
+|RD1-score08-2=6<sup>3</sup>
+|RD1-score08-3=4
+
+|RD1-seed09=26
+|RD1-team09='''{{flagicon|AUS}} [[Daria Gavrilova|D Gavrilova]]'''
+|RD1-score09-1='''6'''
+|RD1-score09-2='''6'''
+|RD1-score09-3=
+|RD1-seed10=LL
+|RD1-team10={{flagicon|USA}} [[Caroline Dolehide|C Dolehide]]
+|RD1-score10-1=2
+|RD1-score10-2=3
+|RD1-score10-3=
+
+|RD1-seed11=
+|RD1-team11={{flagicon|CHN}} [[Peng Shuai|S Peng]]
+|RD1-score11-1=4
+|RD1-score11-2=5
+|RD1-score11-3=
+|RD1-seed12=
+|RD1-team12='''{{flagicon|AUS}} [[Samantha Stosur|S Stosur]]'''
+|RD1-score12-1='''6'''
+|RD1-score12-2='''7'''
+|RD1-score12-3=
+
+|RD1-seed13=
+|RD1-team13={{flagicon|FRA}} [[Pauline Parmentier|P Parmentier]]
+|RD1-score13-1=2
+|RD1-score13-2=4
+|RD1-score13-3=
+|RD1-seed14=
+|RD1-team14='''{{flagicon|USA}} [[Taylor Townsend (tennis)|T Townsend]]'''
+|RD1-score14-1='''6'''
+|RD1-score14-2='''6'''
+|RD1-score14-3=
+
+|RD1-seed15=
+|RD1-team15='''{{flagicon|BLR}} [[Aliaksandra Sasnovich|A Sasnovich]]'''
+|RD1-score15-1='''6'''
+|RD1-score15-2=4
+|RD1-score15-3='''6'''
+|RD1-seed16=8
+|RD1-team16={{flagicon|CZE}} [[Petra Kvitová|P Kvitová]]
+|RD1-score16-1=4
+|RD1-score16-2='''6'''
+|RD1-score16-3=0
+
+|RD2-seed01=12
+|RD2-team01='''{{flagicon|LAT}} [[Jeļena Ostapenko|J Ostapenko]]'''
+|RD2-score01-1='''6'''
+|RD2-score01-2='''6'''
+|RD2-score01-3=
+|RD2-seed02=
+|RD2-team02={{flagicon|BEL}} [[Kirsten Flipkens|K Flipkens]]
+|RD2-score02-1=1
+|RD2-score02-2=3
+|RD2-score02-3=
+
+|RD2-seed03=
+|RD2-team03={{flagicon|USA}} [[Sofia Kenin|S Kenin]]
+|RD2-score03-1=4
+|RD2-score03-2=1
+|RD2-score03-3=
+|RD2-seed04=Q
+|RD2-team04='''{{flagicon|RUS}} [[Vitalia Diatchenko|V Diatchenko]]'''
+|RD2-score04-1='''6'''
+|RD2-score04-2='''6'''
+|RD2-score04-3=
+
+|RD2-seed05=26
+|RD2-team05='''{{flagicon|AUS}} [[Daria Gavrilova|D Gavrilova]]'''
+|RD2-score05-1='''6'''
+|RD2-score05-2='''6'''
+|RD2-score05-3=
+|RD2-seed06=
+|RD2-team06={{flagicon|AUS}} [[Samantha Stosur|S Stosur]]
+|RD2-score06-1=4
+|RD2-score06-2=1
+|RD2-score06-3=
+
+|RD2-seed07=
+|RD2-team07={{flagicon|USA}} [[Taylor Townsend (tennis)|T Townsend]]
+|RD2-score07-1=0
+|RD2-score07-2=4
+|RD2-score07-3=
+|RD2-seed08=
+|RD2-team08='''{{flagicon|BLR}} [[Aliaksandra Sasnovich|A Sasnovich]]'''
+|RD2-score08-1='''6'''
+|RD2-score08-2='''6'''
+|RD2-score08-3=
+
+|RD3-seed01=12
+|RD3-team01='''{{flagicon|LAT}} [[Jeļena Ostapenko|J Ostapenko]]'''
+|RD3-score01-1='''6'''
+|RD3-score01-2='''6'''
+|RD3-score01-3=
+|RD3-seed02=Q
+|RD3-team02={{flagicon|RUS}} [[Vitalia Diatchenko|V Diatchenko]]
+|RD3-score02-1=0
+|RD3-score02-2=4
+|RD3-score02-3=
+
+|RD3-seed03=26
+|RD3-team03={{flagicon|AUS}} [[Daria Gavrilova|D Gavrilova]]
+|RD3-score03-1=3
+|RD3-score03-2=1
+|RD3-score03-3=
+|RD3-seed04=
+|RD3-team04='''{{flagicon|BLR}} [[Aliaksandra Sasnovich|A Sasnovich]]'''
+|RD3-score04-1='''6'''
+|RD3-score04-2='''6'''
+|RD3-score04-3=
+
+|RD4-seed01=12
+|RD4-team01='''{{flagicon|LAT}} [[Jeļena Ostapenko|J Ostapenko]]'''
+|RD4-score01-1='''7<sup>7</sup>'''
+|RD4-score01-2='''6'''
+|RD4-score01-3=
+|RD4-seed02=
+|RD4-team02={{flagicon|BLR}} [[Aliaksandra Sasnovich|A Sasnovich]]
+|RD4-score02-1=6<sup>4</sup>
+|RD4-score02-2=0
+|RD4-score02-3=
+}}
+
+====Section 3====
+{{16TeamBracket-Compact-Tennis3
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+|RD1-seed01=3
+|RD1-team01='''{{flagicon|ESP}} [[Garbiñe Muguruza|G Muguruza]]'''
+|RD1-score01-1='''6'''
+|RD1-score01-2='''7'''
+|RD1-score01-3=
+|RD1-seed02=WC
+|RD1-team02={{flagicon|GBR}} [[Naomi Broady|N Broady]]
+|RD1-score02-1=2
+|RD1-score02-2=5
+|RD1-score02-3=
+
+|RD1-seed03=
+|RD1-team03='''{{flagicon|BEL}} [[Alison Van Uytvanck|A Van Uytvanck]]'''
+|RD1-score03-1='''6'''
+|RD1-score03-2='''6'''
+|RD1-score03-3=
+|RD1-seed04=
+|RD1-team04={{flagicon|SLO}} [[Polona Hercog|P Hercog]]
+|RD1-score04-1=2
+|RD1-score04-2=2
+|RD1-score04-3=
+
+|RD1-seed05=
+|RD1-team05='''{{flagicon|USA}} [[Jennifer Brady (tennis)|J Brady]]'''
+|RD1-score05-1='''6'''
+|RD1-score05-2=6<sup>4</sup>
+|RD1-score05-3='''6'''
+|RD1-seed06=
+|RD1-team06={{flagicon|UKR}} [[Kateryna Kozlova|K Kozlova]]
+|RD1-score06-1=2
+|RD1-score06-2='''7<sup>7</sup>'''
+|RD1-score06-3=2
+
+|RD1-seed07=
+|RD1-team07={{flagicon|CZE}} [[Denisa Allertová|D Allertová]]
+|RD1-score07-1=2
+|RD1-score07-2=2
+|RD1-score07-3=
+|RD1-seed08=28
+|RD1-team08='''{{flagicon|EST}} [[Anett Kontaveit|A Kontaveit]]'''
+|RD1-score08-1='''6'''
+|RD1-score08-2='''6'''
+|RD1-score08-3=
+
+|RD1-seed09=17
+|RD1-team09='''{{flagicon|AUS}} [[Ashleigh Barty|A Barty]]'''
+|RD1-score09-1='''7'''
+|RD1-score09-2='''6'''
+|RD1-score09-3=
+|RD1-seed10
+|RD1-team10={{flagicon|SUI}} [[Stefanie Vögele|S Vögele]]
+|RD1-score10-1=5
+|RD1-score10-2=3
+|RD1-score10-3=
+
+|RD1-seed11=WC
+|RD1-team11={{flagicon|GBR}} [[Gabriella Taylor|G Taylor]]
+|RD1-score11-1=0
+|RD1-score11-2='''6'''
+|RD1-score11-3=3
+|RD1-seed12=Q
+|RD1-team12='''{{flagicon|CAN}} [[Eugenie Bouchard|E Bouchard]]'''
+|RD1-score12-1='''6'''
+|RD1-score12-2=4
+|RD1-score12-3='''6'''
+
+|RD1-seed13=
+|RD1-team13={{flagicon|POL}} [[Magda Linette|M Linette]]
+|RD1-score13-1=3
+|RD1-score13-2='''6'''
+|RD1-score13-3=8
+|RD1-seed14=
+|RD1-team14='''{{flagicon|KAZ}} [[Yulia Putintseva|Y Putintseva]]'''
+|RD1-score14-1='''6'''
+|RD1-score14-2=3
+|RD1-score14-3='''10'''
+
+|RD1-seed15=
+|RD1-team15={{flagicon|CRO}} [[Jana Fett|J Fett]]
+|RD1-score15-1=2
+|RD1-score15-2=5
+|RD1-score15-3=
+|RD1-seed16=14
+|RD1-team16='''{{flagicon|RUS}} [[Daria Kasatkina|D Kasatkina]]'''
+|RD1-score16-1='''6'''
+|RD1-score16-2='''7'''
+|RD1-score16-3=
+
+|RD2-seed01=3
+|RD2-team01={{flagicon|ESP}} [[Garbiñe Muguruza|G Muguruza]]
+|RD2-score01-1='''7'''
+|RD2-score01-2=2
+|RD2-score01-3=1
+|RD2-seed02=
+|RD2-team02='''{{flagicon|BEL}} [[Alison Van Uytvanck|A Van Uytvanck]]'''
+|RD2-score02-1=5
+|RD2-score02-2='''6'''
+|RD2-score02-3='''6'''
+
+|RD2-seed03=
+|RD2-team03={{flagicon|USA}} [[Jennifer Brady (tennis)|J Brady]]
+|RD2-score03-1=2
+|RD2-score03-2=6<sup>4</sup>
+|RD2-score03-3=
+|RD2-seed04=28
+|RD2-team04='''{{flagicon|EST}} [[Anett Kontaveit|A Kontaveit]]'''
+|RD2-score04-1='''6'''
+|RD2-score04-2='''7<sup>7</sup>'''
+|RD2-score04-3=
+
+|RD2-seed05=17
+|RD2-team05='''{{flagicon|AUS}} [[Ashleigh Barty|A Barty]]'''
+|RD2-score05-1='''6'''
+|RD2-score05-2='''7'''
+|RD2-score05-3=
+|RD2-seed06=Q
+|RD2-team06={{flagicon|CAN}} [[Eugenie Bouchard|E Bouchard]]
+|RD2-score06-1=4
+|RD2-score06-2=5
+|RD2-score06-3=
+
+|RD2-seed07=
+|RD2-team07={{flagicon|KAZ}} [[Yulia Putintseva|Y Putintseva]]
+|RD2-score07-1=2
+|RD2-score07-2=3
+|RD2-score07-3=
+|RD2-seed08=14
+|RD2-team08='''{{flagicon|RUS}} [[Daria Kasatkina|D Kasatkina]]'''
+|RD2-score08-1='''6'''
+|RD2-score08-2='''6'''
+|RD2-score08-3=
+
+|RD3-seed01=
+|RD3-team01='''{{flagicon|BEL}} [[Alison Van Uytvanck|A Van Uytvanck]]'''
+|RD3-score01-1='''6'''
+|RD3-score01-2='''6'''
+|RD3-score01-3=
+|RD3-seed02=28
+|RD3-team02={{flagicon|EST}} [[Anett Kontaveit|A Kontaveit]]
+|RD3-score02-1=2
+|RD3-score02-2=3
+|RD3-score02-3=
+
+|RD3-seed03=17
+|RD3-team03={{flagicon|AUS}} [[Ashleigh Barty|A Barty]]
+|RD3-score03-1=5
+|RD3-score03-2=3
+|RD3-score03-3=
+|RD3-seed04=14
+|RD3-team04='''{{flagicon|RUS}} [[Daria Kasatkina|D Kasatkina]]'''
+|RD3-score04-1='''7'''
+|RD3-score04-2='''6'''
+|RD3-score04-3=
+
+|RD4-seed01=
+|RD4-team01={{flagicon|BEL}} [[Alison Van Uytvanck|A Van Uytvanck]]
+|RD4-score01-1='''7<sup>8</sup>'''
+|RD4-score01-2=3
+|RD4-score01-3=2
+|RD4-seed02=14
+|RD4-team02='''{{flagicon|RUS}} [[Daria Kasatkina|D Kasatkina]]'''
+|RD4-score02-1=6<sup>6</sup>
+|RD4-score02-2='''6'''
+|RD4-score02-3='''6'''
+}}
+
+====Section 4====
+{{16TeamBracket-Compact-Tennis3
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+|RD1-seed01=11
+|RD1-team01='''{{flagicon|GER}} [[Angelique Kerber|A Kerber]]'''
+|RD1-score01-1='''7'''
+|RD1-score01-2='''6'''
+|RD1-score01-3=
+|RD1-seed02=Q
+|RD1-team02={{flagicon|RUS}} [[Vera Zvonareva|V Zvonareva]]
+|RD1-score02-1=5
+|RD1-score02-2=3
+|RD1-score02-3=
+
+|RD1-seed03=
+|RD1-team03={{flagicon|CRO}} [[Ana Konjuh|A Konjuh]]
+|RD1-score03-1=2
+|RD1-score03-2='''7<sup>7</sup>'''
+|RD1-score03-3=3
+|RD1-seed04=Q
+|RD1-team04='''{{flagicon|USA}} [[Claire Liu|C Liu]]'''
+|RD1-score04-1='''6'''
+|RD1-score04-2=6<sup>2</sup>
+|RD1-score04-3='''6'''
+
+|RD1-seed05=WC
+|RD1-team05='''{{flagicon|GBR}} [[Katie Boulter|K Boulter]]'''
+|RD1-score05-1='''6'''
+|RD1-score05-2=5
+|RD1-score05-3='''6'''
+|RD1-seed06=
+|RD1-team06={{flagicon|PAR}} [[Verónica Cepede Royg|V Cepede Royg]]
+|RD1-score06-1=4
+|RD1-score06-2='''7'''
+|RD1-score06-3=4
+
+|RD1-seed07=
+|RD1-team07={{flagicon|ROU}} [[Monica Niculescu|M Niculescu]]
+|RD1-score07-1=4
+|RD1-score07-2=1
+|RD1-score07-3=
+|RD1-seed08=18
+|RD1-team08='''{{flagicon|JPN}} [[Naomi Osaka|N Osaka]]'''
+|RD1-score08-1='''6'''
+|RD1-score08-2='''6'''
+|RD1-score08-3=
+
+|RD1-seed09=27
+|RD1-team09='''{{flagicon|ESP}} [[Carla Suárez Navarro|C Suárez Navarro]]'''
+|RD1-score09-1='''6'''
+|RD1-score09-2='''6'''
+|RD1-score09-3=
+|RD1-seed10
+|RD1-team10={{flagicon|GER}} [[Carina Witthöft|C Witthöft]]
+|RD1-score10-1=2
+|RD1-score10-2=4
+|RD1-score10-3=
+
+|RD1-seed11=Q
+|RD1-team11='''{{flagicon|ESP}} [[Sara Sorribes Tormo|S Sorribes Tormo]]'''
+|RD1-score11-1='''7<sup>7</sup>'''
+|RD1-score11-2='''6'''
+|RD1-score11-3=
+|RD1-seed12=
+|RD1-team12={{flagicon|EST}} [[Kaia Kanepi|K Kanepi]]
+|RD1-score12-1=6<sup>5</sup>
+|RD1-score12-2=1
+|RD1-score12-3=
+
+|RD1-seed13=
+|RD1-team13='''{{flagicon|USA}} [[Alison Riske|A Riske]]'''
+|RD1-score13-1='''6'''
+|RD1-score13-2='''6'''
+|RD1-score13-3=
+|RD1-seed14=LL
+|RD1-team14={{flagicon|COL}} [[Mariana Duque Mariño|M Duque Mariño]]
+|RD1-score14-1=1
+|RD1-score14-2=1
+|RD1-score14-3=
+
+|RD1-seed15=
+|RD1-team15='''{{flagicon|SUI}} [[Belinda Bencic|B Bencic]]'''
+|RD1-score15-1='''7<sup>7</sup>'''
+|RD1-score15-2='''6'''
+|RD1-score15-3=
+|RD1-seed16=6
+|RD1-team16={{flagicon|FRA}} [[Caroline Garcia|C Garcia]]
+|RD1-score16-1=6<sup>2</sup>
+|RD1-score16-2=3
+|RD1-score16-3=
+
+|RD2-seed01=11
+|RD2-team01='''{{flagicon|GER}} [[Angelique Kerber|A Kerber]]'''
+|RD2-score01-1=3
+|RD2-score01-2='''6'''
+|RD2-score01-3='''6'''
+|RD2-seed02=Q
+|RD2-team02={{flagicon|USA}} [[Claire Liu|C Liu]]
+|RD2-score02-1='''6'''
+|RD2-score02-2=2
+|RD2-score02-3=4
+
+|RD2-seed03=WC
+|RD2-team03={{flagicon|GBR}} [[Katie Boulter|K Boulter]]
+|RD2-score03-1=3
+|RD2-score03-2=4
+|RD2-score03-3=
+|RD2-seed04=18
+|RD2-team04='''{{flagicon|JPN}} [[Naomi Osaka|N Osaka]]'''
+|RD2-score04-1='''6'''
+|RD2-score04-2='''6'''
+|RD2-score04-3=
+
+|RD2-seed05=27
+|RD2-team05='''{{flagicon|ESP}} [[Carla Suárez Navarro|C Suárez Navarro]]'''
+|RD2-score05-1='''6'''
+|RD2-score05-2='''6'''
+|RD2-score05-3=
+|RD2-seed06=Q
+|RD2-team06={{flagicon|ESP}} [[Sara Sorribes Tormo|S Sorribes Tormo]]
+|RD2-score06-1=4
+|RD2-score06-2=1
+|RD2-score06-3=
+
+|RD2-seed07=
+|RD2-team07={{flagicon|USA}} [[Alison Riske|A Riske]]
+|RD2-score07-1='''6'''
+|RD2-score07-2=6<sup>10</sup>
+|RD2-score07-3=2
+|RD2-seed08=
+|RD2-team08='''{{flagicon|SUI}} [[Belinda Bencic|B Bencic]]'''
+|RD2-score08-1=1
+|RD2-score08-2='''7<sup>12</sup>'''
+|RD2-score08-3='''6'''
+
+|RD3-seed01=11
+|RD3-team01='''{{flagicon|GER}} [[Angelique Kerber|A Kerber]]'''
+|RD3-score01-1='''6'''
+|RD3-score01-2='''6'''
+|RD3-score01-3=
+|RD3-seed02=18
+|RD3-team02={{flagicon|JPN}} [[Naomi Osaka|N Osaka]]
+|RD3-score02-1=2
+|RD3-score02-2=4
+|RD3-score02-3=
+
+|RD3-seed03=27
+|RD3-team03={{flagicon|ESP}} [[Carla Suárez Navarro|C Suárez Navarro]]
+|RD3-score03-1=1
+|RD3-score03-2=6<sup>3</sup>
+|RD3-score03-3=
+|RD3-seed04=
+|RD3-team04='''{{flagicon|SUI}} [[Belinda Bencic|B Bencic]]'''
+|RD3-score04-1='''6'''
+|RD3-score04-2='''7<sup>7</sup>'''
+|RD3-score04-3=
+
+|RD4-seed01=11
+|RD4-team01='''{{flagicon|GER}} [[Angelique Kerber|A Kerber]]'''
+|RD4-score01-1='''6'''
+|RD4-score01-2='''7<sup>7</sup>'''
+|RD4-score01-3=
+|RD4-seed02=
+|RD4-team02={{flagicon|SUI}} [[Belinda Bencic|B Bencic]]
+|RD4-score02-1=3
+|RD4-score02-2=6<sup>5</sup>
+|RD4-score02-3=
+}}
+
+===Bottom half===
+
+====Section 5====
+{{16TeamBracket-Compact-Tennis3
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+|RD1-seed01=7
+|RD1-team01='''{{flagicon|CZE}} [[Karolína Plíšková|Ka Plíšková]]'''
+|RD1-score01-1='''7<sup>7</sup>'''
+|RD1-score01-2=2
+|RD1-score01-3='''6'''
+|RD1-seed02=WC
+|RD1-team02={{flagicon|GBR}} [[Harriet Dart|H Dart]]
+|RD1-score02-1=6<sup>2</sup>
+|RD1-score02-2='''6'''
+|RD1-score02-3=1
+
+|RD1-seed03=
+|RD1-team03={{flagicon|RUS}} [[Ekaterina Alexandrova|E Alexandrova]]
+|RD1-score03-1=6<sup>4</sup>
+|RD1-score03-2=3
+|RD1-score03-3=
+|RD1-seed04=
+|RD1-team04='''{{flagicon|BLR}} [[Victoria Azarenka|V Azarenka]]'''
+|RD1-score04-1='''7<sup>7</sup>'''
+|RD1-score04-2='''6'''
+|RD1-score04-3=
+
+|RD1-seed05=
+|RD1-team05={{flagicon|ROU}} [[Irina-Camelia Begu|I-C Begu]]
+|RD1-score05-1=2
+|RD1-score05-2=2
+|RD1-score05-3=
+|RD1-seed06=WC
+|RD1-team06='''{{flagicon|GBR}} [[Katie Swan|K Swan]]'''
+|RD1-score06-1='''6'''
+|RD1-score06-2='''6'''
+|RD1-score06-3=
+
+|RD1-seed07=
+|RD1-team07={{flagicon|BLR}} [[Aryna Sabalenka|A Sabalenka]]
+|RD1-score07-1='''7<sup>7</sup>'''
+|RD1-score07-2=1
+|RD1-score07-3=4
+|RD1-seed08=29
+|RD1-team08='''{{flagicon|ROU}} [[Mihaela Buzărnescu|M Buzărnescu]]'''
+|RD1-score08-1=6<sup>3</sup>
+|RD1-score08-2='''6'''
+|RD1-score08-3='''6'''
+
+|RD1-seed09=20
+|RD1-team09='''{{flagicon|NED}} [[Kiki Bertens|K Bertens]]'''
+|RD1-score09-1='''6'''
+|RD1-score09-2='''6'''
+|RD1-score09-3=
+|RD1-seed10=Q
+|RD1-team10={{flagicon|CZE}} [[Barbora Štefková|B Štefková]]
+|RD1-score10-1=3
+|RD1-score10-2=2
+|RD1-score10-3=
+
+|RD1-seed11=
+|RD1-team11={{flagicon|CHN}} [[Wang Yafan|Y Wang]]
+|RD1-score11-1='''7<sup>7</sup>'''
+|RD1-score11-2=4
+|RD1-score11-3=4
+|RD1-seed12=
+|RD1-team12='''{{flagicon|RUS}} [[Anna Blinkova|A Blinkova]]'''
+|RD1-score12-1=6<sup>4</sup>
+|RD1-score12-2='''6'''
+|RD1-score12-3='''6'''
+
+|RD1-seed13=Q
+|RD1-team13='''{{flagicon|ROU}} [[Alexandra Dulgheru|A Dulgheru]]'''
+|RD1-score13-1='''6'''
+|RD1-score13-2=1
+|RD1-score13-3='''6'''
+|RD1-seed14=
+|RD1-team14={{flagicon|CZE}} [[Kristýna Plíšková|Kr Plíšková]]
+|RD1-score14-1=4
+|RD1-score14-2='''6'''
+|RD1-score14-3=2
+
+|RD1-seed15=
+|RD1-team15={{flagicon|SWE}} [[Johanna Larsson|J Larsson]]
+|RD1-score15-1='''7<sup>7</sup>'''
+|RD1-score15-2=2
+|RD1-score15-3=1
+|RD1-seed16=9
+|RD1-team16='''{{flagicon|USA}} [[Venus Williams|V Williams]]'''
+|RD1-score16-1=6<sup>3</sup>
+|RD1-score16-2='''6'''
+|RD1-score16-3='''6'''
+
+|RD2-seed01=7
+|RD2-team01='''{{flagicon|CZE}} [[Karolína Plíšková|Ka Plíšková]]'''
+|RD2-score01-1='''6'''
+|RD2-score01-2='''6'''
+|RD2-score01-3=
+|RD2-seed02=
+|RD2-team02={{flagicon|BLR}} [[Victoria Azarenka|V Azarenka]]
+|RD2-score02-1=3
+|RD2-score02-2=3
+|RD2-score02-3=
+
+|RD2-seed03=WC
+|RD2-team03={{flagicon|GBR}} [[Katie Swan|K Swan]]
+|RD2-score03-1=0
+|RD2-score03-2=3
+|RD2-score03-3=
+|RD2-seed04=29
+|RD2-team04='''{{flagicon|ROU}} [[Mihaela Buzărnescu|M Buzărnescu]]'''
+|RD2-score04-1='''6'''
+|RD2-score04-2='''6'''
+|RD2-score04-3=
+
+|RD2-seed05=20
+|RD2-team05='''{{flagicon|NED}} [[Kiki Bertens|K Bertens]]'''
+|RD2-score05-1='''6'''
+|RD2-score05-2='''6'''
+|RD2-score05-3=
+|RD2-seed06=
+|RD2-team06={{flagicon|RUS}} [[Anna Blinkova|A Blinkova]]
+|RD2-score06-1=4
+|RD2-score06-2=0
+|RD2-score06-3=
+
+|RD2-seed07=Q
+|RD2-team07={{flagicon|ROU}} [[Alexandra Dulgheru|A Dulgheru]]
+|RD2-score07-1='''6'''
+|RD2-score07-2=0
+|RD2-score07-3=1
+|RD2-seed08=9
+|RD2-team08='''{{flagicon|USA}} [[Venus Williams|V Williams]]'''
+|RD2-score08-1=4
+|RD2-score08-2='''6'''
+|RD2-score08-3='''6'''
+
+|RD3-seed01=7
+|RD3-team01='''{{flagicon|CZE}} [[Karolína Plíšková|Ka Plíšková]]'''
+|RD3-score01-1=3
+|RD3-score01-2='''7<sup>7</sup>'''
+|RD3-score01-3='''6'''
+|RD3-seed02=29
+|RD3-team02={{flagicon|ROU}} [[Mihaela Buzărnescu|M Buzărnescu]]
+|RD3-score02-1='''6'''
+|RD3-score02-2=6<sup>3</sup>
+|RD3-score02-3=1
+
+|RD3-seed03=20
+|RD3-team03='''{{flagicon|NED}} [[Kiki Bertens|K Bertens]]'''
+|RD3-score03-1='''6'''
+|RD3-score03-2=6<sup>5</sup>
+|RD3-score03-3='''8'''
+|RD3-seed04=9
+|RD3-team04={{flagicon|USA}} [[Venus Williams|V Williams]]
+|RD3-score04-1=2
+|RD3-score04-2='''7<sup>7</sup>'''
+|RD3-score04-3=6
+
+|RD4-seed01=7
+|RD4-team01={{flagicon|CZE}} [[Karolína Plíšková|Ka Plíšková]]
+|RD4-score01-1=3
+|RD4-score01-2=6<sup>1</sup>
+|RD4-score01-3=
+|RD4-seed02=20
+|RD4-team02='''{{flagicon|NED}} [[Kiki Bertens|K Bertens]]'''
+|RD4-score02-1='''6'''
+|RD4-score02-2='''7<sup>7</sup>'''
+|RD4-score02-3=
+}}
+
+====Section 6====
+{{16TeamBracket-Compact-Tennis3
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+|RD1-seed01=13
+|RD1-team01='''{{flagicon|GER}} [[Julia Görges|J Görges]]'''
+|RD1-score01-1='''6'''
+|RD1-score01-2='''7<sup>9</sup>'''
+|RD1-score01-3=
+|RD1-seed02=
+|RD1-team02={{flagicon|PUR}} [[Monica Puig|M Puig]]
+|RD1-score02-1=4
+|RD1-score02-2=6<sup>7</sup>
+|RD1-score02-3=
+
+|RD1-seed03=
+|RD1-team03='''{{flagicon|BLR}} [[Vera Lapko|V Lapko]]'''
+|RD1-score03-1=5
+|RD1-score03-2='''7'''
+|RD1-score03-3='''7'''
+|RD1-seed04=
+|RD1-team04={{flagicon|USA}} [[Christina McHale|C McHale]]
+|RD1-score04-1='''7'''
+|RD1-score04-2=5
+|RD1-score04-3=5
+
+|RD1-seed05=
+|RD1-team05='''{{flagicon|UKR}} [[Lesia Tsurenko|L Tsurenko]]'''
+|RD1-score05-1='''7'''
+|RD1-score05-2='''6'''
+|RD1-score05-3=
+|RD1-seed06=
+|RD1-team06={{flagicon|HUN}} [[Tímea Babos|T Babos]]
+|RD1-score06-1=5
+|RD1-score06-2=2
+|RD1-score06-3=
+
+|RD1-seed07=
+|RD1-team07={{flagicon|RUS}} [[Svetlana Kuznetsova|S Kuznetsova]]
+|RD1-score07-1=6<sup>6</sup>
+|RD1-score07-2=5
+|RD1-score07-3=
+|RD1-seed08=23
+|RD1-team08='''{{flagicon|CZE}} [[Barbora Strýcová|B Strýcová]]'''
+|RD1-score08-1='''7<sup>8</sup>'''
+|RD1-score08-2='''7'''
+|RD1-score08-3=
+
+|RD1-seed09=31
+|RD1-team09={{flagicon|CHN}} [[Zhang Shuai (tennis)|S Zhang]]
+|RD1-score09-1=4
+|RD1-score09-2='''6'''
+|RD1-score09-3=2
+|RD1-seed10=
+|RD1-team10='''{{flagicon|GER}} [[Andrea Petkovic|A Petkovic]]'''
+|RD1-score10-1='''6'''
+|RD1-score10-2=4
+|RD1-score10-3='''6'''
+
+|RD1-seed11=Q
+|RD1-team11={{flagicon|GER}} [[Mona Barthel|M Barthel]]
+|RD1-score11-1=5
+|RD1-score11-2=4
+|RD1-score11-3=
+|RD1-seed12=
+|RD1-team12='''{{flagicon|BEL}} [[Yanina Wickmayer|Y Wickmayer]]'''
+|RD1-score12-1='''7'''
+|RD1-score12-2='''6'''
+|RD1-score12-3=
+
+|RD1-seed13=
+|RD1-team13={{flagicon|SVK}} [[Viktória Kužmová|V Kužmová]]
+|RD1-score13-1=6<sup>3</sup>
+|RD1-score13-2=6<sup>9</sup>
+|RD1-score13-3=
+|RD1-seed14=
+|RD1-team14='''{{flagicon|SWE}} [[Rebecca Peterson|R Peterson]]'''
+|RD1-score14-1='''7<sup>7</sup>'''
+|RD1-score14-2='''7<sup>11</sup>'''
+|RD1-score14-3=
+
+|RD1-seed15=
+|RD1-team15='''{{flagicon|CRO}} [[Donna Vekić|D Vekić]]'''
+|RD1-score15-1='''6'''
+|RD1-score15-2='''6'''
+|RD1-score15-3=
+|RD1-seed16=4
+|RD1-team16={{flagicon|USA}} [[Sloane Stephens|S Stephens]]
+|RD1-score16-1=1
+|RD1-score16-2=3
+|RD1-score16-3=
+
+|RD2-seed01=13
+|RD2-team01='''{{flagicon|GER}} [[Julia Görges|J Görges]]'''
+|RD2-score01-1='''6'''
+|RD2-score01-2=3
+|RD2-score01-3='''6'''
+|RD2-seed02=
+|RD2-team02={{flagicon|BLR}} [[Vera Lapko|V Lapko]]
+|RD2-score02-1=2
+|RD2-score02-2='''6'''
+|RD2-score02-3=2
+
+|RD2-seed03=
+|RD2-team03={{flagicon|UKR}} [[Lesia Tsurenko|L Tsurenko]]
+|RD2-score03-1=1
+|RD2-score03-2=4
+|RD2-score03-3=
+|RD2-seed04=23
+|RD2-team04='''{{flagicon|CZE}} [[Barbora Strýcová|B Strýcová]]'''
+|RD2-score04-1='''6'''
+|RD2-score04-2='''6'''
+|RD2-score04-3=
+
+|RD2-seed05=
+|RD2-team05={{flagicon|GER}} [[Andrea Petkovic|A Petkovic]]
+|RD2-score05-1=4
+|RD2-score05-2=3
+|RD2-score05-3=
+|RD2-seed06=
+|RD2-team06='''{{flagicon|BEL}} [[Yanina Wickmayer|Y Wickmayer]]'''
+|RD2-score06-1='''6'''
+|RD2-score06-2='''6'''
+|RD2-score06-3=
+
+|RD2-seed07=
+|RD2-team07={{flagicon|SWE}} [[Rebecca Peterson|R Peterson]]
+|RD2-score07-1=5
+|RD2-score07-2=4
+|RD2-score07-3=
+|RD2-seed08=
+|RD2-team08='''{{flagicon|CRO}} [[Donna Vekić|D Vekić]]'''
+|RD2-score08-1='''7'''
+|RD2-score08-2='''6'''
+|RD2-score08-3=
+
+|RD3-seed01=13
+|RD3-team01='''{{flagicon|GER}} [[Julia Görges|J Görges]]'''
+|RD3-score01-1='''7<sup>7</sup>'''
+|RD3-score01-2=3
+|RD3-score01-3='''10'''
+|RD3-seed02=23
+|RD3-team02={{flagicon|CZE}} [[Barbora Strýcová|B Strýcová]]
+|RD3-score02-1=6<sup>3</sup>
+|RD3-score02-2='''6'''
+|RD3-score02-3=8
+
+|RD3-seed03=
+|RD3-team03={{flagicon|BEL}} [[Yanina Wickmayer|Y Wickmayer]]
+|RD3-score03-1=6<sup>2</sup>
+|RD3-score03-2=1
+|RD3-score03-3=
+|RD3-seed04=
+|RD3-team04='''{{flagicon|CRO}} [[Donna Vekić|D Vekić]]'''
+|RD3-score04-1='''7<sup>7</sup>'''
+|RD3-score04-2='''6'''
+|RD3-score04-3=
+
+|RD4-seed01=13
+|RD4-team01='''{{flagicon|GER}} [[Julia Görges|J Görges]]'''
+|RD4-score01-1='''6'''
+|RD4-score01-2='''6'''
+|RD4-score01-3=
+|RD4-seed02=
+|RD4-team02={{flagicon|CRO}} [[Donna Vekić|D Vekić]]
+|RD4-score02-1=3
+|RD4-score02-2=2
+|RD4-score02-3=
+}}
+
+====Section 7====
+{{16TeamBracket-Compact-Tennis3
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+|RD1-seed01=5
+|RD1-team01={{flagicon|UKR}} [[Elina Svitolina|E Svitolina]]
+|RD1-score01-1=6<sup>3</sup>
+|RD1-score01-2='''6'''
+|RD1-score01-3=1
+|RD1-seed02=
+|RD1-team02='''{{flagicon|GER}} [[Tatjana Maria|T Maria]]'''
+|RD1-score02-1='''7<sup>7</sup>'''
+|RD1-score02-2=4
+|RD1-score02-3='''6'''
+
+|RD1-seed03=
+|RD1-team03={{flagicon|SVK}} [[Anna Karolína Schmiedlová|AK Schmiedlová]]
+|RD1-score03-1='''7'''
+|RD1-score03-2=2
+|RD1-score03-3=2
+|RD1-seed04=
+|RD1-team04='''{{flagicon|FRA}} [[Kristina Mladenovic|K Mladenovic]]'''
+|RD1-score04-1=5
+|RD1-score04-2='''6'''
+|RD1-score04-3='''6'''
+
+|RD1-seed05=WC
+|RD1-team05={{flagicon|CZE}} [[Tereza Smitková|T Smitková]]
+|RD1-score05-1=6<sup>3</sup>
+|RD1-score05-2=1
+|RD1-score05-3=
+|RD1-seed06=Q
+|RD1-team06='''{{flagicon|BUL}} [[Viktoriya Tomova|V Tomova]]'''
+|RD1-score06-1='''7<sup>7</sup>'''
+|RD1-score06-2='''6'''
+|RD1-score06-3=
+
+|RD1-seed07=
+|RD1-team07={{flagicon|NED}} [[Arantxa Rus|A Rus]]
+|RD1-score07-1=5
+|RD1-score07-2=3
+|RD1-score07-3=
+|RD1-seed08=<small>25/PR</small>
+|RD1-team08='''{{flagicon|USA}} [[Serena Williams|S Williams]]'''
+|RD1-score08-1='''7'''
+|RD1-score08-2='''6'''
+|RD1-score08-3=
+
+|RD1-seed09=19
+|RD1-team09={{flagicon|SVK}} [[Magdaléna Rybáriková|M Rybáriková]]
+|RD1-score09-1=5
+|RD1-score09-2=3
+|RD1-score09-3=
+|RD1-seed10
+|RD1-team10='''{{flagicon|ROU}} [[Sorana Cîrstea|S Cîrstea]]'''
+|RD1-score10-1='''7'''
+|RD1-score10-2='''6'''
+|RD1-score10-3=
+
+|RD1-seed11=Q
+|RD1-team11='''{{flagicon|RUS}} [[Evgeniya Rodina|E Rodina]]'''
+|RD1-score11-1=3
+|RD1-score11-2='''7'''
+|RD1-score11-3='''6'''
+|RD1-seed12=Q
+|RD1-team12={{flagicon|GER}} [[Antonia Lottner|A Lottner]]
+|RD1-score12-1='''6'''
+|RD1-score12-2=5
+|RD1-score12-3=4
+
+|RD1-seed13=
+|RD1-team13='''{{flagicon|THA}} [[Luksika Kumkhum|L Kumkhum]]'''
+|RD1-score13-1=4
+|RD1-score13-2='''6'''
+|RD1-score13-3='''6'''
+|RD1-seed14=
+|RD1-team14={{flagicon|USA}} [[Bernarda Pera|B Pera]]
+|RD1-score14-1='''6'''
+|RD1-score14-2=2
+|RD1-score14-3=3
+
+|RD1-seed15=
+|RD1-team15={{flagicon|AUS}} [[Ajla Tomljanović|A Tomljanović]]
+|RD1-score15-1=4
+|RD1-score15-2=2
+|RD1-score15-3=
+|RD1-seed16=10
+|RD1-team16='''{{flagicon|USA}} [[Madison Keys|M Keys]]'''
+|RD1-score16-1='''6'''
+|RD1-score16-2='''6'''
+|RD1-score16-3=
+
+|RD2-seed01=
+|RD2-team01={{flagicon|GER}} [[Tatjana Maria|T Maria]]
+|RD2-score01-1=2
+|RD2-score01-2=2
+|RD2-score01-3=
+|RD2-seed02=
+|RD2-team02='''{{flagicon|FRA}} [[Kristina Mladenovic|K Mladenovic]]'''
+|RD2-score02-1='''6'''
+|RD2-score02-2='''6'''
+|RD2-score02-3=
+
+|RD2-seed03=Q
+|RD2-team03={{flagicon|BUL}} [[Viktoriya Tomova|V Tomova]]
+|RD2-score03-1=1
+|RD2-score03-2=4
+|RD2-score03-3=
+|RD2-seed04=<small>25/PR</small>
+|RD2-team04='''{{flagicon|USA}} [[Serena Williams|S Williams]]'''
+|RD2-score04-1='''6'''
+|RD2-score04-2='''6'''
+|RD2-score04-3=
+
+|RD2-seed05=
+|RD2-team05={{flagicon|ROU}} [[Sorana Cîrstea|S Cîrstea]]
+|RD2-score05-1='''6'''
+|RD2-score05-2=3
+|RD2-score05-3=3
+|RD2-seed06=Q
+|RD2-team06='''{{flagicon|RUS}} [[Evgeniya Rodina|E Rodina]]'''
+|RD2-score06-1=1
+|RD2-score06-2='''6'''
+|RD2-score06-3='''6'''
+
+|RD2-seed07=
+|RD2-team07={{flagicon|THA}} [[Luksika Kumkhum|L Kumkhum]]
+|RD2-score07-1=4
+|RD2-score07-2=3
+|RD2-score07-3=
+|RD2-seed08=10
+|RD2-team08='''{{flagicon|USA}} [[Madison Keys|M Keys]]'''
+|RD2-score08-1='''6'''
+|RD2-score08-2='''6'''
+|RD2-score08-3=
+
+|RD3-seed01=
+|RD3-team01={{flagicon|FRA}} [[Kristina Mladenovic|K Mladenovic]]
+|RD3-score01-1=5
+|RD3-score01-2=6<sup>2</sup>
+|RD3-score01-3=
+|RD3-seed02=<small>25/PR</small>
+|RD3-team02='''{{flagicon|USA}} [[Serena Williams|S Williams]]'''
+|RD3-score02-1='''7'''
+|RD3-score02-2='''7<sup>7</sup>'''
+|RD3-score02-3=
+
+|RD3-seed03=Q
+|RD3-team03='''{{flagicon|RUS}} [[Evgeniya Rodina|E Rodina]]'''
+|RD3-score03-1='''7'''
+|RD3-score03-2=5
+|RD3-score03-3='''6'''
+|RD3-seed04=10
+|RD3-team04={{flagicon|USA}} [[Madison Keys|M Keys]]
+|RD3-score04-1=5
+|RD3-score04-2='''7'''
+|RD3-score04-3=4
+
+|RD4-seed01=<small>25/PR</small>
+|RD4-team01='''{{flagicon|USA}} [[Serena Williams|S Williams]]'''
+|RD4-score01-1='''6'''
+|RD4-score01-2='''6'''
+|RD4-score01-3=
+|RD4-seed02=Q
+|RD4-team02={{flagicon|RUS}} [[Evgeniya Rodina|E Rodina]]
+|RD4-score02-1=2
+|RD4-score02-2=2
+|RD4-score02-3=
+}}
+
+====Section 8====
+{{16TeamBracket-Compact-Tennis3
+| RD1=First Round
+| RD2=Second Round
+| RD3=Third Round
+| RD4=Fourth Round
+
+|RD1-seed01=16
+|RD1-team01={{flagicon|USA}} [[CoCo Vandeweghe|C Vandeweghe]]
+|RD1-score01-1='''7<sup>7</sup>'''
+|RD1-score01-2=3
+|RD1-score01-3=6
+|RD1-seed02=
+|RD1-team02='''{{flagicon|CZE}} [[Kateřina Siniaková|K Siniaková]]'''
+|RD1-score02-1=6<sup>3</sup>
+|RD1-score02-2='''6'''
+|RD1-score02-3='''8'''
+
+|RD1-seed03=
+|RD1-team03={{flagicon|SUI}} [[Viktorija Golubic|V Golubic]]
+|RD1-score03-1='''6'''
+|RD1-score03-2=3
+|RD1-score03-3=3
+|RD1-seed04=WC
+|RD1-team04='''{{flagicon|TUN}} [[Ons Jabeur|O Jabeur]]'''
+|RD1-score04-1=2
+|RD1-score04-2='''6'''
+|RD1-score04-3='''6'''
+
+|RD1-seed05=
+|RD1-team05={{flagicon|SRB}} [[Aleksandra Krunić|A Krunić]]
+|RD1-score05-1='''6'''
+|RD1-score05-2=3
+|RD1-score05-3=3
+|RD1-seed06=
+|RD1-team06='''{{flagicon|USA}} [[Madison Brengle|M Brengle]]'''
+|RD1-score06-1=2
+|RD1-score06-2='''6'''
+|RD1-score06-3='''6'''
+
+|RD1-seed07=
+|RD1-team07='''{{flagicon|ITA}} [[Camila Giorgi|C Giorgi]]'''
+|RD1-score07-1='''6'''
+|RD1-score07-2=2
+|RD1-score07-3='''6'''
+|RD1-seed08=21
+|RD1-team08={{flagicon|LAT}} [[Anastasija Sevastova|A Sevastova]]
+|RD1-score08-1=1
+|RD1-score08-2='''6'''
+|RD1-score08-3=4
+
+|RD1-seed09=32
+|RD1-team09='''{{flagicon|POL}} [[Agnieszka Radwańska|A Radwańska]]'''
+|RD1-score09-1='''6'''
+|RD1-score09-2=4
+|RD1-score09-3='''7'''
+|RD1-seed10=Q
+|RD1-team10={{flagicon|ROU}} [[Elena-Gabriela Ruse|E-G Ruse]]
+|RD1-score10-1=3
+|RD1-score10-2='''6'''
+|RD1-score10-3=5
+
+|RD1-seed11=
+|RD1-team11={{flagicon|UKR}} [[Kateryna Bondarenko|K Bondarenko]]
+|RD1-score11-1=4
+|RD1-score11-2=4
+|RD1-score11-3=
+|RD1-seed12=
+|RD1-team12='''{{flagicon|CZE}} [[Lucie Šafářová|L Šafářová]]'''
+|RD1-score12-1='''6'''
+|RD1-score12-2='''6'''
+|RD1-score12-3=
+
+|RD1-seed13=
+|RD1-team13={{flagicon|CRO}} [[Petra Martić|P Martić]]
+|RD1-score13-1=6<sup>0</sup>
+|RD1-score13-2='''6'''
+|RD1-score13-3=3
+|RD1-seed14=
+|RD1-team14='''{{flagicon|RUS}} [[Ekaterina Makarova|E Makarova]]'''
+|RD1-score14-1='''7<sup>7</sup>'''
+|RD1-score14-2=2
+|RD1-score14-3='''6'''
+
+|RD1-seed15=
+|RD1-team15={{flagicon|USA}} [[Varvara Lepchenko|V Lepchenko]]
+|RD1-score15-1=0
+|RD1-score15-2=3
+|RD1-score15-3=
+|RD1-seed16=2
+|RD1-team16='''{{flagicon|DEN}} [[Caroline Wozniacki|C Wozniacki]]'''
+|RD1-score16-1='''6'''
+|RD1-score16-2='''6'''
+|RD1-score16-3=
+
+|RD2-seed01=
+|RD2-team01='''{{flagicon|CZE}} [[Kateřina Siniaková|K Siniaková]]'''
+|RD2-score01-1=5
+|RD2-score01-2='''6'''
+|RD2-score01-3='''9'''
+|RD2-seed02=WC
+|RD2-team02={{flagicon|TUN}} [[Ons Jabeur|O Jabeur]]
+|RD2-score02-1='''7'''
+|RD2-score02-2=4
+|RD2-score02-3=7
+
+|RD2-seed03=
+|RD2-team03={{flagicon|USA}} [[Madison Brengle|M Brengle]]
+|RD2-score03-1=4
+|RD2-score03-2=4
+|RD2-score03-3=
+|RD2-seed04=
+|RD2-team04='''{{flagicon|ITA}} [[Camila Giorgi|C Giorgi]]'''
+|RD2-score04-1='''6'''
+|RD2-score04-2='''6'''
+|RD2-score04-3=
+
+|RD2-seed05=32
+|RD2-team05={{flagicon|POL}} [[Agnieszka Radwańska|A Radwańska]]
+|RD2-score05-1=5
+|RD2-score05-2=4
+|RD2-score05-3=
+|RD2-seed06=
+|RD2-team06='''{{flagicon|CZE}} [[Lucie Šafářová|L Šafářová]]'''
+|RD2-score06-1='''7'''
+|RD2-score06-2='''6'''
+|RD2-score06-3=
+
+|RD2-seed07=
+|RD2-team07='''{{flagicon|RUS}} [[Ekaterina Makarova|E Makarova]]'''
+|RD2-score07-1='''6'''
+|RD2-score07-2=1
+|RD2-score07-3='''7'''
+|RD2-seed08=2
+|RD2-team08={{flagicon|DEN}} [[Caroline Wozniacki|C Wozniacki]]
+|RD2-score08-1=4
+|RD2-score08-2='''6'''
+|RD2-score08-3=5
+
+|RD3-seed01=
+|RD3-team01={{flagicon|CZE}} [[Kateřina Siniaková|K Siniaková]]
+|RD3-score01-1='''6'''
+|RD3-score01-2=6<sup>6</sup>
+|RD3-score01-3=2
+|RD3-seed02=
+|RD3-team02='''{{flagicon|ITA}} [[Camila Giorgi|C Giorgi]]'''
+|RD3-score02-1=3
+|RD3-score02-2='''7<sup>8</sup>'''
+|RD3-score02-3='''6'''
+
+|RD3-seed03=
+|RD3-team03={{flagicon|CZE}} [[Lucie Šafářová|L Šafářová]]
+|RD3-score03-1='''6'''
+|RD3-score03-2=4
+|RD3-score03-3=1
+|RD3-seed04=
+|RD3-team04='''{{flagicon|RUS}} [[Ekaterina Makarova|E Makarova]]'''
+|RD3-score04-1=4
+|RD3-score04-2='''6'''
+|RD3-score04-3='''6'''
+
+|RD4-seed01=
+|RD4-team01='''{{flagicon|ITA}} [[Camila Giorgi|C Giorgi]]'''
+|RD4-score01-1='''6'''
+|RD4-score01-2='''6'''
+|RD4-score01-3=
+|RD4-seed02=
+|RD4-team02={{flagicon|RUS}} [[Ekaterina Makarova|E Makarova]]
+|RD4-score02-1=3
+|RD4-score02-2=4
+|RD4-score02-3=
+}}
+
+==References==
+{{reflist}}
+* [http://www.wimbledon.com/en_GB/draws/index.html?event=LS Women's Singles Draw]
+
+{{Wimbledon women's singles drawsheets}}
+{{2018 WTA Tour}}
+
+{{DEFAULTSORT:2018 Wimbledon Championships - Women's Singles}}
+[[Category:2018 Wimbledon Championships|Women's Singles]]
+[[Category:Wimbledon Championship by year – Ladies' Singles]]
