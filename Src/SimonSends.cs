@@ -199,7 +199,7 @@ namespace KtaneStuff
             const double bf = .45;
             const Normal n = Normal.Average;
 
-            var data = new(double width, double depth, double bevel, Normal? normal)[] { (.6, .5, .19, null), (.85, .4, .28, n), (.95, .3, .33, n), (1, .17, .34, n), (1, 0, .35, Normal.Mine) };
+            var data = new (double width, double depth, double bevel, Normal? normal)[] { (.6, .5, .19, null), (.85, .4, .28, n), (.95, .3, .33, n), (1, .17, .34, n), (1, 0, .35, Normal.Mine) };
             MeshVertexInfo[] rect2((double width, double depth, double bevel, Normal? normal) x)
             {
                 var pts = new List<Pt>();

@@ -64,7 +64,7 @@ namespace KtaneStuff
                 num += int.MaxValue;
             }
             _seedArray[_inext] = num;
-            return (double) num * 4.6566128752457969E-10;
+            return num * 4.6566128752457969E-10;
         }
 
         /// <summary>Returns a nonnegative random number.</summary>
@@ -87,7 +87,7 @@ namespace KtaneStuff
             {
                 throw new ArgumentOutOfRangeException("maxValue");
             }
-            return (int) (Sample() * (double) maxValue);
+            return (int) (Sample() * maxValue);
         }
 
         /// <summary>Returns a random number within a specified range.</summary>
@@ -108,7 +108,7 @@ namespace KtaneStuff
             {
                 return minValue;
             }
-            return (int) ((ulong) ((uint) (Sample() * num)) + (ulong) ((long) minValue));
+            return (int) ((uint) (Sample() * num) + (ulong) minValue);
         }
 
         /// <summary>Fills the elements of a specified array of bytes with random numbers.</summary>

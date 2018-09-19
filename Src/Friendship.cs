@@ -201,8 +201,8 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                         using (var tr = new GraphicsTransformer(g).Translate(-circum.Center.X, -circum.Center.Y).Scale(90 / circum.Radius, 90 / circum.Radius).Translate(100, 100))
                         {
                             g.DrawImage(bmp, 0, 0);
-                             //g.DrawEllipse(Pens.Black, circum.ToRectangle().ToRectangleF());
-                         }
+                            //g.DrawEllipse(Pens.Black, circum.ToRectangle().ToRectangleF());
+                        }
                     }
                 }, g =>
                 {

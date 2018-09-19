@@ -234,7 +234,7 @@ namespace KtaneStuff
         {
             var xs = new[] { -w / 2, w / 2, w / 2, -w / 2 };
             var ys = new[] { -w / 2, -w / 2, w / 2, w / 2 };
-            var coords = Enumerable.Range(0, 4).Reverse().Select(ix => (xs[ix], ys[ix])).Select(m => new(double d, double h)[] { (1, .15), (.95, .155), (.9, .155), (.85, .14) }.Select(tup => pt(m.Item1 * tup.d, tup.h, m.Item2 * tup.d)).ToArray()).ToArray();
+            var coords = Enumerable.Range(0, 4).Reverse().Select(ix => (xs[ix], ys[ix])).Select(m => new (double d, double h)[] { (1, .15), (.95, .155), (.9, .155), (.85, .14) }.Select(tup => pt(m.Item1 * tup.d, tup.h, m.Item2 * tup.d)).ToArray()).ToArray();
             return CreateMesh(true, false, coords, flatNormals: true);
         }
 
