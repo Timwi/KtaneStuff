@@ -59,6 +59,7 @@
     <Compile Include="EitherOr.cs" />
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="GridMatching.cs" />
+    <Compile Include="KnowYourWay.cs" />
     <Compile Include="Ktane.cs" />
     <Compile Include="Lasers.cs" />
     <Compile Include="Mafia.cs" />
