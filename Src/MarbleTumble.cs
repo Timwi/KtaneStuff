@@ -184,15 +184,22 @@ namespace KtaneStuff
         {
             for (int cylIx = 0; cylIx < 5; cylIx++)
                 for (int trapIx = _gapTrapMins[cylIx]; trapIx <= _gapTrapMaxs[cylIx]; trapIx++)
-                    foreach (var color in "red,yellow,green,blue,silver".Split(',').Zip("ff8181,eff09a,81d682,8eb5ff,ccc".Split(','), (name, col) => (name, col)))
+                {
+                    var notches = Enumerable.Range(1, 9).Where(n => n != trapIx).ToArray();
+                    foreach (var (name, colorLight, colorDark) in Ut.NewArray(
+                        ("red", "ff8181", "eb4747"),
+                        ("yellow", "eff09a", "bdc030"),
+                        ("green", "81d682", "3d8f3f"),
+                        ("blue", "8eb5ff", "185bd8"),
+                        ("silver", "ccc", "787878")))
                     {
+                        var cylinderPolygon = CylinderPolygon(cylIx + .5, cylIx + 1.5, _marbleSize, _marbleSize, (360 / _numNotches) * trapIx, 0).Select(tup => $"{tup.p.X},{tup.p.Y}").JoinString(" ");
+                        var notchesSvg = notches.Select(n => $"<path transform='rotate({n * 360 / _numNotches - 90})' d='M0,{cylIx + .8} L.1,{cylIx + 1} 0,{cylIx + 1.2} -.1,{cylIx + 1}z' />").JoinString();
                         File.WriteAllText(
-                            $@"D:\c\KTANE\Public\More\img\Marble Tumble\Cylinder-{cylIx}-{trapIx}-{color.name}.svg",
-                            $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-6 -6 12 12'><path d='M {CylinderPolygon(cylIx + .5, cylIx + 1.5, _marbleSize, _marbleSize, (360 / _numNotches) * trapIx, 0)
-                                .Select(tup => tup.p)
-                                .Select(tup => $"{tup.X},{tup.Y}")
-                                .JoinString(" ")} z' fill='#{color.col}' stroke-width='.06' stroke='#000' /></svg>");
+                            $@"D:\c\KTANE\Public\More\img\Marble Tumble\Cylinder-{cylIx}-{trapIx}-{name}.svg",
+                            $@"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-6 -6 12 12'><path d='M{cylinderPolygon}z' fill='#{colorLight}' stroke-width='.06' stroke='#000' /><g fill='rgba(0, 0, 0, .2)'>{notchesSvg}</g></svg>");
                     }
+                }
         }
 
         sealed class DijNode : Node<int, string>
