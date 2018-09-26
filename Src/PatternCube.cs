@@ -22,6 +22,7 @@ namespace KtaneStuff
             public int Orientation { get; private set; }
             public bool Equals(FaceSymbol other) => other.Symbol == Symbol && other.Orientation == Orientation;
             public FaceSymbol(char symbol, int orientation) { Symbol = symbol; Orientation = orientation; }
+            public override int GetHashCode() => Ut.ArrayHash(Symbol, Orientation);
         }
         sealed class HalfCube
         {
@@ -71,6 +72,7 @@ namespace KtaneStuff
             public int Orientation { get; private set; }
             public bool Equals(FaceInfo other) => other != null && other.Face == Face && other.Orientation == Orientation;
             public FaceInfo(int face, int orientation) { Face = face; Orientation = orientation; }
+            public override int GetHashCode() => Ut.ArrayHash(Face, Orientation);
         }
         sealed class Net : IEquatable<Net>
         {
@@ -82,10 +84,11 @@ namespace KtaneStuff
                     return false;
                 for (int i = Faces.GetLength(0) - 1; i >= 0; i--)
                     for (int j = other.Faces.GetLength(1) - 1; j >= 0; j--)
-                        if (!Equals(Faces[i, j], other.Faces[i, j]))
+                        if (Faces[i, j] != null && !Faces[i, j].Equals(other.Faces[i, j]))
                             return false;
                 return true;
             }
+            public override int GetHashCode() => Ut.ArrayHash(Faces.GetLength(0), Faces.GetLength(1), Faces.Cast<object>().ToArray());
 
             public string ToString(FaceSymbol[] faceSymbols, bool[] showSymbol, bool[] showOrientation)
             {
@@ -138,10 +141,10 @@ namespace KtaneStuff
             public string ID { get { return Enumerable.Range(0, Faces.GetLength(1)).Select(y => Enumerable.Range(0, Faces.GetLength(0)).Select(x => Faces[x, y] == null ? "_" : "X").JoinString()).JoinString("-"); } }
         }
 
-        private static readonly List<(int face1, int face2, int direction, int orientation)> _transitions;
+        private static readonly List<(int fromFace, int toFace, int direction, int orientation)> _transitions;
         static PatternCube()
         {
-            _transitions = new List<(int face1, int face2, int direction, int orientation)>
+            _transitions = new List<(int fromFace, int toFace, int direction, int orientation)>
             {
                 (0, 1, 2, 0),
                 (0, 2, 1, 3),
@@ -156,8 +159,8 @@ namespace KtaneStuff
                 (3, 5, 2, 0),
                 (4, 5, 2, 3)
             };
-            foreach (var (face1, face2, direction, orientation) in _transitions.ToArray())
-                _transitions.Add((face2, face1, (direction + 6 - orientation) % 4, (4 - orientation) % 4));
+            foreach (var (fromFace, toFace, direction, orientation) in _transitions.ToArray())
+                _transitions.Add((toFace, fromFace, (direction + 6 - orientation) % 4, (4 - orientation) % 4));
         }
 
         public static void GenerateManualCodeAndModels()
@@ -171,8 +174,8 @@ namespace KtaneStuff
                 Console.WriteLine(geom);
 
             // Generate diagrams in the manual
-            var allowableGroup1Combinations = ",X,Y,XY,XZ,XYZ".Split(',').SelectMany(str => "ABCD".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
-            var allowableGroup2Combinations = ",X,Z,XY,YZ,XYZ".Split(',').SelectMany(str => "EFGH".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
+            var allowableGroup1Combinations = ",X,Y,XY,XZ".Split(',').SelectMany(str => "ABCD".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
+            var allowableGroup2Combinations = ",X,Z,XY,YZ".Split(',').SelectMany(str => "EFGH".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
 
             var rnd = new Random(47);
             List<HalfCube> generateCubes(char[][] combinations) =>
@@ -287,18 +290,9 @@ namespace KtaneStuff
                 var minY = sofar.Min(k => k.y);
                 var maxY = sofar.Max(k => k.y);
 
-                //// Discard nets that are in “landscape mode”
-                //if (maxX - minX > maxY - minY)
-                //    return;
                 // Discard nets that are 5×2
                 if (maxX - minX == 4)
                     return;
-
-                // Discard nets that have four faces in a 2×2 square
-                for (int sx = minX; sx <= maxX; sx++)
-                    for (int sy = minY; sy <= maxY; sy++)
-                        if (sofar.Any(t => t.x == sx && t.y == sy) && sofar.Any(t => t.x == sx + 1 && t.y == sy) && sofar.Any(t => t.x == sx && t.y == sy + 1) && sofar.Any(t => t.x == sx + 1 && t.y == sy + 1))
-                            return;
 
                 var arr = new FaceInfo[maxX - minX + 1, maxY - minY + 1];
                 for (int sy = minY; sy <= maxY; sy++)
@@ -311,12 +305,12 @@ namespace KtaneStuff
             }
             else
             {
-                foreach (var (face1, face2, direction, newOrientation) in _transitions)
+                foreach (var (fromFace, toFace, direction, newOrientation) in _transitions)
                 {
-                    var ix = sofar.IndexOf(tp => tp.face == face1);
+                    var ix = sofar.IndexOf(tp => tp.face == fromFace);
                     if (ix == -1)
                         continue;
-                    if (sofar.Any(tp => tp.face == face2))
+                    if (sofar.Any(tp => tp.face == toFace))
                         continue;
                     var (x, y, face, oldOrientation) = sofar[ix];
                     var newX = x + _xDelta[(direction + oldOrientation) % 4];
@@ -324,7 +318,7 @@ namespace KtaneStuff
                     if (sofar.Any(tp => tp.x == newX && tp.y == newY))
                         continue;
                     var newSofar = sofar.ToList();
-                    newSofar.Add((newX, newY, face2, (newOrientation + oldOrientation) % 4));
+                    newSofar.Add((newX, newY, toFace, (newOrientation + oldOrientation) % 4));
                     recurse(nets, newSofar);
                 }
             }
