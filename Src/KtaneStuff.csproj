@@ -53,6 +53,7 @@
     <Compile Include="3DMaze.cs" />
     <Compile Include="Astrology.cs" />
     <Compile Include="BlackHole.cs" />
+    <Compile Include="Boggle.cs" />
     <Compile Include="Curriculum.cs" />
     <Compile Include="DiplomaticSolution.cs" />
     <Compile Include="DragonEnergy.cs" />
