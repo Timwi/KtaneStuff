@@ -63,6 +63,7 @@
     <Compile Include="KnowYourWay.cs" />
     <Compile Include="Ktane.cs" />
     <Compile Include="Lasers.cs" />
+    <Compile Include="LionsShare.cs" />
     <Compile Include="Mafia.cs" />
     <Compile Include="Braille.cs" />
     <Compile Include="ColoredSwitches.cs" />
