@@ -184,14 +184,32 @@ namespace KtaneStuff
             var group1Arrangements = generateCubes(allowableGroup1Combinations.Select(c => c.ToArray().Shuffle(rnd)).ToArray().Shuffle(rnd)).ToList().Shuffle(rnd);
             var group2Arrangements = generateCubes(allowableGroup2Combinations.Select(c => c.ToArray().Shuffle(rnd)).ToArray().Shuffle(rnd)).ToList().Shuffle(rnd);
 
-            foreach (var (startTag, endTag, arrangements) in new[] { (@"<!-- g1-s -->", @"<!-- g1-e -->", group1Arrangements), (@"<!-- g2-s -->", @"<!-- g2-e -->", group2Arrangements) })
+            foreach (var (startTag, endTag, arrangements, desiredSymbols) in Ut.NewArray(
+                (@"<!-- g1-s -->", @"<!-- g1-e -->", group1Arrangements, "ABX,AXY,BCD,AXZ,BCX,BCY,ABY,BXY,ACD,BXZ,BDX,BDY,ACX,ACY,CXY,ABD,CXZ,CDX,ADX,ADY,DXY,ABC,DXZ,CDY".Split(',')),
+                (@"<!-- g2-s -->", @"<!-- g2-e -->", group2Arrangements, "EFX,EXY,FGH,EYZ,FGX,FGZ,EFZ,FXY,EGH,FYZ,FHX,FHZ,EGX,EGZ,GXY,EFH,GYZ,GHX,EHX,EHZ,HXY,EFG,HYZ,GHZ".Split(','))))
+            {
+                var cubes = arrangements.Select(hc => new { Cube = hc, Symbols = $"{hc.Top.Symbol}{hc.Left.Symbol}{hc.Front.Symbol}", Number = $"{hc.Top.Symbol}{hc.Left.Symbol}{hc.Front.Symbol}".Count(ch => "ABCDEFGH".Contains(ch)) }).ToArray();
+                bool isDesired(string symbols, int num, int i) => desiredSymbols[i].All(sym => symbols.Contains(sym));
+                for (int i = 0; i < cubes.Length; i++)
+                {
+                    if (!isDesired(cubes[i].Symbols, cubes[i].Number, i))
+                    {
+                        var newIx = cubes.IndexOf(c => isDesired(c.Symbols, c.Number, i), i + 1);
+                        if (newIx == -1)
+                            System.Diagnostics.Debugger.Break();
+                        var t = cubes[i];
+                        cubes[i] = cubes[newIx];
+                        cubes[newIx] = t;
+                    }
+                }
                 Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Pattern Cube.html", startTag, endTag,
-                    arrangements.Select(cube =>
-                        $"<div class='cube-box highlightable'><div class='cube-rotation'>" +
-                            $"<div class='face front symbol-{cube.Front.Symbol} or-{cube.Front.Orientation}'></div>" +
-                            $"<div class='face left symbol-{cube.Left.Symbol} or-{cube.Left.Orientation}'></div>" +
-                            $"<div class='face top symbol-{cube.Top.Symbol} or-{cube.Top.Orientation}'></div>" +
+                    cubes.Select(hc =>
+                        $"<div class='cube-box highlightable num-{hc.Number}'><div class='cube-rotation'>" +
+                            $"<div class='face front symbol-{hc.Cube.Front.Symbol} or-{hc.Cube.Front.Orientation}'></div>" +
+                            $"<div class='face left symbol-{hc.Cube.Left.Symbol} or-{hc.Cube.Left.Orientation}'></div>" +
+                            $"<div class='face top symbol-{hc.Cube.Top.Symbol} or-{hc.Cube.Top.Orientation}'></div>" +
                         $"</div></div>").Split(6).Select(chunk => $@"<div class='cube-row'>{chunk.JoinString()}</div>").JoinString("\n"));
+            }
 
             // Generate code file
             var path = @"D:\c\KTANE\PatternCube\Assets\Data.cs";
@@ -224,7 +242,7 @@ namespace KtaneStuff
                     polygons.Add(new[] { p(x1, y), p(x1, y + h), p(x1 + w, y + h), p(x1 + w, y) });
                 }
                 var polys = Utils.BoolsToPaths(Ut.NewArray(net.Faces.GetLength(0), net.Faces.GetLength(1), (x, y) => net.Faces[x, y] != null));
-                polygons.AddRange(polys.Select(poly => poly.Select(pt => p(x1 + w * (pt.X + 1.5), y1 + h * (pt.Y + 5.5 - net.Faces.GetLength(1)))).Reverse().ToArray()));
+                polygons.AddRange(polys.Select((Point[] poly) => poly.Select(pt => p(x1 + w * (pt.X + 1.5), y1 + h * (pt.Y + 5.5 - net.Faces.GetLength(1)))).Reverse().ToArray()));
 
                 var tri = polygons.Triangulate().Select(poly => poly.Select(p => pt(p.X, .15, p.Y).WithTexture(new PointD(.4771284794 * p.X + .46155, -.4771284794 * p.Y + .5337373145))).Reverse().ToArray()).ToArray();
                 File.WriteAllText($@"D:\c\KTANE\PatternCube\Assets\Models\ModuleFront_{net.ID}.obj", GenerateObjFile(tri, $@"ModuleFront_{net.ID}", AutoNormal.Flat));
