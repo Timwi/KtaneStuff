@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace KtaneStuff
 {
@@ -141,5 +142,21 @@ namespace KtaneStuff
         private int _inext;
         private int _inextp;
         private readonly int[] _seedArray = new int[56];
+
+        // Brings an array into random order using the Fisher-Yates shuffle.
+        // This is an inplace algorithm, i.e. the input array is modified.
+        public T ShuffleFisherYates<T>(T list) where T : IList
+        {
+            var i = list.Count;
+            while (i > 1)
+            {
+                var index = Next(0, i);
+                i--;
+                var value = list[index];
+                list[index] = list[i];
+                list[i] = value;
+            }
+            return list;
+        }
     }
 }
