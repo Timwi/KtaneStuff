@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using KtaneStuff.Modeling;
+using RT.KitchenSink;
 using RT.Util;
-using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
 
@@ -37,26 +40,46 @@ namespace KtaneStuff
 
         public static void GeneratePngs()
         {
+            const int nx = 10;
+            const int ny = 12;
+
             var tasks = new List<(string from, string to)>();
             //CommandRunner.Run(@"D:\Tools\pngcrf.bat", @"Symbols.png").WithWorkingDirectory(@"D:\c\KTANE\PatternCube\Data").Go();
             using (var bmp = new Bitmap(@"D:\c\KTANE\PatternCube\Data\Symbols.png"))
             {
-                var w = bmp.Width / 4;
-                var h = bmp.Height / 3;
-                for (int y = 0; y < 3; y++)
+                unsafe
                 {
-                    for (int x = 0; x < (y == 2 ? 3 : 4); x++)
+                    var input = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                    var w = bmp.Width / nx;
+                    var h = bmp.Height / ny;
+                    for (int y = 0; y < ny; y++)
                     {
-                        var ch = "ABCDEFGHXYZ"[y * 4 + x];
-                        var path1 = $@"D:\c\KTANE\PatternCube\Assets\Textures\Symbol{ch}-tmp.png";
-                        var path2 = $@"D:\c\KTANE\PatternCube\Assets\Textures\Symbol{ch}.png";
-                        GraphicsUtil.DrawBitmap(w, h, g =>
+                        for (int x = 0; x < nx; x++)
                         {
-                            g.Clear(Color.FromArgb(1, 255, 255, 255));
-                            g.DrawImage(bmp, -x * w, -y * h);
-                        }).Save(path1);
-                        tasks.Add((path1, path2));
+                            var ix = y * nx + x;
+                            var path1 = $@"D:\c\KTANE\PatternCube\Assets\Textures\Symbol{ix}-tmp.png";
+                            var path2 = $@"D:\c\KTANE\PatternCube\Assets\Textures\Symbol{ix}.png";
+
+                            var newBmp = new Bitmap(w, h);
+                            var output = newBmp.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                            for (var py = 0; py < h; py++)
+                            {
+                                var pIn = (byte*) (input.Scan0 + (h * y + py) * input.Stride);
+                                var pOut = (byte*) (output.Scan0 + py * output.Stride);
+                                for (int px = 0; px < w; px++)
+                                {
+                                    pOut[4 * px] = 255;
+                                    pOut[4 * px + 1] = 255;
+                                    pOut[4 * px + 2] = 255;
+                                    pOut[4 * px + 3] = pIn[4 * (w * x + px) + 3];
+                                }
+                            }
+                            newBmp.UnlockBits(output);
+                            newBmp.Save(path1);
+                            tasks.Add((path1, path2));
+                        }
                     }
+                    bmp.UnlockBits(input);
                 }
             }
             tasks.ParallelForEach(tsk =>
@@ -173,49 +196,35 @@ namespace KtaneStuff
             foreach (var geom in nets.Select(n => $"{n.Faces.GetLength(0)} × {n.Faces.GetLength(1)}").Distinct())
                 Console.WriteLine(geom);
 
-            // Generate diagrams in the manual
-            var allowableGroup1Combinations = ",X,Y,XY,XZ".Split(',').SelectMany(str => "ABCD".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
-            var allowableGroup2Combinations = ",X,Z,XY,YZ".Split(',').SelectMany(str => "EFGH".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
+            // Generate data string for the nets in the Data.cs source file
+            var path2 = @"D:\c\KTANE\PatternCube\Assets\Data.cs";
+            Utils.ReplaceInFile(path2, "/*Nets-start*/", "/*Nets-end*/", $@"@""{nets.Select(nt => nt.Code).JoinString("&")}""");
 
-            var rnd = new Random(47);
-            List<HalfCube> generateCubes(char[][] combinations) =>
-                combinations.Select(combination => HalfCube.Random(combination, rnd)).ToList();
-
-            var group1Arrangements = generateCubes(allowableGroup1Combinations.Select(c => c.ToArray().Shuffle(rnd)).ToArray().Shuffle(rnd)).ToList().Shuffle(rnd);
-            var group2Arrangements = generateCubes(allowableGroup2Combinations.Select(c => c.ToArray().Shuffle(rnd)).ToArray().Shuffle(rnd)).ToList().Shuffle(rnd);
-
-            foreach (var (startTag, endTag, arrangements, desiredSymbols) in Ut.NewArray(
-                (@"<!-- g1-s -->", @"<!-- g1-e -->", group1Arrangements, "ABX,AXY,BCD,AXZ,BCX,BCY,ABY,BXY,ACD,BXZ,BDX,BDY,ACX,ACY,CXY,ABD,CXZ,CDX,ADX,ADY,DXY,ABC,DXZ,CDY".Split(',')),
-                (@"<!-- g2-s -->", @"<!-- g2-e -->", group2Arrangements, "EFX,EXY,FGH,EYZ,FGX,FGZ,EFZ,FXY,EGH,FYZ,FHX,FHZ,EGX,EGZ,GXY,EFH,GYZ,GHX,EHX,EHZ,HXY,EFG,HYZ,GHZ".Split(','))))
+            // Generate SVGs in the Data.cs source file
+            var svg = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\PatternCube\Data\Symbols.svg"));
+            var svgPathDs = new string[120];
+            foreach (var pathRaw in svg.Root.ElementsI("path"))
             {
-                var cubes = arrangements.Select(hc => new { Cube = hc, Symbols = $"{hc.Top.Symbol}{hc.Left.Symbol}{hc.Front.Symbol}", Number = $"{hc.Top.Symbol}{hc.Left.Symbol}{hc.Front.Symbol}".Count(ch => "ABCDEFGH".Contains(ch)) }).ToArray();
-                bool isDesired(string symbols, int num, int i) => desiredSymbols[i].All(sym => symbols.Contains(sym));
-                for (int i = 0; i < cubes.Length; i++)
-                {
-                    if (!isDesired(cubes[i].Symbols, cubes[i].Number, i))
-                    {
-                        var newIx = cubes.IndexOf(c => isDesired(c.Symbols, c.Number, i), i + 1);
-                        if (newIx == -1)
-                            System.Diagnostics.Debugger.Break();
-                        var t = cubes[i];
-                        cubes[i] = cubes[newIx];
-                        cubes[newIx] = t;
-                    }
-                }
-                Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Pattern Cube.html", startTag, endTag,
-                    cubes.Select(hc =>
-                        $"<div class='cube-box highlightable num-{hc.Number}'><div class='cube-rotation'>" +
-                            $"<div class='face front symbol-{hc.Cube.Front.Symbol} or-{hc.Cube.Front.Orientation}'></div>" +
-                            $"<div class='face left symbol-{hc.Cube.Left.Symbol} or-{hc.Cube.Left.Orientation}'></div>" +
-                            $"<div class='face top symbol-{hc.Cube.Top.Symbol} or-{hc.Cube.Top.Orientation}'></div>" +
-                        $"</div></div>").Split(6).Select(chunk => $@"<div class='cube-row'>{chunk.JoinString()}</div>").JoinString("\n"));
+                var ix = -1;
+                var d = pathRaw.AttributeI("d").Value;
+                var pieces = DecodeSvgPath.DecodePieces(d).ToArray();
+                foreach (var piece in pieces)
+                    if (piece.Points != null)
+                        foreach (var coord in piece.Points)
+                        {
+                            var nx = (int) coord.X / 120;
+                            var ny = (int) coord.Y / 120;
+                            var nIx = ny * 10 + nx;
+                            if (ix == -1)
+                                ix = nIx;
+                            else if (ix != nIx)
+                                Debugger.Break();
+                        }
+                if (svgPathDs[ix] != null)
+                    Debugger.Break();
+                svgPathDs[ix] = d;
             }
-
-            // Generate code file
-            var path = @"D:\c\KTANE\PatternCube\Assets\Data.cs";
-            Utils.ReplaceInFile(path, "/*Diag-g1-start*/", "/*Diag-g1-end*/", $@"@""{group1Arrangements.Select(halfCube => new[] { halfCube.Top, halfCube.Left, halfCube.Front }.Select(face => face.Symbol + "" + face.Orientation).JoinString(",")).JoinString(";")}""");
-            Utils.ReplaceInFile(path, "/*Diag-g2-start*/", "/*Diag-g2-end*/", $@"@""{group2Arrangements.Select(halfCube => new[] { halfCube.Top, halfCube.Left, halfCube.Front }.Select(face => face.Symbol + "" + face.Orientation).JoinString(",")).JoinString(";")}""");
-            Utils.ReplaceInFile(path, "/*Nets-start*/", "/*Nets-end*/", $@"@""{nets.Select(nt => nt.Code).JoinString("&")}""");
+            Utils.ReplaceInFile(path2, "/*SVGs-start*/", "/*SVGs-end*/", svgPathDs.Select(s => $@"@""{s.CLiteralEscape()}""").JoinString("," + Environment.NewLine));
 
             // Generate module backing models for every unique shape of net
             // (outline vertices are sorted clockwise)
@@ -249,6 +258,52 @@ namespace KtaneStuff
             }
 
             File.WriteAllText(@"D:\c\KTANE\PatternCube\Assets\Models\Frame.obj", GenerateObjFile(frame(w), "Frame"));
+        }
+
+        private static void GenerateManualOLD()
+        {
+            var allowableGroup1Combinations = ",X,Y,XY,XZ".Split(',').SelectMany(str => "ABCD".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
+            var allowableGroup2Combinations = ",X,Z,XY,YZ".Split(',').SelectMany(str => "EFGH".Subsequences(3 - str.Length, 3 - str.Length).Select(ss => str + ss.JoinString())).ToArray();
+
+            var rnd = new Random(47);
+            List<HalfCube> generateCubes(char[][] combinations) =>
+                combinations.Select(combination => HalfCube.Random(combination, rnd)).ToList();
+
+            var group1Arrangements = generateCubes(allowableGroup1Combinations.Select(c => c.ToArray().Shuffle(rnd)).ToArray().Shuffle(rnd)).ToList().Shuffle(rnd);
+            var group2Arrangements = generateCubes(allowableGroup2Combinations.Select(c => c.ToArray().Shuffle(rnd)).ToArray().Shuffle(rnd)).ToList().Shuffle(rnd);
+
+            foreach (var (startTag, endTag, arrangements, desiredSymbols) in Ut.NewArray(
+                (@"<!-- g1-s -->", @"<!-- g1-e -->", group1Arrangements, "ABX,AXY,BCD,AXZ,BCX,BCY,ABY,BXY,ACD,BXZ,BDX,BDY,ACX,ACY,CXY,ABD,CXZ,CDX,ADX,ADY,DXY,ABC,DXZ,CDY".Split(',')),
+                (@"<!-- g2-s -->", @"<!-- g2-e -->", group2Arrangements, "EFX,EXY,FGH,EYZ,FGX,FGZ,EFZ,FXY,EGH,FYZ,FHX,FHZ,EGX,EGZ,GXY,EFH,GYZ,GHX,EHX,EHZ,HXY,EFG,HYZ,GHZ".Split(','))))
+            {
+                var cubes = arrangements.Select(hc => new { Cube = hc, Symbols = $"{hc.Top.Symbol}{hc.Left.Symbol}{hc.Front.Symbol}", Number = $"{hc.Top.Symbol}{hc.Left.Symbol}{hc.Front.Symbol}".Count(ch => "ABCDEFGH".Contains(ch)) }).ToArray();
+                bool isDesired(string symbols, int num, int i) => desiredSymbols[i].All(sym => symbols.Contains(sym));
+                for (int i = 0; i < cubes.Length; i++)
+                {
+                    if (!isDesired(cubes[i].Symbols, cubes[i].Number, i))
+                    {
+                        var newIx = cubes.IndexOf(c => isDesired(c.Symbols, c.Number, i), i + 1);
+                        if (newIx == -1)
+                            System.Diagnostics.Debugger.Break();
+                        var t = cubes[i];
+                        cubes[i] = cubes[newIx];
+                        cubes[newIx] = t;
+                    }
+                }
+                int trSymbol(char ch) => new[] { 90, 91, 92, 93, 100, 101, 102, 103, 110, 111, 112 }["ABCDEFGHXYZ".IndexOf(ch)];
+
+                Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Pattern Cube.html", startTag, endTag,
+                    cubes.Select(hc =>
+                        $"<div class='cube-box highlightable num-{hc.Number}'><div class='cube-rotation'>" +
+                            $"<div class='face top symbol-{trSymbol(hc.Cube.Top.Symbol)} or-{hc.Cube.Top.Orientation}'></div>" +
+                            $"<div class='face left symbol-{trSymbol(hc.Cube.Left.Symbol)} or-{hc.Cube.Left.Orientation}'></div>" +
+                            $"<div class='face front symbol-{trSymbol(hc.Cube.Front.Symbol)} or-{hc.Cube.Front.Orientation}'></div>" +
+                        $"</div></div>").Split(6).Select(chunk => $@"<div class='cube-row'>{chunk.JoinString()}</div>").JoinString("\n"));
+            }
+
+            var path = @"D:\c\KTANE\PatternCube\Assets\Data.cs";
+            Utils.ReplaceInFile(path, "/*Diag-g1-start*/", "/*Diag-g1-end*/", $@"@""{group1Arrangements.Select(halfCube => new[] { halfCube.Top, halfCube.Left, halfCube.Front }.Select(face => face.Symbol + "" + face.Orientation).JoinString(",")).JoinString(";")}""");
+            Utils.ReplaceInFile(path, "/*Diag-g2-start*/", "/*Diag-g2-end*/", $@"@""{group2Arrangements.Select(halfCube => new[] { halfCube.Top, halfCube.Left, halfCube.Front }.Select(face => face.Symbol + "" + face.Orientation).JoinString(",")).JoinString(";")}""");
         }
 
         private static IEnumerable<VertexInfo[]> frame(double w)
