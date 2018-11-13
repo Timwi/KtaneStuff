@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using KtaneStuff.Modeling;
 using RT.Util;
+using RT.Util.Drawing;
 
 namespace KtaneStuff
 {
@@ -9,10 +12,20 @@ namespace KtaneStuff
 
     static class ColoredSquares
     {
-        public static void DoModels()
+        public static void DoModelsAndTextures()
         {
             File.WriteAllText(@"D:\c\KTANE\ColoredSquares\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
             File.WriteAllText(@"D:\c\KTANE\ColoredSquares\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
+
+            foreach (var (ch, colorCode) in new[] { ('B', "3852E1"), ('G', "38E139"), ('M', "C738E1"), ('R', "E13838"), ('Y', "E1E138") })
+            {
+                GraphicsUtil.DrawBitmap(256, 256, g =>
+                {
+                    var color = Color.FromArgb(0xC0, Convert.ToInt32(colorCode.Substring(0, 2), 16), Convert.ToInt32(colorCode.Substring(2, 2), 16), Convert.ToInt32(colorCode.Substring(4, 2), 16));
+                    g.Clear(color);
+                    g.DrawString(ch.ToString(), new Font("Doris P Bold", 64f, FontStyle.Bold), Brushes.Black, 120, 130, new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+                }).Save($@"D:\c\KTANE\ColoredSquares\Assets\Textures\Colorblind-{ch}.png");
+            }
         }
 
         private static IEnumerable<VertexInfo[]> Button()
@@ -36,7 +49,8 @@ namespace KtaneStuff
                 u == 2 * bézierSteps - 2 ? Normal.Mine : Normal.Average,
                 u == 0 ? Normal.Mine : Normal.Average,
                 v == 2 * bézierSteps - 2 ? Normal.Mine : Normal.Average,
-                v == 0 ? Normal.Mine : Normal.Average)));
+                v == 0 ? Normal.Mine : Normal.Average,
+                p(v / (double) (2 * bézierSteps), 1 - u / (double) (2 * bézierSteps)))));
         }
 
         private static IEnumerable<VertexInfo[]> ButtonHighlight()
