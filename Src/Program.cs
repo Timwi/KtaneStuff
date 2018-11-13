@@ -21,7 +21,7 @@ namespace KtaneStuff
 {
     partial class Program
     {
-        [STAThread()]
+        [STAThread]
         static int Main(string[] args)
         {
             try { Console.OutputEncoding = Encoding.UTF8; }
@@ -30,7 +30,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            LionsShare.DoModels();
+            OneHundredAndOneDalmatians.DoModels();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

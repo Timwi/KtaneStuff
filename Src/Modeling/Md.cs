@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using RT.KitchenSink;
@@ -326,6 +325,7 @@ namespace KtaneStuff.Modeling
         public static double arccos(double x) => Math.Acos(x) / Math.PI * 180;
         public static double pow(double x, double y) => Math.Pow(x, y);
         public static Pt pt(double x, double y, double z) => new Pt(x, y, z);
+        public static Pt ptp(double r, double a, double y) => pt(r * cos(a), y, r * sin(a));
         public static MeshVertexInfo pt(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) => new MeshVertexInfo(new Pt(x, y, z), befX, afX, befY, afY);
         public static MeshVertexInfo pt(double x, double y, double z, Pt normalOverride) => new MeshVertexInfo(new Pt(x, y, z), normalOverride);
         public static PointD p(double x, double y) => new PointD(x, y);
