@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
@@ -32,30 +31,51 @@ namespace KtaneStuff
         ///     Optional random number generator.</param>
         /// <returns>
         ///     A lazy enumerable containing all solutions. To find just one solution, enumerate only the first element.</returns>
-        public static IEnumerable<int[]> GenerateGrid(int width, int height, int minNum, int maxNum, Func<int[], int, int, BigInteger> extraTaken = null, Random rnd = null)
+        public static IEnumerable<int[]> GenerateGrid(int width, int height, int minNum, int maxNum, Func<int[], int, int, BigInteger> extraTaken = null, Random rnd = null, int?[] given = null)
         {
             var max = maxNum - minNum + 1;
-            var generator = new GridGenerator(Ut.NewArray(width * height, _ => rnd == null ? Rnd.Next(max) : rnd.Next(max)), width, height, max, extraTaken);
-            foreach (var result in generator.recurse(BigInteger.Zero, 0, 0))
+            var generator = new GridGenerator(
+                grid: Ut.NewArray(width * height, ix => given != null && given[ix] != null ? given[ix].Value - minNum : rnd == null ? Rnd.Next(max) : rnd.Next(max)),
+                width: width,
+                height: height,
+                max: max,
+                extraTaken: extraTaken,
+                given: Ut.NewArray(width * height, ix => given != null && given[ix] != null));
+            foreach (var result in generator.recurse(generator.initialTaken, 0, 0))
                 yield return Ut.NewArray(width * height, ix => generator._grid[ix] + minNum);
         }
 
         /// <summary>
-        ///     Generates a Sudoku.</summary>
+        ///     Generates all possible Sudokus with the given parameters.</summary>
         /// <param name="size">
         ///     The size of each subgrid. For example, if <paramref name="size"/> is 3, the generated Sudoku is a standard
         ///     Sudoku with 9 rows, 9 columns and 9 subgrids.</param>
+        /// <param name="given">
+        ///     Specifies which cells are already prefilled.</param>
         /// <returns/>
-        public static int[] GenerateSudoku(int size)
+        public static IEnumerable<int[]> GenerateSudokus(int size, int?[] given = null)
         {
             var sq = size * size;
             var block = (~(BigInteger.MinusOne << (size * (sq + 1)))) / (~(BigInteger.MinusOne << (sq + 1)));
             for (int i = 1; i < size; i++)
                 block |= block << (sq * (sq + 1));
-            return GenerateGrid(sq, sq, 1, sq, (grid, index, num) => block << (num + size * (sq + 1) * ((index % sq) / size) + size * sq * (sq + 1) * (index / (size * sq)))).First();
+            return GenerateGrid(sq, sq, 1, sq, (grid, index, num) => block << (num + size * (sq + 1) * ((index % sq) / size) + size * sq * (sq + 1) * (index / (size * sq))), given: given);
         }
 
-        private GridGenerator(int[] grid, int width, int height, int max, Func<int[], int, int, BigInteger> extraTaken)
+        /// <summary>
+        ///     Generates a Sudoku, or null if no Sudoku satisfies the given parameters.</summary>
+        /// <param name="size">
+        ///     The size of each subgrid. For example, if <paramref name="size"/> is 3, the generated Sudoku is a standard
+        ///     Sudoku with 9 rows, 9 columns and 9 subgrids.</param>
+        /// <param name="given">
+        ///     Specifies which cells are already prefilled.</param>
+        /// <returns/>
+        public static int[] GenerateSudoku(int size, int?[] given = null)
+        {
+            return GenerateSudokus(size, given).FirstOrDefault();
+        }
+
+        private GridGenerator(int[] grid, int width, int height, int max, Func<int[], int, int, BigInteger> extraTaken, bool[] given)
         {
             _grid = grid;
             _width = width;
@@ -63,6 +83,7 @@ namespace KtaneStuff
             _max = max;
             _maxPlusOne = max + 1;
             _extraTaken = extraTaken;
+            _given = given;
 
             _adders = Ut.NewArray(_width, _height, (x, y) =>
                 // current row
@@ -74,18 +95,45 @@ namespace KtaneStuff
             _overhang = _oneOfEach << max;
         }
 
-        private int _width, _height, _max, _maxPlusOne;
-        private int[] _grid;
-        private BigInteger[][] _adders;
-        private BigInteger _oneOfEach, _overhang;
-        private Func<int[], int, int, BigInteger> _extraTaken;
+        private readonly int _width;
+        private readonly int _height;
+        private readonly int _max;
+        private readonly int _maxPlusOne;
+        private readonly int[] _grid;
+        private readonly bool[] _given;
+        private readonly BigInteger[][] _adders;
+        private readonly BigInteger _oneOfEach;
+        private readonly BigInteger _overhang;
+        private readonly Func<int[], int, int, BigInteger> _extraTaken;
+        private static readonly object[] _oneNull = new object[] { null };
+
         private int _debugCounter;
-        private static object[] _oneNull = new object[] { null };
+
+        public BigInteger initialTaken
+        {
+            get
+            {
+                var taken = BigInteger.Zero;
+                for (int y = 0; y < _height; y++)
+                    for (int x = 0; x < _width; x++)
+                        if (_given[y * _width + x])
+                        {
+                            var j = _grid[y * _width + x];
+                            var newTaken = _adders[x][y] << j;
+                            if (_extraTaken != null)
+                                newTaken = newTaken | _extraTaken(_grid, y * _width + x, j);
+                            taken = taken | (newTaken & ~(~(BigInteger.MinusOne << _maxPlusOne) << ((y * _width + x) * _maxPlusOne)));
+                        }
+                return taken;
+            }
+        }
 
         private IEnumerable<object> recurse(BigInteger taken, int x, int y)
         {
             if (y == _height)
                 return _oneNull;
+            while (x < _width && _given[y * _height + x])
+                x++;
             if (x == _width)
                 return recurse(taken, 0, y + 1);
             return recurseImpl(taken, x, y);
