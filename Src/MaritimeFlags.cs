@@ -28,6 +28,16 @@ namespace KtaneStuff
                 values.Zip(words, (v, w) => $"<div>{w}={v}</div>").JoinString());
         }
 
+        public static bool IsValid(string word)
+        {
+            for (int i = 1; i < word.Length; i++)
+            {
+                if (word.Substring(0, i).LastIndexOf(word[i]) >= 4)
+                    return false;
+            }
+            return true;
+        }
+
         public static void DoModels()
         {
             var (frame, dial) = Compass();
