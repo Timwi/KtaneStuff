@@ -41,63 +41,21 @@ namespace KtaneStuff
                     .ToArray());
         }
 
-        public static void AssignTextures()
+        public static unsafe void DoManualAndIcons()
         {
-            var text = File.ReadAllLines(@"D:\c\KTANE\XRay\Assets\XRayModule.prefab");
-            var indexes = text.SelectIndexWhere(l => l == "  ButtonLabels:").ToArray();
-            if (indexes.Length != 1)
-                System.Diagnostics.Debugger.Break();
-            var index = indexes[0] + 1;
-
-            for (int i = 0; i < 33; i++)
-            {
-                var yaml = File.ReadLines($@"D:\c\KTANE\XRay\Assets\Textures\Icon {"ABC"[i / 12]}{(i % 12) + 1}.png.meta").First(l => l.StartsWith("guid: "));
-                text[i + index] = $"  - {{fileID: 2800000, guid: {yaml.Substring("guid: ".Length)}, type: 3}}";
-            }
-
-            File.WriteAllLines(@"D:\c\KTANE\XRay\Assets\XRayModule.prefab", text);
-        }
-
-        public unsafe static void DoManualAndIcons()
-        {
+            //goto manualCodeOnly;
+            const int nx = 11;
+            const int ny = 10;
             using (var src = new Bitmap(@"D:\c\KTANE\XRay\Data\Icons.png"))
             {
-                var w = (src.Width / 12);
-                var h = (src.Height / 3);
+                var w = src.Width / nx;
+                var h = src.Height / ny;
                 var threads = new List<Thread>();
-                var declarations = new string[33];
-                for (int icY = 0; icY < 3; icY++)
-                    for (int icX = 0; icX < (icY == 2 ? 9 : 12); icX++)
+                var declarations = new string[nx * ny];
+                for (int icY = 0; icY < ny; icY++)
+                    for (int icX = 0; icX < nx; icX++)
                     {
-                        var code = $"{"ABC"[icY]}{icX + 1}";
-
-                        // For the manual
-                        var manPath1 = $@"D:\c\KTANE\XRay\Manual\img\X-Ray\Icon {code}_.png";
-                        var manPath2 = $@"D:\c\KTANE\XRay\Manual\img\X-Ray\Icon {code}.png";
-                        var manPath3 = $@"D:\c\KTANE\Public\HTML\img\X-Ray\Icon {code}.png";
-
-                        // Textures for the module
-                        var modPath = $@"D:\c\KTANE\XRay\Assets\Textures\Icon {code}.png";
-
-                        using (var dest = new Bitmap(w, h, PixelFormat.Format32bppArgb))
-                        using (var g = Graphics.FromImage(dest))
-                        {
-                            g.Clear(Color.Transparent);
-                            g.DrawImage(src, -icX * w, -icY * h);
-                            dest.Save(manPath1);
-                        }
-
-                        {
-                            var thr = new Thread(() =>
-                            {
-                                CommandRunner.Run(@"pngcr", manPath1, manPath2).Go();
-                                File.Delete(manPath1);
-                                File.Copy(manPath2, manPath3, overwrite: true);
-                                File.Copy(manPath2, modPath, overwrite: true);
-                            });
-                            thr.Start();
-                            threads.Add(thr);
-                        }
+                        var code = $"{(char) ('A' + icX)}{icY + 1}";
 
                         // C# declaration of the bitwise form of the icons
                         var bmpData = src.LockBits(new Rectangle(icX * w, icY * h, w, h), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
@@ -112,17 +70,18 @@ namespace KtaneStuff
                                 {
                                     if (x % 64 == 0)
                                         numbers.Add(0);
-                                    if (p[x * 4] < 0x80)
+                                    if (p[x * 4 + 3] >= 0x80)
                                     {
                                         numbers[numbers.Count - 1] = numbers[numbers.Count - 1] | (1UL << (x % 64));
                                         pixels[x][y] = true;
                                     }
                                 }
                             }
-                            declarations[12 * icY + icX] = $"new ulong[] {{ {numbers.Select(n => n + "UL").JoinString(", ")} }}";
+                            declarations[icX + 11 * icY] = $"new ulong[] {{ {numbers.Select(n => n + "UL").JoinString(", ")} }}";
 
+#pragma warning disable 162
                             // Video frames (scanning from top to bottom)
-                            if (true)
+                            if (false)
                             {
                                 var thr = new Thread(() =>
                                 {
@@ -152,9 +111,7 @@ namespace KtaneStuff
                             // Video frames (scanning from bottom to top)
                             if (false)
                             {
-#pragma warning disable 162
                                 var thr = new Thread(() =>
-#pragma warning restore 162
                                 {
                                     var path = @"D:\temp\XRayVideos";
                                     for (int frame = 0; frame < h + 160; frame++)
@@ -183,6 +140,32 @@ namespace KtaneStuff
                         {
                             src.UnlockBits(bmpData);
                         }
+
+                        // Textures for the module
+                        if (false)
+                        {
+                            var modPathTmp = $@"D:\c\KTANE\XRay\Assets\Textures\Icon {code}.png.tmp.png";
+                            var modPath = $@"D:\c\KTANE\XRay\Assets\Textures\Icon {code}.png";
+
+                            using (var dest = new Bitmap(w, h, PixelFormat.Format32bppArgb))
+                            using (var g = Graphics.FromImage(dest))
+                            {
+                                g.Clear(Color.Transparent);
+                                g.DrawImage(src, -icX * w, -icY * h);
+                                dest.Save(modPathTmp);
+                            }
+
+                            {
+                                var thr = new Thread(() =>
+                                {
+                                    CommandRunner.Run(@"pngcr", modPathTmp, modPath).Go();
+                                    File.Delete(modPathTmp);
+                                });
+                                thr.Start();
+                                threads.Add(thr);
+                            }
+                        }
+#pragma warning restore 162
                     }
 
                 foreach (var thr in threads)
@@ -197,20 +180,33 @@ namespace KtaneStuff
 }}");
             }
 
-            string iconIxToPath(int i) => i < 12 ? $"img/X-Ray/Icon A{i + 1}.png" : i < 24 ? $"img/X-Ray/Icon B{i - 12 + 1}.png" : $"img/X-Ray/Icon C{i - 24 + 1}.png";
-            const int width = 38;
-
+            manualCodeOnly:
             var rnd = new Random(47);
             var icons = Enumerable.Repeat(Enumerable.Range(0, 33), 5).SelectMany(x => x).ToList().Shuffle(rnd);
 
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\X-Ray.html", "/*!!*/", "/*!!!*/", Enumerable.Range(0, ny).SelectMany(y => Enumerable.Range(0, nx).Select(x => $".icon.{(char) ('a' + x)}{y + 1} {{ background-position: {-x * .9}cm {-y * .9}cm; }}")).JoinString("\r\n"));
+
+            var convertData = "a1,a1f,b1,b1f,c1,c1f,d1,d1f,e1,e1f,h2f,h2,d7,j1,h6,g1,a6,a2,k2,h1,a7,e2,d6,b3,a10,b10,c10,d10,e10,f10,i10,h9,i9".Split(',');
+            string convert(int icon)
+            {
+                var data = convertData[icon];
+                var flip = false;
+                if (data.EndsWith("f"))
+                {
+                    flip = true;
+                    data = data.Substring(0, data.Length - 1);
+                }
+                return "icon " + data + (flip ? " flipped" : "");
+            }
+
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\X-Ray.html", "<!--%%-->", "<!--%%%-->", new TABLE { class_ = "xray-table xray-table-1" }._(
-                Enumerable.Range(0, 3).Select(row => new TR(Enumerable.Range(0, 3).Select(col => new TD(new IMG { src = $"img/X-Ray/Icon C{row * 3 + col + 1}.png", width = width }))))).ToString());
+                Enumerable.Range(0, 3).Select(row => new TR(Enumerable.Range(0, 3).Select(col => new TD(new DIV { class_ = convert(col + 3 * row + 24) }))))).ToString());
 
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\X-Ray.html", "<!--##-->", "<!--###-->", new TABLE { class_ = "xray-table xray-table-2" }._(
-                new TR(new TD { class_ = "corner" }, Enumerable.Range(0, 12).Select(col => new TH(new IMG { src = $"img/X-Ray/Icon A{col + 1}.png", width = width }))),
-                Enumerable.Range(0, 12).Select(row => new TR(new TH(new IMG { src = $"img/X-Ray/Icon B{row + 1}.png", width = width }), icons.Skip(12 * row).Take(12).Select(ix => new TD(new IMG { src = iconIxToPath(ix), width = width }))))).ToString());
+                new TR(new TD { class_ = "corner" }, Enumerable.Range(0, 12).Select(col => new TH(new DIV { class_ = convert(col) }))),
+                Enumerable.Range(0, 12).Select(row => new TR(new TH(new DIV { class_ = convert(row + 12) }), icons.Skip(12 * row).Take(12).Select(ix => new TD(new DIV { class_ = convert(ix) }))))).ToString());
 
-            Clipboard.SetText($@"private static int[] _table = {{ {icons.Take(12 * 12).JoinString(", ")} }};");
+            Clipboard.SetText($@"private static int[] _seed1Table = {{ {icons.Take(12 * 12).JoinString(", ")} }};");
         }
     }
 }
