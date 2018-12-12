@@ -80,11 +80,11 @@ namespace KtaneStuff.Modeling
                 yield return Triangulate(polygons).Select(ps => ps.Select(p => pt(p.X, 0, p.Y).WithNormal(0, -1, 0)).ToArray());
         }
 
-        public static VertexInfo[][] Disc(int numVertices = 20, bool reverse = false)
+        public static VertexInfo[][] Disc(int numVertices = 20, bool reverse = false, double addAngle = 0)
         {
             return Enumerable.Range(0, numVertices)
-                .Select(i => new PointD(cos(360.0 * i / numVertices), sin(360.0 * i / numVertices)))
-                .SelectConsecutivePairs(true, (p1, p2) => (reverse ? new[] { pt(p1.X, 0, p1.Y), pt(p2.X, 0, p2.Y), pt(0, 0, 0) } : new[] { pt(p1.X, 0, p1.Y), pt(0, 0, 0), pt(p2.X, 0, p2.Y) }).Select(p => p.WithNormal(0, 1, 0)).ToArray())
+                .Select(i => new PointD(cos(360.0 * i / numVertices + addAngle), sin(360.0 * i / numVertices + addAngle)))
+                .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.X, 0, p1.Y), pt(p2.X, 0, p2.Y), pt(0, 0, 0) }.Apply(arr => reverse ? arr : arr.ReverseInplace()).Select(p => p.WithNormal(0, 1, 0).WithTexture((p.X + 1) / 2, (p.Z + 1) / 2)).ToArray())
                 .ToArray();
         }
 

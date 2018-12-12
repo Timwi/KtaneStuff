@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using KtaneStuff.Modeling;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;

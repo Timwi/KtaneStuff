@@ -97,6 +97,7 @@
     <Compile Include="SimonSends.cs" />
     <Compile Include="SimonShrieks.cs" />
     <Compile Include="SimonSings.cs" />
+    <Compile Include="SimonSpins.cs" />
     <Compile Include="SymbolCycle.cs" />
     <Compile Include="SymbolicCoordinates.cs" />
     <Compile Include="Tennis.cs" />
