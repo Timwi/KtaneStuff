@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using RT.Util;
 using RT.Util.ExtensionMethods;
@@ -50,6 +51,90 @@ namespace KtaneStuff
                 row++;
             }
             tt.WriteToConsole();
+        }
+
+        public static void CodeSizeAnalysis()
+        {
+            var additional = new Dictionary<string, string[]>
+            {
+                { "Hexamaze", new[] { "Hex.cs" } },
+                { "No particular module", new string[] { "Edgework.cs", "EliasCube.cs", "GridGenerator.cs", "Ktane.cs", "MonoRandom.cs", "MorseTable.cs", "Simulations.cs", "Translatable.cs", "Utils.cs", @"Modeling\AutoNormal.cs", @"Modeling\BevelPoint.cs", @"Modeling\GaussianBlur.cs", @"Modeling\Md.cs", @"Modeling\MeshVertexInfo.cs", @"Modeling\Normal.cs", @"Modeling\Pt.cs", @"Modeling\VertexInfo.cs" } }
+            };
+
+            var allExtraFiles = new DirectoryInfo($@"D:\c\KTANE\KtaneStuff\Src").EnumerateFiles("*.cs", SearchOption.AllDirectories).ToList();
+            var list = GetLiveJson()["KtaneModules"].GetList()
+                .Where(el => el["Author"].GetString().Contains("Timwi") && !new[] { "Lasers", "Dr. Doctor", "3D Tunnels", "Cursed Double-Oh" }.Contains(el["Name"].GetString()))
+                .Concat((JsonValue) null)
+                .Select(el =>
+                {
+                    var name = el == null ? "No particular module" : el["Name"].GetString();
+                    var id = el == null ? "No particular module" : el["ModuleID"].GetString();
+                    var dir = $@"D:\c\KTANE\{name.Replace(" ", "")}";
+                    if (!Directory.Exists(dir))
+                        dir = $@"D:\c\KTANE\{Regex.Replace(id, @"Module$", "")}";
+                    var bytes = 0L;
+                    if (Directory.Exists(dir))
+                    {
+                        foreach (var file in new DirectoryInfo(Path.Combine(dir, "Assets")).EnumerateFiles("*.cs", SearchOption.AllDirectories))
+                            if (!new[] { "Editor", "KMScripts", "Plugins", "Shaders", "TestHarness" }.Any(d => file.FullName.Contains($@"Assets\{d}")) && !new[] { "KMBombInfoExtensions.cs", "Ut.cs", "DummyModule.cs", "Data.cs", "ExtensionMethods.cs" }.Contains(file.Name))
+                            {
+                                Console.WriteLine(file.FullName);
+                                bytes += new FileInfo(file.FullName).Length;
+                            }
+                        Console.WriteLine($"{name} = {bytes}");
+                    }
+
+                    var extra = $@"D:\c\KTANE\KtaneStuff\Src\{name.Replace(" ", "")}.cs";
+                    if (!File.Exists(extra))
+                        extra = $@"D:\c\KTANE\KtaneStuff\Src\{Regex.Replace(id, @"Module$", "")}.cs";
+                    var extraLoc = 0L;
+                    if (File.Exists(extra))
+                    {
+                        extraLoc = new FileInfo(extra).Length;
+                        allExtraFiles.RemoveAll(f => f.FullName.Equals(extra, StringComparison.InvariantCultureIgnoreCase));
+                    }
+                    foreach (var adtnl in additional.Get(name, new string[0]))
+                    {
+                        extraLoc += new FileInfo($@"D:\c\KTANE\KtaneStuff\Src\{adtnl}").Length;
+                        allExtraFiles.RemoveAll(f => f.Name.Equals(adtnl, StringComparison.InvariantCultureIgnoreCase));
+                    }
+
+                    var manual = el == null ? null : File.ReadAllText($@"D:\c\KTANE\Public\HTML\{name}.html");
+                    var manualBytes = el == null ? 0 : Regex.Matches(manual, @"<script>\s*(.*?)\s*</script>", RegexOptions.Singleline).Cast<Match>().Select(m => (long) m.Groups[1].Length).Sum();
+
+                    return new { Module = name, LOC = bytes, LOC2 = extraLoc, Manual = manualBytes };
+                })
+                .OrderByDescending(inf => inf.LOC + inf.LOC2 + inf.Manual)
+                .ToList();
+            Console.WriteLine(allExtraFiles.Select(f => f.FullName).JoinString("\n"));
+            list.Add(new { Module = "No particular module", LOC = 0L, LOC2 = allExtraFiles.Select(f => f.Length).Sum(), Manual = 0L });
+
+            // Copy Excel data to clipboard
+            Clipboard.SetText(list.Select(inf => $"{ inf.Module}\t{inf.LOC}\t{inf.LOC2}\t{inf.Manual}").JoinString("\n"));
+        }
+
+        public static void UpdateModuleIconsHtml()
+        {
+            var list = GetLiveJson()["KtaneModules"].GetList()
+                .Where(el => el["Type"].GetString() == "Regular" || el["Type"].GetString() == "Needy")
+                .OrderBy(el => DateTime.Parse(el["Published"].GetString()))
+                .Select(el => $@"<div class='module' data-module='{el["Name"].GetString().HtmlEscape()}' data-type='{el["Type"].GetString().HtmlEscape()}'></div>")
+                .ToList();
+            var n = list.Count;
+            var w = (int) Math.Ceiling(Math.Sqrt(n));
+            while (n > 1)
+            {
+                while (n % w != 0)
+                    w++;
+                if ((double) w * w / n < 1.6)
+                    break;
+                n--;
+                w = (int) Math.Ceiling(Math.Sqrt(n));
+            }
+            list = list.Take(n).OrderBy(x => Rnd.NextDouble()).ToList();
+
+            Utils.ReplaceInFile(@"D:\Daten\Upload\KTANE\Modules.html", "<!--%%-->", "<!--%%%-->", list.JoinString("\n"));
+            Utils.ReplaceInFile(@"D:\Daten\Upload\KTANE\Modules.html", "/*w_s*/", "/*w_e*/", $"{35 * w}px");
         }
 
         public static JsonValue GetLiveJson() => new HClient().Get(@"https://ktane.timwi.de/json/raw").DataJson;
