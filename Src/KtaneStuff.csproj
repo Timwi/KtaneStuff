@@ -55,12 +55,15 @@
     <Compile Include="BlackHole.cs" />
     <Compile Include="Boggle.cs" />
     <Compile Include="Curriculum.cs" />
+    <Compile Include="CursedDoubleOh.cs" />
     <Compile Include="DiplomaticSolution.cs" />
     <Compile Include="DividedSquares.cs" />
     <Compile Include="DragonEnergy.cs" />
     <Compile Include="EitherOr.cs" />
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="GridMatching.cs" />
+    <Compile Include="GuitarChords.cs" />
+    <Compile Include="Hogwarts.cs" />
     <Compile Include="KnowYourWay.cs" />
     <Compile Include="Ktane.cs" />
     <Compile Include="Kudosudoku.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="SimonShrieks.cs" />
     <Compile Include="SimonSings.cs" />
     <Compile Include="SimonSpins.cs" />
+    <Compile Include="StreetFighter.cs" />
     <Compile Include="SymbolCycle.cs" />
     <Compile Include="SymbolicCoordinates.cs" />
     <Compile Include="Tennis.cs" />

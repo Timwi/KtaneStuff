@@ -197,7 +197,7 @@ namespace KtaneStuff
             return false;
         }
 
-        public static void Simulation()
+        public static void SimulationSeed1()
         {
             /* Version 1 (too hard)
             var criteria1 = Ut.NewArray(
@@ -216,7 +216,7 @@ namespace KtaneStuff
                 new { Name = "Otherwise, if two adjacent colors flashed in clockwise order", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => Enumerable.Range(0, seq.Length - 1).Any(ix => seq[ix + 1] == (seq[ix] + 1) % 6)) },
                 new { Name = "Otherwise", Criterion = Ut.Lambda((int[] seq, int[] rgb, int orange, int purple) => true) }
             );
-            int numStages=3,minFirstStageLength=6,maxFirstStageLength=6,minStageExtra=1,maxStageExtra=3;
+            int numStages=3,minFirstStageLength=3,maxFirstStageLength=5,minStageExtra=1,maxStageExtra=2;
             bool allowSameConsecutive = false;
             // Version 2 /*/
             var criteria1 = Ut.NewArray(
@@ -305,6 +305,84 @@ namespace KtaneStuff
                 tt.WriteToConsole();
                 ConsoleUtil.WriteLine(new string('═', 125).Color(ConsoleColor.White));
             }
+        }
+
+        public static void SimulationSeeded()
+        {
+            bool matchesPattern(int[] seq, params int[] offsets) => Enumerable.Range(0, seq.Length - offsets.Length).Any(ix => Enumerable.Range(0, offsets.Length).All(offsetIx => seq[ix + offsetIx + 1] == (seq[ix] + offsets[offsetIx]) % 6));
+
+            var criteria = Ut.NewArray<(int probability, string name, Func<int[], int[], bool> fnc)>(
+                (5, "If every color flashed at least once", (seq, rgb) => Enumerable.Range(0, 6).Count(col => !seq.Contains(col)) == 0),
+                (12, "If three colors, each two apart, flashed in clockwise order", (seq, rgb) => matchesPattern(seq, 2, 4)),
+                (22, "If a color flashed, then an adjacent color, then the first again", (seq, rgb) => matchesPattern(seq, 1, 0) || matchesPattern(seq, 5, 0)),
+                (12, "If three adjacent colors flashed in counter-clockwise order", (seq, rgb) => matchesPattern(seq, 5, 4)),
+                (12, "If three adjacent colors flashed in clockwise order", (seq, rgb) => matchesPattern(seq, 1, 2)),
+                (12, "If a color flashed, then the color opposite, then the first again", (seq, rgb) => matchesPattern(seq, 3, 0)),
+                (10, "If three adjacent colors did not flash", (seq, rgb) => Enumerable.Range(0, 6).Any(col => !seq.Contains(col) && !seq.Contains((col + 1) % 6) && !seq.Contains((col + 2) % 6))),
+                (17, "If the first and last color flashing are the same", (seq, rgb) => seq[0] == seq.Last()),
+                (12, "If three colors, each two apart, flashed in counter-clockwise order", (seq, rgb) => matchesPattern(seq, 4, 2)),
+                (23, "If a color flashed, then a color two away, then the first again", (seq, rgb) => matchesPattern(seq, 2, 0) || matchesPattern(seq, 4, 0)),
+                (26, "If a color flashed, then an adjacent color, then the one opposite that", (seq, rgb) => matchesPattern(seq, 1, 4) || matchesPattern(seq, 5, 2)),
+                (26, "If a color flashed, then an adjacent color, then the one opposite the first", (seq, rgb) => matchesPattern(seq, 1, 3) || matchesPattern(seq, 5, 3)),
+                (26, "If a color flashed, then a color two away, then the one opposite that", (seq, rgb) => matchesPattern(seq, 2, 5) || matchesPattern(seq, 4, 1)),
+                (26, "If a color flashed, then a color two away, then the one opposite the first", (seq, rgb) => matchesPattern(seq, 2, 3) || matchesPattern(seq, 4, 3)),
+                (23, "If at most one color out of red, yellow, and blue flashed", (seq, rgb) => rgb.Count(color => seq.Contains(color)) <= 1),
+                (26, "If a color flashed, then the color opposite, then one adjacent to the first", (seq, rgb) => matchesPattern(seq, 3, 1) || matchesPattern(seq, 3, 5)),
+                (22, "If no color flashed more than once", (seq, rgb) => Enumerable.Range(0, 6).All(col => seq.Count(c => c == col) <= 1)),
+                (26, "If a color flashed, then the color opposite, then one adjacent to that", (seq, rgb) => matchesPattern(seq, 3, 2) || matchesPattern(seq, 3, 4)), 
+                (24, "If exactly two colors flashed exactly twice", (seq, rgb) => Enumerable.Range(0, 6).Count(col => seq.Count(c => c == col) == 2) == 2),
+                (42, "If there are two colors adjacent to each other that didn’t flash", (seq, rgb) => Enumerable.Range(0, 6).Any(col => !seq.Contains(col) && !seq.Contains((col + 1) % 6))), 
+                (27, "If there is exactly one color that didn’t flash", (seq, rgb) => Enumerable.Range(0, 6).Count(col => !seq.Contains(col)) == 1),
+                (28, "If no color flashed exactly twice", (seq, rgb) => Enumerable.Range(0, 6).All(col => seq.Count(c => c == col) != 2)),
+                (29, "If there are at least three colors that didn’t flash", (seq, rgb) => Enumerable.Range(0, 6).Count(col => !seq.Contains(col)) >= 3),
+                (30, "If exactly two colors flashed more than once", (seq, rgb) => Enumerable.Range(0, 6).Count(col => seq.Count(c => c == col) > 1) == 2),
+                (33, "If the first and last color flashing are adjacent", (seq, rgb) => seq[0] == (seq.Last() + 1) % 6 || seq[0] == (seq.Last() + 5) % 6),
+                (38, "If exactly one color flashed more than once", (seq, rgb) => Enumerable.Range(0, 6).Count(col => seq.Count(c => c == col) > 1) == 1),
+                (44, "If there are two colors two away from each other that didn’t flash", (seq, rgb) => Enumerable.Range(0, 6).Any(col => !seq.Contains(col) && !seq.Contains((col + 2) % 6))),
+                (26, "If there are two colors opposite each other that didn’t flash", (seq, rgb) => Enumerable.Range(0, 3).Any(col => !seq.Contains(col) && !seq.Contains(col + 3))), 
+                (40, "If there are exactly two colors that didn’t flash", (seq, rgb) => Enumerable.Range(0, 6).Count(col => !seq.Contains(col)) == 2),
+                (41, "If exactly one color flashed exactly twice", (seq, rgb) => Enumerable.Range(0, 6).Count(col => seq.Count(c => c == col) == 2) == 1),
+                (48, "If the number of distinct colors that flashed is even", (seq, rgb) => Enumerable.Range(0, 6).Count(col => seq.Contains(col)) % 2 == 0),
+                (39, "If no two adjacent colors flashed in clockwise order", (seq, rgb) => !matchesPattern(seq, 1)),
+                (39, "If no two adjacent colors flashed in counter-clockwise order", (seq, rgb) => !matchesPattern(seq, 5)),
+                (61, "If two adjacent colors flashed in clockwise order", (seq, rgb) => matchesPattern(seq, 1)), 
+                (39, "If no two colors two apart flashed in counter-clockwise order", (seq, rgb) => !matchesPattern(seq, 4)),
+                (50, "If the first and last color flashing are not adjacent and not the same", (seq, rgb) => seq[0] != (seq.Last() + 1) % 6 && seq[0] != (seq.Last() + 5) % 6 && seq[0] != seq.Last()),
+                (52, "If a color flashed, then another color, then the first", (seq, rgb) => Enumerable.Range(0, seq.Length - 2).Any(ix => seq[ix] == seq[ix + 2])),
+                (39, "If no two colors two apart flashed in clockwise order", (seq, rgb) => !matchesPattern(seq, 2)),
+                (61, "If two adjacent colors flashed in counter-clockwise order", (seq, rgb) => matchesPattern(seq, 5)),
+                (61, "If two colors two apart flashed in clockwise order", (seq, rgb) => matchesPattern(seq, 2)),
+                (61, "If two colors two apart flashed in counter-clockwise order", (seq, rgb) => matchesPattern(seq, 4)),
+                (52, "If the number of distinct colors that flashed is odd", (seq, rgb) => Enumerable.Range(0, 6).Count(col => seq.Contains(col)) % 2 == 1),
+                (77, "If at least two colors out of red, yellow, and blue flashed", (seq, rgb) => rgb.Count(color => seq.Contains(color)) >= 2),
+                (100, "Otherwise", (seq, rgb) => true)
+            );
+            int numStages = 3, minFirstStageLength = 3, maxFirstStageLength = 5, minStageExtra = 1, maxStageExtra = 2;
+            bool allowSameConsecutive = false;
+
+            const int numIterations = 50000;
+
+            var dic = new Dictionary<int, int>();
+            for (int i = 0; i < numIterations; i++)
+            {
+                var rgb = Enumerable.Range(0, 6).ToArray().Shuffle().Subarray(0, 3);
+                var seqs = generateSequences(numStages, minFirstStageLength, maxFirstStageLength, minStageExtra, maxStageExtra, allowSameConsecutive);
+                for (int seqIx = 0; seqIx < seqs.Length; seqIx++)
+                    for (int ix = 0; ix < criteria.Length; ix++)
+                        if (criteria[ix].fnc(seqs[seqIx], rgb))
+                            dic.IncSafe(ix);
+            }
+
+            var tt = new TextTable { ColumnSpacing = 3, VerticalRules = true };
+            var row = 0;
+            for (int ix = 0; ix < criteria.Length; ix++)
+            {
+                tt.SetCell(0, row, $"{(dic.Get(ix, 0) / (double) numIterations / 3) * 100:0.0}%".Color(ConsoleColor.Green), alignment: HorizontalTextAlignment.Right);
+                tt.SetCell(1, row, $"{criteria[ix].probability}".Color(ConsoleColor.Yellow), alignment: HorizontalTextAlignment.Right);
+                tt.SetCell(2, row, criteria[ix].name.Color(ConsoleColor.Cyan));
+                row++;
+            }
+            tt.WriteToConsole();
         }
 
         private static int[][] generateSequences(int numStages, int minFirstStageLength, int maxFirstStageLength, int minStageExtra, int maxStageExtra, bool allowSameConsecutive)
