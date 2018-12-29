@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="3DMaze.cs" />
     <Compile Include="Astrology.cs" />
+    <Compile Include="BinaryPuzzle.cs" />
     <Compile Include="BlackHole.cs" />
     <Compile Include="Boggle.cs" />
     <Compile Include="Curriculum.cs" />
@@ -62,7 +63,7 @@
     <Compile Include="EitherOr.cs" />
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="GridMatching.cs" />
-    <Compile Include="GuitarChords.cs" />
+    <Compile Include="BrokenGuitarChords.cs" />
     <Compile Include="Hogwarts.cs" />
     <Compile Include="KnowYourWay.cs" />
     <Compile Include="Ktane.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="PolyhedralMaze.cs" />
     <Compile Include="PerplexingWires.cs" />
     <Compile Include="PointOfOrder.cs" />
+    <Compile Include="RegularCrazyTalk.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="Set.cs" />
     <Compile Include="SimonSends.cs" />

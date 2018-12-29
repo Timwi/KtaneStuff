@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
 {
-    static class ActualGuitarChords
+    using static Md;
+
+    static class BrokenGuitarChords
     {
-        public static void GenerateManual()
+        public static void GenerateManualOld()
         {
             var allChords = new Dictionary<string, GuitarChord>();
 
@@ -80,6 +84,16 @@ namespace KtaneStuff
                 }
             }
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Guitar Chords.html", @"<!--%%-->", @"<!--%%%-->", $"<svg viewBox='0 0 {8 * 11 + 2} {8 * f * 12 + 3}'>{svg}</svg>");
+        }
+
+        public static void DoModels()
+        {
+            File.WriteAllText(@"D:\c\KTANE\BrokenGuitarChords\Assets\Models\Mute.obj", GenerateObjFile(Mute(), "Mute"));
+        }
+
+        private static IEnumerable<VertexInfo[]> Mute()
+        {
+            return new[] { p(-3, -5), p(0, -2), p(3, -5), p(5, -3), p(2, 0), p(5, 3), p(3, 5), p(0, 2), p(-3, 5), p(-5, 3), p(-2, 0), p(-5, -3) }.Extrude(1, true, true);
         }
 
         sealed class ChordQuality

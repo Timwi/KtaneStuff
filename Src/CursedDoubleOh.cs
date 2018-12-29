@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RT.Dijkstra;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
@@ -44,26 +45,59 @@ namespace KtaneStuff
                                 if ((int) a >> 1 != (int) c >> 1 && (int) b >> 1 != (int) c >> 1)
                                     foreach (var d in fncs)
                                         if ((int) a >> 1 != (int) d >> 1 && (int) b >> 1 != (int) d >> 1 && (int) c >> 1 != (int) d >> 1)
-                                            paths.IncSafe(new[] { a, b, c, d }.Select((f, ix) => new { Fnc = f, Name = (char) ('A' + ix) })
+                                            paths.IncSafe(new[] { 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2 }.Select(f => new { Fnc = new[] { a, b, c, d }[f], Name = (char) ('A' + f) })
                                                 .Aggregate(new { Path = (_grid[i] / 10).ToString(), Pos = i }, (p, n) =>
                                                 {
-                                                    var newPos = p.Pos;
-                                                    switch (n.Fnc)
-                                                    {
-                                                        case ButtonFunction.SmallLeft: newPos = (newPos / 3) * 3 + (newPos + 2) % 3; break;
-                                                        case ButtonFunction.SmallRight: newPos = (newPos / 3) * 3 + (newPos + 1) % 3; break;
-                                                        case ButtonFunction.SmallUp: newPos = (newPos / 27) * 27 + (newPos + 18) % 27; break;
-                                                        case ButtonFunction.SmallDown: newPos = (newPos / 27) * 27 + (newPos + 9) % 27; break;
-                                                        case ButtonFunction.LargeLeft: newPos = (newPos / 9) * 9 + (newPos + 6) % 9; break;
-                                                        case ButtonFunction.LargeRight: newPos = (newPos / 9) * 9 + (newPos + 3) % 9; break;
-                                                        case ButtonFunction.LargeUp: newPos = (newPos + 54) % 81; break;
-                                                        case ButtonFunction.LargeDown: newPos = (newPos + 27) % 81; break;
-                                                    }
+                                                    var newPos = Move(p.Pos, n.Fnc);
                                                     return new { Path = p.Path + n.Name + (_grid[newPos] / 10), Pos = newPos };
                                                 }).Path);
             }
             foreach (var kvp in paths.OrderByDescending(p => p.Value).Take(20))
                 Console.WriteLine($"{kvp.Key} = {kvp.Value}");
+            Console.WriteLine(paths.Count);
         }
+
+        private static int Move(int pos, ButtonFunction fnc)
+        {
+            switch (fnc)
+            {
+                case ButtonFunction.SmallLeft: return (pos / 3) * 3 + (pos + 2) % 3;
+                case ButtonFunction.SmallRight: return (pos / 3) * 3 + (pos + 1) % 3;
+                case ButtonFunction.SmallUp: return (pos / 27) * 27 + (pos + 18) % 27;
+                case ButtonFunction.SmallDown: return (pos / 27) * 27 + (pos + 9) % 27;
+                case ButtonFunction.LargeLeft: return (pos / 9) * 9 + (pos + 6) % 9;
+                case ButtonFunction.LargeRight: return (pos / 9) * 9 + (pos + 3) % 9;
+                case ButtonFunction.LargeUp: return (pos + 54) % 81;
+                case ButtonFunction.LargeDown: return (pos + 27) % 81;
+            }
+            return -1;
+        }
+
+        sealed class CDNode : Node<int, int>
+        {
+            public int Pos { get; private set; }
+            private readonly ButtonFunction[] _btnFncs;
+            private readonly ButtonFunction _last;
+            private readonly HashSet<int> _taken;
+            public CDNode(int pos, ButtonFunction[] btnFncs, ButtonFunction last, HashSet<int> taken)
+            {
+                Pos = pos;
+                _btnFncs = btnFncs;
+                _last = last;
+                _taken = taken;
+            }
+
+            public override bool IsFinal => Pos == 4 + 9 * 4;
+            public override IEnumerable<Edge<int, int>> Edges => Enumerable.Range(0, _btnFncs.Length)
+                .Where(i => _btnFncs[i] != _last)
+                .Select(i => new { NewPos = Move(Pos, _btnFncs[i]), Ix = i })
+                .Where(inf => !_taken.Contains(inf.NewPos))
+                .Select(inf => new Edge<int, int>(1, inf.Ix, new CDNode(inf.NewPos, _btnFncs, _btnFncs[inf.Ix], _taken)));
+            public override bool Equals(Node<int, int> other) => other is CDNode cd ? cd.Pos == Pos : false;
+            public override int GetHashCode() => Pos;
+        }
+
+        private static string FindSolution(int position, HashSet<int> positionsTaken, ButtonFunction[] btnFncs, ButtonFunction last) =>
+            DijkstrasAlgorithm.Run(new CDNode(position, btnFncs, last, positionsTaken), 0, (a, b) => a + b, out var totalWeight).Select(i => "ABCD"[i]).JoinString();
     }
 }

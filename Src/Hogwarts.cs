@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using KtaneStuff.Modeling;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 
 namespace KtaneStuff
 {
+    using System.Collections.Generic;
+    using static Md;
+
     static class Hogwarts
     {
         public static unsafe void CreateTextures()
@@ -50,6 +55,22 @@ namespace KtaneStuff
                     }
                 }
             }
+        }
+
+        public static void DoModels()
+        {
+            File.WriteAllText(@"D:\c\KTANE\Hogwarts\Assets\Models\Highlight.obj", GenerateObjFile(Highlight(), "Highlight"));
+        }
+
+        private static IEnumerable<VertexInfo[]> Highlight()
+        {
+            const int revSteps = 72;
+            const double ir = .42;
+            const double or = .68;
+            const double len = 1;
+            return CreateMesh(true, false,
+                Enumerable.Range(0, revSteps).Select(i => i * 180d / (revSteps - 1) - 90).Select(angle => new[] { pt(len + ir * cos(angle), 0, ir * sin(angle)), pt(len + or * cos(angle), 0, or * sin(angle)) }).Concat(
+                Enumerable.Range(0, revSteps).Select(i => i * 180d / (revSteps - 1) + 90).Select(angle => new[] { pt(-len + ir * cos(angle), 0, ir * sin(angle)), pt(-len + or * cos(angle), 0, or * sin(angle)) })).Reverse().ToArray());
         }
 
         public static void Funalysis()
