@@ -102,6 +102,7 @@
     <Compile Include="SimonSends.cs" />
     <Compile Include="SimonShrieks.cs" />
     <Compile Include="SimonSings.cs" />
+    <Compile Include="SimonSpeaks.cs" />
     <Compile Include="SimonSpins.cs" />
     <Compile Include="StreetFighter.cs" />
     <Compile Include="SymbolCycle.cs" />
