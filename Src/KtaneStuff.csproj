@@ -99,6 +99,7 @@
     <Compile Include="RegularCrazyTalk.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="Set.cs" />
+    <Compile Include="ShippingChart.cs" />
     <Compile Include="SimonSends.cs" />
     <Compile Include="SimonShrieks.cs" />
     <Compile Include="SimonSings.cs" />
