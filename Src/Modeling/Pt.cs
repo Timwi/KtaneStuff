@@ -27,6 +27,7 @@ namespace KtaneStuff.Modeling
         public VertexInfo WithNormal(Pt normal) => new VertexInfo(this, normal);
         public VertexInfo WithNormal(double x, double y, double z) => new VertexInfo(this, new Pt(x, y, z));
         public VertexInfo WithTexture(PointD texture) => new VertexInfo(this, null, texture);
+        public VertexInfo WithTexture(double x, double y) => new VertexInfo(this, null, new PointD(x, y));
 
         public MeshVertexInfo WithMeshInfo(Pt normal) => new MeshVertexInfo(this, normal);
         public MeshVertexInfo WithMeshInfo(double normalX, double normalY, double normalZ) => new MeshVertexInfo(this, new Pt(normalX, normalY, normalZ));

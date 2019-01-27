@@ -30,23 +30,34 @@ namespace KtaneStuff
                 .Select(p => new PointD(p.X, p.Y - 802.36218))
                 .ToArray();
 
-            GraphicsUtil.DrawBitmap(500, 500, g =>
-            {
-                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                g.Clear(Color.White);
-                using (var tr = new GraphicsTransformer(g).Scale(2, 2))
-                {
-                    for (int i = 0; i < data.Length; i++)
-                        if (!new[] { 31, 15, 12, 28 }.Contains(i))
-                            g.DrawLine(new Pen(Color.CornflowerBlue, .5f), data[i].ToPointF(), data[(i + 1) % data.Length].ToPointF());
-                    for (int i = 0; i < data.Length; i++)
-                        g.DrawString(((char) (i < 10 ? '0' + i : 'A' + i - 10)).ToString(), new Font("Niagara Solid", 10f, FontStyle.Bold), Brushes.Black, (float) data[i].X, (float) data[i].Y, new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
-                }
-            }).Save(@"D:\temp\temp.png");
+            //GraphicsUtil.DrawBitmap(500, 500, g =>
+            //{
+            //    g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            //    g.Clear(Color.White);
+            //    using (var tr = new GraphicsTransformer(g).Scale(2, 2))
+            //    {
+            //        for (int i = 0; i < data.Length; i++)
+            //            if (!new[] { 31, 15, 12, 28 }.Contains(i))
+            //                g.DrawLine(new Pen(Color.CornflowerBlue, .5f), data[i].ToPointF(), data[(i + 1) % data.Length].ToPointF());
+            //        for (int i = 0; i < data.Length; i++)
+            //            g.DrawString(((char) (i < 10 ? '0' + i : 'A' + i - 10)).ToString(), new Font("Niagara Solid", 10f, FontStyle.Bold), Brushes.Black, (float) data[i].X, (float) data[i].Y, new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+            //    }
+            //}).Save(@"D:\temp\temp.png");
+
+            var minX = data.Min(p => p.X);
+            var maxX = data.Max(p => p.X);
+            var minY = data.Min(p => p.Y);
+            var maxY = data.Max(p => p.Y);
 
             void mkFile(string file, string objName, string code)
             {
-                File.WriteAllText(file, GenerateObjFile(code.Split(',').Select(str => str.Select(ch => ch <= '9' ? ch - '0' : ch - 'A' + 10).Select(ix => pt(data[ix].X, ix >= 16 ? 5 : 0, data[ix].Y)).Reverse().ToArray()), objName, AutoNormal.Flat));
+                File.WriteAllText(file, GenerateObjFile(
+                    code.Split(',').Select(str => str
+                        .Select(ch => ch <= '9' ? ch - '0' : ch - 'A' + 10)
+                        .Select(ix => pt(data[ix].X, ix >= 16 ? 5 : 0, data[ix].Y).WithTexture((data[ix].X - minX) / (maxX - minX), (data[ix].Y - minY) / (maxY - minY)))
+                        .Reverse().ToArray()), 
+                    objName, 
+                    AutoNormal.Flat));
             }
 
             mkFile(@"D:\c\KTANE\Mafia\Assets\Models\GallowsFront.obj", "GallowsFront", @"GSUJ,GJIH,KTVL,USRM,NQPO");

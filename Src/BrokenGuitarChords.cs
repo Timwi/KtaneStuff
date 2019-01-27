@@ -109,7 +109,6 @@ namespace KtaneStuff
 
         sealed class GuitarChord
         {
-            public int Transpose;
             public int?[] Fingers;  // null = muted string
         }
     }

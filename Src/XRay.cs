@@ -180,7 +180,6 @@ namespace KtaneStuff
 }}");
             }
 
-            manualCodeOnly:
             var rnd = new Random(47);
             var icons = Enumerable.Repeat(Enumerable.Range(0, 33), 5).SelectMany(x => x).ToList().Shuffle(rnd);
 
