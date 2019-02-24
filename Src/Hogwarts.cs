@@ -80,19 +80,25 @@ namespace KtaneStuff
             var scores = modules.Select(module =>
                 founders.Select(founder =>
                     founder.ToUpperInvariant().Where(ch => char.IsLetter(ch)).GroupBy(ch => ch).Sum(gr => gr.Count() * module.Count(ch => char.ToUpperInvariant(ch) == gr.Key))).ToArray()).ToArray();
-            var totals = scores.Select(row => row.Max() - row.Min()).ToArray();
-            var indexes = Enumerable.Range(0, modules.Length).OrderByDescending(ix => totals[ix]).ToArray();
+            var sortCriterion = scores.Select(row => row.Min()).ToArray();
+            var indexes = Enumerable.Range(0, modules.Length).OrderByDescending(ix => sortCriterion[ix]).ToArray();
 
             var tt = new TextTable { ColumnSpacing = 2 };
             for (int r = 0; r < indexes.Length; r++)
             {
                 tt.SetCell(0, r + 1, modules[indexes[r]].Color(ConsoleColor.White));
-                tt.SetCell(5, r + 1, totals[indexes[r]].ToString().Color(ConsoleColor.Yellow));
+                tt.SetCell(5, r + 1, sortCriterion[indexes[r]].ToString().Color(ConsoleColor.Yellow));
                 for (int c = 0; c < founders.Length; c++)
                     tt.SetCell(c + 1, r + 1, scores[indexes[r]][c].ToString().Color(ConsoleColor.Green));
             }
+
+            var averages = Enumerable.Range(0, 4).Select(house => scores.Average(sc => sc[house])).ToArray();
             for (int c = 0; c < founders.Length; c++)
+            {
                 tt.SetCell(c + 1, 0, founders[c].Color(ConsoleColor.Cyan));
+                tt.SetCell(c + 1, indexes.Length + 2, founders[c].Color(ConsoleColor.Cyan));
+                tt.SetCell(c + 1, indexes.Length + 1, averages[c].ToString().Color(ConsoleColor.Yellow));
+            }
 
             tt.WriteToConsole();
         }
