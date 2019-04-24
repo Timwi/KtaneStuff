@@ -90,6 +90,7 @@
     <Compile Include="Modeling\GaussianBlur.cs" />
     <Compile Include="MonoRandom.cs" />
     <Compile Include="Neutralization.cs" />
+    <Compile Include="OddOneOut.cs" />
     <Compile Include="OneHundredAndOneDalmatians.cs" />
     <Compile Include="PatternCube.cs" />
     <Compile Include="PigpenCipher.cs" />
