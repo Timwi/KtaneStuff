@@ -21,7 +21,7 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Screen.obj", GenerateObjFile(Screen(), "Screen"));
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\ScreenFrame.obj", GenerateObjFile(ScreenFrame(), "ScreenFrame"));
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Highlight.obj", GenerateObjFile(Highlight(), "Highlight"));
-            File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Torus.obj", GenerateObjFile(Torus(.2, .03, 36), "Torus"));
+            File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Torus.obj", GenerateObjFile(LooseModels.Torus(.2, .03, 36), "Torus"));
             File.WriteAllText(@"D:\c\KTANE\WordSearch\Assets\Models\Decoration.obj", GenerateObjFile(Decoration(), "Decoration"));
         }
 

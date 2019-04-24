@@ -31,7 +31,7 @@ namespace KtaneStuff
         {
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\ClockFrame.obj", GenerateObjFile(ClockFrame(), "ClockFrame"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\Clockface.obj", GenerateObjFile(Clockface(), "Clockface"));
-            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\SecondHand.obj", GenerateObjFile(Cylinder(-.9 / 6, .9, .01, 8), "SecondHand"));
+            File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\SecondHand.obj", GenerateObjFile(LooseModels.Cylinder(-.9 / 6, .9, .01, 8), "SecondHand"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\AM.obj", GenerateObjFile(AmPm("AM"), "AM"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\PM.obj", GenerateObjFile(AmPm("PM"), "PM"));
             File.WriteAllText(@"D:\c\KTANE\TheClock\Assets\Models\Knob.obj", GenerateObjFile(Knob(), "Knob"));

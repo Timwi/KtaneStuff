@@ -20,7 +20,7 @@ namespace KtaneStuff
         public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\XRay\Assets\Models\Button.obj", GenerateObjFile(SymbolButton(), "Button"));
-            File.WriteAllText(@"D:\c\KTANE\XRay\Assets\Models\ButtonHighlight.obj", GenerateObjFile(Disc(numVertices: 32, reverse: true), "ButtonHighlight"));
+            File.WriteAllText(@"D:\c\KTANE\XRay\Assets\Models\ButtonHighlight.obj", GenerateObjFile(LooseModels.Disc(numVertices: 32, reverse: true), "ButtonHighlight"));
         }
 
         private static IEnumerable<VertexInfo[]> SymbolButton()

@@ -34,7 +34,7 @@ namespace KtaneStuff
                 File.WriteAllText($@"D:\c\KTANE\RockPaperScissorsLizardSpock\Assets\Models\{resp}.obj", GenerateObjFile(GetMesh(svg, false, .1), resp));
                 File.WriteAllText($@"D:\c\KTANE\RockPaperScissorsLizardSpock\Assets\Models\{resp}Half.obj", GenerateObjFile(GetMesh(svg, true, .1), resp + "Half"));
             }
-            File.WriteAllText($@"D:\c\KTANE\RockPaperScissorsLizardSpock\Assets\Models\Disc.obj", GenerateObjFile(Disc(72, reverse: true), "Disc"));
+            File.WriteAllText($@"D:\c\KTANE\RockPaperScissorsLizardSpock\Assets\Models\Disc.obj", GenerateObjFile(LooseModels.Disc(72, reverse: true), "Disc"));
         }
 
         public static void GenerateComponentSvg()

@@ -19,7 +19,7 @@ namespace KtaneStuff
 
         private static IEnumerable<VertexInfo[]> LedSocket()
         {
-            return Cylinder(.01, .1, .1, 32);
+            return LooseModels.Cylinder(.01, .1, .1, 32);
         }
 
         private static IEnumerable<VertexInfo[]> Button()

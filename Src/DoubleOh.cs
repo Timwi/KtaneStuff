@@ -20,7 +20,7 @@ namespace KtaneStuff
                 File.WriteAllText($@"D:\c\KTANE\DoubleOh\Assets\Models\Button{inf.Name}.obj", GenerateObjFile(Button(inf.Svg), $"Button{inf.Name}"));
             File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonTop.obj", GenerateObjFile(Button(null), "ButtonTop"));
             File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonHighlight.obj", GenerateObjFile(Button("Highlight"), "ButtonHighlight"));
-            File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonCollider.obj", GenerateObjFile(Box().Select(face => face.Select(p => new Pt(p.X * .85, p.Y * .65, p.Z * .85).RotateY(45)).ToArray()), "ButtonCollider"));
+            File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonCollider.obj", GenerateObjFile(LooseModels.Box().Select(face => face.Select(p => new Pt(p.X * .85, p.Y * .65, p.Z * .85).RotateY(45)).ToArray()), "ButtonCollider"));
             File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\Frame.obj", GenerateObjFile(Frame(), "Frame"));
 
             //var g = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\DoubleOh\Assets\Sources\Segments.svg")).Root.Elements().FirstOrDefault(e => e.Name.LocalName == "g");

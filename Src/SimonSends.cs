@@ -31,8 +31,8 @@ namespace KtaneStuff
         {
             File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\Wire.obj", GenerateObjFile(Wire(), "Wire"));
             File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\Knob.obj", GenerateObjFile(Knob(), "Knob"));
-            File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\KnobBase.obj", GenerateObjFile(Cylinder(0, -.05, .1, 36).Select(f => f.Select(v => v.RotateX(90)).ToArray()), "KnobBase"));
-            File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\KnobHighlight.obj", GenerateObjFile(Disc(36, reverse: true), "KnobHighlight"));
+            File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\KnobBase.obj", GenerateObjFile(LooseModels.Cylinder(0, -.05, .1, 36).Select(f => f.Select(v => v.RotateX(90)).ToArray()), "KnobBase"));
+            File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\KnobHighlight.obj", GenerateObjFile(LooseModels.Disc(36, reverse: true), "KnobHighlight"));
 
             var (button, highlight) = ButtonAndHighlight();
             File.WriteAllText($@"D:\c\KTANE\SimonSends\Assets\Models\Button.obj", GenerateObjFile(button, "Button"));

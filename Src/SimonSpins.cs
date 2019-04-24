@@ -21,8 +21,8 @@ namespace KtaneStuff
             File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\HighlightCircle.obj", GenerateObjFile(Enumerable.Range(0, 36).Select(i => i * 360 / 36).Select(angle => p(cos(angle), sin(angle))).Extrude(1, true, true), "HighlightCircle"));
             File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\HighlightSquare.obj", GenerateObjFile(new[] { p(-1, -1), p(1, -1), p(1, 1), p(-1, 1) }.Extrude(1, true, true), "HighlightSquare"));
             File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\HighlightPentagon.obj", GenerateObjFile(Enumerable.Range(0, 5).Select(i => i * 360 / 5 - 90).Select(angle => p(cos(angle), sin(angle))).Extrude(1, true, true), "HighlightPentagon"));
-            File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\FaceCircle.obj", GenerateObjFile(Disc(12), "FaceCircle"));
-            File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\FacePentagon.obj", GenerateObjFile(Disc(5, addAngle: -90), "FacePentagon"));
+            File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\FaceCircle.obj", GenerateObjFile(LooseModels.Disc(12), "FaceCircle"));
+            File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\FacePentagon.obj", GenerateObjFile(LooseModels.Disc(5, addAngle: -90), "FacePentagon"));
             File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\Pivot.obj", GenerateObjFile(Pivot(), "Pivot"));
             File.WriteAllText($@"D:\c\KTANE\SimonSpins\Assets\Models\Protrusion.obj", GenerateObjFile(Protrusion(), "Protrusion"));
         }

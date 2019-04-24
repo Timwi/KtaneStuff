@@ -70,6 +70,7 @@
     <Compile Include="Kudosudoku.cs" />
     <Compile Include="Lasers.cs" />
     <Compile Include="LionsShare.cs" />
+    <Compile Include="LooseModels.cs" />
     <Compile Include="Mafia.cs" />
     <Compile Include="Braille.cs" />
     <Compile Include="ColoredSwitches.cs" />
