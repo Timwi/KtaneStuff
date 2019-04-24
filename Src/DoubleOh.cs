@@ -126,7 +126,7 @@ namespace KtaneStuff
                 )
                     .WithTexture(patch2[i][j].Texture));
 
-            var outlineRaw = patch2[0].Select(pt => new { Point = p(pt.Vertex.X, pt.Vertex.Z), Texture = pt.Texture }).ToArray();
+            var outlineRaw = patch2[0].Select(pt => new { Point = p(pt.Vertex.X, pt.Vertex.Z), pt.Texture }).ToArray();
 
             var texturize = Ut.Lambda((PointD pt) =>
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -14,9 +15,9 @@ namespace KtaneStuff
 {
     static class Ktane
     {
-        static void CountWords()
+        public static void CountWords()
         {
-            var entities = "ensp=\u2002,emsp=\u2003,nbsp=\u00a0,ge=≥,gt=>,lt=<,le=≤,amp=&,shy=\u00ad,mdash=—,trade=™,ohm=Ω,ldquo=“,rdquo=”,horbar=―,rarr=→,uarr=↑,darr=↓,larr=←,times=×"
+            var entities = "ensp=\u2002,emsp=\u2003,nbsp=\u00a0,ge=≥,gt=>,lt=<,le=≤,amp=&,shy=\u00ad,mdash=—,trade=™,ohm=Ω,ldquo=“,rdquo=”,horbar=―,rarr=→,uarr=↑,darr=↓,larr=←,times=×,quot=\",phi=φ,rsquo=’"
                 .Split(',')
                 .Select(p => p.Split('='))
                 .ToDictionary(p => $"&{p[0]};", p => p[1]);
@@ -28,21 +29,32 @@ namespace KtaneStuff
                     .Select(file => File.ReadAllText(file.FullName))
                     .Select(text => Regex.Replace(text, @"\A.*(?=<body)", "", RegexOptions.Singleline))
                     .Select(text => Regex.Replace(text, @"<style>([^<]*)</style>", "", RegexOptions.Singleline))
-                    .Select(text => Regex.Replace(text, @"<[^>]+>", "", RegexOptions.Singleline))
+                    .Select(text => Regex.Replace(text, @"<[^>]+>", " ", RegexOptions.Singleline))
                     .Select(text => Regex.Replace(text, @"&\w+;", m => entities[m.Value], RegexOptions.Singleline))
                     .Select(text => text.Replace("Keep Talking and Nobody Explodes Mod", ""))
                     .Select(text => text.Replace("Keep Talking and Nobody Explodes v. 1", ""))
-                    .SelectMany(text => Regex.Matches(text, @"[-'’\w]+", RegexOptions.Singleline).Cast<Match>())
-                    .Where(m => m.Value.All(ch => ch >= 'A' && ch <= 'Z'))
+                    .SelectMany(text =>
+                    {
+                        var matches = Regex.Matches(text, @"[-'’\w]+", RegexOptions.Singleline).Cast<Match>();
+                        //var tmp = matches.Select(m => m.Value.ToUpperInvariant()).Distinct().Order().ToArray();
+                        //if (text.Contains("Alchemy") || text.Contains("Lightspeed") || text.Contains("Manometers"))
+                        //{
+                        //    Console.WriteLine(tmp.Contains("ACTIVATE"));
+                        //}
+                        return matches;
+                    })
+                    //.Where(m => m.Value.All(ch => (ch >= '0' && ch <= '9') || ch == '.'))
                     .Select(m => m.Value.ToUpperInvariant())
-                    //.Where(word => word.Length >= 2)
-                    .Where(word => Indicator.WellKnown.Concat(new[] { "NLL" }).Contains(word.ToUpperInvariant()))
+                    .Where(m => m.All(ch => ch >= 'A' && ch <= 'Z'))
+                    .Where(word => word.Length >= 3)
+                    //.Where(word => Indicator.WellKnown.Concat(new[] { "NLL" }).Contains(word.ToUpperInvariant()))
                     .GroupBy(word => word, StringComparer.OrdinalIgnoreCase)
                     .ToDictionary(gr => gr.Key, gr => gr.Count(), StringComparer.OrdinalIgnoreCase);
 
             var tt = new TextTable { ColumnSpacing = 2 };
             var row = 0;
-            foreach (var kvp in words.OrderByDescending(p => p.Value).Take(100))
+            foreach (var kvp in words.Where(p => p.Value == 2).OrderBy(p => p.Key))
+            //.OrderByDescending(p => p.Value).Take(100))
             {
                 tt.SetCell(0, row, $"{row + 1}.".ToString().Color(ConsoleColor.Blue), alignment: HorizontalTextAlignment.Right);
                 tt.SetCell(1, row, kvp.Value.ToString().Color(ConsoleColor.White), alignment: HorizontalTextAlignment.Right);
@@ -51,6 +63,22 @@ namespace KtaneStuff
                 row++;
             }
             tt.WriteToConsole();
+        }
+
+        public static void FindUnsubscribedModules()
+        {
+            var exclusionList = new[] { "Accumulation", "Blackjack", "Button Sequence", "Complicated Buttons", "Countdown", "Dragon Energy", "Encrypted Morse", "FizzBuzz", "Font Select", "Game of Life Cruel", "Game of Life Simple", "Guitar Chords", "Ice Cream", "Micro-Modules", "Pigpen Rotations", "Scripting", "Seven Wires", "Sink", "Street Fighter", "Symbolic Password", "The Crystal Maze", "The Festive Jukebox", "The Hangover", "The Jukebox", "The Stopwatch", "The Swan", "The Time Keeper", "Third Base", "Timing is Everything", "Unfair Cipher", "Wire Spaghetti" };
+            var installedWorkshopIds = new DirectoryInfo(@"D:\Steam\steamapps\workshop\content\341800").EnumerateDirectories().Select(d => d.Name).ToHashSet();
+            var localIds = new DirectoryInfo(@"D:\Steam\steamapps\common\Keep Talking and Nobody Explodes\mods").EnumerateDirectories().Select(d => d.Name).ToHashSet();
+            localIds.AddRange(new DirectoryInfo(@"D:\Steam\steamapps\common\Keep Talking and Nobody Explodes\tmpmods").EnumerateDirectories().Select(d => d.Name));
+            localIds.AddRange(localIds.Select(i => Regex.Replace(i, @"Module$", "")).ToArray());
+            foreach (var module in Ktane.GetLiveJson())
+            {
+                if (module["SteamID"] == null || module["Type"].GetString() != "Regular")
+                    continue;
+                if (!installedWorkshopIds.Contains(module["SteamID"].GetString()) && !localIds.Contains(module["ModuleID"].GetString()) && !localIds.Contains(Regex.Replace(module["ModuleID"].GetString(), @"Module$", "")))
+                    Console.WriteLine($"Not subscribed: {module["Name"].GetString()}");
+            }
         }
 
         public static void CodeSizeAnalysis()
@@ -62,7 +90,7 @@ namespace KtaneStuff
             };
 
             var allExtraFiles = new DirectoryInfo($@"D:\c\KTANE\KtaneStuff\Src").EnumerateFiles("*.cs", SearchOption.AllDirectories).ToList();
-            var list = GetLiveJson()["KtaneModules"].GetList()
+            var list = GetLiveJson()
                 .Where(el => el["Author"].GetString().Contains("Timwi") && !new[] { "Lasers", "Dr. Doctor", "3D Tunnels", "Cursed Double-Oh" }.Contains(el["Name"].GetString()))
                 .Concat((JsonValue) null)
                 .Select(el =>
@@ -115,7 +143,7 @@ namespace KtaneStuff
 
         public static void UpdateModuleIconsHtml()
         {
-            var list = GetLiveJson()["KtaneModules"].GetList()
+            var list = GetLiveJson()
                 .Where(el => el["Type"].GetString() == "Regular" || el["Type"].GetString() == "Needy")
                 .OrderBy(el => DateTime.Parse(el["Published"].GetString()))
                 .Select(el => $@"<div class='module' data-module='{el["Name"].GetString().HtmlEscape()}' data-type='{el["Type"].GetString().HtmlEscape()}'></div>")
@@ -137,7 +165,7 @@ namespace KtaneStuff
             Utils.ReplaceInFile(@"D:\Daten\Upload\KTANE\Modules.html", "/*w_s*/", "/*w_e*/", $"{35 * w}px");
         }
 
-        public static JsonValue GetLiveJson() => new HClient().Get(@"https://ktane.timwi.de/json/raw").DataJson;
+        public static JsonList GetLiveJson() => new HClient().Get(@"https://ktane.timwi.de/json/raw").DataJson["KtaneModules"].GetList();
 
         private static void AllComponentSvgsExperimentForTabletop(IEnumerable<string> moduleNames)
         {
@@ -190,6 +218,33 @@ namespace KtaneStuff
                     )
                         .ToString());
             }
+        }
+
+        public static string GenerateModuleStatistics<TKey>(Func<DateTime, TKey> grouping, TKey[] bucketNames, bool cumulative)
+        {
+            var numModules = new int[bucketNames.Length];
+            var numRegular = new int[bucketNames.Length];
+
+            foreach (var module in Ktane.GetLiveJson().Where(m => m["Type"].GetString() != "Widget"))
+            {
+                var bucket = bucketNames.IndexOf(grouping(DateTime.Parse(module["Published"].GetString())));
+                if (bucket == -1)
+                    Debugger.Break();
+                numModules[bucket]++;
+                if (module["Type"].GetString() == "Regular")
+                    numRegular[bucket]++;
+            }
+
+            if (cumulative)
+            {
+                for (int i = 1; i < bucketNames.Length; i++)
+                {
+                    numModules[i] += numModules[i - 1];
+                    numRegular[i] += numRegular[i - 1];
+                }
+            }
+
+            return bucketNames.Select((bck, ix) => $"{bck}\t{numRegular[ix]}\t{numModules[ix]}").JoinString("\n");
         }
     }
 

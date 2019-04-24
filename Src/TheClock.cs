@@ -169,10 +169,7 @@ namespace KtaneStuff
             var arabicIx = 0;
             var romanIx = 0;
             foreach (var key in numberData.Keys)
-                if (key.StartsWith("A"))
-                    indexes[key] = arabicIx++;
-                else
-                    indexes[key] = romanIx++;
+                indexes[key] = key.StartsWith("A") ? arabicIx++ : romanIx++;
 
             numberData.ParallelForEach(1, kvp =>
             {

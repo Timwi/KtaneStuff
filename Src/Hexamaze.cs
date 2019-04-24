@@ -451,8 +451,7 @@ namespace KtaneStuff
                 for (int rotation = 0; rotation < 6; rotation++)
                 {
                     var markingsStr = Hex.LargeHexagon(smallSize).Select(h => h.Rotate(rotation) + centerHex).Select(h => maze.Markings.Get(h, Marking.None).Rotate(-rotation)).ToMarkingString();
-                    List<Tuple<Hex, int>> uniqs;
-                    if (unique.TryGetValue(markingsStr, out uniqs) && uniqs.Count > 0)
+                    if (unique.TryGetValue(markingsStr, out var uniqs) && uniqs.Count > 0)
                     {
                         if (saveFiles)
                         {

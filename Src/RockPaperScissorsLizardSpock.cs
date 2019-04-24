@@ -16,7 +16,7 @@ namespace KtaneStuff
 
     static class RockPaperScissorsLizardSpock
     {
-        private static string[] Responses = new[] { "Rock", "Paper", "Scissors", "Lizard", "Spock" };
+        private static readonly string[] Responses = new[] { "Rock", "Paper", "Scissors", "Lizard", "Spock" };
 
         public static void GenerateModels()
         {
