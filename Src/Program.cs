@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -31,7 +30,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            File.WriteAllText(@"D:\c\KTANE\Manipulator\Assets\ThinTube.obj", Modeling.Md.GenerateObjFile(LooseModels.Tube(36, .9, 1, 1), "ThinTube"));
+            ModuleMaze.GenerateIndex();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

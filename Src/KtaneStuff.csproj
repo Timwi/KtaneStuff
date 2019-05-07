@@ -89,6 +89,7 @@
     <Compile Include="Modeling\AutoNormal.cs" />
     <Compile Include="Modeling\GaussianBlur.cs" />
     <Compile Include="ModeSettings.cs" />
+    <Compile Include="ModuleMaze.cs" />
     <Compile Include="MonoRandom.cs" />
     <Compile Include="Neutralization.cs" />
     <Compile Include="OddOneOut.cs" />
