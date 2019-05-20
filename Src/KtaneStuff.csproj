@@ -62,6 +62,7 @@
     <Compile Include="DragonEnergy.cs" />
     <Compile Include="EitherOr.cs" />
     <Compile Include="ExtendedPassword.cs" />
+    <Compile Include="FactoryMaze.cs" />
     <Compile Include="GridMatching.cs" />
     <Compile Include="BrokenGuitarChords.cs" />
     <Compile Include="Hogwarts.cs" />
