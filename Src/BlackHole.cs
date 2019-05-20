@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using RT.KitchenSink;
 using RT.Util;
+using RT.Util.Consoles;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
@@ -47,7 +48,7 @@ namespace KtaneStuff
             }).Save(bhPath1);
             pngcr(bhPath1, bhPath2);
 
-            var colorInfos = new(string colorCode, string name)[] { ("e70909ff", "red"), ("ed800cff", "orange"), ("deda16ff", "yellow"), ("17b129ff", "green"), ("10a0a8ff", "cyan"), ("2826ffff", "blue"), ("bb0db0ff", "purple") };
+            var colorInfos = new (string colorCode, string name)[] { ("e70909ff", "red"), ("ed800cff", "orange"), ("deda16ff", "yellow"), ("17b129ff", "green"), ("10a0a8ff", "cyan"), ("2826ffff", "blue"), ("bb0db0ff", "purple") };
 
             foreach (var (colorCode, name) in colorInfos)
             {
@@ -111,6 +112,45 @@ namespace KtaneStuff
 
             foreach (var thr in thrs)
                 thr.Join();
+        }
+
+        public static void Verify(int x, int y, int dir)
+        {
+            var _grid = @"3	4	1	0	2	3	1	2	0	4
+1	3	0	2	4	1	2	3	4	0
+3	2	4	2	1	3	0	0	1	4
+4	0	0	1	3	4	2	2	1	3
+1	2	1	3	0	0	4	3	4	2
+4	0	2	3	4	1	3	0	2	1
+2	1	3	1	3	0	4	4	0	2
+2	4	4	0	0	2	1	1	3	3
+0	1	3	4	2	2	0	4	3	1
+0	3	2	4	1	4	3	1	2	0".Replace("\r", "").Split('\n').Select(row => row.Split('\t').Select(int.Parse).ToArray()).ToArray();
+
+            for (int i = 0; i < 15; i++)
+            {
+                var colors = Ut.NewArray<ConsoleColor>(10, 10);
+
+                var digit = 0;
+                for (int j = 0; j < i + 1; j++)
+                {
+                    digit = (digit + _grid[y][x]) % 5;
+                    colors[y][x]++;
+                    if (dir == 1 || dir == 2 || dir == 3)
+                        x = (x + 1) % 10;
+                    else if (dir == 5 || dir == 6 || dir == 7)
+                        x = (x + 9) % 10;
+                    if (dir == 7 || dir == 0 || dir == 1)
+                        y = (y + 9) % 10;
+                    else if (dir == 3 || dir == 4 || dir == 5)
+                        y = (y + 1) % 10;
+                }
+                for (int yy = 0; yy < 10; yy++)
+                    ConsoleUtil.WriteLine(Enumerable.Range(0, 10).Select(xx => $" {_grid[yy][xx].ToString()} ".Color(ConsoleColor.White, colors[yy][xx])).JoinColoredString());
+                ConsoleUtil.WriteLine($"{(i + 1).ToString().Color(ConsoleColor.Magenta)}th digit is {digit.ToString().Color(ConsoleColor.Green)}", null);
+                Console.WriteLine();
+                dir = (dir + 1) % 8;
+            }
         }
 
         internal static void Analyze()

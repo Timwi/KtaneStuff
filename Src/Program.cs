@@ -9,7 +9,7 @@ using RT.Util;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KtaneStuff")]
-[assembly: AssemblyCopyright("Copyright © Timwi 2016–2018")]
+[assembly: AssemblyCopyright("Copyright © Timwi 2016–2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
@@ -30,7 +30,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            ModuleMaze.GenerateIndex();
+            BlackHole.Verify(5, 4, 4);
 
             Console.WriteLine("Done.");
             Console.ReadLine();
