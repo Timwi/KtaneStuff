@@ -61,6 +61,7 @@
     <Compile Include="DividedSquares.cs" />
     <Compile Include="DragonEnergy.cs" />
     <Compile Include="EitherOr.cs" />
+    <Compile Include="ElderFuthark.cs" />
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="FactoryMaze.cs" />
     <Compile Include="GridMatching.cs" />

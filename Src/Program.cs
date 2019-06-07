@@ -30,7 +30,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            TheClock.GenerateCharts中文();
+            ElderFuthark.ReplaceRunesInManual();
 
             Console.WriteLine("Done.");
             Console.ReadLine();
