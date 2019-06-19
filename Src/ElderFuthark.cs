@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using System.Text.RegularExpressions;
 using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff
@@ -11,17 +10,24 @@ namespace KtaneStuff
     {
         public static void ReplaceRunesInManual()
         {
-            var svg = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\ElderFuthark\Runes.svg"));
-            var paths = svg.Root.ElementsI("path").ToArray();
-            var chars = "abcdefghijylmnopzrstuvx";
-            Console.WriteLine(paths.Length);
-            Console.WriteLine(chars.Length);
-
-            if (paths.Length != 23 || chars.Length != 23)
-                Debugger.Break();
-
-            for (int i = 0; i < 23; i++)
-                Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Elder Futhark.html", $"<!--rune-{chars[i]}-->", $"<!--/rune-{chars[i]}-->", $@"<svg viewBox='{7.5 + 10 * i} 7 5 6'><path d='{paths[i].AttributeI("d").Value}' /></svg>");
+            var d = new Dictionary<string, List<string>>();
+            foreach (var module in Ktane.GetLiveJson())
+                if (module["Type"].GetString() != "Widget")
+                {
+                    var name = Regex.Replace(module["Name"].GetString(), @"^The ", "").ToUpperInvariant().Where(ch => ch >= 'A' && ch <= 'Z').JoinString();
+                    var x = new HashSet<string>();
+                    for (int j = 0; j < name.Length - 2; j++)
+                        x.Add(name.Substring(j, 3));
+                    foreach (var y in x)
+                        d.AddSafe(y, name);
+                }
+            var i = 1;
+            foreach (var kvp in d.OrderByDescending(k => k.Value.Count))
+            {
+                Console.WriteLine($"{i}. {kvp.Key} ({kvp.Value.Count})");
+                i++;
+            }
+            Console.WriteLine(d.Count);
         }
     }
 }
