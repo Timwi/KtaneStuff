@@ -5,7 +5,10 @@ namespace KtaneStuff.Modeling
 {
     public struct Pt : IEquatable<Pt>
     {
-        public double X; public double Y; public double Z;
+        public double X;
+        public double Y;
+        public double Z;
+
         public override string ToString() => string.Format("({0}, {1}, {2})", X, Y, Z);
         public Pt(double x, double y, double z) { X = x; Y = y; Z = z; }
         public Pt Add(double x = 0, double y = 0, double z = 0) => new Pt(X + x, Y + y, Z + z);

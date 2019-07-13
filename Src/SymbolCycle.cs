@@ -225,27 +225,28 @@ namespace KtaneStuff
                 var ch = char.ConvertFromUtf32(char.ConvertToUtf32(chars, i));
                 i += ch.Length;
 
-                GraphicsUtil.DrawBitmap(w, h, g =>
-                {
-                    g.Clear(Color.Transparent);
-
-                    var gp = new GraphicsPath();
-                    gp.AddString(ch, new FontFamily("🏸🏹🏺🕋🕌🕍🕎🕺🏏🏐🏑🏒🏓".Contains(ch) ? "Segoe UI Symbol" : "Symbola"), 0, 100, new PointF(0, 0), new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
-
-                    var pts = gp.PathPoints;
-                    float minX = pts[0].X, maxX = pts[0].X, minY = pts[0].Y, maxY = pts[0].Y;
-                    foreach (var pt in pts)
+                if (!File.Exists($@"D:\c\KTANE\SymbolCycle\Assets\Symbols\Icon{j}.png"))
+                    GraphicsUtil.DrawBitmap(w, h, g =>
                     {
-                        minX = Math.Min(minX, pt.X);
-                        maxX = Math.Max(maxX, pt.X);
-                        minY = Math.Min(minY, pt.Y);
-                        maxY = Math.Max(maxY, pt.Y);
-                    }
-                    var rect = GraphicsUtil.FitIntoMaintainAspectRatio(new Size((int) (maxX - minX), (int) (maxY - minY)), new Rectangle(1, 1, w - 2, h - 2));
+                        g.Clear(Color.Transparent);
 
-                    using (var tr = new GraphicsTransformer(g).Translate(-minX, -minY).Scale(rect.Width / (maxX - minX), rect.Height / (maxY - minY)).Translate(rect.Left, rect.Top))
-                        g.FillPath(Brushes.White, gp);
-                }).Save($@"D:\c\KTANE\SymbolCycle\Assets\Symbols\Icon{j}.png");
+                        var gp = new GraphicsPath();
+                        gp.AddString(ch, new FontFamily("🏸🏹🏺🕋🕌🕍🕎🕺🏏🏐🏑🏒🏓".Contains(ch) ? "Segoe UI Symbol" : "Symbola"), 0, 100, new PointF(0, 0), new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+
+                        var pts = gp.PathPoints;
+                        float minX = pts[0].X, maxX = pts[0].X, minY = pts[0].Y, maxY = pts[0].Y;
+                        foreach (var pt in pts)
+                        {
+                            minX = Math.Min(minX, pt.X);
+                            maxX = Math.Max(maxX, pt.X);
+                            minY = Math.Min(minY, pt.Y);
+                            maxY = Math.Max(maxY, pt.Y);
+                        }
+                        var rect = GraphicsUtil.FitIntoMaintainAspectRatio(new Size((int) (maxX - minX), (int) (maxY - minY)), new Rectangle(1, 1, w - 2, h - 2));
+
+                        using (var tr = new GraphicsTransformer(g).Translate(-minX, -minY).Scale(rect.Width / (maxX - minX), rect.Height / (maxY - minY)).Translate(rect.Left, rect.Top))
+                            g.FillPath(Brushes.White, gp);
+                    }).Save($@"D:\c\KTANE\SymbolCycle\Assets\Symbols\Icon{j}.png");
                 j++;
             }
         }
