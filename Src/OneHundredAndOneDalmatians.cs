@@ -147,7 +147,7 @@ namespace KtaneStuff
                 {
                     for (int x = 0; x < w; x += 2)
                     {
-                        var pt = new PointD(x * 16d / w - 8, y * 16d / h - 8);
+                        var pt = new PointD(x * 18d / w - 9, y * 18d / h - 9);
                         var inside = pattern.Any(p => pt.Distance(new PointD(p.x - mx, p.y - my)) < p.r);
                         var angle = rnd.NextDouble() * 45 - 45 * .5;
                         using (var tr = new GraphicsTransformer(g).RotateAt((float) angle, x, y))
