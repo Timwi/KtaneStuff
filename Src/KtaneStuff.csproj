@@ -117,6 +117,7 @@
     <Compile Include="SymbolicCoordinates.cs" />
     <Compile Include="Tennis.cs" />
     <Compile Include="TheGamepad.cs" />
+    <Compile Include="ToonEnough.cs" />
     <Compile Include="Translatable.cs" />
     <Compile Include="MarbleTumble.cs" />
     <Compile Include="XRay.cs" />
