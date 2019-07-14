@@ -22,7 +22,7 @@ namespace KtaneStuff
         const double _bevelRatio = .7;
         const double _bevMid = _bevelSize * _bevelRatio;
         const double _bevMid2 = _bevelSize * (1 - _bevelRatio);
-        const double _notchDepth = .05;
+        const double _notchDepth = .2;
 
         const int _numNotches = 10;
         static readonly int[] _gapTrapMins = new[] { 3, 2, 1, 1, 1 };
@@ -35,15 +35,17 @@ namespace KtaneStuff
                     file.Delete();
             for (int r = 1; r <= 5; r++)
                 for (int t = _gapTrapMins[r - 1]; t <= _gapTrapMaxs[r - 1]; t++)
-                    File.WriteAllText($@"D:\c\KTANE\MarbleTumble\Assets\Models\Cylinder-{r}-{t}.obj", GenerateObjFile(
-                        Cylinder(r - .5, r + .5, (360 / _numNotches) * t, Enumerable.Range(1, 9).Where(n => n != t).ToArray()),
-                        $"Cylinder_{r}_{t}"));
+                {
+                    var (mainBody, notches) = Cylinder(r - .5, r + .5, (360 / _numNotches) * t, Enumerable.Range(1, 9).Where(n => n != t).ToArray(), n => r == 1 ? (Math.Abs(t - n) <= 1 ? .15 : n <= 1 || 10 - n <= 1 ? .105 : .15) : .15);
+                    File.WriteAllText($@"D:\c\KTANE\MarbleTumble\Assets\Models\Cylinder-{r}-{t}.obj", GenerateObjFile(mainBody.Concat(notches), $"Cylinder_{r}_{t}"));
+                    Console.WriteLine($"Generated: {r}-{t}");
+                }
         }
 
         private static IEnumerable<double> range(double from, double to, int steps) => Enumerable.Range(0, steps).Select(i => from + (to - from) * i / steps);
 
         /// <summary>
-        ///     Generates a polygon that describes the outline of a single tumble-lock cylinder.</summary>
+        ///     Generates a polygon that describes the outline of a single cylinder.</summary>
         /// <param name="inner">
         ///     The radius of the inside (the “hole in the ring”).</param>
         /// <param name="outer">
@@ -58,9 +60,11 @@ namespace KtaneStuff
         ///     The distance from the original curve at which to calculate the UV coordinates.</param>
         /// <param name="notches">
         ///     List of positions (0–9) of notches on the surface of the cylinder.</param>
+        /// <param name="getNotchSize">
+        ///     Size of the notches (max .1 for inner cylinder)</param>
         /// <returns>
         ///     A sequence of points that describe the outline, decorated with texture coordinates.</returns>
-        private static IEnumerable<(IEnumerable<(PointD p, PointD texture)> poly, PointD mid)> CylinderPolygonWithNotches(double inner, double outer, double marble, double trapDepth, int trap, double textureDist, int[] notches = null)
+        private static IEnumerable<(IEnumerable<(PointD p, PointD texture)> poly, PointD mid)> CylinderPolygonWithNotches(double inner, double outer, double marble, double trapDepth, int trap, double textureDist, int[] notches = null, Func<int, double> getNotchSize = null)
         {
             double w = (outer - inner) / 2;     // half the width of the cylinder’s bulk (same as radius of the semicircles on each side of the gap)
             double m = (outer + inner) / 2;     // distance from center to the middle of the bulk
@@ -86,7 +90,10 @@ namespace KtaneStuff
             if (notches != null)
             {
                 foreach (var n in notches)
-                    yield return (new[] { p(-.1, m), p(0, m + .2), p(.1, m), p(0, m - .2) }.Select(p => p.Rotated((-n * .2 + .5) * Math.PI)).Select(p => (p, p)).ToArray(), p(0, m).Rotated((-n * .2 + .5) * Math.PI));
+                {
+                    var ns = getNotchSize == null ? .1 : getNotchSize(n);
+                    yield return (new[] { p(-ns, m), p(0, m + 2 * ns), p(ns, m), p(0, m - 2 * ns) }.Select(p => p.Rotated((-n * .2 + .5) * Math.PI)).Select(p => (p, p)).ToArray(), p(0, m).Rotated((-n * .2 + .5) * Math.PI));
+                }
             }
         }
 
@@ -95,9 +102,9 @@ namespace KtaneStuff
             return CylinderPolygonWithNotches(inner, outer, marble, trapDepth, trap, textureDist).First().poly;
         }
 
-        private static IEnumerable<VertexInfo[]> Cylinder(double inner, double outer, int trap, int[] notches)
+        private static (IEnumerable<VertexInfo[]> mainBody, IEnumerable<VertexInfo[]> notches) Cylinder(double inner, double outer, int trap, int[] notches, Func<int, double> getNotchSize)
         {
-            var topFaceFull = CylinderPolygonWithNotches(inner + _bevelSize, outer - _bevelSize, _marbleSize + _bevelSize, _marbleSize - _bevelSize, trap, 0, notches).ToArray();
+            var topFaceFull = CylinderPolygonWithNotches(inner + _bevelSize, outer - _bevelSize, _marbleSize + _bevelSize, _marbleSize - _bevelSize, trap, 0, notches, getNotchSize).ToArray();
             var topFaceOutline = topFaceFull.First();
 
             var bottom = CylinderPolygon(inner, outer, _marbleSize, _marbleSize, trap, 1).Select(p => pt(p.p.X, 0, p.p.Y).WithMeshInfo(Normal.Mine, Normal.Mine, Normal.Average, Normal.Average).WithTexture(p.texture)).ToArray();
@@ -105,40 +112,48 @@ namespace KtaneStuff
             var bevelMiddle = CylinderPolygon(inner + _bevMid2, outer - _bevMid2, _marbleSize + _bevMid2, _marbleSize - _bevMid2, trap, .05).Select(p => pt(p.p.X, _height + _bevMid, p.p.Y).WithMeshInfo(Normal.Average, Normal.Average, Normal.Average, Normal.Average).WithTexture(p.texture)).ToArray();
             var bevelTop = topFaceOutline.poly.Select(p => pt(p.p.X, _height + _bevelSize, p.p.Y).WithMeshInfo(0, 1, 0).WithTexture(p.texture)).ToArray();
 
-            // Main body of the cylinder without the top face
             PointD translateTexture(PointD orig) => p((orig.X + outer + 1) / (2 * outer + 2), (orig.Y + outer + 1) / (2 * outer + 2));
             VertexInfo[] translateTextures(VertexInfo[] orig) => orig.Select(v => v.WithTexture(translateTexture(v.Texture.Value))).ToArray();
-            foreach (var f in CreateMesh(false, true, new[] { bottom, bevelBottom, bevelMiddle, bevelTop }))
-                yield return translateTextures(f);
 
-            // Top face without the notches
-            var topFacePoly = topFaceFull.Select(pl => pl.poly.Select(p => p.p).ToArray()).ToArray();
-            VertexInfo[][] arr;
-            try
+            IEnumerable<VertexInfo[]> generateMainBody()
             {
-                arr = topFacePoly
-                    .Triangulate()
-                    .Select(face => face.Select(p => pt(p.X, _height + _bevelSize, p.Y).WithNormal(0, 1, 0).WithTexture(topFaceFull.SelectMany(pl => pl.poly).MinElement(p2 => p2.p.Distance(p)).texture)).Reverse().ToArray())
-                    .ToArray();
-            }
-            catch (Exception)
-            {
-                makeTempPng(topFacePoly.SelectMany(x => x));
-                throw;
-            }
+                // Main body of the cylinder without the top face
+                foreach (var f in CreateMesh(false, true, new[] { bottom, bevelBottom, bevelMiddle, bevelTop }))
+                    yield return translateTextures(f);
 
-            foreach (var f in arr)
-                yield return translateTextures(f);
+                // Top face without the notches
+                var topFacePoly = topFaceFull.Select(pl => pl.poly.Select(p => p.p).ToArray()).ToArray();
+                VertexInfo[][] arr;
+                try
+                {
+                    arr = topFacePoly
+                        .Triangulate()
+                        .Select(face => face.Select(p => pt(p.X, _height + _bevelSize, p.Y).WithNormal(0, 1, 0).WithTexture(topFaceFull.SelectMany(pl => pl.poly).MinElement(p2 => p2.p.Distance(p)).texture)).Reverse().ToArray())
+                        .ToArray();
+                }
+                catch (Exception)
+                {
+                    makeTempPng(topFacePoly.SelectMany(x => x));
+                    throw;
+                }
 
-            // Notches
-            foreach (var (poly, mid) in topFaceFull.Skip(1))
-            {
-                foreach (var f in CreateMesh(true, false, poly.Select(ptTx => new[] {
-                    pt(ptTx.p.X, _height + _bevelSize, ptTx.p.Y).WithMeshInfo(Normal.Mine, Normal.Mine, Normal.Mine, Normal.Mine).WithTexture(ptTx.texture),
-                    pt(mid.X, _height + _bevelSize - _notchDepth, mid.Y).WithMeshInfo(0, 1, 0).WithTexture(mid)
-                }).ToArray()))
+                foreach (var f in arr)
                     yield return translateTextures(f);
             }
+
+            IEnumerable<VertexInfo[]> generateNotches()
+            {
+                foreach (var (poly, mid) in topFaceFull.Skip(1))
+                {
+                    foreach (var f in CreateMesh(true, false, poly.Select(ptTx => new[] {
+                        pt(ptTx.p.X, _height + _bevelSize, ptTx.p.Y).WithMeshInfo(Normal.Mine, Normal.Mine, Normal.Mine, Normal.Mine).WithTexture(ptTx.texture),
+                        pt(mid.X, _height + _bevelSize - _notchDepth, mid.Y).WithMeshInfo(0, 1, 0).WithTexture(mid)
+                    }).ToArray()))
+                        yield return translateTextures(f);
+                }
+            }
+
+            return (generateMainBody(), generateNotches());
         }
 
         public static void DoDebug()
