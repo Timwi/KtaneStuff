@@ -87,6 +87,7 @@
     <Compile Include="LedEncryption.cs" />
     <Compile Include="Mahjong.cs" />
     <Compile Include="MaritimeFlags.cs" />
+    <Compile Include="MegaMan2.cs" />
     <Compile Include="Mineseeker.cs" />
     <Compile Include="Modeling\AutoNormal.cs" />
     <Compile Include="Modeling\GaussianBlur.cs" />

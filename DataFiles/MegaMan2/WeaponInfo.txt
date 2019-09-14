@@ -1,0 +1,109 @@
+DL no.00 Proto Man 	Proto Shield
+DL no.01 Mega Man 	Mega Buster
+DL no.03 Cut Man 	Rolling Cutter
+DL no.04 Guts Man 	Super Arm
+DL no.05 Ice Man 	Ice Slasher
+DL no.06 Bomb Man 	Hyper Bomb
+DL no.07 Fire Man 	Fire Storm
+DL no.08 Elec Man 	Thunder Beam
+DW no.09 Metal Man 	Metal Blade
+DW no.10 Air Man 	Air Shooter
+DW no.11 Bubble Man 	Bubble Lead
+DW no.12 Quick Man 	Quick Boomerang
+DW no.13 Crash Man 	Crash Bomber
+DW no.14 Flash Man 	Time Stopper
+DW no.15 Heat Man 	Atomic Fire
+DW no.16 Wood Man 	Leaf Shield
+DW no.17 Needle Man 	Needle Cannon
+DW no.18 Magnet Man 	Magnet Missile
+DW no.19 Gemini Man 	Gemini Laser
+DW no.20 Hard Man 	Hard Knuckle
+DW no.21 Top Man 	Top Spin
+DW no.22 Snake Man 	Search Snake
+DW no.23 Spark Man 	Spark Shock
+DW no.24 Shadow Man 	Shadow Blade
+DW no.25 Bright Man 	Flash Stopper
+DW no.26 Toad Man 	Rain Flush
+DW no.27 Drill Man 	Drill Bomb
+DW no.28 Pharaoh Man 	Pharaoh Shot
+DW no.29 Ring Man 	Ring Boomerang
+DW no.30 Dust Man 	Dust Crusher
+DW no.31 Dive Man 	Dive Missile
+DW no.32 Skull Man 	Skull Barrier
+DW no.33 Gravity Man 	Gravity Hold
+DW no.34 Wave Man 	Water Wave
+DW no.35 Stone Man 	Power Stone
+DW no.36 Gyro Man 	Gyro Attack
+DW no.37 Star Man 	Star Crash
+DW no.38 Charge Man 	Charge Kick
+DW no.39 Napalm Man 	Napalm Bomb
+DW no.40 Crystal Man 	Crystal Eye
+DW no.41 Blizzard Man 	Blizzard Attack
+DW no.42 Centaur Man 	Centaur Flash
+DW no.43 Flame Man 	Flame Blast
+DW no.44 Knight Man 	Knight Crusher
+DW no.45 Plant Man 	Plant Barrier
+DW no.46 Tomahawk Man 	Silver Tomahawk
+DW no.47 Wind Man 	Wind Storm
+DW no.48 Yamato Man 	Yamato Spear
+DW no.49 Freeze Man 	Freeze Cracker
+DW no.50 Junk Man 	Junk Shield
+DW no.51 Burst Man 	Danger Wrap
+DW no.52 Cloud Man 	Thunder Bolt
+DW no.53 Spring Man 	Wild Coil
+DW no.54 Slash Man 	Slash Claw
+DW no.55 Shade Man 	Noise Crush
+DW no.56 Turbo Man 	Scorch Wheel
+DW no.57 Tengu Man 	Tengu Blade
+DW no.57 Tengu Man 	Tornado Hold
+DW no.58 Astro Man 	Astro Crush
+DW no.58 Astro Man 	Copy Vision
+DW no.59 Sword Man 	Flame Sword
+DW no.60 Clown Man 	Thunder Claw
+DW no.61 Search Man 	Homing Sniper
+DW no.62 Frost Man 	Ice Wave
+DW no.63 Grenade Man 	Flash Bomb
+DW no.64 Aqua Man 	Water Balloon
+DL no.65 Concrete Man 	Concrete Shot
+DL no.66 Tornado Man 	Tornado Blow
+DL no.67 Splash Woman 	Laser Trident
+DL no.68 Plug Man 	Plug Ball
+DL no.69 Jewel Man 	Jewel Satellite
+DL no.70 Hornet Man 	Hornet Chaser
+DL no.71 Magma Man 	Magma Bazooka
+DL no.72 Galaxy Man 	Black Hole Bomb
+DW no.73 Blade Man 	Triple Blade
+DW no.74 Pump Man 	Water Shield
+DW no.75 Commando Man 	Commando Bomb
+DW no.76 Chill Man 	Chill Spike
+DW no.77 Sheep Man 	Thunder Wool
+DW no.78 Strike Man 	Rebound Striker
+DW no.79 Nitro Man 	Wheel Cutter
+DW no.80 Solar Man 	Solar Blaze
+DW no.81 Block Man 	Block Dropper
+DW no.82 Fuse Man 	Scramble Thunder
+DW no.83 Blast Man 	Chain Blast
+DW no. 84 Acid Man 	Acid Barrier
+DW no. 85 Tundra Man 	Tundra Storm
+DW no. 86 Torch Man 	Blazing Torch
+DW no. 87 Impact Man 	Pile Driver
+DW no. 88 Bounce Man 	Bounce Ball
+DL no.01 Quint 	Sakugarne
+RK no.01 Enker 	Mirror Buster
+RK no.02 Punk 	Screw Crusher
+RK no.03 Ballade 	Ballade Cracker
+SR no.01 Terra 	Spark Chaser
+SR no.02 Mercury 	Grab Buster
+SR no.03 Venus 	Bubble Bomb
+SR no.04 Mars 	Photon Missile
+SR no.05 Jupiter 	Electric Shock
+SR no.06 Saturn 	Black Hole
+SR no.07 Uranus 	Deep Digger
+SR no.08 Pluto 	Break Dash
+SR no.09 Neptune 	Salt Water
+KG no.01 Dynamo Man 	Lightning Bolt
+KG no.02 Cold Man 	Ice Wall
+KG no.03 Ground Man 	Spread Drill
+KG no.04 Pirate Man 	Remote Mine
+KG no.05 Burner Man 	Wave Burner
+KG no.06 Magic Man 	Magic Card
