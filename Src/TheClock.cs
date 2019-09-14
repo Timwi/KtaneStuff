@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Media;
 using KtaneStuff.Modeling;
 using RT.KitchenSink;
 using RT.Util;
@@ -212,7 +212,7 @@ namespace KtaneStuff
             var numbers = arabic ? "1|2,1,2,3,4,5,6,7,8,9,1|0,1|1".Split(',') : "XII,I,II,III,IV,V,VI,VII,VIII,IX,X,XI".Split(',');
             var stuffs = new List<PathStuff>();
 
-            using (var bmp = new Bitmap(1024, 768, PixelFormat.Format32bppArgb))
+            using (var bmp = new Bitmap(1024, 768, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
                 for (int i = 0; i < 12; i++)
                 {
                     var angle = i * 360 / 12 - 90;
@@ -220,7 +220,7 @@ namespace KtaneStuff
                     var x = 0.0;
                     foreach (var piece in spacing == null ? new[] { numbers[i].Replace("|", "") } : numbers[i].Split('|'))
                     {
-                        gp.AddString(piece, new FontFamily(fontFamily), 0, .25f, new PointF((float) x, 0), new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+                        gp.AddString(piece, new System.Drawing.FontFamily(fontFamily), 0, .25f, new PointF((float) x, 0), new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
                         if (spacing != null && arabic && (i == 0 || i >= 10))
                             x += (i == 0 || i == 10) ? spacing[0] : spacing[1];
                     }
@@ -349,6 +349,8 @@ namespace KtaneStuff
 
         public static void GenerateCharts()
         {
+            // The numbers are now off due to switching the rendering to WPF
+
             // Minutes
             File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Minutes Chart.svg", generateChart("Special Elite", "Minutes", .4, .1, 1, 1.24, 1000,
                 new RingInfo { Labels = new[] { "Arrows", "Lines", "Spades" }, Horiz = true, FontSize = .8, HFactor = 32, InnerD = .35, OuterD = .6 },
@@ -365,6 +367,8 @@ namespace KtaneStuff
 
         public static void GenerateCharts中文()
         {
+            // The numbers are now off due to switching the rendering to WPF
+
             // Minutes
             File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Minutes Chart 中文.svg", generateChart("Yu Gothic", "分鐘", .6, .25, 1, 1.24, 1000,
                 new RingInfo { Labels = new[] { "箭頭", "針狀", "桃花" }, Horiz = true, FontSize = .8, HFactor = 40, InnerD = .3, OuterD = .65 },
@@ -377,6 +381,40 @@ namespace KtaneStuff
                 new RingInfo { Labels = new[] { "阿拉伯數字", "羅馬數字", "沒有數字" }, Horiz = true, FontSize = .6, HFactor = 32, InnerD = .35, OuterD = .6 },
                 new RingInfo { Labels = new[] { "銀色", "金色" }, Horiz = true, FontSize = .6, HFactor = 20, InnerD = .3, OuterD = .65 },
                 new RingInfo { Labels = new[] { "相同", "不相同" }, Horiz = true, FontSize = .4, HFactor = 14, InnerD = .4, OuterD = .6 }));
+        }
+
+        public static void GenerateChartsРусский()
+        {
+            // The numbers are now off due to switching the rendering to WPF
+
+            // Minutes
+            File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Minutes Chart Русский.svg", generateChart("Special Elite", "Минуты", .4, .1, 1, 1.24, 1000,
+                new RingInfo { Labels = new[] { "В виде стрел", "Линии", "Наконечники" }, Horiz = true, FontSize = .6, HFactor = 32, InnerD = .45, OuterD = .5 },
+                new RingInfo { Labels = new[] { "Красный", "Зелёный", "Синий", "Золотой", "Черный" }, Horiz = true, FontSize = .3, HFactor = 16, InnerD = .45, OuterD = .5 },
+                new RingInfo { Labels = new[] { "Ч", "Б" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .45, OuterD = .5 },
+                new RingInfo { Labels = new[] { "Нет", "Да" }, Horiz = false, FontSize = .4, HFactor = 12, InnerD = .4, OuterD = .55 }));
+
+            // Hours
+            File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Hours Chart Русский.svg", generateChart("Special Elite", "Часы", .4, .1, 1 / .8, 1, 100,
+                new RingInfo { Labels = new[] { "Арабские", "Римские", "Отсутствуют" }, Horiz = true, FontSize = .6, HFactor = 32, InnerD = .45, OuterD = .5 },
+                new RingInfo { Labels = new[] { "Серебряные", "Золотые" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .45, OuterD = .5 },
+                new RingInfo { Labels = new[] { "Совпадает", "Не совпадает" }, Horiz = true, FontSize = .3, HFactor = 14, InnerD = .45, OuterD = .5 }));
+        }
+
+        public static void GenerateChartsČeština()
+        {
+            // Minutes
+            File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Minutes Chart Čeština.svg", generateChart("Special Elite", "Minuty", .4, .1, 1, 1.24, 1000,
+                new RingInfo { Labels = new[] { "Šipky", "Linky", "Ryče" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .95, OuterD = 0 },
+                new RingInfo { Labels = new[] { "Červená", "Zelená", "Modrá", "Zlatá", "Černá" }, Horiz = true, FontSize = .35, HFactor = 16, InnerD = .75, OuterD = .25 },
+                new RingInfo { Labels = new[] { "Č", "B" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .8, OuterD = .2 },
+                new RingInfo { Labels = new[] { "Ano", "Ne" }, Horiz = false, FontSize = .4, HFactor = 12, InnerD = .95, OuterD = 0 }));
+
+            // Hours
+            File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Hours Chart Čeština.svg", generateChart("Special Elite", "Hodiny", .4, .1, 1 / .8, 1, 100,
+                new RingInfo { Labels = new[] { "Arabská", "Římská", "Žádná" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .95, OuterD = 0 },
+                new RingInfo { Labels = new[] { "Stříbrná", "Zlatá" }, Horiz = true, FontSize = .6, HFactor = 20, InnerD = .85, OuterD = .15 },
+                new RingInfo { Labels = new[] { "Ano", "Ne" }, Horiz = true, FontSize = .7, HFactor = 14, InnerD = .95, OuterD = .05 }));
         }
 
         sealed class RingInfo
@@ -398,6 +436,18 @@ namespace KtaneStuff
             var innerCirc = 1;
             var offset = rings.Aggregate(180, (p, n) => p / n.Labels.Length);
 
+            IEnumerable<DecodeSvgPath.PathPiece> createPath(string str, double fontSize)
+            {
+                if (string.IsNullOrEmpty(str))
+                    throw new ArgumentNullException(nameof(str));
+
+                var typeFaceToUse = new Typeface(font);
+                var ft = new FormattedText(str, System.Globalization.CultureInfo.CurrentCulture, System.Windows.FlowDirection.LeftToRight, typeFaceToUse, fontSize, System.Windows.Media.Brushes.Black, 1.25);
+                ft.TextAlignment = System.Windows.TextAlignment.Center;
+                var geometry = ft.BuildGeometry(new System.Windows.Point(0, 0));
+                return DecodeSvgPath.DecodePieces(geometry.GetFlattenedPathGeometry().Figures.JoinString());
+            }
+
             foreach (var ring in rings)
             {
                 svg.Append(mkCircle(0, 0, (circ + innerCirc) * fac, "none", "#000", .05 * fac));
@@ -410,7 +460,7 @@ namespace KtaneStuff
 
                     if (ring.Horiz)
                     {
-                        var writing = Utils.FontToSvgPath(label, font, ring.FontSize);
+                        var writing = createPath(label, ring.FontSize);
                         var textAngle2 = textAngle + 90;
                         if (textAngle < 90 || textAngle >= 270)
                             svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + ring.OuterD + innerCirc).Apply(r => new PointD((r + p.Y) * cos(textAngle2 - p.X * ring.HFactor) * fac, (r + p.Y) * sin(textAngle2 - p.X * ring.HFactor) * fac)))).JoinString(" ")}' fill='#000' stroke='none' />");
