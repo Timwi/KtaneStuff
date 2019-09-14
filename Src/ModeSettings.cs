@@ -369,10 +369,10 @@ Stack’em	8
 The Necronomicon	17		
 The Troll	9		
 The Witness	8		!".Replace("\r", "").Split('\n').Select(line => line.Split('\t')).ToArray();
-            var clash = inputRaw.UniquePairs().FirstOrDefault(tup => tup.Item1[0] == tup.Item2[0]);
+            var clash = inputRaw.UniquePairs().FirstOrNull(tup => tup.Item1[0] == tup.Item2[0]);
             if (clash != null)
             {
-                Console.WriteLine(clash.Item1[0]);
+                Console.WriteLine(clash.Value.Item1[0]);
                 return;
             }
 

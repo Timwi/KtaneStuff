@@ -332,7 +332,7 @@ namespace KtaneStuff
                             for (int d = 0; d < 10; d++)
                                 for (int f = 0; f < 10; f++)
                                     all.Add($"{a},{b},{c},{d},{f}");
-                foreach (DijNode elem in e.HashSet)
+                foreach (DijNode elem in e.VisitedNodes)
                 {
                     if (!all.Remove(elem.Rotations.Select(r => (r % 10 + 10) % 10).JoinString(",")))
                         System.Diagnostics.Debugger.Break();

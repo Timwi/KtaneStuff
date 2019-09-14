@@ -613,13 +613,13 @@ namespace KtaneStuff
                                 Id = "full-house-from-two-pair",
                                 GetCounterExample = new Func<Puzzle, Edgework, Tuple<PlayingCard, PlayingCard>>((puzzle, edgework) =>
                                 {
-                                    var pair1 = puzzle.Pile.UniquePairs().FirstOrDefault(p => p.Item1.Rank == p.Item2.Rank);
+                                    var pair1 = puzzle.Pile.UniquePairs().FirstOrNull(p => p.Item1.Rank == p.Item2.Rank);
                                     if (pair1 == null)
                                         return null;
-                                    var pair2 = puzzle.Pile.UniquePairs().FirstOrDefault(p => p.Item1.Rank == p.Item2.Rank && p.Item1.Rank != pair1.Item1.Rank);
+                                    var pair2 = puzzle.Pile.UniquePairs().FirstOrNull(p => p.Item1.Rank == p.Item2.Rank && p.Item1.Rank != pair1.Value.Item1.Rank);
                                     if (pair2 == null)
                                         return null;
-                                    return puzzle.WrongCards.Where(card => card.Rank == pair1.Item1.Rank || card.Rank == pair2.Item1.Rank).FirstOrNull().NullOr(cc => Tuple.Create(cc, puzzle.CorrectCards[0]));
+                                    return puzzle.WrongCards.Where(card => card.Rank == pair1.Value.Item1.Rank || card.Rank == pair2.Value.Item1.Rank).FirstOrNull().NullOr(cc => Tuple.Create(cc, puzzle.CorrectCards[0]));
                                 })
                             },
                             new
