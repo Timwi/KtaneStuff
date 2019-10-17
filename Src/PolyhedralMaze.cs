@@ -7,13 +7,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using CsQuery;
 using KtaneStuff.Modeling;
+using RT.Json;
+using RT.Serialization;
 using RT.Servers;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
-using RT.Util.Json;
-using RT.Util.Serialization;
 using RT.Util.Text;
 
 namespace KtaneStuff
@@ -163,7 +163,9 @@ OrthokisPropelloCube
 PentakisDodecahedron
 RectifiedRhombicuboctahedron
 TriakisIcosahedron
-Rhombicosidodecahedron".Replace("\r", "").Split('\n');
+Rhombicosidodecahedron
+ElongatedSquareGyrobicupola
+GyroelongatedTriangularBicupola".Replace("\r", "").Split('\n');
 
             List<PolyhedronInfo> polyhedra;
             try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
@@ -173,18 +175,25 @@ Rhombicosidodecahedron".Replace("\r", "").Split('\n');
             {
                 var (name, faces) = Parse(File.ReadAllText(file.FullName));
                 var newInfo = new PolyhedronInfo(Path.GetFileNameWithoutExtension(file.Name), name, faces);
-                //if ((faces.Length < 40 || faces.Length > 60) && newInfo.FileCompatibleName != "Rhombicosidodecahedron")
-                if (!wanted.Contains(newInfo.FileCompatibleName))
-                    continue;
-
                 var info = polyhedra.FirstOrDefault(si => si.FileCompatibleName == newInfo.FileCompatibleName);
-                if (info == null)
+                if (!wanted.Contains(newInfo.FileCompatibleName))
                 {
-                    Console.WriteLine($"Adding {newInfo.ReadableName} ({newInfo.Faces.Length})");
-                    polyhedra.Add(newInfo);
+                    if (info != null)
+                    {
+                        Console.WriteLine($"Removing {newInfo.ReadableName} ({newInfo.Faces.Length})");
+                        polyhedra.Remove(info);
+                    }
                 }
                 else
-                    info.Faces = faces;
+                {
+                    if (info == null)
+                    {
+                        Console.WriteLine($"Adding {newInfo.ReadableName} ({newInfo.Faces.Length})");
+                        polyhedra.Add(newInfo);
+                    }
+                    else
+                        info.Faces = faces;
+                }
             }
 
             ClassifyJson.SerializeToFile(polyhedra, _masterJsonPath);
@@ -382,6 +391,7 @@ namespace PolyhedralMaze
                     case "convert-to-portal": ConvertTo(Adjacency.Portaled, edgeData); break;
                     case "convert-to-curve": ConvertTo(Adjacency.Curved, edgeData); break;
                     case "make-connected": ConvertTo(Adjacency.Connected, edgeData); break;
+                    case "toggle-wall": ToggleWall(edgeData); break;
 
                     case "generate-maze": Update(edgeData["polyhedron"].GetString(), p => GenerateMaze(p, json["WallProb"].GetDoubleLenient(), json["Seed"].GetIntLenient())); break;
                     case "clear-maze": Update(edgeData["polyhedron"].GetString(), ClearMaze); break;
@@ -481,6 +491,20 @@ namespace PolyhedralMaze
                 var edgeIx = edgeData["edge"].GetInt();
                 var adjInf = polyhedron.Adjacencies.Single(ad => (ad.FromFace == faceIx && ad.FromEdge == edgeIx) || (ad.ToFace == faceIx && ad.ToEdge == edgeIx));
                 adjInf.Adjacency = (adjInf.Adjacency & ~Adjacency.ConnectionMask) | adj;
+                SendDelete(polyhedron, $"face-{faceIx}", $"edge-{faceIx}-{edgeIx}", "decor");
+                _boundingBoxes[pIx] = GenerateNet(polyhedron);
+                SendViewBoxes();
+                save();
+            }
+
+            private void ToggleWall(JsonValue edgeData)
+            {
+                var pIx = _polyhedra.IndexOf(poly => poly.FileCompatibleName == edgeData["polyhedron"].GetString());
+                var polyhedron = _polyhedra[pIx];
+                var faceIx = edgeData["face"].GetInt();
+                var edgeIx = edgeData["edge"].GetInt();
+                var adjInf = polyhedron.Adjacencies.Single(ad => (ad.FromFace == faceIx && ad.FromEdge == edgeIx) || (ad.ToFace == faceIx && ad.ToEdge == edgeIx));
+                adjInf.Adjacency = (adjInf.Adjacency ^ Adjacency.Traversible);
                 SendDelete(polyhedron, $"face-{faceIx}", $"edge-{faceIx}-{edgeIx}", "decor");
                 _boundingBoxes[pIx] = GenerateNet(polyhedron);
                 SendViewBoxes();

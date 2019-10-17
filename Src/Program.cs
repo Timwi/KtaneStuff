@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using RT.Util;
+using RT.PostBuild;
 
 [assembly: AssemblyTitle("KtaneStuff")]
 [assembly: AssemblyDescription("Contains some ancillary code used in the creation of some Keep Talking and Nobody Explodes mods.")]
@@ -28,9 +28,9 @@ namespace KtaneStuff
             catch { }
 
             if (args.Length == 2 && args[0] == "--post-build-check")
-                return Ut.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
+                return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            MarbleTumble.DoModels();
+            PolyhedralMaze.RunServer();
 
             Console.WriteLine("Done.");
             Console.ReadLine();

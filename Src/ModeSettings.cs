@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using RT.Json;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Json;
 
 namespace KtaneStuff
 {

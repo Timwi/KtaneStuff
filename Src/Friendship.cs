@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using CsQuery;
 using KtaneStuff.Modeling;
+using RT.Serialization;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
-using RT.Util.Serialization;
 
 namespace KtaneStuff
 {

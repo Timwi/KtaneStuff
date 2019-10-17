@@ -11,7 +11,7 @@ using RT.KitchenSink;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
-using RT.Util.Serialization;
+using RT.Serialization;
 
 namespace KtaneStuff
 {

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KtaneStuff</RootNamespace>
     <AssemblyName>KtaneStuff</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <OutputPath>..\Builds\$(Configuration)\</OutputPath>
@@ -178,12 +178,32 @@
       <Project>{8f80d916-8999-45d8-acb2-ffa7e2698fd6}</Project>
       <Name>RT.TagSoup</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\RT.Util\Src\RT.KitchenSink.csproj">
-      <Project>{7edb80b5-ca44-4ad9-bf23-18a9470feb69}</Project>
-      <Name>RT.KitchenSink</Name>
+    <ProjectReference Include="..\..\..\RT.Util\RT.Json\RT.Json.csproj">
+      <Project>{81c21164-5061-43a8-b692-19f3dff41f89}</Project>
+      <Name>RT.Json</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\RT.Util\Src\RT.Util.csproj">
-      <Project>{8d0fe79c-ad8d-475c-9e6f-9cae85365b5d}</Project>
+    <ProjectReference Include="..\..\..\RT.Util\RT.PostBuild\RT.PostBuild.csproj">
+      <Project>{95cecd30-3ebe-49d9-8066-595c3edfd997}</Project>
+      <Name>RT.PostBuild</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RT.Util\RT.Serialization.Json\RT.Serialization.Json.csproj">
+      <Project>{ab321516-6112-4cc8-b96b-1baf8400a460}</Project>
+      <Name>RT.Serialization.Json</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RT.Util\RT.Serialization.Xml\RT.Serialization.Xml.csproj">
+      <Project>{cc2dfa3f-a508-49f8-af02-dfe6cf04b36a}</Project>
+      <Name>RT.Serialization.Xml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RT.Util\RT.Serialization\RT.Serialization.csproj">
+      <Project>{fc0e5313-e26a-4ca8-9eee-f2985085eaa9}</Project>
+      <Name>RT.Serialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RT.Util\RT.Util.Core\RT.Util.Core.csproj">
+      <Project>{70328064-e4b0-4d90-a769-d480677ee187}</Project>
+      <Name>RT.Util.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RT.Util\RT.Util\RT.Util.csproj">
+      <Project>{e9fb021e-c4e9-4a87-b81c-9607af2c145d}</Project>
       <Name>RT.Util</Name>
     </ProjectReference>
   </ItemGroup>

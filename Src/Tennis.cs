@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using RT.Serialization;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
-using RT.Util.Serialization;
 
 namespace KtaneStuff
 {

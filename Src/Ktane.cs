@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using RT.Json;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Json;
 using RT.Util.Text;
 
 namespace KtaneStuff
