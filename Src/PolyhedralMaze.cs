@@ -628,7 +628,7 @@ namespace PolyhedralMaze
                 var polygons = new PointD[faces.Length][];
 
                 // Remembers which faces have already been encountered (through adjacent edges) but not yet processed.
-                var seen = new HashSet<int>();
+                var seen = new HashSet<int> { 0 };
 
                 q.Enqueue((0, faces));
                 while (q.Count > 0)

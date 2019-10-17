@@ -23,6 +23,7 @@
 
             var socket;
             var selectedEdge = null;
+            var selectedEdgeIx = null;
 
             function setEdgeAppearance(obj, stroke, strokeWidth)
             {
@@ -39,11 +40,34 @@
                     if (selectedEdge != null)
                         selectedEdge.returnToNormal();
 
+                    var edgeData = JSON.parse(this.getAttribute('data-edge'));
                     $('#edge-options').show();
-                    $('#eo-data').text(this.getAttribute('data-edge'));
+                    $('#eo-data').text(JSON.stringify(edgeData, null, 1));
                     this.returnToNormal = function (obj, str, sw) { return function () { setEdgeAppearance(obj, str, sw); } }(this, this.getAttribute('stroke'), this.getAttribute('stroke-width'));
                     setEdgeAppearance(this, '#6495ed', '.1');
                     selectedEdge = this;
+                    selectedEdgeIx = +edgeData.edge;
+                }
+                else if (/^(poly-.*)-label-(\d+)$/.exec(this.getAttribute('id')))
+                {
+                    var poly = RegExp.$1;
+                    var face = RegExp.$2;
+                    var edges = Array.from($(`.${poly}-face-${face}`))
+                        .map(obj => Array.from(obj.classList).map(cls => ({ obj: obj, m: new RegExp(`^${poly}-edge-${face}-(\\d+)\$`).exec(cls) })).filter(inf => inf.m !== null))
+                        .filter(infs => infs.length > 0)
+                        .map(infs => ({ edge: infs[0].obj, ix: +infs[0].m[1] }));
+                    var newEdgeIx = selectedEdgeIx + 1;
+                    var findEdge = edges.findIndex(inf => inf.ix === newEdgeIx);
+                    if (findEdge === -1)
+                    {
+                        newEdgeIx = 0;
+                        findEdge = edges.findIndex(inf => inf.ix === 0);
+                    }
+                    if (findEdge !== -1)
+                    {
+                        processElementClick.apply(edges[findEdge].edge);
+                        selectedEdgeIx = newEdgeIx;
+                    }
                 }
             }
 
