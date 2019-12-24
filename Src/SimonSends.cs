@@ -85,10 +85,8 @@ namespace KtaneStuff
 
             Utils.ReplaceInFile(@"D:\c\KTANE\SimonSends\Assets\SimonSendsModule.cs", "/*MANUAL*/", "/*!MANUAL*/", $@"@""{_text.Select(para => para.JoinString(" ")).JoinString("|")}""");
 
-            const int iterations = 1000000;
-
             // How many times does each combo occur? Sum of the values is equal to iterations.
-            var comboStats = new Dictionary<string, int>();
+            var comboStats = new Dictionary<string, List<string>>();
 
             // How many times does each letter (A–Z) occur? Sum is greater than iterations.
             var letterStats = Ut.NewArray(3, _ => new Dictionary<char, int>());
@@ -96,12 +94,13 @@ namespace KtaneStuff
             // How many times does each solution length occur?
             var lengthStats = new Dictionary<int, int>();
 
-            for (int iter = 0; iter < iterations; iter++)
+            for (int cmb = 0; cmb < 26 * 26 * 26; cmb++)
             {
-                var available = Enumerable.Range(0, 26).ToList().Shuffle();
-                var r = available[0];
-                var g = available[1];
-                var b = available[2];
+                var r = cmb % 26;
+                var g = (cmb / 26) % 26;
+                var b = (cmb / 26 / 26) % 26;
+                if (r == g || r == b || g == b)
+                    continue;
 
                 var (_, _, _, newR) = getPosition(b, g, r);
                 var (_, _, _, newG) = getPosition(r, b, g);
@@ -119,7 +118,7 @@ namespace KtaneStuff
                         return "KBGCRMYW"[(isB ? 1 : 0) + (isG ? 2 : 0) + (isR ? 4 : 0)];
                     })
                     .JoinString();
-                comboStats.IncSafe(combo);
+                comboStats.AddSafe(combo, $"{(char) (r + 'A')}{(char) (g + 'A')}{(char) (b + 'A')}");
                 letterStats[0].IncSafe(newR);
                 letterStats[1].IncSafe(newG);
                 letterStats[2].IncSafe(newB);
@@ -127,20 +126,24 @@ namespace KtaneStuff
             }
 
             Console.WriteLine(comboStats.Count);
-            foreach (var kvp in comboStats.OrderByDescending(p => p.Value).Take(10))
-                Console.WriteLine($"{kvp.Key,13} = {100 * kvp.Value / (double) iterations:0.##}%");
+            foreach (var kvp in comboStats.OrderByDescending(p => p.Value.Count).Take(10))
+                Console.WriteLine($"{kvp.Key,13} = {100 * kvp.Value.Count / (double) (26 * 26 * 26):0.##}%");
             Console.WriteLine("---");
             var tt = new TextTable { ColumnSpacing = 2 };
             for (int i = 0; i < 3; i++)
                 tt.SetCell(i, 0, letterStats[i]
                     .OrderByDescending(p => p.Value)
-                    .Select(kvp => "{0} = {1,6:0.00}% {2}".Color(null).Fmt(kvp.Key.Color(new[] { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue }[i]), 100 * kvp.Value / (double) iterations, new string('█', (200 * kvp.Value + iterations / 2) / iterations)))
+                    .Select(kvp => "{0} = {1,6:0.00}% {2}".Color(null).Fmt(kvp.Key.Color(new[] { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue }[i]), 100 * kvp.Value / (double) (26 * 26 * 26), new string('█', (200 * kvp.Value + (26 * 26 * 26) / 2) / (26 * 26 * 26))))
                     .JoinColoredString("\n")
                     .Replace(" ", "\u00a0"));
             tt.WriteToConsole();
             Console.WriteLine("---");
             foreach (var kvp in lengthStats.OrderBy(p => p.Key))
-                Console.WriteLine($"{kvp.Key,2} = {100 * kvp.Value / (double) iterations,6:0.00}% {new string('█', (100 * kvp.Value + iterations / 2) / iterations)}");
+                Console.WriteLine($"{kvp.Key,2} = {100 * kvp.Value / (double) (26 * 26 * 26),6:0.00}% {new string('█', (100 * kvp.Value + (26 * 26 * 26) / 2) / (26 * 26 * 26))}");
+            Console.WriteLine("---");
+            foreach (var kvp in comboStats)
+                if (kvp.Value.Count == 1)
+                    Console.WriteLine($"{kvp.Key} = {kvp.Value.JoinString(", ")}");
         }
 
         private static (int paraIx, int wordIx, int letterIx, char ch) getPosition(int paraCount, int wordCount, int letterCount)
