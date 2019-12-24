@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using RT.KitchenSink;
 using RT.Util;
 using RT.Util.ExtensionMethods;
@@ -39,7 +41,7 @@ namespace KtaneStuff.Modeling
 
         public static string GenerateObjFile(IEnumerable<Pt[]> faces, string objectName = null, AutoNormal autoNormal = AutoNormal.None)
         {
-            return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, null)).ToArray()).ToArray(), objectName);
+            return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, null)).ToArray()).ToArray(), objectName, autoNormal);
         }
 
         public static string GenerateObjFile(IEnumerable<VertexInfo[]> faces, string objectName = null, AutoNormal autoNormal = AutoNormal.None)
@@ -59,7 +61,7 @@ namespace KtaneStuff.Modeling
                 s.AppendLine($"o {objectName}");
             foreach (var v in vertices)
                 s.AppendLine($"v {v.X:R} {v.Y:R} {v.Z:R}");
-            foreach (var n in normals)
+            foreach (var n in normals.Select(n => n.Normalize()))
                 s.AppendLine($"vn {n.X:R} {n.Y:R} {n.Z:R}");
             foreach (var t in textures)
                 s.AppendLine($"vt {t.X:R} {t.Y:R}");
@@ -557,6 +559,42 @@ namespace KtaneStuff.Modeling
         {
             yield return polygon.FlatNormals();
             yield return polygon.Reverse().ToArray().FlatNormals();
+        }
+
+        public static (string name, Pt[][] polygons) ParseObjFile(string file)
+        {
+            var vertices = new List<Pt>();
+            var textures = new List<PointD>();
+            var normals = new List<Pt>();
+            var faces = new List<Tuple<int, int, int>[]>();
+            string name = null;
+
+            foreach (var line in File.ReadAllLines(file))
+            {
+                Match m;
+                if ((m = Regex.Match(line, @"^v (-?\d*\.?\d+(?:[eE][-+]?\d+)?) (-?\d*\.?\d+(?:[eE][-+]?\d+)?) (-?\d*\.?\d+(?:[eE][-+]?\d+)?)$")).Success)
+                    vertices.Add(new Pt(double.Parse(m.Groups[1].Value), double.Parse(m.Groups[2].Value), double.Parse(m.Groups[3].Value)));
+                else if ((m = Regex.Match(line, @"^vt (-?\d*\.?\d+(?:[eE][-+]?\d+)?) (-?\d*\.?\d+(?:[eE][-+]?\d+)?)$")).Success)
+                    textures.Add(new PointD(double.Parse(m.Groups[1].Value), double.Parse(m.Groups[2].Value)));
+                else if ((m = Regex.Match(line, @"^vn (-?\d*\.?\d+(?:[eE][-+]?\d+)?) (-?\d*\.?\d+(?:[eE][-+]?\d+)?) (-?\d*\.?\d+(?:[eE][-+]?\d+)?)$")).Success)
+                    normals.Add(new Pt(double.Parse(m.Groups[1].Value), double.Parse(m.Groups[2].Value), double.Parse(m.Groups[3].Value)));
+                else if (line.StartsWith("v"))
+                    System.Diagnostics.Debugger.Break();
+                else if (line.StartsWith("f "))
+                    faces.Add(line.Substring(2).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s =>
+                        {
+                            var ixs = s.Split(new[] { '/' });
+                            var vix = int.Parse(ixs[0]) - 1;
+                            var tix = ixs.Length > 1 && ixs[1].Length > 0 ? int.Parse(ixs[1]) - 1 : -1;
+                            var nix = ixs.Length > 2 && ixs[2].Length > 0 ? int.Parse(ixs[2]) - 1 : -1;
+                            return Tuple.Create(vix, tix, nix);
+                        }).ToArray());
+                else if (line.StartsWith("o "))
+                    name = line.Substring(2);
+            }
+
+            return (name, faces.Select(f => f.Select(p => vertices[p.Item1]).ToArray()).ToArray());
         }
     }
 }

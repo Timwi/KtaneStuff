@@ -103,6 +103,7 @@
     <Compile Include="PatternCube.cs" />
     <Compile Include="PigpenCipher.cs" />
     <Compile Include="Poker.cs" />
+    <Compile Include="Polygons.cs" />
     <Compile Include="PolyhedralMaze.cs" />
     <Compile Include="PerplexingWires.cs" />
     <Compile Include="PointOfOrder.cs" />
