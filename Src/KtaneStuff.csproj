@@ -74,6 +74,7 @@
     <Compile Include="Kudosudoku.cs" />
     <Compile Include="Lasers.cs" />
     <Compile Include="LionsShare.cs" />
+    <Compile Include="LondonUnderground.cs" />
     <Compile Include="LooseModels.cs" />
     <Compile Include="Mafia.cs" />
     <Compile Include="Braille.cs" />
