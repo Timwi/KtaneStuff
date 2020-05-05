@@ -119,23 +119,13 @@ namespace KtaneStuff
                     throw new ArgumentException("Invalid marking.", nameof(marking));
             }
         }
-        private static Marking Mirror(this Marking marking, bool doMirror)
-        {
-            if (!doMirror)
-                return marking;
-            switch (marking)
-            {
-                case Marking.TriangleUp: return Marking.TriangleDown;
-                case Marking.TriangleDown: return Marking.TriangleUp;
-                default: return marking;
-            }
-        }
-        private static string ToMarkingString(this IEnumerable<Marking> markings) => markings.Select(m => m == Marking.None ? "•" : /*((int) m).ToString()*/ m.ToString().Substring(0, 1)).JoinString();
+        private static string ToMarkingString(this IEnumerable<Marking> markings) => markings.Select(m => m == Marking.None ? "•" : ((int) m).ToString()).JoinString();
 
         public sealed class HexamazeInfo : ICloneable
         {
             public int Size = 12;
             public int SubmazeSize = 12;
+            // The bool[] has three elements: wall at NW, N, and NE. The other walls must be obtained from the neighbouring hexes.
             public Dictionary<Hex, bool[]> Walls = new Dictionary<Hex, bool[]>();
             public Dictionary<Hex, Marking> Markings = new Dictionary<Hex, Marking>();
             public bool HasWall(Hex hex, int n) => Walls.Get(n < 3 ? hex : hex.Neighbors[n], new[] { false, false, false })[n % 3];
@@ -219,11 +209,20 @@ namespace KtaneStuff
 
             var rnd = new Random(26);   // This random seed gives the most walls (all but 501)
             var totalWallsRemoved = 0;
-            var walls = new AutoDictionary<Hex, bool[]>(_ => new bool[3] { true, true, true });
+            var walls = new AutoDictionary<Hex, bool[]>(hex =>
+            {
+                //if (hex.Q == 12 && hex.R == -10)
+                //    System.Diagnostics.Debugger.Break();
+                return new bool[3] {
+                    hex.Distance < mazeSize || hex.Neighbors[0].Distance < mazeSize,
+                    hex.Distance < mazeSize || hex.Neighbors[1].Distance < mazeSize,
+                    hex.Distance < mazeSize || hex.Neighbors[2].Distance < mazeSize
+                };
+            });
             var removeWall = Ut.Lambda((Hex hex, int n) => { walls[n < 3 ? hex : hex.Neighbors[n]][n % 3] = false; totalWallsRemoved++; });
             var hasWall = Ut.Lambda((Hex hex, int n) => walls[n < 3 ? hex : hex.Neighbors[n]][n % 3]);
             var stack = new Stack<Hex>();
-            Hex curHex = new Hex(0, 0);
+            var curHex = new Hex(0, 0);
             stack.Push(curHex);
             var taken = new HashSet<Hex> { curHex };
             var markings = new HashSet<Hex>();
@@ -318,12 +317,17 @@ namespace KtaneStuff
             }
 
             // Step 3: Put as many walls back in as possible
-            var missingWalls = walls.SelectMany(kvp => kvp.Value.Select((w, i) => new { Hex = kvp.Key, Index = i, IsWall = w })).Where(inf => !inf.IsWall).ToList();
+            var missingWalls = walls
+                .SelectMany(kvp => kvp.Value.Select((w, i) => new { Hex = kvp.Key, Index = i, IsWall = w }))
+                .Where(inf => !inf.IsWall && (inf.Hex.Distance < mazeSize || inf.Hex.Neighbors[inf.Index].Distance < mazeSize))
+                .ToList();
             while (missingWalls.Count > 0)
             {
                 var randomMissingWallIndex = rnd.Next(missingWalls.Count);
                 var randomMissingWall = missingWalls[randomMissingWallIndex];
                 missingWalls.RemoveAt(randomMissingWallIndex);
+                if (randomMissingWall.Hex.Q == 12 && randomMissingWall.Hex.R == -10 && randomMissingWall.Index > 0)
+                    System.Diagnostics.Debugger.Break();
                 walls[randomMissingWall.Hex][randomMissingWall.Index] = true;
 
                 bool possible = true;
@@ -371,20 +375,14 @@ namespace KtaneStuff
             {
                 Size = mazeSize,
                 SubmazeSize = smallMazeSize,
-                Markings = markings.Select((h, ix) => new { Hex = h, Index = ix }).ToDictionary(inf => inf.Hex, inf => (Marking) (inf.Index)),
+                Markings = markings.Select((h, ix) => new { Hex = h, Index = ix }).ToDictionary(inf => inf.Hex, inf => (Marking) inf.Index),
                 Walls = walls.ToDictionary()
             };
         }
 
         public static HexamazeInfo GenerateMarkings(HexamazeInfo origMaze)
         {
-            var obj = new object();
-            var lowestMarkings = int.MaxValue;
-            HexamazeInfo bestMaze = null;
-
             var seed = 146;     // 19 markings with initial hexagon in the center
-            //Enumerable.Range(0, 300).ParallelForEach(4, seed =>
-            //{
             var rnd = new Random(seed);
 
             var maze = origMaze.Clone();
@@ -403,10 +401,12 @@ namespace KtaneStuff
             {
                 var availableHexes = Hex.LargeHexagon(size).Where(h => !maze.Markings.ContainsKey(h) && !h.Neighbors.SelectMany(n => n.Neighbors).Any(maze.Markings.ContainsKey)).ToArray();
                 if (availableHexes.Length == 0)
-                    goto impossiburu;
+                    return null;
                 var randomHex = availableHexes[rnd.Next(availableHexes.Length)];
                 maze.Markings[randomHex] = allowedMarkings.PickRandom(rnd);
             }
+
+            Console.WriteLine($"{maze.Markings.Count(kvp => kvp.Value != Marking.None)} markings");
 
             // Step 2: Find markings to remove again
             var removableMarkings = maze.Markings.ToList();
@@ -423,21 +423,18 @@ namespace KtaneStuff
                 }
             }
 
-            lock (obj)
-            {
-                var msg = "{0/White} = {1/Green}{2/Magenta}".Color(null).Fmt(seed, maze.Markings.Count, maze.Markings.Count < lowestMarkings ? " — NEW BEST" : maze.Markings.Count == lowestMarkings ? " — TIED" : "");
-                if (maze.Markings.Count <= lowestMarkings)
-                {
-                    lowestMarkings = maze.Markings.Count;
-                    bestMaze = maze;
-                    WriteMazeInManual(bestMaze);
-                }
-                ConsoleUtil.WriteLine(msg);
-            }
+            Console.WriteLine($"{maze.Markings.Count(kvp => kvp.Value != Marking.None)} markings");
 
-            impossiburu:;
-            //});
-            return bestMaze;
+            //    var msg = "{0/White} = {1/Green}{2/Magenta}".Color(null).Fmt(seed, maze.Markings.Count, maze.Markings.Count < lowestMarkings ? " — NEW BEST" : maze.Markings.Count == lowestMarkings ? " — TIED" : "");
+            //    if (maze.Markings.Count <= lowestMarkings)
+            //    {
+            //        lowestMarkings = maze.Markings.Count;
+            //        bestMaze = maze;
+            //        WriteMazeInManual(bestMaze);
+            //    }
+            //    ConsoleUtil.WriteLine(msg);
+
+            return maze;
         }
 
         private static bool areMarkingsUnique(HexamazeInfo maze, bool saveFiles = false)
