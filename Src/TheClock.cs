@@ -349,7 +349,8 @@ namespace KtaneStuff
 
         public static void GenerateCharts()
         {
-            // The numbers are now off due to switching the rendering to WPF
+            // WARNING: The numbers are now off due to switching the rendering to WPF
+            // WARNING: This does not place the diagram directly into the HTML; use Čeština or Français as templates instead
 
             // Minutes
             File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Minutes Chart.svg", generateChart("Special Elite", "Minutes", .4, .1, 1, 1.24, 1000,
@@ -367,7 +368,8 @@ namespace KtaneStuff
 
         public static void GenerateCharts中文()
         {
-            // The numbers are now off due to switching the rendering to WPF
+            // WARNING: The numbers are now off due to switching the rendering to WPF
+            // WARNING: This does not place the diagram directly into the HTML; use Čeština or Français as templates instead
 
             // Minutes
             File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Minutes Chart 中文.svg", generateChart("Yu Gothic", "分鐘", .6, .25, 1, 1.24, 1000,
@@ -385,7 +387,8 @@ namespace KtaneStuff
 
         public static void GenerateChartsРусский()
         {
-            // The numbers are now off due to switching the rendering to WPF
+            // WARNING: The numbers are now off due to switching the rendering to WPF
+            // WARNING: This does not place the diagram directly into the HTML; use Čeština or Français as templates instead
 
             // Minutes
             File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Minutes Chart Русский.svg", generateChart("Special Elite", "Минуты", .4, .1, 1, 1.24, 1000,
@@ -404,17 +407,33 @@ namespace KtaneStuff
         public static void GenerateChartsČeština()
         {
             // Minutes
-            File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Minutes Chart Čeština.svg", generateChart("Special Elite", "Minuty", .4, .1, 1, 1.24, 1000,
-                new RingInfo { Labels = new[] { "Šipky", "Linky", "Ryče" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .95, OuterD = 0 },
-                new RingInfo { Labels = new[] { "Červená", "Zelená", "Modrá", "Zlatá", "Černá" }, Horiz = true, FontSize = .35, HFactor = 16, InnerD = .75, OuterD = .25 },
-                new RingInfo { Labels = new[] { "Č", "B" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .8, OuterD = .2 },
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Čeština — Hodiny).html", "<!--MINUTES-START-->", "<!--MINUTES-END-->", generateChart("Special Elite", "Minuty", .4, .1, 1, 1.24, 1000,
+                new RingInfo { Labels = new[] { "Šipky", "Linky", "Ryče" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .75, OuterD = .2 },
+                new RingInfo { Labels = new[] { "Červená", "Zelená", "Modrá", "Zlatá", "Černá" }, Horiz = true, FontSize = .35, HFactor = 16, InnerD = .65, OuterD = .35 },
+                new RingInfo { Labels = new[] { "Č", "B" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .65, OuterD = .35 },
                 new RingInfo { Labels = new[] { "Ano", "Ne" }, Horiz = false, FontSize = .4, HFactor = 12, InnerD = .95, OuterD = 0 }));
 
             // Hours
-            File.WriteAllText(@"D:\Daten\Upload\KTANE\The Clock\Hours Chart Čeština.svg", generateChart("Special Elite", "Hodiny", .4, .1, 1 / .8, 1, 100,
-                new RingInfo { Labels = new[] { "Arabská", "Římská", "Žádná" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .95, OuterD = 0 },
-                new RingInfo { Labels = new[] { "Stříbrná", "Zlatá" }, Horiz = true, FontSize = .6, HFactor = 20, InnerD = .85, OuterD = .15 },
-                new RingInfo { Labels = new[] { "Ano", "Ne" }, Horiz = true, FontSize = .7, HFactor = 14, InnerD = .95, OuterD = .05 }));
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Čeština — Hodiny).html", "<!--HOURS-START-->", "<!--HOURS-END-->", generateChart("Special Elite", "Hodiny", .4, .1, 1 / .8, 1, 100,
+                new RingInfo { Labels = new[] { "Arabská", "Římská", "Žádná" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .75, OuterD = .2 },
+                new RingInfo { Labels = new[] { "Stříbrná", "Zlatá" }, Horiz = true, FontSize = .6, HFactor = 20, InnerD = .7, OuterD = .3 },
+                new RingInfo { Labels = new[] { "Ano", "Ne" }, Horiz = true, FontSize = .7, HFactor = 14, InnerD = .8, OuterD = .2 }));
+        }
+
+        public static void GenerateChartsFrançais()
+        {
+            // Minutes
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Français — L’Horloge).html", "<!--MINUTES-START-->", "<!--MINUTES-END-->", generateChart("Special Elite", "Minutes", .4, .1, 1, 1.24, 1000,
+                new RingInfo { Labels = new[] { "Flèches", "Lignes", "Piques" }, Horiz = true, FontSize = .8, HFactor = 32, InnerD = .8, OuterD = .15 },
+                new RingInfo { Labels = new[] { "Rouges", "Verts", "Bleus", "Dorés", "Noirs" }, Horiz = true, FontSize = .35, HFactor = 16, InnerD = .65, OuterD = .35 },
+                new RingInfo { Labels = new[] { "N", "B" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .7, OuterD = .3 },
+                new RingInfo { Labels = new[] { "Ab", "Pr" }, Horiz = false, FontSize = .4, HFactor = 12, InnerD = .95, OuterD = 0 }));
+
+            // Hours
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Français — L’Horloge).html", "<!--HOURS-START-->", "<!--HOURS-END-->", generateChart("Special Elite", "Heures", .4, .1, 1 / .8, 1, 100,
+                new RingInfo { Labels = new[] { "Arabes", "Romains", "Aucun" }, Horiz = true, FontSize = .6, HFactor = 32, InnerD = .75, OuterD = .2 },
+                new RingInfo { Labels = new[] { "Argenté", "Doré" }, Horiz = true, FontSize = .6, HFactor = 20, InnerD = .75, OuterD = .2 },
+                new RingInfo { Labels = new[] { "Identique", "Différente" }, Horiz = true, FontSize = .3, HFactor = 14, InnerD = .6, OuterD = .4 }));
         }
 
         sealed class RingInfo
@@ -463,9 +482,9 @@ namespace KtaneStuff
                         var writing = createPath(label, ring.FontSize);
                         var textAngle2 = textAngle + 90;
                         if (textAngle < 90 || textAngle >= 270)
-                            svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + ring.OuterD + innerCirc).Apply(r => new PointD((r + p.Y) * cos(textAngle2 - p.X * ring.HFactor) * fac, (r + p.Y) * sin(textAngle2 - p.X * ring.HFactor) * fac)))).JoinString(" ")}' fill='#000' stroke='none' />");
+                            svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + ring.OuterD + innerCirc).Apply(r => new PointD((r + p.Y) * cos(textAngle2 - p.X * ring.HFactor) * fac, (r + p.Y) * sin(textAngle2 - p.X * ring.HFactor) * fac)))).Select(pp => pp.ToString(1)).JoinString(" ")}' fill='#000' stroke='none' />");
                         else
-                            svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + ring.InnerD + innerCirc).Apply(r => new PointD((r - p.Y) * cos(textAngle2 + p.X * ring.HFactor) * fac, (r - p.Y) * sin(textAngle2 + p.X * ring.HFactor) * fac)))).JoinString(" ")}' fill='#000' stroke='none' />");
+                            svg.Append($"<path class='writing' d='{writing.Select(piece => piece.Select(p => (circ + ring.InnerD + innerCirc).Apply(r => new PointD((r - p.Y) * cos(textAngle2 + p.X * ring.HFactor) * fac, (r - p.Y) * sin(textAngle2 + p.X * ring.HFactor) * fac)))).Select(pp => pp.ToString(1)).JoinString(" ")}' fill='#000' stroke='none' />");
                     }
                     else
                     {
@@ -489,7 +508,9 @@ namespace KtaneStuff
 
             svg.Append($"<text x='0' y='{centerTextY * fac}' fill='#000' font-size='{centerTextFontSize * fac}' text-anchor='middle' font-family='{font}'>{centerText}</text>");
 
-            return $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='{(-circ - innerCirc - .2) * fac} {(-circ - innerCirc - .2) * fac} {(2 * (circ + innerCirc) + .4) * xSizeFac * fac} {(2 * (circ + innerCirc) + .4) * ySizeFac * fac}'>{svg}{(text.Length > 0 ? $"<g>{text}</g>" : null)}</svg>";
+            //<svg xmlns='http://www.w3.org/2000/svg' viewBox='{(-circ - innerCirc - .2) * fac} {(-circ - innerCirc - .2) * fac} {(2 * (circ + innerCirc) + .4) * xSizeFac * fac} {(2 * (circ + innerCirc) + .4) * ySizeFac * fac}'>
+            return $"{svg}{(text.Length > 0 ? $"<g>{text}</g>" : null)}";
+            //</svg>
         }
 
         private static string mkCircle(double cx, double cy, double r, string fill = null, string stroke = null, double? strokeWidth = null)
