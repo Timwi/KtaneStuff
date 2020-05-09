@@ -211,8 +211,6 @@ namespace KtaneStuff
             var totalWallsRemoved = 0;
             var walls = new AutoDictionary<Hex, bool[]>(hex =>
             {
-                //if (hex.Q == 12 && hex.R == -10)
-                //    System.Diagnostics.Debugger.Break();
                 return new bool[3] {
                     hex.Distance < mazeSize || hex.Neighbors[0].Distance < mazeSize,
                     hex.Distance < mazeSize || hex.Neighbors[1].Distance < mazeSize,
@@ -300,17 +298,16 @@ namespace KtaneStuff
                 if (candidateCounts.Count == 0)
                     break;
 
-                //*
                 // Remove one wall out of the “most wanted”
                 var topScores = candidateCounts.Values.Distinct().Order().TakeLast(1).ToArray();
                 var candidates2 = candidateCounts.Where(kvp => topScores.Contains(kvp.Value)).ToArray();
+
+                //*
                 var randomCandidate = candidates2[rnd.Next(candidates2.Length)];
                 removeWall(randomCandidate.Key.Item1, randomCandidate.Key.Item2);
                 /*/
-                // Remove any one wall
-                var candidates2 = candidateCounts.Keys.ToArray();
-                var randomCandidate = candidates2[rnd.Next(candidates2.Length)];
-                removeWall(randomCandidate.Item1, randomCandidate.Item2);
+                foreach (var candidate in candidates2)
+                    removeWall(candidate.Key.Item1, candidate.Key.Item2);
                 /**/
 
                 Console.Write($"Walls removed: {totalWallsRemoved}  \r");
@@ -318,17 +315,17 @@ namespace KtaneStuff
 
             // Step 3: Put as many walls back in as possible
             var missingWalls = walls
-                .SelectMany(kvp => kvp.Value.Select((w, i) => new { Hex = kvp.Key, Index = i, IsWall = w }))
-                .Where(inf => !inf.IsWall && (inf.Hex.Distance < mazeSize || inf.Hex.Neighbors[inf.Index].Distance < mazeSize))
+                .SelectMany(kvp => kvp.Value.Select((w, i) => (hex: kvp.Key, index: i, isWall: w)))
+                .Where(inf => !inf.isWall && (inf.hex.Distance < mazeSize || inf.hex.Neighbors[inf.index].Distance < mazeSize))
                 .ToList();
             while (missingWalls.Count > 0)
             {
                 var randomMissingWallIndex = rnd.Next(missingWalls.Count);
                 var randomMissingWall = missingWalls[randomMissingWallIndex];
                 missingWalls.RemoveAt(randomMissingWallIndex);
-                if (randomMissingWall.Hex.Q == 12 && randomMissingWall.Hex.R == -10 && randomMissingWall.Index > 0)
+                if (randomMissingWall.hex.Q == 12 && randomMissingWall.hex.R == -10 && randomMissingWall.index > 0)
                     System.Diagnostics.Debugger.Break();
-                walls[randomMissingWall.Hex][randomMissingWall.Index] = true;
+                walls[randomMissingWall.hex][randomMissingWall.index] = true;
 
                 bool possible = true;
                 foreach (var centerHex in Hex.LargeHexagon(mazeSize - smallMazeSize + 1))
@@ -355,8 +352,8 @@ namespace KtaneStuff
 
                     if (filled.Count < 3 * smallMazeSize * (smallMazeSize - 1) + 1 || edgesReachable.Contains(false))
                     {
-                        // This wall cannot be added, take it back out.
-                        walls[randomMissingWall.Hex][randomMissingWall.Index] = false;
+                        // These walls cannot be added, take them back out.
+                        walls[randomMissingWall.hex][randomMissingWall.index] = false;
                         possible = false;
                         break;
                     }
@@ -389,6 +386,7 @@ namespace KtaneStuff
             var size = maze.Size;
             var smallSize = maze.SubmazeSize;
 
+            tryAgain:
             maze.Markings = new Dictionary<Hex, Marking>();
             // List Circle and Hexagon twice so that triangles don’t completely dominate the distribution
             var allowedMarkings = new[] { Marking.Circle, Marking.Circle, Marking.Hexagon, Marking.Hexagon, Marking.TriangleDown, Marking.TriangleLeft, Marking.TriangleRight, Marking.TriangleUp };
@@ -401,7 +399,10 @@ namespace KtaneStuff
             {
                 var availableHexes = Hex.LargeHexagon(size).Where(h => !maze.Markings.ContainsKey(h) && !h.Neighbors.SelectMany(n => n.Neighbors).Any(maze.Markings.ContainsKey)).ToArray();
                 if (availableHexes.Length == 0)
-                    return null;
+                {
+                    Console.WriteLine("Markings are wonky. Trying again.");
+                    goto tryAgain;
+                }
                 var randomHex = availableHexes[rnd.Next(availableHexes.Length)];
                 maze.Markings[randomHex] = allowedMarkings.PickRandom(rnd);
             }
