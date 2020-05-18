@@ -63,11 +63,11 @@ namespace KtaneStuff
                 .ToArray());
         }
 
-        public static VertexInfo[][] Disc(int numVertices = 20, bool reverse = false, double addAngle = 0)
+        public static VertexInfo[][] Disc(int numVertices = 20, double x = 0, double y = 0, double radius = 1, bool reverse = false, double addAngle = 0)
         {
             return Enumerable.Range(0, numVertices)
-                .Select(i => new PointD(cos(360.0 * i / numVertices + addAngle), sin(360.0 * i / numVertices + addAngle)))
-                .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.X, 0, p1.Y), pt(p2.X, 0, p2.Y), pt(0, 0, 0) }.Apply(arr => reverse ? arr : arr.ReverseInplace()).Select(p => p.WithNormal(0, 1, 0).WithTexture((p.X + 1) / 2, (p.Z + 1) / 2)).ToArray())
+                .Select(i => new PointD(x + radius * cos(360.0 * i / numVertices + addAngle), y + radius * sin(360.0 * i / numVertices + addAngle)))
+                .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(p1.X, 0, p1.Y), pt(p2.X, 0, p2.Y), pt(x, 0, y) }.Apply(arr => reverse ? arr : arr.ReverseInplace()).Select(p => p.WithNormal(0, 1, 0).WithTexture((p.X + 1) / 2, (p.Z + 1) / 2)).ToArray())
                 .ToArray();
         }
 
