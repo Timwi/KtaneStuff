@@ -45,6 +45,50 @@ namespace KtaneStuff
             return CreateMesh(false, true, Ut.NewArray(arr.Length, arr[0].Outline.Length, (x, y) => pt(arr[x].Outline[y].X, arr[x].Y, arr[x].Outline[y].Y, Normal.Mine, Normal.Mine, Normal.Mine, Normal.Mine)));
         }
 
+        public static void GenerateMazeAndOutputToConsole()
+        {
+            var start = DateTime.UtcNow;
+
+            var inf = GenerateHexamaze();
+            inf = GenerateMarkings(inf);
+            var w = 6 * inf.Size - 2;
+            var h = 4 * inf.Size - 1;
+            var chs = new char[w, h];
+            for (var x = 0; x < w; x++)
+                for (var y = 0; y < h; y++)
+                    chs[x, y] = ' ';
+            foreach (var (hex, walls) in inf.Walls.Select(kvp => (kvp.Key, kvp.Value)))
+            {
+                // NW wall
+                if (walls[0])
+                    chs[w / 2 + 3 * hex.Q - 2, h / 2 + hex.Q + 2 * hex.R] = '/';
+
+                // N wall
+                if (walls[1])
+                {
+                    chs[w / 2 + 3 * hex.Q - 1, h / 2 + hex.Q + 2 * hex.R - 1] = '_';
+                    chs[w / 2 + 3 * hex.Q, h / 2 + hex.Q + 2 * hex.R - 1] = '_';
+                }
+
+                // NE wall
+                if (walls[2])
+                    chs[w / 2 + 3 * hex.Q + 1, h / 2 + hex.Q + 2 * hex.R] = '\\';
+
+                // Marking
+                var m = inf.Markings.Get(hex, Marking.None);
+                if (m != Marking.None)
+                {
+                    chs[w / 2 + 3 * hex.Q - 1, h / 2 + hex.Q + 2 * hex.R] = " (/\\<|{"[(int) m];
+                    chs[w / 2 + 3 * hex.Q, h / 2 + hex.Q + 2 * hex.R] = " )\\/|>}"[(int) m];
+                }
+            }
+            for (var y = 0; y < h; y++)
+                Console.WriteLine(Enumerable.Range(0, w).Select(x => chs[x, y]).JoinString());
+
+            Console.WriteLine($"{inf.Markings.Count(kvp => kvp.Value != Marking.None)} markings");
+            Console.WriteLine($"Took {(DateTime.UtcNow - start).TotalSeconds:0.#}sec.");
+        }
+
         private static IEnumerable<PointD> InsertKinks(this IEnumerable<PointD> src, double expand)
         {
             expand += 3.5 * Hex.WidthToHeight;
