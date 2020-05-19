@@ -259,7 +259,7 @@ namespace KtaneStuff
                     curHex = stack.Pop();
                     continue;
                 }
-                var dir = availableNeighborIndices[rnd.Next(availableNeighborIndices.Length)];
+                var dir = availableNeighborIndices[rnd.Next(0, availableNeighborIndices.Length)];
                 walls[wallIndex(curHex, dir)] = false;
                 stack.Push(curHex);
                 curHex = neighbors[dir];
@@ -309,7 +309,8 @@ namespace KtaneStuff
                     }
                     else if (kvp.Value == topScore)
                         topScorers.Add(kvp.Key);
-                var randomCandidate = topScorers[rnd.Next(topScorers.Count)];
+                topScorers.Sort();
+                var randomCandidate = topScorers[rnd.Next(0, topScorers.Count)];
                 walls[randomCandidate] = false;
             }
 
@@ -317,7 +318,7 @@ namespace KtaneStuff
             var missingWalls = Enumerable.Range(0, allWalls.Length).Where(ix => allWalls[ix] && !walls[ix]).ToList();
             while (missingWalls.Count > 0)
             {
-                var randomMissingWallIndex = rnd.Next(missingWalls.Count);
+                var randomMissingWallIndex = rnd.Next(0, missingWalls.Count);
                 var randomMissingWall = missingWalls[randomMissingWallIndex];
                 missingWalls.RemoveAt(randomMissingWallIndex);
                 walls[randomMissingWall] = true;
@@ -347,7 +348,7 @@ namespace KtaneStuff
                     .ToArray();
                 if (availableHexes.Length == 0)
                     goto tryAgain;
-                var randomHex = availableHexes[rnd.Next(availableHexes.Length)];
+                var randomHex = availableHexes[rnd.Next(0, availableHexes.Length)];
                 markings[markingIndex(randomHex)] = allowedMarkings[rnd.Next(0, allowedMarkings.Length)];
             }
 
@@ -355,7 +356,7 @@ namespace KtaneStuff
             var removableMarkings = markings.SelectIndexWhere(m => m != Marking.None).ToList();
             while (removableMarkings.Count > 0)
             {
-                var tryRemoveIndex = rnd.Next(removableMarkings.Count);
+                var tryRemoveIndex = rnd.Next(0, removableMarkings.Count);
                 var tryRemove = removableMarkings[tryRemoveIndex];
                 removableMarkings.RemoveAt(tryRemoveIndex);
                 var prevMarking = markings[tryRemove];
