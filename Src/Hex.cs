@@ -90,6 +90,20 @@ namespace KtaneStuff
             new Hex(Q, R + 1),
             new Hex(Q - 1, R + 1));
 
+        public Hex GetNeighbor(int dir)
+        {
+            switch (dir)
+            {
+                case 0: return new Hex(Q - 1, R);
+                case 1: return new Hex(Q, R - 1);
+                case 2: return new Hex(Q + 1, R - 1);
+                case 3: return new Hex(Q + 1, R);
+                case 4: return new Hex(Q, R + 1);
+                case 5: return new Hex(Q - 1, R + 1);
+                default: throw new ArgumentOutOfRangeException("dir", "Direction must be 0–5.");
+            }
+        }
+
         public static Hex GetDirection(int dir)
         {
             switch (dir)
@@ -100,8 +114,8 @@ namespace KtaneStuff
                 case 3: return new Hex(1, 0);
                 case 4: return new Hex(0, 1);
                 case 5: return new Hex(-1, 1);
+                default: throw new ArgumentOutOfRangeException("dir", "Direction must be 0–5.");
             }
-            throw new ArgumentException("Invalid direction. Direction must be 0–5.", nameof(dir));
         }
 
         public int Distance => Math.Max(Math.Abs(Q), Math.Max(Math.Abs(R), Math.Abs(-Q - R)));

@@ -300,7 +300,10 @@ namespace KtaneStuff
 
         public static void ReplaceInFile(this string path, string startMarker, string endMarker, string newText)
         {
-            File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), $@"(?<={Regex.Escape(startMarker)})(\r?\n)*( *).*?(\r?\n *)?(?={Regex.Escape(endMarker)})", m => m.Groups[1].Value + newText.Unindent().Indent(m.Groups[2].Length) + m.Groups[3].Value, RegexOptions.Singleline));
+            File.WriteAllText(path, Regex.Replace(File.ReadAllText(path),
+                $@"(?<={Regex.Escape(startMarker)})(\r?\n)*( *).*?(\r?\n *)?(?={Regex.Escape(endMarker)})",
+                m => m.Groups[1].Value + newText.Unindent().Indent(m.Groups[2].Length) + m.Groups[3].Value,
+                RegexOptions.Singleline));
         }
 
         public static int IncSafe<K1, K2>(this IDictionary<K1, Dictionary<K2, int>> dic, K1 key1, K2 key2, int amount = 1)
