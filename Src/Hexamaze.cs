@@ -33,81 +33,19 @@ namespace KtaneStuff
 
         private static IEnumerable<Pt[]> Screen()
         {
-            return Hex.LargeHexagonOutline(sideLength: 4, hexWidth: 1)
+            return Hex.LargeHexagonOutline(sideLength: SubmazeSize, hexWidth: 1)
                 .SelectConsecutivePairs(true, (p1, p2) => new[] { pt(0, 0, 0), pt(p2.X, 0, p2.Y), pt(p1.X, 0, p1.Y) });
         }
 
         private static IEnumerable<VertexInfo[]> ScreenFrame()
         {
             var arr = Ut.NewArray(
-                new { Outline = Hex.LargeHexagonOutline(sideLength: 4, hexWidth: 1, expand: .0).InsertKinks(.0).ToArray(), Y = 0d },
-                new { Outline = Hex.LargeHexagonOutline(sideLength: 4, hexWidth: 1, expand: .05).InsertKinks(.05).ToArray(), Y = .1 },
-                new { Outline = Hex.LargeHexagonOutline(sideLength: 4, hexWidth: 1, expand: .2).InsertKinks(.35).ToArray(), Y = .1 },
-                new { Outline = Hex.LargeHexagonOutline(sideLength: 4, hexWidth: 1, expand: .25).InsertKinks(.4).ToArray(), Y = 0d }
+                new { Outline = Hex.LargeHexagonOutline(sideLength: SubmazeSize, hexWidth: 1, expand: .0).InsertKinks(.0).ToArray(), Y = 0d },
+                new { Outline = Hex.LargeHexagonOutline(sideLength: SubmazeSize, hexWidth: 1, expand: .05).InsertKinks(.05).ToArray(), Y = .1 },
+                new { Outline = Hex.LargeHexagonOutline(sideLength: SubmazeSize, hexWidth: 1, expand: .2).InsertKinks(.35).ToArray(), Y = .1 },
+                new { Outline = Hex.LargeHexagonOutline(sideLength: SubmazeSize, hexWidth: 1, expand: .25).InsertKinks(.4).ToArray(), Y = 0d }
             ).Reverse().ToArray();
             return CreateMesh(false, true, Ut.NewArray(arr.Length, arr[0].Outline.Length, (x, y) => pt(arr[x].Outline[y].X, arr[x].Y, arr[x].Outline[y].Y, Normal.Mine, Normal.Mine, Normal.Mine, Normal.Mine)));
-        }
-
-        private const int sw = 2 * Size + 1;
-
-        public static void GenerateMazeAndOutputToConsole()
-        {
-            var start = DateTime.UtcNow;
-
-            var inf = GenerateHexamaze(47);
-            var w = 6 * Size - 2;
-            var h = 4 * Size - 1;
-            var chs = new char[w, h];
-            for (var x = 0; x < w; x++)
-                for (var y = 0; y < h; y++)
-                    chs[x, y] = ' ';
-
-            // Walls
-            for (var ix = 0; ix < inf.Walls.Length; ix++)
-            {
-                if (!inf.Walls[ix])
-                    continue;
-
-                var dir = ix % 3;
-                var r = (ix / 3) % sw - Size;
-                var q = (ix / 3) / sw - Size;
-                switch (dir)
-                {
-                    // NW wall
-                    case 0:
-                        chs[w / 2 + 3 * q - 2, h / 2 + q + 2 * r] = '/';
-                        break;
-
-                    // N wall
-                    case 1:
-                    {
-                        chs[w / 2 + 3 * q - 1, h / 2 + q + 2 * r - 1] = '_';
-                        chs[w / 2 + 3 * q, h / 2 + q + 2 * r - 1] = '_';
-                    }
-                    break;
-
-                    // NE wall
-                    case 2:
-                        chs[w / 2 + 3 * q + 1, h / 2 + q + 2 * r] = '\\';
-                        break;
-                }
-            }
-
-            // Markings
-            foreach (var hex in Hex.LargeHexagon(Size))
-            {
-                var m = inf.Markings[markingIndex(hex)];
-                if (m != Marking.None)
-                {
-                    chs[w / 2 + 3 * hex.Q - 1, h / 2 + hex.Q + 2 * hex.R] = " (/\\<|{"[(int) m];
-                    chs[w / 2 + 3 * hex.Q, h / 2 + hex.Q + 2 * hex.R] = " )\\/|>}"[(int) m];
-                }
-            }
-            for (var y = 0; y < h; y++)
-                Console.WriteLine(Enumerable.Range(0, w).Select(x => chs[x, y]).JoinString());
-
-            Console.WriteLine($"{inf.Markings.Count(m => m != Marking.None)} markings");
-            Console.WriteLine($"Took {(DateTime.UtcNow - start).TotalSeconds:0.#}sec.");
         }
 
         private static IEnumerable<PointD> InsertKinks(this IEnumerable<PointD> src, double expand)
@@ -220,244 +158,6 @@ namespace KtaneStuff
             return dot;
         }
 
-        private static int markingIndex(Hex h)
-        {
-            return (h.Q + Size) * sw + h.R + Size;
-        }
-
-        private static int wallIndex(Hex hex, int dir)
-        {
-            return dir < 3
-                ? 3 * sw * (hex.Q + Size) + 3 * (hex.R + Size) + dir
-                : wallIndex(hex.GetNeighbor(dir), dir - 3);
-        }
-
-        public static GeneratedMaze GenerateHexamaze(int seed)
-        {
-            var rnd = new MonoRandom(seed);
-
-            // PART 1: GENERATE MAZE (walls)
-            var walls = Ut.NewArray(3 * sw * sw, ix =>
-            {
-                var r = (ix / 3) % sw - Size;
-                var q = (ix / 3) / sw - Size;
-                var h = new Hex(q, r);
-                return h.Distance < Size || h.GetNeighbor(ix % 3).Distance < Size;
-            });
-            var allWalls = (bool[]) walls.Clone();
-
-            var stack = new Stack<Hex>();
-            var curHex = new Hex(0, 0);
-            stack.Push(curHex);
-            var taken = new HashSet<Hex> { curHex };
-
-            // Step 1.1: generate a single giant maze
-            while (true)
-            {
-                var neighbors = curHex.Neighbors;
-                var availableNeighborIndices = neighbors.SelectIndexWhere(n => !taken.Contains(n) && n.Distance < Size).ToArray();
-                if (availableNeighborIndices.Length == 0)
-                {
-                    if (stack.Count == 0)
-                        break;
-                    curHex = stack.Pop();
-                    continue;
-                }
-                var dir = availableNeighborIndices[rnd.Next(0, availableNeighborIndices.Length)];
-                walls[wallIndex(curHex, dir)] = false;
-                stack.Push(curHex);
-                curHex = neighbors[dir];
-                taken.Add(curHex);
-            }
-
-            // Step 1.2: Go through all submazes and make sure they’re all connected and all have at least one exit on each side
-            // This is parallelizable and uses multiple threads
-            var allSubmazes = Hex.LargeHexagon(Size - SubmazeSize + 1).Select(h => (Hex?) h).ToArray();
-            Hex? lastHex1 = null, lastHex2 = null;
-            while (true)
-            {
-                var candidateCounts = new Dictionary<int, int>();
-
-                for (var smIx = 0; smIx < allSubmazes.Length; smIx++)
-                {
-                    if (allSubmazes[smIx] == null)
-                        continue;
-
-                    var centerHex = allSubmazes[smIx].Value;
-
-                    // We do not need to examine this submaze if the wall we last removed isn’t even in it
-                    if (lastHex1 != null && (lastHex1.Value - centerHex).Distance > SubmazeSize &&
-                        lastHex2 != null && (lastHex2.Value - centerHex).Distance > SubmazeSize)
-                        continue;
-
-                    var validity = DetermineSubmazeValidity(centerHex, walls);
-                    if (validity.IsValid)
-                    {
-                        allSubmazes[smIx] = null;
-                        continue;
-                    }
-
-                    // Find out which walls might benefit from removing
-                    foreach (var fh in validity.Filled)
-                    {
-                        var neighbors = fh.Neighbors;
-                        for (var dir = 0; dir < neighbors.Length; dir++)
-                        {
-                            var th = neighbors[dir];
-                            var offset = th - centerHex;
-                            if ((offset.Distance < SubmazeSize && walls[wallIndex(fh, dir)] && !validity.Filled.Contains(th)) ||
-                                (offset.Distance == SubmazeSize && offset.GetEdges(SubmazeSize).Any(e => !validity.EdgesReachable[e])))
-                                candidateCounts.IncSafe(wallIndex(fh, dir));
-                        }
-                    }
-                }
-
-                if (candidateCounts.Count == 0)
-                    break;
-
-                // Remove one wall out of the “most wanted”
-                var topScore = 0;
-                var topScorers = new List<int>();
-                foreach (var kvp in candidateCounts)
-                    if (kvp.Value > topScore)
-                    {
-                        topScore = kvp.Value;
-                        topScorers.Clear();
-                        topScorers.Add(kvp.Key);
-                    }
-                    else if (kvp.Value == topScore)
-                        topScorers.Add(kvp.Key);
-                topScorers.Sort();
-                var randomWall = topScorers[rnd.Next(0, topScorers.Count)];
-                walls[randomWall] = false;
-
-                var rcdir = randomWall % 3;
-                lastHex1 = new Hex((randomWall / 3) / sw - Size, (randomWall / 3) % sw - Size);
-                lastHex2 = lastHex1.Value.GetNeighbor(rcdir);
-            }
-
-            // Step 1.3: Put as many walls back in as possible
-            var missingWalls = Enumerable.Range(0, allWalls.Length).Where(ix => allWalls[ix] && !walls[ix]).ToList();
-            while (missingWalls.Count > 0)
-            {
-                var randomMissingWallIndex = rnd.Next(0, missingWalls.Count);
-                var randomMissingWall = missingWalls[randomMissingWallIndex];
-                missingWalls.RemoveAt(randomMissingWallIndex);
-                walls[randomMissingWall] = true;
-
-                var affectedHex1 = new Hex((randomMissingWall / 3) / sw - Size, (randomMissingWall / 3) % sw - Size);
-                var affectedHex2 = affectedHex1.GetNeighbor(randomMissingWall % 3);
-
-                foreach (var centerHex in rnd.ShuffleFisherYates(Hex.LargeHexagon(Size - SubmazeSize + 1).ToList()))
-                {
-                    // We do not need to examine this submaze if the wall we put in isn’t even in it
-                    if (((affectedHex1 - centerHex).Distance <= SubmazeSize ||
-                        (affectedHex2 - centerHex).Distance <= SubmazeSize) &&
-                        !DetermineSubmazeValidity(centerHex, walls).IsValid)
-                    {
-                        // This wall cannot be added, take it back out.
-                        walls[randomMissingWall] = false;
-                        break;
-                    }
-                }
-            }
-
-            // PART 2: GENERATE MARKINGS
-            tryAgain:
-            var markings = new Marking[sw * sw];
-            // List Circle and Hexagon twice so that triangles don’t completely dominate the distribution
-            var allowedMarkings = new[] { Marking.Circle, Marking.Circle, Marking.Hexagon, Marking.Hexagon, Marking.TriangleDown, Marking.TriangleLeft, Marking.TriangleRight, Marking.TriangleUp };
-
-            // Step 2.1: Put random markings in until there are no more ambiguities
-            while (!areMarkingsUnique(markings))
-            {
-                var availableHexes = Hex.LargeHexagon(Size)
-                    .Where(h => markings[markingIndex(h)] == Marking.None &&
-                        h.Neighbors.SelectMany(n1 => n1.Neighbors)
-                            .All(n2 => n2.Distance >= Size || markings[markingIndex(n2)] == Marking.None))
-                    .ToArray();
-                if (availableHexes.Length == 0)
-                    goto tryAgain;
-                var randomHex = availableHexes[rnd.Next(0, availableHexes.Length)];
-                markings[markingIndex(randomHex)] = allowedMarkings[rnd.Next(0, allowedMarkings.Length)];
-            }
-
-            // Step 2.2: Find markings to remove again
-            var removableMarkings = markings.SelectIndexWhere(m => m != Marking.None).ToList();
-            while (removableMarkings.Count > 0)
-            {
-                var tryRemoveIndex = rnd.Next(0, removableMarkings.Count);
-                var tryRemove = removableMarkings[tryRemoveIndex];
-                removableMarkings.RemoveAt(tryRemoveIndex);
-                var prevMarking = markings[tryRemove];
-                markings[tryRemove] = Marking.None;
-                if (!areMarkingsUnique(markings))
-                {
-                    // No longer unique — put it back in
-                    markings[tryRemove] = prevMarking;
-                }
-            }
-
-            return new GeneratedMaze(walls, markings);
-        }
-
-        private sealed class SubmazeValidity
-        {
-            public HashSet<Hex> Filled;
-            public bool[] EdgesReachable;
-            public bool IsValid;
-        }
-
-        private static SubmazeValidity DetermineSubmazeValidity(Hex centerHex, bool[] walls)
-        {
-            bool hasWall(Hex hex, int dir) => dir < 3 ? walls[3 * sw * (hex.Q + Size) + 3 * (hex.R + Size) + dir] : hasWall(hex.GetNeighbor(dir), dir - 3);
-            var ret = new SubmazeValidity();
-            ret.Filled = new HashSet<Hex> { centerHex };
-            var q = ret.Filled.ToQueue();
-            ret.EdgesReachable = new bool[6];
-
-            // Flood-fill as much of the maze as possible
-            while (q.Count > 0)
-            {
-                var hex = q.Dequeue();
-                var neighbors = hex.Neighbors;
-                for (int dir = 0; dir < 6; dir++)
-                {
-                    var offset = neighbors[dir] - centerHex;
-                    if (offset.Distance < SubmazeSize && !hasWall(hex, dir) && ret.Filled.Add(neighbors[dir]))
-                        q.Enqueue(neighbors[dir]);
-                    if (offset.Distance == SubmazeSize && !hasWall(hex, dir))
-                        foreach (var edge in offset.GetEdges(SubmazeSize))
-                            ret.EdgesReachable[edge] = true;
-                }
-            }
-
-            ret.IsValid =
-                // All hexes filled?
-                (ret.Filled.Count >= 3 * SubmazeSize * (SubmazeSize - 1) + 1) &&
-                // All edges reachable?
-                !ret.EdgesReachable.Contains(false);
-            return ret;
-        }
-
-        private static bool areMarkingsUnique(Marking[] markings)
-        {
-            var unique = new HashSet<string>();
-            foreach (var centerHex in Hex.LargeHexagon(Size - SubmazeSize + 1))
-            {
-                for (int rotation = 0; rotation < 6; rotation++)
-                {
-                    var markingsStr = Hex.LargeHexagon(SubmazeSize)
-                        .Select(h => h.Rotate(rotation) + centerHex)
-                        .Select(h => markings[markingIndex(h)].Rotate(-rotation))
-                        .ToMarkingString();
-                    if (!unique.Add(markingsStr))
-                        return false;
-                }
-            }
-            return true;
-        }
-
         public static void GenerateMarkingsTextures()
         {
             var pngcrs = new List<Thread>();
@@ -491,8 +191,8 @@ namespace KtaneStuff
                 Utils.ReplaceInFile(path, "<!--%%-->", "<!--%%%-->", $@"
                     <svg class='legend' viewBox='-325 -375 650 750'>
                         {"red,yellow,green,cyan,blue,pink".Split(',').Select((color, i) => $"<g class='label' transform='rotate({330 + 60 * i})'><text text-anchor='middle' y='-280'>{color}</text><path d='M-124.7-150v-200M124.7-150v-200' /></g>").JoinString()}
-                        <polygon class='outline' points='{Hex.LargeHexagonOutline(4, hexSizeFactor).Select(p => $"{p.X},{p.Y}").JoinString(" ")}' />
-                        {Hex.LargeHexagon(4).Select(h => h.GetCenter(hexSizeFactor)).Select(p => $"<circle class='dot' cx='{p.X}' cy='{p.Y}' r='{hexSizeFactor / 12}' />").JoinString()}
+                        <polygon class='outline' points='{Hex.LargeHexagonOutline(SubmazeSize, hexSizeFactor).Select(p => $"{p.X},{p.Y}").JoinString(" ")}' />
+                        {Hex.LargeHexagon(SubmazeSize).Select(h => h.GetCenter(hexSizeFactor)).Select(p => $"<circle class='dot' cx='{p.X}' cy='{p.Y}' r='{hexSizeFactor / 12}' />").JoinString()}
                     </svg>");
 
                 // Create the main maze in the manual page
@@ -524,8 +224,8 @@ namespace KtaneStuff
             const double hexWidth = 48;
             var path = @"D:\c\KTANE\Hexamaze\Manual\img\Component\Hexamaze.svg";
             File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<=<!--##-->).*(?=<!--###-->)", options: RegexOptions.Singleline, replacement: $@"
-                <polygon fill='#000' points='{Hex.LargeHexagonOutline(4, hexWidth).Select(p => $"{p.X + 174},{p.Y + 174}").JoinString(" ")}' />
-                {Hex.LargeHexagon(4)
+                <polygon fill='#000' points='{Hex.LargeHexagonOutline(SubmazeSize, hexWidth).Select(p => $"{p.X + 174},{p.Y + 174}").JoinString(" ")}' />
+                {Hex.LargeHexagon(SubmazeSize)
                     .Select(h => new { Point = h.GetCenter(hexWidth) + new PointD(174, 174) })
                     .Select(inf => $"<circle cx='{inf.Point.X}' cy='{inf.Point.Y}' r='{hexWidth / 12}' fill='#fff' />")
                     .JoinString()}

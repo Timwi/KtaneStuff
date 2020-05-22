@@ -39,7 +39,6 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
-            Hexamaze.GenerateMazeAndOutputToConsole();
 
             Console.WriteLine("Done.");
             Console.ReadLine();
