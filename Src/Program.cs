@@ -18,7 +18,7 @@ using static KtaneStuff.Modeling.Md;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KtaneStuff")]
-[assembly: AssemblyCopyright("Copyright © Timwi 2016–2019")]
+[assembly: AssemblyCopyright("Copyright © Timwi 2016–2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
@@ -39,6 +39,7 @@ namespace KtaneStuff
             if (args.Length == 2 && args[0] == "--post-build-check")
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
+            
 
             Console.WriteLine("Done.");
             Console.ReadLine();

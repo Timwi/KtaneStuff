@@ -22,8 +22,8 @@ namespace KtaneStuff
 
     static class PolyhedralMaze
     {
-        private static string _masterJsonPath = @"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Master.json";
-        private static object _lockObj = new object();
+        private static readonly string _masterJsonPath = @"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Master.json";
+        private static readonly object _lockObj = new object();
 
         [Flags]
         public enum Adjacency
@@ -42,21 +42,81 @@ namespace KtaneStuff
 
             /// <summary>A mask used to determine the connection type.</summary>
             ConnectionMask = 3 << 1,
+        }
 
-            ///// <summary>The faces are NOT adjacent in the net, nor can you walk from one to the other.</summary>
-            //None = NotTraversible | Portaled,
-            ///// <summary>The faces are adjacent in the net, but you cannot walk from one to the other (it’s a wall).</summary>
-            //NetWall = NotTraversible | Connected,
-            ///// <summary>The faces are adjacent in the net and you cannot walk from one to the other.</summary>
-            //Net = Traversible | Connected,
-            ///// <summary>
-            /////     The faces are NOT adjacent in the net, but you cannot walk from one to the other. The connection is
-            /////     indicated by a letter.</summary>
-            //Portal = Traversible | Portaled,
-            ///// <summary>
-            /////     The faces are NOT adjacent in the net, but you cannot walk from one to the other. The connection is
-            /////     indicated by a curved line.</summary>
-            //Curve = Traversible | Curved
+        public static void Analyze()
+        {
+            var polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath);
+            var d = new Dictionary<int, List<string>>();
+            foreach (var poly in polyhedra)
+            {
+                var startingFaces = Enumerable.Range(0, poly.Faces.Length).Where(f => poly.Adjacencies.Where(a => a.FromFace == f || a.ToFace == f).All(a => (a.Adjacency & Adjacency.Traversible) == Adjacency.Traversible)).ToArray();
+                foreach (var face in startingFaces)
+                    d.AddSafe(face, poly.ReadableName.Replace("\r", "").Replace("\n", " "));
+            }
+            foreach (var kvp in d.OrderBy(p => p.Key))
+                ConsoleUtil.WriteLine($"{kvp.Key} = {kvp.Value.JoinString(", ")}".Color(kvp.Value.Count == 1 ? ConsoleColor.White : ConsoleColor.DarkGray));
+        }
+
+        public static void FindStartingFaces()
+        {
+            IEnumerable<int> adjacent(PolyhedronInfo poly, int face)
+            {
+                foreach (var adj in poly.Adjacencies)
+                    if (adj.FromFace == face)
+                        yield return adj.ToFace;
+                    else if (adj.ToFace == face)
+                        yield return adj.FromFace;
+            }
+
+            var polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath);
+
+            Console.WriteLine("Pairs");
+            var validTuples = new List<int[]>();
+            foreach (var pair in Enumerable.Range(0, 42).UniquePairs())
+            {
+                foreach (var poly in polyhedra)
+                {
+                    var taken = new HashSet<int> { pair.Item1 };
+                    foreach (var adj in adjacent(poly, pair.Item1))
+                        taken.Add(adj);
+                    if (taken.Contains(pair.Item2))
+                        goto busted;
+                }
+                validTuples.Add(new[] { pair.Item1, pair.Item2 });
+                busted:;
+            }
+
+            while (true)
+            {
+                var validExtensions = new List<int[]>();
+                foreach (var tuple in validTuples)
+                {
+                    var validExtras = new HashSet<int>(Enumerable.Range(0, 42).Skip(tuple.Max() + 1));
+                    foreach (var poly in polyhedra)
+                    {
+                        var taken = new HashSet<int>();
+                        foreach (var face in tuple)
+                        {
+                            taken.Add(face);
+                            foreach (var adj in adjacent(poly, face))
+                                taken.Add(adj);
+                        }
+                        for (var extra = tuple.Max() + 1; extra < 42; extra++)
+                            if (validExtras.Contains(extra) && taken.Contains(extra))
+                                validExtras.Remove(extra);
+                    }
+                    foreach (var extra in validExtras)
+                        validExtensions.Add(tuple.Insert(tuple.Length, extra));
+                }
+                if (validExtensions.Count == 0)
+                    break;
+                validTuples = validExtensions;
+            }
+
+            Console.WriteLine("Tuples:");
+            foreach (var tuple in validTuples)
+                Console.WriteLine(tuple.JoinString(", "));
         }
 
         public sealed class AdjacencyInfo
@@ -123,7 +183,7 @@ namespace KtaneStuff
                 throw new InvalidOperationException();
             }
 
-            public string Declaration
+            public string CsDeclaration
             {
                 get
                 {
@@ -134,15 +194,41 @@ namespace KtaneStuff
                     {
                         var normal = ((Faces[fIx][2] - Faces[fIx][1]) * (Faces[fIx][0] - Faces[fIx][1])).Normalize();
                         var adjFacesInf = Enumerable.Range(0, Faces[fIx].Length)
-                            .Select(eIx => Adjacencies.Select(adj => adj.FromFace == fIx && adj.FromEdge == eIx && adj.Adjacency.HasFlag(Adjacency.Traversible) ? adj.ToFace : adj.ToFace == fIx && adj.ToEdge == eIx && adj.Adjacency.HasFlag(Adjacency.Traversible) ? adj.FromFace : (int?) null).FirstOrDefault(adj => adj != null))
-                            .Select(val => val == null ? "null" : val.Value.ToString())
+                            .Select(eIx => Adjacencies.Select(adj => adj.FromFace == fIx && adj.FromEdge == eIx ? adj.ToFace : adj.ToFace == fIx && adj.ToEdge == eIx ? adj.FromFace : (int?) null).First(adj => adj != null).Value)
                             .JoinString(", ");
-                        sb.AppendLine($@"                new Face {{ Normal = new Vector3({-normal.X}f, {normal.Y}f, {normal.Z}f), Distance = {normal.Dot(Faces[fIx][0] / avg)}f, AdjacentFaces = new int?[] {{ {adjFacesInf} }}, Vertices = new Vector3[] {{");
+                        sb.AppendLine($@"                new Face {{ Normal = new Vector3({-normal.X}f, {normal.Y}f, {normal.Z}f), Distance = {normal.Dot(Faces[fIx][0] / avg)}f, AdjacentFaces = new int[] {{ {adjFacesInf} }}, Vertices = new Vector3[] {{");
                         for (int eIx = 0; eIx < Faces[fIx].Length; eIx++)
                             sb.AppendLine($@"                    new Vector3({-Faces[fIx][eIx].X / avg}f, {Faces[fIx][eIx].Y / avg}f, {Faces[fIx][eIx].Z / avg}f){(eIx == Faces[fIx].Length - 1 ? "" : ",")}");
                         sb.AppendLine($@"                }} }}{(fIx == Faces.Length - 1 ? "" : ",")}");
                     }
                     sb.Append($@"            }} }}");
+                    return sb.ToString();
+                }
+            }
+
+            public string JsDeclaration
+            {
+                get
+                {
+                    var sb = new StringBuilder();
+                    sb.AppendLine($@"{{");
+                    sb.AppendLine($@"        Name: ""{FileCompatibleName.CLiteralEscape()}"",");
+                    sb.AppendLine($@"        ReadableName: ""{ReadableName.Replace("\r", "").Replace("\n", " ").CLiteralEscape()}"",");
+                    var faceAdjs = new List<string>();
+                    for (int fIx = 0; fIx < Faces.Length; fIx++)
+                    {
+                        var adjFacesInf = Enumerable.Range(0, Faces[fIx].Length)
+                            .Select(eIx => Adjacencies
+                                .Select(adj =>
+                                    adj.FromFace == fIx && adj.FromEdge == eIx ? adj.ToFace :
+                                    adj.ToFace == fIx && adj.ToEdge == eIx ? adj.FromFace : (int?) null)
+                                .First(adj => adj != null))
+                            .Select(val => val.Value.ToString())
+                            .JoinString(", ");
+                        faceAdjs.Add($@"[ {adjFacesInf} ]");
+                    }
+                    sb.AppendLine($@"        Faces: [ {faceAdjs.JoinString(", ")} ]");
+                    sb.Append($@"    }}");
                     return sb.ToString();
                 }
             }
@@ -167,9 +253,7 @@ Rhombicosidodecahedron
 ElongatedSquareGyrobicupola
 GyroelongatedTriangularBicupola".Replace("\r", "").Split('\n');
 
-            List<PolyhedronInfo> polyhedra;
-            try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
-            catch { polyhedra = new List<PolyhedronInfo>(); }
+            var polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath);
 
             foreach (var file in new DirectoryInfo(@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Txt").GetFiles("*.txt"))
             {
@@ -263,11 +347,19 @@ GyroelongatedTriangularBicupola".Replace("\r", "").Split('\n');
             }
         }
 
-        public static void GenerateDeclaration()
+        public static void GenerateJsDeclaration()
         {
-            List<PolyhedronInfo> polyhedra;
-            try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
-            catch { polyhedra = new List<PolyhedronInfo>(); }
+            var polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath);
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Polyhedral Maze.html", "//%%start", "//%%end", $@"
+let polyhedra = [
+    {polyhedra.Select(p => p.JsDeclaration).JoinString(@",
+    ")}
+];");
+        }
+
+        public static void GenerateCsDeclaration()
+        {
+            var polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath);
 
             File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Polyhedra.cs", $@"
 using UnityEngine;
@@ -284,7 +376,7 @@ namespace PolyhedralMaze
     sealed class Face
     {{
         public Vector3[] Vertices;
-        public int?[] AdjacentFaces;
+        public int[] AdjacentFaces;
         public Vector3 Normal;
         public float Distance;
     }}
@@ -292,7 +384,7 @@ namespace PolyhedralMaze
     static class Data
     {{
         public static Polyhedron[] Polyhedra = new Polyhedron[] {{
-            {polyhedra.Select(p => p.Declaration).JoinString(@",
+            {polyhedra.Select(p => p.CsDeclaration).JoinString(@",
             ")}
         }};
     }}
@@ -308,7 +400,7 @@ namespace PolyhedralMaze
             try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
             catch { polyhedra = new List<PolyhedronInfo>(); }
 
-            HttpResponse mainPage(HttpRequest req)
+            static HttpResponse mainPage(HttpRequest req)
             {
                 return HttpResponse.Html(File.ReadAllBytes(@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\ManualTemplate.html"));
             }
@@ -411,7 +503,7 @@ namespace PolyhedralMaze
             private static void ClearMaze(PolyhedronInfo polyhedron)
             {
                 foreach (var adj in polyhedron.Adjacencies)
-                    adj.Adjacency = adj.Adjacency | Adjacency.Traversible;
+                    adj.Adjacency |= Adjacency.Traversible;
             }
 
             private void GenerateMaze(PolyhedronInfo polyhedron, double wallProbability, int seed)
@@ -804,7 +896,7 @@ namespace PolyhedralMaze
                 {
                     Line = line,
                     CoordinateMatch = Regex.Match(line, @"^C(\d+) *= *(-?\d*\.?\d+) *(?:=|$)"),
-                    VertexMatch = Regex.Match(line, @"^V(\d+) *= *\( *((?<m1>-?)C(?<c1>\d+)|(?<n1>-?\d*\.\d+)) *, *((?<m2>-?)C(?<c2>\d+)|(?<n2>-?\d*\.\d+)) *, *((?<m3>-?)C(?<c3>\d+)|(?<n3>-?\d*\.\d+)) *\) *$"),
+                    VertexMatch = Regex.Match(line, @"^V(\d+) *= *\( *((?<m1>-?)C(?<c1>\d+)|(?<n1>-?\d*\.?\d+)) *, *((?<m2>-?)C(?<c2>\d+)|(?<n2>-?\d*\.?\d+)) *, *((?<m3>-?)C(?<c3>\d+)|(?<n3>-?\d*\.?\d+)) *\) *$"),
                     FaceMatch = Regex.Match(line, @"^ *\{ *(\d+ *(, *\d+ *)*)\} *$")
                 });
             var coords = matches.Where(m => m.CoordinateMatch.Success).ToDictionary(m => int.Parse(m.CoordinateMatch.Groups[1].Value), m => double.Parse(m.CoordinateMatch.Groups[2].Value));

@@ -8,7 +8,7 @@
     <link rel='stylesheet' type='text/css' href='css/font.css'>
     <link href="css/normalize.css" rel="stylesheet" type="text/css">
     <link href="css/main.css" rel="stylesheet" type="text/css">
-    <script src='js/highlighter.js'></script>
+    <script src='js/ktane-utils.js'></script>
     <script src="js/jquery.3.1.1.min.js"></script>
     <script id="main-js">
         $(function ()
@@ -188,7 +188,13 @@
                         $('#log-wrap,#main-js,#extra-css').remove();
                         $('.svg-container').each((_, x) => $(x).attr('id', null).attr('class', null));
                         $('svg *[class]').each((_, x) => x.removeAttribute('class'));
-                        $('svg *[id]').each((_, x) => { var id = x.getAttribute('id'); x.removeAttribute('id'); if (id.indexOf('outline') !== -1) x.setAttribute('class', 'highlightable'); });
+                        $('svg *[id]').each((_, x) => {
+                            let id = x.getAttribute('id');
+                            if (id.indexOf('outline') !== -1)
+                                x.setAttribute('class', 'highlightable');
+                            if (!/^poly-.*-(?:edge|portal-letter|portal-marker|curve)-\d+-\d+$/.test(id))
+                                x.removeAttribute('id');
+                        });
                         $('*[data-edge]').each((_, x) => x.removeAttribute('data-edge'));
                     }
                     else
