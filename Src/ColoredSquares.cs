@@ -17,14 +17,21 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\ColoredSquares\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
             File.WriteAllText(@"D:\c\KTANE\ColoredSquares\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
 
-            foreach (var (ch, colorCode) in new[] { ('B', "3852E1"), ('G', "38E139"), ('M', "C738E1"), ('R', "E13838"), ('Y', "E1E138") })
+            foreach (var (fn, ch, colorName, colorCode, useWhite) in Ut.NewArray(
+                // Standard colors
+                ("B", 'B', "Blue", "3852E1", false), ("G", 'G', "Green", "38E139", false), ("M", 'M', "Magenta", "C737E1", false), ("R", 'R', "Red", "E13838", false), ("Y", 'Y', "Yellow", "E1E138", false),
+                // Juxtacolored Squares only
+                ("DB", 'B', "DarkBlue", "1313D4", true),
+                ("O", 'O', "Orange", "FE9700", false), ("C", 'C', "Cyan", "00FEFF", false), ("P", 'P', "Purple", "8516CA", true), ("H", 'H', "Chestnut", "930400", true), ("N", 'N', "Brown", "B16110", false),
+                ("V", 'V', "Mauve", "E0A9FE", false), ("Z", 'Z', "Azure", "2875FE", false), ("J", 'J', "Jade", "87ED8D", false), ("F", 'F', "Forest", "002B14", true), ("A", 'A', "Gray", "B4B4B4", false)
+            ))
             {
                 GraphicsUtil.DrawBitmap(256, 256, g =>
                 {
                     var color = Color.FromArgb(0xC0, Convert.ToInt32(colorCode.Substring(0, 2), 16), Convert.ToInt32(colorCode.Substring(2, 2), 16), Convert.ToInt32(colorCode.Substring(4, 2), 16));
                     g.Clear(color);
-                    g.DrawString(ch.ToString(), new Font("Doris P Bold", 64f, FontStyle.Bold), Brushes.Black, 120, 130, new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
-                }).Save($@"D:\c\KTANE\ColoredSquares\Assets\Textures\Colorblind-{ch}.png");
+                    g.DrawString(ch.ToString(), new Font("Orbitron", 52f, FontStyle.Bold), useWhite ? Brushes.White : Brushes.Black, 128, 135, new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+                }).Save($@"D:\c\KTANE\ColoredSquares\Assets\Textures\Colorblind-{fn}.png");
             }
         }
 
@@ -50,7 +57,7 @@ namespace KtaneStuff
                 u == 0 ? Normal.Mine : Normal.Average,
                 v == 2 * bézierSteps - 2 ? Normal.Mine : Normal.Average,
                 v == 0 ? Normal.Mine : Normal.Average,
-                p(v / (double) (2 * bézierSteps), 1 - u / (double) (2 * bézierSteps)))));
+                p(v / (double) (2 * bézierSteps - 2), 1 - u / (double) (2 * bézierSteps - 2)))));
         }
 
         private static IEnumerable<VertexInfo[]> ButtonHighlight()
