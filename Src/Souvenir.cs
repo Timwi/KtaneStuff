@@ -12,6 +12,7 @@ namespace KtaneStuff
     {
         public static void DoModels()
         {
+            File.WriteAllText(@"D:\c\KTANE\Souvenir\Assets\Models\AnswerHighlightVeryLong.obj", GenerateObjFile(AnswerHighlight(.39), "AnswerHighlightVeryLong"));
             File.WriteAllText(@"D:\c\KTANE\Souvenir\Assets\Models\AnswerHighlightLong.obj", GenerateObjFile(AnswerHighlight(.21), "AnswerHighlightLong"));
             File.WriteAllText(@"D:\c\KTANE\Souvenir\Assets\Models\AnswerHighlightShort.obj", GenerateObjFile(AnswerHighlight(.15), "AnswerHighlightShort"));
         }
