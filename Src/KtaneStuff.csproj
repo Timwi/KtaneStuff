@@ -110,6 +110,7 @@
     <Compile Include="PolyhedralMaze.cs" />
     <Compile Include="PerplexingWires.cs" />
     <Compile Include="PointOfOrder.cs" />
+    <Compile Include="ProperPassword.cs" />
     <Compile Include="RegularCrazyTalk.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="Set.cs" />
