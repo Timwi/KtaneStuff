@@ -127,6 +127,7 @@
     <Compile Include="ToonEnough.cs" />
     <Compile Include="Translatable.cs" />
     <Compile Include="MarbleTumble.cs" />
+    <Compile Include="UltimateTicTacToe.cs" />
     <Compile Include="WorldMazes.cs" />
     <Compile Include="XRay.cs" />
     <Compile Include="Yahtzee.cs" />
