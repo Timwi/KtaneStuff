@@ -57,6 +57,7 @@
     <Compile Include="Astrology.cs" />
     <Compile Include="BinaryPuzzle.cs" />
     <Compile Include="BlackHole.cs" />
+    <Compile Include="Bloxx.cs" />
     <Compile Include="Boggle.cs" />
     <Compile Include="ColorBraille.cs" />
     <Compile Include="Curriculum.cs" />
