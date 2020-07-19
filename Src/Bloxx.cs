@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using RT.Dijkstra;
 using RT.TagSoup;
@@ -118,10 +119,14 @@ namespace KtaneStuff
 
         public static void Experiment()
         {
-            var rnd = new Random(8475);
+            var counts = 0;
+            startOver:
+            var rnd2 = new Random();
+            var seed = rnd2.Next();
+            var rnd = new Random(seed);
 
             tryEverythingAgain:
-            const int numCheckPoints = 5;
+            const int numCheckPoints = 6;
             var cols = 15;
             var rows = 11;
             var validPositions = "###########----###########----############---#############--#########################################################################################################";
@@ -172,23 +177,25 @@ namespace KtaneStuff
                 validStates.Remove(nextCheckPoint);
             }
 
-            // Mark checkpoints
-            for (var i = 0; i < checkPoints.Count; i++)
-                checkPoints[i].MarkUsed(newGrid, cols, i == 0 ? checkPoints[i].posChar() : i == checkPoints.Count - 1 ? 'X' : i.ToString()[0]);
-
-            Console.WriteLine(newGrid.Split(cols).Select(row => row.JoinString()).JoinString("\n"));
-
             // Find shortest path
             var overallStart = new BloxxNode { GameState = checkPoints[0], DesiredEndState = checkPoints.Last(), ValidPositions = new string(newGrid), ValidPositionsWidth = cols };
             var shortestPath = DijkstrasAlgorithm.Run(overallStart, 0, (a, b) => a + b, out _).ToArray();
 
             var finalGrid = Ut.NewArray(validPositions.Length, _ => '-');
-            checkPoints[0].MarkUsed(finalGrid, cols, checkPoints[0].posChar());
+            // Mark reachable squares
             for (var spIx = 0; spIx < shortestPath.Length; spIx++)
                 shortestPath[spIx].state.MarkUsed(finalGrid, cols, spIx == shortestPath.Length - 1 ? 'X' : '#');
-
-            Console.WriteLine();
+            // Mark start and end location
+            checkPoints[0].MarkUsed(finalGrid, cols, checkPoints[0].posChar());
+            checkPoints.Last().MarkUsed(finalGrid, cols, 'X');
+            if (finalGrid.Count(ch => ch == '#') < 50)
+                goto startOver;
+            counts++;
+            Console.WriteLine($"{counts}: Seed = {seed}, start = {checkPoints[0]}, end = {checkPoints.Last()}");
             Console.WriteLine(finalGrid.Split(cols).Select(row => row.JoinString()).JoinString("\n"));
+            Console.WriteLine();
+            Console.ReadLine();
+            goto startOver;
         }
     }
 }
