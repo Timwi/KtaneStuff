@@ -73,6 +73,7 @@
     <Compile Include="BrokenGuitarChords.cs" />
     <Compile Include="Hogwarts.cs" />
     <Compile Include="IndexingSudoku.cs" />
+    <Compile Include="JackAttack.cs" />
     <Compile Include="KnowYourWay.cs" />
     <Compile Include="Ktane.cs" />
     <Compile Include="Kudosudoku.cs" />
