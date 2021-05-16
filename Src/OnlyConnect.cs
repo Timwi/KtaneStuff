@@ -79,7 +79,7 @@ Polish=jeżu klątw, spłódź finom część gry hańb
 Portuguese=luís argüia à júlia que «brações, fé, chá, óxido, pôr, zângão» eram palavras do português. 
 Romanian=muzicologă în bej vând whisky și tequila, preț fix.
 Spanish=benjamín pidió una bebida de kiwi y fresa; noé, sin vergüenza, la más exquisita champaña del menú.
-Swedish=byxfjärmat föl gick på duvshowen.
+Swedish=yxskaftbud, ge vår wc-zonmö iq-hjälp.
 Turkish=pijamalı hasta yağız şoföre çabucak güvendi.
 Welsh=parciais fy jac codi baw hud llawn dŵr ger tŷ mabon. 
 ".Trim().Replace("\r", "").Split('\n');

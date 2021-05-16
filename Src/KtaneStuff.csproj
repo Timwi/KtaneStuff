@@ -69,6 +69,7 @@
     <Compile Include="ElderFuthark.cs" />
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="FactoryMaze.cs" />
+    <Compile Include="FindUnknownModules.cs" />
     <Compile Include="GridMatching.cs" />
     <Compile Include="BrokenGuitarChords.cs" />
     <Compile Include="Hogwarts.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Set.cs" />
     <Compile Include="ShippingChart.cs" />
     <Compile Include="SimonSends.cs" />
+    <Compile Include="SimonShouts.cs" />
     <Compile Include="SimonShrieks.cs" />
     <Compile Include="SimonSings.cs" />
     <Compile Include="SimonSpeaks.cs" />

@@ -44,6 +44,33 @@ namespace KtaneStuff
             ConnectionMask = 3 << 1,
         }
 
+        public static void GenerateModelForTabletop()
+        {
+            const int minEdges = 3;
+            const int maxEdges = 7;
+            const int x0 = 110;
+            const int y0 = 110;
+            const int spacing = 210;
+            const int radius = 100;
+
+            const int w = 2 * x0 + (maxEdges - minEdges) * spacing;
+            const int h = 2 * y0;
+
+            var (name, faces) = Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Txt\LpentagonalIcositetrahedron.txt"));
+            var fileCompatibleName = "LpentagonalIcositetrahedron";
+            static PointD getTexturePoint(int e, int edges) => new PointD((x0 + (edges - minEdges) * spacing + radius * cos(360 / edges * e)) / w, (y0 + radius * sin(360 / edges * e)) / h);
+
+            var avg = faces.SelectMany(p => p).Average(p => p.Length);
+            File.WriteAllText($@"D:\Daten\Upload\Tabletop Simulator\Misc\Temp\{fileCompatibleName}.obj",
+                GenerateObjFile(faces.SelectMany(face => triangulate(face.Select((p, vIx) => (p / avg).WithTexture(getTexturePoint(vIx, face.Length))).ToArray())).ToArray(), fileCompatibleName, AutoNormal.Flat));
+
+            static IEnumerable<VertexInfo[]> triangulate(VertexInfo[] vi)
+            {
+                for (var i = 1; i < vi.Length - 1; i++)
+                    yield return new[] { vi[0], vi[i], vi[i + 1] };
+            }
+        }
+
         public static void Analyze()
         {
             var polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath);

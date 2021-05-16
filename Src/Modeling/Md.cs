@@ -48,32 +48,66 @@ namespace KtaneStuff.Modeling
         {
             var facesProcessed = faces;
             if (autoNormal != AutoNormal.None)
-                facesProcessed = faces.Select(face => face.Select(p => new VertexInfo(p.Location, p.Normal ?? (autoNormal == AutoNormal.Flat && face.Length >= 3 ? (face[2].Location - face[1].Location) * (face[0].Location - face[1].Location) : (Pt?) null), p.Texture)).ToArray());
+                facesProcessed = faces.Select(face => face.Select(p => new VertexInfo(p.Location, p.Normal ?? (autoNormal == AutoNormal.Flat && face.Length >= 3 ? ((face[2].Location - face[1].Location) * (face[0].Location - face[1].Location)).Normalize() : (Pt?) null), p.Texture)).ToArray());
 
             var facesArr = facesProcessed.ToArray();
-            var vertices = facesArr.SelectMany(f => f).Select(f => f.Location).Distinct().ToArray();
-            var verticesLookup = vertices.Select((v, i) => Ut.KeyValuePair(v, i + 1)).ToDictionary();
-            var normals = facesArr.SelectMany(f => f).Where(f => f.Normal != null).Select(f => f.Normal.Value).Distinct().ToArray();
-            var normalsLookup = normals.Select((n, i) => Ut.KeyValuePair(n, i + 1)).ToDictionary();
-            var textures = facesArr.SelectMany(f => f).Where(f => f.Texture != null).Select(f => f.Texture.Value).Distinct().ToArray();
-            var s = new StringBuilder();
-            if (objectName != null)
-                s.AppendLine($"o {objectName}");
-            foreach (var v in vertices)
-                s.AppendLine($"v {v.X:R} {v.Y:R} {v.Z:R}");
-            foreach (var n in normals.Select(n => n.Normalize()))
-                s.AppendLine($"vn {n.X:R} {n.Y:R} {n.Z:R}");
-            foreach (var t in textures)
-                s.AppendLine($"vt {t.X:R} {t.Y:R}");
-            if (objectName != null)
-                s.AppendLine($"g {objectName}");
-            foreach (var f in facesArr)
-                s.AppendLine($@"f {f.Select(vi =>
-                    verticesLookup[vi.Location].Apply(v =>
-                    vi.Texture.NullOr(t => textures.IndexOf(t) + 1).Apply(t =>
-                    vi.Normal.NullOr(n => normalsLookup[n]).Apply(n =>
-                    n == null ? t == null ? v.ToString() : $"{v}/{t}" : $"{v}/{t}/{n}")))).JoinString(" ")}");
-            return s.ToString();
+
+            var vertices = new List<string>();
+            var normals = new List<string>();
+            var textures = new List<string>();
+            var facesStrs = new List<string>();
+            foreach (var face in facesArr)
+            {
+                var faceStr = new List<string>();
+                foreach (var vertex in face)
+                {
+                    var v = vertex.Location;
+                    vertices.Add($"v {v.X:R} {v.Y:R} {v.Z:R}");
+                    var str = vertices.Count.ToString();
+                    if (vertex.Texture != null)
+                    {
+                        var t = vertex.Texture.Value;
+                        textures.Add($"vt {t.X:R} {t.Y:R}");
+                        str += $"/{textures.Count}";
+                    }
+                    if (vertex.Normal != null)
+                    {
+                        var n = vertex.Normal.Value;
+                        normals.Add($"vn {n.X:R} {n.Y:R} {n.Z:R}");
+                        if (vertex.Texture == null)
+                            str += "/";
+                        str += $"/{normals.Count}";
+                    }
+                    faceStr.Add(str);
+                }
+                facesStrs.Add($"f {faceStr.JoinString(" ")}");
+            }
+            return $"o {objectName}\r\n{vertices.JoinString("\r\n")}\r\n{normals.JoinString("\r\n")}\r\n{textures.JoinString("\r\n")}\r\ng {objectName}\r\n{facesStrs.JoinString("\r\n")}";
+
+
+            //var vertices = facesArr.SelectMany(f => f).Select(f => f.Location).Distinct().ToArray();
+            //var verticesLookup = vertices.Select((v, i) => Ut.KeyValuePair(v, i + 1)).ToDictionary();
+            //var normals = facesArr.SelectMany(f => f).Where(f => f.Normal != null).Select(f => f.Normal.Value).Distinct().ToArray();
+            //var normalsLookup = normals.Select((n, i) => Ut.KeyValuePair(n, i + 1)).ToDictionary();
+            //var textures = facesArr.SelectMany(f => f).Where(f => f.Texture != null).Select(f => f.Texture.Value).Distinct().ToArray();
+            //var s = new StringBuilder();
+            //if (objectName != null)
+            //    s.AppendLine($"o {objectName}");
+            //foreach (var v in vertices)
+            //    s.AppendLine($"v {v.X:R} {v.Y:R} {v.Z:R}");
+            //foreach (var n in normals.Select(n => n.Normalize()))
+            //    s.AppendLine($"vn {n.X:R} {n.Y:R} {n.Z:R}");
+            //foreach (var t in textures)
+            //    s.AppendLine($"vt {t.X:R} {t.Y:R}");
+            //if (objectName != null)
+            //    s.AppendLine($"g {objectName}");
+            //foreach (var f in facesArr)
+            //    s.AppendLine($@"f {f.Select(vi =>
+            //        verticesLookup[vi.Location].Apply(v =>
+            //        vi.Texture.NullOr(t => textures.IndexOf(t) + 1).Apply(t =>
+            //        vi.Normal.NullOr(n => normalsLookup[n]).Apply(n =>
+            //        n == null ? t == null ? v.ToString() : $"{v}/{t}" : $"{v}/{t}/{n}")))).JoinString(" ")}");
+            //return s.ToString();
         }
 
         public static IEnumerable<Pt> Bézier(Pt start, Pt control1, Pt control2, Pt end, int steps)

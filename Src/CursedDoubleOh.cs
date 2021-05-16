@@ -32,7 +32,7 @@ namespace KtaneStuff
             25 73 67 16 58 01 34 82 40
             11 54 80 32 77 45 23 66 08".Trim().Replace("\r", "").Split(new[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(str => int.Parse(str)).ToArray();
 
-        public static void MakeCheatSheet()
+        public static void AnalysisABCD()
         {
             var fncs = EnumStrong.GetValues<ButtonFunction>();
             var paths = new Dictionary<string, int>();
@@ -51,6 +51,29 @@ namespace KtaneStuff
                                                     var newPos = Move(p.Pos, n.Fnc);
                                                     return new { Path = p.Path + n.Name + (_grid[newPos] / 10), Pos = newPos };
                                                 }).Path);
+            }
+            foreach (var kvp in paths.OrderByDescending(p => p.Value).Take(20))
+                Console.WriteLine($"{kvp.Key} = {kvp.Value}");
+            Console.WriteLine(paths.Count);
+        }
+
+        public static void AnalysisABAB()
+        {
+            var fncs = EnumStrong.GetValues<ButtonFunction>();
+            var paths = new Dictionary<string, int>();
+            for (int i = 0; i < 81; i++)
+            {
+                foreach (var a in fncs)
+                    foreach (var b in fncs)
+                        if ((int) a >> 1 != (int) b >> 1)
+                            //foreach (var c in fncs)
+                            //    if ((int) a >> 1 != (int) c >> 1 && (int) b >> 1 != (int) c >> 1)
+                            paths.IncSafe(new[] { 0, 1, 0, 1 }.Select(f => new { Fnc = new[] { a, b }[f], Name = (char) ('A' + f) })
+                                .Aggregate(new { Path = (_grid[i] / 10).ToString(), Pos = i }, (p, n) =>
+                                {
+                                    var newPos = Move(p.Pos, n.Fnc);
+                                    return new { Path = p.Path + n.Name + (_grid[newPos] / 10), Pos = newPos };
+                                }).Path);
             }
             foreach (var kvp in paths.OrderByDescending(p => p.Value).Take(20))
                 Console.WriteLine($"{kvp.Key} = {kvp.Value}");
