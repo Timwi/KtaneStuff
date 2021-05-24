@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
+using KtaneStuff.Modeling;
 using RT.KitchenSink;
 using RT.Util;
-using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
-using RT.Util.Text;
-using KtaneStuff.Modeling;
-using System.IO;
 using RT.Util.Geometry;
 
 namespace KtaneStuff
@@ -17,113 +15,128 @@ namespace KtaneStuff
 
     static class SimonShouts
     {
+        static string _grid = @"RRGRRRGRYRBRYRBRRRRGRBRYRGRRRBRYRGGGRGGGYGBGYGBGGRGGGBGYGGGRGBGYRRGRRRGRYRBRYRBRBRBGBBBYBGBRBBBYRGGGRGGGYGBGYGBGYRYGYBYYYGYRYBYYRYGYRYGYYYBYYYBYGRGGGBGYGGGRGBGYRBGBRBGBYBBBYBBBRRRGRBRYRGRRRBRYRYGYRYGYYYBYYYBYBRBGBBBYBGBRBBBYRBGBRBGBYBBBYBBBYRYGYBYYYGYRYBYY";
+
         public static void Experiment()
         {
-            var grid = @"RRGRRRGRYRBRYRBRRRRGRBRYRGRRRBRYRGGGRGGGYGBGYGBGGRGGGBGYGGGRGBGYRRGRRRGRYRBRYRBRBRBGBBBYBGBRBBBYRGGGRGGGYGBGYGBGYRYGYBYYYGYRYBYYRYGYRYGYYYBYYYBYGRGGGBGYGGGRGBGYRBGBRBGBYBBBYBBBRRRGRBRYRGRRRBRYRYGYRYGYYYBYYYBYBRBGBBBYBGBRBBBYRBGBRBGBYBBBYBBBYRYGYBYYYGYRYBYY";
-
-            var tt = new TextTable { ColumnSpacing = 1 };
-            for (var ix = 0; ix < 16; ix++)
-                tt.SetCell(ix + 1, 0, Enumerable.Range(0, 2).Select(i => "RGBY"[(ix >> (2 * i)) % 4]).JoinString());
-            for (var ix = 0; ix < 16; ix++)
-                tt.SetCell(0, ix + 1, Enumerable.Range(0, 2).Select(i => "RGBY"[(ix >> (2 * i)) % 4]).JoinString());
-            for (var comboIx = 0; comboIx < 256; comboIx++)
-            {
-                var combo = Enumerable.Range(0, 4).Select(i => "RGBY"[(comboIx >> (2 * i)) % 4]).JoinString();
-
-                var valid = Ut.NewArray(256, ix =>
-                        combo[0] != grid[ix] &&
-                        combo[1] != grid[(ix + 1) % 16 + 16 * (ix / 16)] &&
-                        combo[2] != grid[ix % 16 + 16 * ((ix / 16 + 1) % 16)] &&
-                        combo[3] != grid[(ix + 1) % 16 + 16 * ((ix / 16 + 1) % 16)]);
-
-                var q = new Queue<int>();
-                q.Enqueue(Enumerable.Range(0, 256).First(i => valid[i]));
-                var covered = new HashSet<int>();
-                var steps = new List<(int dx, int dy)> { (0, -2), (-1, -1), (0, -1), (1, -1), (-2, 0), (-1, 0), (1, 0), (2, 0), (-1, 1), (0, 1), (1, 1), (0, 2) };
-                //steps.AddRange(new[] { (-3, 0), (-2, 1), (-1, 2), (0, 3), (1, 2), (2, 1), (3, 0), (2, -1), (1, -2), (0, -3), (-1, -2), (-2, -1) });
-                steps.AddRange(new[] { (-2, 1), (-1, 2), (1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, -1) });
-                while (q.Count > 0)
-                {
-                    var elem = q.Dequeue();
-                    if (!covered.Add(elem))
-                        continue;
-                    foreach (var (dx, dy) in steps)
-                    {
-                        var n = (elem + dx + 16) % 16 + 16 * ((elem / 16 + dy + 16) % 16);
-                        if (valid[n])
-                            q.Enqueue(n);
-                    }
-                }
-
-                if (combo == "YYYY")
-                    ConsoleUtil.WriteLine(Enumerable.Range(0, 16).Select(row => Enumerable.Range(0, 16).Select(col => "██".Color(valid[col + 16 * row] && covered.Contains(col + 16 * row) ? ConsoleColor.Yellow : valid[col + 16 * row] ? ConsoleColor.Magenta : ConsoleColor.Blue)).JoinColoredString()).JoinColoredString("\n"));
-
-                tt.SetCell(comboIx % 16 + 1, comboIx / 16 + 1, covered.Count == valid.Count(b => b) ? "OK".Color(ConsoleColor.Green) : $"{covered.Count * 100 / valid.Count(b => b),2}".Color(ConsoleColor.Magenta));
-            }
-            tt.WriteToConsole();
-        }
-
-        public static void Experiment2()
-        {
-            var grid = @"RRGRRRGRYRBRYRBRRRRGRBRYRGRRRBRYRGGGRGGGYGBGYGBGGRGGGBGYGGGRGBGYRRGRRRGRYRBRYRBRBRBGBBBYBGBRBBBYRGGGRGGGYGBGYGBGYRYGYBYYYGYRYBYYRYGYRYGYYYBYYYBYGRGGGBGYGGGRGBGYRBGBRBGBYBBBYBBBRRRGRBRYRGRRRBRYRYGYRYGYYYBYYYBYBRBGBBBYBGBRBBBYRBGBRBGBYBBBYBBBYRYGYBYYYGYRYBYY";
-
             var seed = Rnd.Next();
             Console.WriteLine($"Seed: {seed}");
             var rnd = new Random(seed);
-            var iter = 0;
+
             tryAgain:
-            if (iter > 10000)
-                Debugger.Break();
-            var startposition = rnd.Next(0, grid.Length);
-            var endposition = Enumerable.Range(0, grid.Length).Except(new[] { startposition }).PickRandom(rnd);
-            var valid = Ut.NewArray(256, ix => ix == endposition || (
-                grid[endposition] != grid[ix] &&
-                grid[(endposition + 1) % 16 + 16 * (endposition / 16)] != grid[(ix + 1) % 16 + 16 * (ix / 16)] &&
-                grid[endposition % 16 + 16 * ((endposition / 16 + 1) % 16)] != grid[ix % 16 + 16 * ((ix / 16 + 1) % 16)] &&
-                grid[(endposition + 1) % 16 + 16 * ((endposition / 16 + 1) % 16)] != grid[(ix + 1) % 16 + 16 * ((ix / 16 + 1) % 16)]));
+            var _curPosition = rnd.Next(0, _grid.Length);
+            var _goalPosition = Enumerable.Range(0, _grid.Length).Except(new[] { _curPosition }).PickRandom(rnd);
+            var valid = Ut.NewArray(256, pos => pos == _goalPosition || (
+                _grid[_goalPosition] != _grid[pos] &&
+                _grid[(_goalPosition + 1) % 16 + 16 * (_goalPosition / 16)] != _grid[(pos + 1) % 16 + 16 * (pos / 16)] &&
+                _grid[_goalPosition % 16 + 16 * ((_goalPosition / 16 + 1) % 16)] != _grid[pos % 16 + 16 * ((pos / 16 + 1) % 16)] &&
+                _grid[(_goalPosition + 1) % 16 + 16 * ((_goalPosition / 16 + 1) % 16)] != _grid[(pos + 1) % 16 + 16 * ((pos / 16 + 1) % 16)]));
 
-            var allPossibleMovements = (from dx in Enumerable.Range(-3, 7) from dy in Enumerable.Range(-3, 7) where (Math.Abs(dx) + Math.Abs(dy)).IsBetween(1, 3) select (dx, dy)).ToArray().Shuffle(rnd);
-            var movements = allPossibleMovements.Subarray(0, 4);
+            var _flashingLetters = "ABCDFGHIJKLMNOPQRSUVWXYZ".ToCharArray().Shuffle(rnd).Take(4).Select(ch => ch - 'A').ToArray();
+            var availableMovements = _flashingLetters.Select(ltr => new Movement(ltr)).ToArray();
 
+            var _optimalMovements = new Dictionary<int, Movement>();
             var q = new Queue<int>();
-            q.Enqueue(startposition);
-            var covered = new Dictionary<int, int>();    // key = grid index; value = distance from startposition
-            covered[startposition] = 0;
+            q.Enqueue(_goalPosition);
             while (q.Count > 0)
             {
-                var iad = q.Dequeue();
-                foreach (var (dx, dy) in movements)
+                var pos = q.Dequeue();
+                foreach (var mv in availableMovements)
                 {
-                    var n = (iad + dx + 16) % 16 + 16 * ((iad / 16 + dy + 16) % 16);
-                    if (valid[n] && !covered.ContainsKey(n))
+                    var n = pos - mv;
+                    if (n != _goalPosition && valid[n] && !_optimalMovements.ContainsKey(n))
                     {
-                        covered[n] = covered[iad] + 1;
+                        _optimalMovements[n] = mv;
                         q.Enqueue(n);
                     }
                 }
             }
 
-            if (!covered.ContainsKey(endposition) || !covered[endposition].IsBetween(3, 5))
-            {
-                iter++;
+            if (!_optimalMovements.ContainsKey(_curPosition))
                 goto tryAgain;
+
+            var solutionPath = getSolutionPath(_curPosition, _goalPosition, _optimalMovements);
+            if (solutionPath.Length < 3 || solutionPath.Length > 5)
+                goto tryAgain;
+
+            var _moduleId = 0;
+            Console.WriteLine(@"[Simon Shouts #{0}] Start: {1} ({2}, {3})", _moduleId, positionToGridColors(_curPosition), (char) ('A' + _curPosition % 16), _curPosition / 16 + 1);
+            Console.WriteLine(@"[Simon Shouts #{0}] Goal: {1} ({2}, {3})", _moduleId, positionToGridColors(_goalPosition), (char) ('A' + _goalPosition % 16), _goalPosition / 16 + 1);
+            Console.WriteLine(@"[Simon Shouts #{0}] Movements (reading order): {1}", _moduleId, new[] { 0, 3, 1, 2 }.Select(ord => string.Format("{0} ({1}, {2})", (char) ('A' + _flashingLetters[ord]), availableMovements[ord].XDist, availableMovements[ord].YDist)).JoinString(", "));
+            Console.WriteLine(@"[Simon Shouts #{0}] Possible solution: {1}", _moduleId, solutionPath);
+
+            //Console.WriteLine($"Start: {(from dy in new[] { 0, 1 } from dx in new[] { 0, 1 } select grid[(startposition % 16 + dx) % 16 + 16 * ((startposition / 16 + dy) % 16)]).JoinString()}");
+            //Console.WriteLine($"End: {(from dy in new[] { 0, 1 } from dx in new[] { 0, 1 } select grid[(endposition % 16 + dx) % 16 + 16 * ((endposition / 16 + dy) % 16)]).JoinString()}");
+            //Console.WriteLine($"Movements: {movements.JoinString(", ")}");
+            //Console.WriteLine($"Dist: {covered[endposition]}");
+            //ConsoleUtil.WriteLine(Enumerable.Range(0, 16).Select(row => Enumerable.Range(0, 16)
+            //    .Select(col => col + 16 * row)
+            //    .Select(ix => "██".Color(
+            //            ix == _curPosition ? ConsoleColor.Green :
+            //            ix == _goalPosition ? ConsoleColor.Red :
+            //            valid[ix] && covered.ContainsKey(ix) ? ConsoleColor.Yellow :
+            //            valid[ix] ? ConsoleColor.Magenta :
+            //            ConsoleColor.Blue))
+            //    .JoinColoredString()).JoinColoredString("\n"));
+            //Console.WriteLine($"iter: {iter}");
+            //Console.WriteLine($"Reachable points: {Enumerable.Range(0, 256).Count(i => valid[i] && covered.ContainsKey(i))}");
+        }
+
+        static string positionToGridColors(int pos)
+        {
+            return (from dy in new[] { 0, 1 } from dx in new[] { 0, 1 } select _grid[(pos % 16 + dx) % 16 + 16 * ((pos / 16 + dy) % 16)]).JoinString();
+        }
+
+        static string getSolutionPath(int _curPosition, int _goalPosition, Dictionary<int, Movement> _optimalMovements)
+        {
+            var position = _curPosition;
+            var solution = new List<char>();
+            while (position != _goalPosition)
+            {
+                var m = _optimalMovements[position];
+                solution.Add((char) (m.Letter + 'A'));
+                position += m;
+            }
+            return solution.JoinString();
+        }
+
+        struct Movement
+        {
+            public int XDist { get; private set; }
+            public int YDist { get; private set; }
+            public int Letter { get; private set; }
+
+            private static readonly string[] _xDists = new[]
+            {
+                "K",
+                "FLQ",
+                "BGMRW",
+                "ACHSXZ",
+                "DINUY",
+                "JOV",
+                "P"
+            };
+            private static readonly string[] _yDists = new[]
+            {
+                "A",
+                "BCD",
+                "FGHIJ",
+                "KLMNOP",
+                "QRSUV",
+                "WXY",
+                "Z"
+            };
+
+            public Movement(int letter) : this()
+            {
+                var ch = ((char) ('A' + letter)).ToString();
+                XDist = _xDists.IndexOf(str => str.Contains(ch)) - 3;
+                YDist = _yDists.IndexOf(str => str.Contains(ch)) - 3;
+                Letter = letter;
             }
 
-            Console.WriteLine($"Start: {(from dy in new[] { 0, 1 } from dx in new[] { 0, 1 } select grid[(startposition % 16 + dx) % 16 + 16 * ((startposition / 16 + dy) % 16)]).JoinString()}");
-            Console.WriteLine($"End: {(from dy in new[] { 0, 1 } from dx in new[] { 0, 1 } select grid[(endposition % 16 + dx) % 16 + 16 * ((endposition / 16 + dy) % 16)]).JoinString()}");
-            Console.WriteLine($"Movements: {movements.JoinString(", ")}");
-            Console.WriteLine($"Dist: {covered[endposition]}");
-            ConsoleUtil.WriteLine(Enumerable.Range(0, 16).Select(row => Enumerable.Range(0, 16)
-                .Select(col => col + 16 * row)
-                .Select(ix => "██".Color(
-                        ix == startposition ? ConsoleColor.Green :
-                        ix == endposition ? ConsoleColor.Red :
-                        valid[ix] && covered.ContainsKey(ix) ? ConsoleColor.Yellow :
-                        valid[ix] ? ConsoleColor.Magenta :
-                        ConsoleColor.Blue))
-                .JoinColoredString()).JoinColoredString("\n"));
-            Console.WriteLine($"iter: {iter}");
-            Console.WriteLine($"Reachable points: {Enumerable.Range(0, 256).Count(i => valid[i] && covered.ContainsKey(i))}");
+            public static int operator +(int pos, Movement mv) { return (pos + 16 + mv.XDist) % 16 + 16 * ((pos / 16 + 16 + mv.YDist) % 16); }
+            public static int operator -(int pos, Movement mv) { return (pos + 16 - mv.XDist) % 16 + 16 * ((pos / 16 + 16 - mv.YDist) % 16); }
         }
 
         public static void CreateModels()
@@ -186,6 +199,38 @@ namespace KtaneStuff
             var highlightOutline = getPath("M 50,-20.078125 45.658203,-12.480469 3.7636719,60.835938 35,92.070312 l 15,-15 15,15 31.236328,-31.234374 z");
             var triangulated = Md.Triangulate(new[] { highlightOutline, outlines[0] });
             File.WriteAllText(@"D:\c\KTANE\SimonShouts\Assets\Models\ButtonHighlight.obj", GenerateObjFile(triangulated.Select(t => t.Select(p => pt(p.X, 0, p.Y)).ToArray()).ToArray(), "ButtonHighlight"));
+        }
+
+        public static void GenerateSvgInManual()
+        {
+            var colorNames = "red,green,blue,yellow".Split(',');
+            var squares = _grid.Select((ch, ix) => $"<rect x='{ix % 16}' y='{ix / 16}' width='1' height='1' class='{colorNames["RGBY".IndexOf(ch)]}' /><text x='{ix % 16 + .5}' y='{ix / 16 + .7}'>{ch}</text>").JoinString();
+            var highlightables = Enumerable.Range(0, 16 * 16).Select(ix => $"<circle cx='{ix % 16 + 1}' cy='{ix / 16 + 1}' r='.4' class='highlightable' />").JoinString();
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Simon Shouts.html", "<!--%%-->", "<!--%%%-->", $"<svg class='grid' viewBox='-.5 -.5 17 17'><g stroke='black' stroke-width='.025' id='debruijn-torus'>{squares}</g>{highlightables}</svg>");
+
+            var morse = new[] { ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." };
+            var morseSvg = morse.Select(str =>
+            {
+                var sb = new StringBuilder();
+                var x = 0.0;
+                foreach (var ch in str)
+                {
+                    if (ch == '.')
+                    {
+                        sb.Append($"<circle cx='{x + .5}' cy='.5' r='.5' />");
+                        x += 2;
+                    }
+                    else
+                    {
+                        sb.Append($"<rect x='{x}' y='0' width='3' height='1' />");
+                        x += 4;
+                    }
+                }
+                return $"<svg class='morse' viewBox='0 0 {x - 1} 1.5'>{sb}</svg>";
+            }).ToArray();
+
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Simon Shouts.html", "<!--%%1-->", "<!--%%%1-->", Enumerable.Range(0, 13).Select(i => $"<div>{(char) ('A' + i)}{morseSvg[i]}</div>").JoinString());
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Simon Shouts.html", "<!--%%2-->", "<!--%%%2-->", Enumerable.Range(13, 13).Select(i => $"<div>{(char) ('A' + i)}{morseSvg[i]}</div>").JoinString());
         }
     }
 }

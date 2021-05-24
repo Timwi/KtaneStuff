@@ -40,7 +40,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            SimonShouts.Experiment2();
+            ModuleMaze.UpdatePngs();
 
 
             Console.WriteLine("Done.");

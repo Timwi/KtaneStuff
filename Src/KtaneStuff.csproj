@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3DMaze.cs" />
+    <Compile Include="DeBruijnConstraint.cs" />
     <Compile Include="Astrology.cs" />
     <Compile Include="BinaryPuzzle.cs" />
     <Compile Include="BlackHole.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Translatable.cs" />
     <Compile Include="MarbleTumble.cs" />
     <Compile Include="UltimateTicTacToe.cs" />
+    <Compile Include="Variety.cs" />
     <Compile Include="WorldMazes.cs" />
     <Compile Include="XRay.cs" />
     <Compile Include="Yahtzee.cs" />
@@ -179,6 +181,10 @@
     <Compile Include="Simulations.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\PuzzleSolvers\Src\PuzzleSolvers.csproj">
+      <Project>{beee96c6-58ac-4a55-a12c-8f42380fe532}</Project>
+      <Name>PuzzleSolvers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\RT.Dijkstra\Src\RT.Dijkstra.csproj">
       <Project>{1e53ea37-7c37-4185-82fd-d3bf9e4c878e}</Project>
       <Name>RT.Dijkstra</Name>
