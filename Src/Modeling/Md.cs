@@ -188,7 +188,7 @@ namespace KtaneStuff.Modeling
         static Pt getPt(MeshVertexInfo[][] pts, int x, int y) => pts[(x + pts.Length) % pts.Length][(y + pts[0].Length) % pts[0].Length].Location;
         static Pt ifZero(this Pt pt, Pt alt) { return Math.Abs(pt.X) <= double.Epsilon && Math.Abs(pt.Y) <= double.Epsilon && Math.Abs(pt.Z) <= double.Epsilon ? alt : pt; }
 
-        public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, MeshVertexInfo[][] pts, bool textureCoordsAreFlipped = false)
+        public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, MeshVertexInfo[][] pts)
         {
             var normals = Ut.NewArray(pts.Length, pts[0].Length, (x, y) =>
             {
@@ -212,10 +212,14 @@ namespace KtaneStuff.Modeling
             return Enumerable.Range(0, pts.Length)
                 .SelectManyConsecutivePairs(closedX, (i1, i2) => Enumerable.Range(0, pts[0].Length)
                     .SelectConsecutivePairs(closedY, (j1, j2) => Ut.NewArray(
-                        new VertexInfo(pts[i1][j1].Location, normals[i1][j1][(int) pts[i1][j1].NormalAfterX + 3 * (int) pts[i1][j1].NormalAfterY].Normalize(), pts[i1][j1].TextureAfter?.X ?? pts[i1][j1].Texture?.X, pts[i1][j1].TextureAfter?.Y ?? pts[i1][j1].Texture?.Y),
-                        new VertexInfo(pts[i2][j1].Location, normals[i2][j1][(2 - (int) pts[i2][j1].NormalBeforeX) + 3 * (int) pts[i2][j1].NormalAfterY].Normalize(), pts[i2][j1].Texture?.X, pts[i2][j1].TextureAfter?.Y ?? pts[i2][j1].Texture?.Y),
-                        new VertexInfo(pts[i2][j2].Location, normals[i2][j2][(2 - (int) pts[i2][j2].NormalBeforeX) + 3 * (2 - (int) pts[i2][j2].NormalBeforeY)].Normalize(), pts[i2][j2].TextureAfter?.X ?? pts[i2][j2].Texture?.X, pts[i2][j2].Texture?.Y),
-                        new VertexInfo(pts[i1][j2].Location, normals[i1][j2][(int) pts[i1][j2].NormalAfterX + 3 * (2 - (int) pts[i1][j2].NormalBeforeY)].Normalize(), pts[i1][j2].Texture))
+                        new VertexInfo(pts[i1][j1].Location, normals[i1][j1][(int) pts[i1][j1].NormalAfterX + 3 * (int) pts[i1][j1].NormalAfterY].Normalize(),
+                            pts[i1][j1].TextureAfter?.X ?? pts[i1][j1].Texture?.X, pts[i1][j1].TextureAfter?.Y ?? pts[i1][j1].Texture?.Y),
+                        new VertexInfo(pts[i2][j1].Location, normals[i2][j1][(2 - (int) pts[i2][j1].NormalBeforeX) + 3 * (int) pts[i2][j1].NormalAfterY].Normalize(),
+                            pts[i2][j1].Texture?.X, pts[i2][j1].TextureAfter?.Y ?? pts[i2][j1].Texture?.Y),
+                        new VertexInfo(pts[i2][j2].Location, normals[i2][j2][(2 - (int) pts[i2][j2].NormalBeforeX) + 3 * (2 - (int) pts[i2][j2].NormalBeforeY)].Normalize(),
+                            pts[i2][j2].Texture?.X, pts[i2][j2].Texture?.Y),
+                        new VertexInfo(pts[i1][j2].Location, normals[i1][j2][(int) pts[i1][j2].NormalAfterX + 3 * (2 - (int) pts[i1][j2].NormalBeforeY)].Normalize(),
+                            pts[i1][j2].TextureAfter?.X ?? pts[i1][j2].Texture?.X, pts[i1][j2].Texture?.Y))
                         .SelectConsecutivePairs(true, (vi1, vi2) => vi1.Location == vi2.Location ? null : vi1.Nullable())
                         .Where(vi => vi != null)
                         .Select(vi => vi.Value)

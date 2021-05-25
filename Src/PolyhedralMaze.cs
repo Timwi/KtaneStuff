@@ -963,7 +963,7 @@ namespace PolyhedralMaze
                     bpa(1 - bi.X, bi.Y, -ratio + bi.X, bi.Before, bi.After, Normal.Mine, Normal.Mine, 3 * xf, inf.Y, 3 * xf, 1 - inf.Y),
 
                     null
-                )).Where(x => x != null).SelectMany(x => x).ToArray()).ToArray(), textureCoordsAreFlipped: true);
+                )).Where(x => x != null).SelectMany(x => x).ToArray()).ToArray());
         }
 
         private static IEnumerable<VertexInfo[]> ResetButton()
@@ -997,7 +997,7 @@ namespace PolyhedralMaze
                     bpa(1 - bi.X, bi.Y, -ratio + bi.X, bi.Before, bi.After, bi.NormalOverride, Normal.Mine, Normal.Mine),
 
                     null
-                )).Where(x => x != null).SelectMany(x => x).ToArray()).Concat(new[] { Enumerable.Repeat(pt(0, depth, 0).WithMeshInfo(0d, 1d, 0d).WithTexture(.5, .5), 4).ToArray() }).ToArray(), textureCoordsAreFlipped: true);
+                )).Where(x => x != null).SelectMany(x => x).ToArray()).Concat(new[] { Enumerable.Repeat(pt(0, depth, 0).WithMeshInfo(0d, 1d, 0d).WithTexture(.5, .5), 4).ToArray() }).ToArray());
         }
 
         public static void ListPolyhedra()
