@@ -83,31 +83,6 @@ namespace KtaneStuff.Modeling
                 facesStrs.Add($"f {faceStr.JoinString(" ")}");
             }
             return $"o {objectName}\r\n{vertices.JoinString("\r\n")}\r\n{normals.JoinString("\r\n")}\r\n{textures.JoinString("\r\n")}\r\ng {objectName}\r\n{facesStrs.JoinString("\r\n")}";
-
-
-            //var vertices = facesArr.SelectMany(f => f).Select(f => f.Location).Distinct().ToArray();
-            //var verticesLookup = vertices.Select((v, i) => Ut.KeyValuePair(v, i + 1)).ToDictionary();
-            //var normals = facesArr.SelectMany(f => f).Where(f => f.Normal != null).Select(f => f.Normal.Value).Distinct().ToArray();
-            //var normalsLookup = normals.Select((n, i) => Ut.KeyValuePair(n, i + 1)).ToDictionary();
-            //var textures = facesArr.SelectMany(f => f).Where(f => f.Texture != null).Select(f => f.Texture.Value).Distinct().ToArray();
-            //var s = new StringBuilder();
-            //if (objectName != null)
-            //    s.AppendLine($"o {objectName}");
-            //foreach (var v in vertices)
-            //    s.AppendLine($"v {v.X:R} {v.Y:R} {v.Z:R}");
-            //foreach (var n in normals.Select(n => n.Normalize()))
-            //    s.AppendLine($"vn {n.X:R} {n.Y:R} {n.Z:R}");
-            //foreach (var t in textures)
-            //    s.AppendLine($"vt {t.X:R} {t.Y:R}");
-            //if (objectName != null)
-            //    s.AppendLine($"g {objectName}");
-            //foreach (var f in facesArr)
-            //    s.AppendLine($@"f {f.Select(vi =>
-            //        verticesLookup[vi.Location].Apply(v =>
-            //        vi.Texture.NullOr(t => textures.IndexOf(t) + 1).Apply(t =>
-            //        vi.Normal.NullOr(n => normalsLookup[n]).Apply(n =>
-            //        n == null ? t == null ? v.ToString() : $"{v}/{t}" : $"{v}/{t}/{n}")))).JoinString(" ")}");
-            //return s.ToString();
         }
 
         public static IEnumerable<Pt> Bézier(Pt start, Pt control1, Pt control2, Pt end, int steps)
@@ -221,8 +196,7 @@ namespace KtaneStuff.Modeling
                         new VertexInfo(pts[i1][j2].Location, normals[i1][j2][(int) pts[i1][j2].NormalAfterX + 3 * (2 - (int) pts[i1][j2].NormalBeforeY)].Normalize(),
                             pts[i1][j2].TextureAfter?.X ?? pts[i1][j2].Texture?.X, pts[i1][j2].Texture?.Y))
                         .SelectConsecutivePairs(true, (vi1, vi2) => vi1.Location == vi2.Location ? null : vi1.Nullable())
-                        .Where(vi => vi != null)
-                        .Select(vi => vi.Value)
+                        .WhereNotNull()
                         .ToArray()
                     ));
         }
