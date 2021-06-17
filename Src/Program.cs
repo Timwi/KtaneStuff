@@ -40,7 +40,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            ModuleMaze.UpdatePngs();
+            MultiMorse.GenerateMorseWav();
 
 
             Console.WriteLine("Done.");
