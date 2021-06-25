@@ -21,36 +21,39 @@ namespace KtaneStuff
 
             File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Frame3x3.obj", GenerateObjFile(MazeFrame(MazeComponent.Frame, 3, 3), $"Frame3x3"));
             File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Back3x3.obj", GenerateObjFile(MazeFrame(MazeComponent.Back, 3, 3), $"Back3x3"));
+            File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Frame3x4.obj", GenerateObjFile(MazeFrame(MazeComponent.Frame, 3, 4), $"Frame3x4"));
+            File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Back3x4.obj", GenerateObjFile(MazeFrame(MazeComponent.Back, 3, 4), $"Back3x4"));
+            File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Frame4x3.obj", GenerateObjFile(MazeFrame(MazeComponent.Frame, 4, 3), $"Frame4x3"));
+            File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Back4x3.obj", GenerateObjFile(MazeFrame(MazeComponent.Back, 4, 3), $"Back4x3"));
+            File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Frame4x4.obj", GenerateObjFile(MazeFrame(MazeComponent.Frame, 4, 4), $"Frame4x4"));
+            File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Back4x4.obj", GenerateObjFile(MazeFrame(MazeComponent.Back, 4, 4), $"Back4x4"));
             File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\Button.obj", GenerateObjFile(MazeButton(), "Button"));
             File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\Maze\ButtonHighlight.obj", GenerateObjFile(MazeButtonHighlight(), "ButtonHighlight"));
         }
 
         private static IEnumerable<VertexInfo[]> MazeButton()
         {
-            const double w = .1;
-            const double h = .05;
-            const double ow = .15;
-            const double oh = .07;
-            var inner = new[] { p(-w, 0), p(w, 0), p(0, -h) }.Select(p => pt(p.X, .05, p.Y)).ToArray();
+            const double w = 8;
+            const double h = 4;
+            const double ow = 12;
+            const double oh = 6;
+            var inner = new[] { p(-w, 0), p(w, 0), p(0, -h) }.Select(p => pt(p.X, 1.5, p.Y)).ToArray();
             var outer = new[] { p(-ow, 0), p(ow, 0), p(0, -oh) }.Select(p => pt(p.X, 0, p.Y)).ToArray();
             return CreateMesh(false, true, new[] { inner, outer }, flatNormals: true).Concat(inner.Select(p => p.WithNormal(0, 1, 0)).ToArray());
         }
 
         private static IEnumerable<VertexInfo[]> MazeButtonHighlight()
         {
-            const double w = .15;
-            const double h = .07;
-            yield return new[] { p(-w, 0), p(0, -h), p(0, 0) }.Select(p => pt(p.X, .05, p.Y)).Select(p => p.WithNormal(0, 1, 0)).ToArray();
-            yield return new[] { p(0, 0), p(0, -h), p(w, 0) }.Select(p => pt(p.X, .05, p.Y)).Select(p => p.WithNormal(0, 1, 0)).ToArray();
+            const double w = 12;
+            const double h = 6;
+            yield return new[] { p(-w, 0), p(0, -h), p(0, 0) }.Select(p => pt(p.X, 1.5, p.Y)).Select(p => p.WithNormal(0, 1, 0)).ToArray();
+            yield return new[] { p(0, 0), p(0, -h), p(w, 0) }.Select(p => pt(p.X, 1.5, p.Y)).Select(p => p.WithNormal(0, 1, 0)).ToArray();
         }
 
         enum MazeComponent { Frame, Back }
 
         private static IEnumerable<VertexInfo[]> MazeFrame(MazeComponent which, int mazeWidth, int mazeHeight)
         {
-            const double cw = .0125 / 2;
-            const double ch = .0125 / 2;
-
             MeshVertexInfo[] frameImpl(Normal xNormal, double tx, double w, double h, double y, double bevel)
             {
                 var bl = bevel * Math.Sqrt(2);
@@ -72,16 +75,17 @@ namespace KtaneStuff
                     .Select(tup => new MeshVertexInfo(tup.p, xNormal, xNormal, Normal.Mine, Normal.Mine, new PointD(tx, tup.ty ?? 1), new PointD(tx, tup.ty ?? 0)))
                     .ToArray();
             }
-            MeshVertexInfo[] frame(Normal xNormal, double ty, double margin, double y, double bevel) => frameImpl(xNormal, ty, mazeWidth * cw + margin, mazeHeight * ch + margin, y, bevel);
+            MeshVertexInfo[] frame(Normal xNormal, double ty, double margin, double y, double bevel) =>
+                frameImpl(xNormal, ty, mazeWidth * .5 + margin, mazeHeight * .5 + margin, y, bevel);
 
             return which switch
             {
                 MazeComponent.Frame => CreateMesh(false, true, Ut.NewArray(
-                    frame(Normal.Mine, 0, .11, 0, .015),
-                    frame(Normal.Average, .6, .12, .02, .016),
-                    frame(Normal.Mine, 1, .126, 0, .0166))),
+                    frame(Normal.Mine, 0, .1, 0, .3),
+                    frame(Normal.Average, .6, .3, .4, .32),
+                    frame(Normal.Mine, 1, .5, 0, .332))),
 
-                MazeComponent.Back => frame(Normal.Mine, 0, .11, 0, .015).SelectConsecutivePairs(true, (v1, v2) => new[] { pt(0, 0, 0).WithNormal(0, 1, 0), v1.Location.WithNormal(0, 1, 0), v2.Location.WithNormal(0, 1, 0) }).ToArray(),
+                MazeComponent.Back => frame(Normal.Mine, 0, .1, 0, .3).SelectConsecutivePairs(true, (v1, v2) => new[] { pt(0, 0, 0).WithNormal(0, 1, 0), v1.Location.WithNormal(0, 1, 0), v2.Location.WithNormal(0, 1, 0) }).ToArray(),
 
                 _ => throw new InvalidOperationException(),
             };
