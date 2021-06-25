@@ -99,6 +99,7 @@
     <Compile Include="MaritimeFlags.cs" />
     <Compile Include="MegaMan2.cs" />
     <Compile Include="Mineseeker.cs" />
+    <Compile Include="Missions.cs" />
     <Compile Include="Modeling\AutoNormal.cs" />
     <Compile Include="Modeling\GaussianBlur.cs" />
     <Compile Include="ModeSettings.cs" />
