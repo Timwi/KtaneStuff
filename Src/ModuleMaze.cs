@@ -21,8 +21,7 @@ namespace KtaneStuff
             if (wrong != null)
                 Debugger.Break();
 
-            updateModuleBitmap(@"D:\c\KTANE\ModuleMaze\Assets\Icons\Modules.png", 3, moduleNames);
-            updateModuleBitmap(@"D:\c\KTANE\ModuleMaze\Assets\Icons\ModulesO.png", 1, moduleNames);
+            updateModuleBitmap(@"D:\c\KTANE\ModuleMaze\Assets\Icons\Modules.png", 1, moduleNames);
         }
 
         public static void UpdateManual()
@@ -66,7 +65,7 @@ namespace KtaneStuff
             var big = false;
             Clipboard.SetText(Enumerable.Range(0, 400).Select(ix => $@"
     - serializedVersion: 2
-      name: {moduleNames[ix]}
+      name: {Regex.Replace(moduleNames[ix], @"\?$", "")}
       rect:
         serializedVersion: 2
         x: {(big ? 96 * (ix % 20) : 32 * (ix % 20))}
