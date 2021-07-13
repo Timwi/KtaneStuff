@@ -608,5 +608,18 @@ namespace KtaneStuff.Modeling
 
             return (name, faces.Select(f => f.Select(p => vertices[p.Item1]).ToArray()).ToArray());
         }
+
+        public static VertexInfo[][] Texturize(this VertexInfo[][] mesh, double baseY, double rMult)
+        {
+            var textureTmps = mesh.Select(arr => arr.Select(pt => p(pt.Location.X, pt.Location.Z) * ((pt.Location.Y - baseY) * rMult + 1)).ToArray()).ToArray();
+
+            var minU = textureTmps.Min(arr => arr.Min(p => p.X));
+            var maxU = textureTmps.Max(arr => arr.Max(p => p.X));
+            var minV = textureTmps.Min(arr => arr.Min(p => p.Y));
+            var maxV = textureTmps.Max(arr => arr.Max(p => p.Y));
+
+            static double lm(double min, double max, double val) => (val - min) / (max - min);
+            return mesh.Select((arr, i) => arr.Select((p, j) => p.WithTexture(lm(minU, maxU, textureTmps[i][j].X), lm(minV, maxV, textureTmps[i][j].Y))).ToArray()).ToArray();
+        }
     }
 }

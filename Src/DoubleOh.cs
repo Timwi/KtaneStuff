@@ -23,14 +23,6 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\ButtonCollider.obj", GenerateObjFile(LooseModels.Box().Select(face => face.Select(p => new Pt(p.X * .85, p.Y * .65, p.Z * .85).RotateY(45)).ToArray()), "ButtonCollider"));
             File.WriteAllText(@"D:\c\KTANE\DoubleOh\Assets\Models\Frame.obj", GenerateObjFile(Frame(), "Frame"));
 
-            //var g = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\DoubleOh\Assets\Sources\Segments.svg")).Root.Elements().FirstOrDefault(e => e.Name.LocalName == "g");
-            //foreach (var path in g.Elements().Where(e => e.Name.LocalName == "path"))
-            //{
-            //    // -982.36218
-            //    var svg = DecodeSvgPath.DecodePieces(path.Attributes().FirstOrDefault(a => a.Name.LocalName == "d").Value).Select(piece => piece.Select(p => p + new PointD(0, -982.36218)));
-            //    Console.WriteLine(svg.JoinString(" "));
-            //}
-
             var segments = Ut.NewArray(
                 @"M2.5, 3.1875 0.5, 5.1875 0.5, 29.78122 5, 34.28122 9.5, 29.78122 9.5, 10.18746 z",
                 @"M37.5, 3.1875 30.5, 10.18746 30.5, 29.78122 35, 34.28122 39.5, 29.78122 39.5, 5.1875 z",
@@ -160,8 +152,5 @@ namespace KtaneStuff
                 .Concat(outline)
                 .Concat(svgPolygons.SelectMany(poly => BevelFromCurve(poly.Reverse().Select(p => pt(p.X, h, p.Y)), bevelRadius, roundSteps, Normal.Mine)).Select(face => face.Select(vi => vi.WithTexture(texturize(p(vi.Location.X, vi.Location.Z)))).ToArray()));
         }
-
-        private static VertexInfo round(VertexInfo p) { return new VertexInfo(round(p.Location), p.Normal?.Apply(n => round(n)), p.Texture); }
-        private static Pt round(Pt p) { return pt(Math.Round(p.X * 1000) / 1000, Math.Round(p.Y * 1000) / 1000, Math.Round(p.Z * 1000) / 1000); }
     }
 }

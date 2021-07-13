@@ -1,17 +1,8 @@
 ﻿using System;
-using RT.Util.ExtensionMethods;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
-using KtaneStuff.Modeling;
 using RT.PostBuild;
-using RT.Util;
-using RT.Util.Geometry;
-using RT.Util.Consoles;
-using System.Collections.Generic;
 
 [assembly: AssemblyTitle("KtaneStuff")]
 [assembly: AssemblyDescription("Contains some ancillary code used in the creation of some Keep Talking and Nobody Explodes mods.")]
