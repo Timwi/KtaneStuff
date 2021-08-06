@@ -176,7 +176,7 @@ namespace KtaneStuff
             const int steps = 60;
             const double ir = 1.05;
             const double or = 1.3;
-            return Enumerable.Range(0, steps).Select(i => i * 360 / steps).ConsecutivePairs(closed: true).Select(pair => new[] { ptp(ir, pair.Item1, 0), ptp(or, pair.Item1, 0), ptp(or, pair.Item2, 0), ptp(ir, pair.Item2, 0) }.Select(p=>p.WithNormal(0,1,0)).ToArray());
+            return Enumerable.Range(0, steps).Select(i => i * 360 / steps).ConsecutivePairs(closed: true).Select(pair => new[] { ptp(ir, pair.Item1, 0), ptp(or, pair.Item1, 0), ptp(or, pair.Item2, 0), ptp(ir, pair.Item2, 0) }.Select(p => p.WithNormal(0, 1, 0)).ToArray());
         }
 
         private static IEnumerable<VertexInfo[]> ArrowHighlight()
@@ -277,7 +277,7 @@ namespace KtaneStuff
         {
             const int steps = 60;
             return Enumerable.Range(0, steps).Select(i => i * 360 / steps).ConsecutivePairs(closed: true)
-                .Select(angles => new[] { pt(0, 0, 0), ptp(1, angles.Item2, 0), ptp(1, angles.Item1, 0) }.Select(p => p.WithNormal(0, 1, 0).WithTexture(-(p.X + 1) / 2, (p.Z + 1) / 2)).ToArray())
+                .Select(angles => new[] { pt(0, 0, 0), ptp(1, angles.Item2, 0), ptp(1, angles.Item1, 0) }.Select(p => p.WithNormal(0, 1, 0).WithTexture((-p.X) / 2 + .5, p.Z / 2 + .5)).ToArray())
                 .ToArray();
         }
     }
