@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3DMaze.cs" />
+    <Compile Include="CodeStatistics.cs" />
     <Compile Include="DeBruijnConstraint.cs" />
     <Compile Include="Astrology.cs" />
     <Compile Include="BinaryPuzzle.cs" />
