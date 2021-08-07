@@ -12,7 +12,7 @@ using RT.PostBuild;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KtaneStuff")]
-[assembly: AssemblyCopyright("Copyright © Timwi 2016–2020")]
+[assembly: AssemblyCopyright("Copyright © Timwi 2016–2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
