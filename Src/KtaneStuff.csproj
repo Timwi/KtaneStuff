@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3DMaze.cs" />
+    <Compile Include="Codenames.cs" />
     <Compile Include="CodeStatistics.cs" />
     <Compile Include="Concentration.cs" />
     <Compile Include="DeBruijnConstraint.cs" />
