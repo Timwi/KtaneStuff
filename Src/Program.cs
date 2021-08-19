@@ -34,7 +34,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            OneHundredAndOneDalmatians.DoModels();
+            Souvenir.GenerateGrid();
 
 
             Console.WriteLine("Done.");
