@@ -348,5 +348,14 @@ namespace KtaneStuff
                     yield return DecodeSvgPath.PathPiece.End;
             }
         }
+
+        public static void SvgToPng(string outputFile, string svg, int width)
+        {
+            var path = Path.GetTempFileName();
+            File.WriteAllText(path, svg);
+            var cmd = $@"D:\Inkscape\bin\inkscape.exe --export-type=""png"" ""--export-filename={outputFile}"" --export-width={width} ""{path}""";
+            CommandRunner.RunRaw(cmd).Go();
+            File.Delete(path);
+        }
     }
 }

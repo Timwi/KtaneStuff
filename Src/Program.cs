@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.RegularExpressions;
-using KtaneStuff.Modeling;
 using RT.PostBuild;
 
 [assembly: AssemblyTitle("KtaneStuff")]
@@ -34,7 +31,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            Souvenir.GenerateGrid();
+            ColoredButtons.TheWhiteButton_MakeModels();
 
 
             Console.WriteLine("Done.");

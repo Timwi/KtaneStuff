@@ -34,25 +34,5 @@ namespace KtaneStuff
                 .Concat(new[] { pt(0, 0, (height - padding) / 2), pt(right, 0, (height - padding) / 2), pt(right, 0, height / 2), pt(0, 0, height / 2) })
                 .Concat(new[] { pt(right, 0, -height / 2), pt(right, 0, height / 2), pt(right - height / 3, 0, 0) });
         }
-
-        public static void GenerateGrid()
-        {
-            (from x in Enumerable.Range(0, 7)
-             from y in Enumerable.Range(0, 7)
-             select (x, y))
-             .ParallelForEach(Environment.ProcessorCount, tup =>
-             {
-                 var (x, y) = tup;
-                 var svg = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\Souvenir\DataFiles\Grid.svg"));
-                 var rect = svg.Descendants().First(e => e.Attribute("id")?.Value == "square");
-                 rect.Attribute("x").Value = (x * 10 + 2.25).ToString();
-                 rect.Attribute("y").Value = (y * 10 + 2.25).ToString();
-                 var path = $@"D:\c\KTANE\Souvenir\DataFiles\temp-{x}-{y}.svg";
-                 File.WriteAllText(path, svg.ToString(SaveOptions.DisableFormatting));
-                 var cmd = $@"D:\Inkscape\bin\inkscape.exe --export-type=""png"" ""--export-filename=D:\c\KTANE\Souvenir\Assets\Sprites\Tiles7x7\{(char) ('A' + x)}{y + 1}.png"" --export-width=270 --export-height=270 ""{path}""";
-                 CommandRunner.RunRaw(cmd).Go();
-                 File.Delete(path);
-             });
-        }
     }
 }
