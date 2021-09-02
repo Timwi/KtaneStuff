@@ -57,6 +57,7 @@
     <Compile Include="Codenames.cs" />
     <Compile Include="CodeStatistics.cs" />
     <Compile Include="Concentration.cs" />
+    <Compile Include="Coord.cs" />
     <Compile Include="DeBruijnConstraint.cs" />
     <Compile Include="Astrology.cs" />
     <Compile Include="BinaryPuzzle.cs" />
