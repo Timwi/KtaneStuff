@@ -22,7 +22,6 @@ namespace KtaneStuff
             )
                 .Select(val => Enumerable.Range(0, 19).Aggregate(0, (p, n) => p | ((val & (1 << (18 - n))) != 0 ? (1 << n) : 0))).ToArray();
 
-            var c = 0;
             // 0000000001100111111
             var bits = new[] { 0, 1, 2, 3, 4, 5, 8, 9 };
 
