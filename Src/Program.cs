@@ -33,7 +33,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            ColoredButtons.TheBlueButton_TestUniqueness();
+            ColoredButtons.TheBlueButton_GeneratePuzzle();
 
 
             Console.WriteLine("Done.");
