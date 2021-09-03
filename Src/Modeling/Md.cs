@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using RT.KitchenSink;
 using RT.Util;
@@ -15,28 +14,80 @@ namespace KtaneStuff.Modeling
 {
     public static partial class Md
     {
-        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<PointD> polygon, double depth, bool includeBackFace = false, bool flatSideNormals = false) => Extrude(new[] { polygon }, depth, includeBackFace, flatSideNormals);
-        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<IEnumerable<PointD>> polygons, double depth, bool includeBackFace = false, bool flatSideNormals = false) => extrudeImpl(polygons, depth, includeBackFace, flatSideNormals).SelectMany(x => x);
+        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<PointD> polygon, double depth, bool includeBackFace = false, bool flatSideNormals = false) =>
+            Extrude(new[] { polygon }, depth, includeBackFace, flatSideNormals);
+        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<IEnumerable<PointD>> polygons, double depth, bool includeBackFace = false, bool flatSideNormals = false) =>
+            extrudeImpl(polygons.Select(poly => poly.Select(p => (pt: p, flat: (object) flatSideNormals))), depth, includeBackFace).SelectMany(x => x);
 
-        private static IEnumerable<IEnumerable<VertexInfo[]>> extrudeImpl(IEnumerable<IEnumerable<PointD>> polygons, double depth, bool includeBackFace, bool flatSideNormals)
+        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<DecodeSvgPath.PathPiece> pieces, double depth, double bézierSmoothness, bool includeBackFace = false)
+        {
+            if (pieces == null)
+                throw new ArgumentNullException(nameof(pieces));
+            if (bézierSmoothness <= 0)
+                throw new ArgumentOutOfRangeException(nameof(bézierSmoothness), "The bézierSmoothness parameter cannot be zero or negative.");
+
+            IEnumerable<IEnumerable<(PointD pt, object flat)>> iterator()
+            {
+                foreach (var group in pieces.Split(pp => pp.Type == DecodeSvgPath.PathPieceType.End).Where(gr => gr.Any()).Select(gr => gr.ToArray()))
+                {
+                    yield return Enumerable.Range(0, group.Length).SelectMany(grIx =>
+                    {
+                        var prev = group[(grIx + group.Length - 1) % group.Length];
+                        var cur = group[grIx];
+                        var next = group[(grIx + 1) % group.Length];
+
+                        Pt nrml(PointD p) => pt(0, 1, 0) * pt(p.X, 0, p.Y);
+                        var nextNormal = nrml(next.Points[0] - cur.Points[cur.Points.Length - 1]);
+
+                        if (cur.Type == DecodeSvgPath.PathPieceType.Move || cur.Type == DecodeSvgPath.PathPieceType.Line)
+                            return cur.Points.Select(p => (pt: p, flat: (object) true));
+
+                        if (cur.Type == DecodeSvgPath.PathPieceType.Curve)
+                        {
+                            var lastPt = prev.Points[prev.Points.Length - 1];
+                            return Enumerable.Range(0, cur.Points.Length / 3)
+                                .Select((ix, first, last) => SmoothBézier(first ? lastPt : cur.Points[3 * ix - 1], cur.Points[3 * ix], cur.Points[3 * ix + 1], cur.Points[3 * ix + 2], bézierSmoothness)
+                                    .Skip(1)
+                                    .Select((p, frst, lst) => (pt: p, flat: lst ? (object) (nrml(cur.Points[3 * ix + 2] - cur.Points[3 * ix + 1]), last ? nextNormal : nrml(cur.Points[3 * ix + 3] - cur.Points[3 * ix + 2])) : false)))
+                                .SelectMany(x => x)
+                                .ToArray();
+                        }
+
+                        throw new InvalidOperationException();
+                    });
+                }
+            }
+            return extrudeImpl(iterator(), depth, includeBackFace).SelectMany(x => x);
+        }
+
+        // The “object normal” object in the tuple can be one of the following:
+        //  • true: calculate a flat normal
+        //  • false: calculate a smooth normal (average between previous and next faces)
+        //  • (Pt, Pt): actual normals for the face before and after the vertex
+        private static IEnumerable<IEnumerable<VertexInfo[]>> extrudeImpl(IEnumerable<IEnumerable<(PointD pt, object normal)>> polygons, double depth, bool includeBackFace)
         {
             // Walls
             foreach (var path in polygons)
                 yield return path
                     .SelectConsecutivePairs(true, (p1, p2) => new { P1 = p1, P2 = p2 })
                     .Where(inf => inf.P1 != inf.P2)
-                    .SelectConsecutivePairs(true, (q1, q2) => new { P = q1.P2, N1 = (pt(0, 1, 0) * pt(q1.P2.X - q1.P1.X, 0, q1.P2.Y - q1.P1.Y)), N2 = (pt(0, 1, 0) * pt(q2.P2.X - q2.P1.X, 0, q2.P2.Y - q2.P1.Y)) })
+                    .SelectConsecutivePairs(true, (q1, q2) => new
+                    {
+                        P = q1.P2,
+                        N1 = pt(0, 1, 0) * pt(q1.P2.pt.X - q1.P1.pt.X, 0, q1.P2.pt.Y - q1.P1.pt.Y),
+                        N2 = pt(0, 1, 0) * pt(q2.P2.pt.X - q2.P1.pt.X, 0, q2.P2.pt.Y - q2.P1.pt.Y)
+                    })
                     .SelectConsecutivePairs(true, (p1, p2) => Ut.NewArray(
-                        pt(p1.P.X, depth, p1.P.Y).WithNormal(flatSideNormals ? p1.N2 : p1.N1 + p1.N2),
-                        pt(p2.P.X, depth, p2.P.Y).WithNormal(flatSideNormals ? p1.N2 : p2.N1 + p2.N2),
-                        pt(p2.P.X, 0, p2.P.Y).WithNormal(flatSideNormals ? p1.N2 : p2.N1 + p2.N2),
-                        pt(p1.P.X, 0, p1.P.Y).WithNormal(flatSideNormals ? p1.N2 : p1.N1 + p1.N2)));
+                        pt(p1.P.pt.X, depth, p1.P.pt.Y).WithNormal(p1.P.normal is (Pt n1a, Pt n1b) ? n1b : (bool) p1.P.normal ? p1.N2 : p1.N1 + p1.N2),
+                        pt(p2.P.pt.X, depth, p2.P.pt.Y).WithNormal(p2.P.normal is (Pt n2a, Pt n2b) ? n2a : (bool) p2.P.normal ? p2.N1 : p2.N1 + p2.N2),
+                        pt(p2.P.pt.X, 0, p2.P.pt.Y).WithNormal(p2.P.normal is (Pt n3a, Pt n3b) ? n3a : (bool) p2.P.normal ? p2.N1 : p2.N1 + p2.N2),
+                        pt(p1.P.pt.X, 0, p1.P.pt.Y).WithNormal(p1.P.normal is (Pt n4a, Pt n4b) ? n4b : (bool) p1.P.normal ? p1.N2 : p1.N1 + p1.N2)));
 
             // Front face
-            yield return Triangulate(polygons).Select(ps => ps.Select(p => pt(p.X, depth, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray());
+            yield return Triangulate(polygons.Select(poly => poly.Select(tup => tup.pt))).Select(ps => ps.Select(p => pt(p.X, depth, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray());
             // Back face
             if (includeBackFace)
-                yield return Triangulate(polygons).Select(ps => ps.Select(p => pt(p.X, 0, p.Y).WithNormal(0, -1, 0)).ToArray());
+                yield return Triangulate(polygons.Select(poly => poly.Select(tup => tup.pt))).Select(ps => ps.Select(p => pt(p.X, 0, p.Y).WithNormal(0, -1, 0)).ToArray());
         }
 
         public static string GenerateObjFile(IEnumerable<Pt[]> faces, string objectName = null, AutoNormal autoNormal = AutoNormal.None)
