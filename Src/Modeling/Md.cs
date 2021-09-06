@@ -95,7 +95,7 @@ namespace KtaneStuff.Modeling
             return GenerateObjFile(faces.Select(face => face.Select(p => new VertexInfo(p, null)).ToArray()).ToArray(), objectName, autoNormal);
         }
 
-        public static string GenerateObjFile(IEnumerable<VertexInfo[]> faces, string objectName = null, AutoNormal autoNormal = AutoNormal.None)
+        public static string GenerateObjFile(IEnumerable<VertexInfo[]> faces, string objectName = null, AutoNormal autoNormal = AutoNormal.None, bool uniqueVertices = false)
         {
             var facesProcessed = faces;
             if (autoNormal != AutoNormal.None)
@@ -113,8 +113,14 @@ namespace KtaneStuff.Modeling
                 foreach (var vertex in face)
                 {
                     var v = vertex.Location;
-                    vertices.Add($"v {v.X:R} {v.Y:R} {v.Z:R}");
-                    var str = vertices.Count.ToString();
+                    var def = $"v {v.X:R} {v.Y:R} {v.Z:R}";
+                    var ix = vertices.IndexOf(def);
+                    if (uniqueVertices || ix == -1)
+                    {
+                        ix = vertices.Count;
+                        vertices.Add($"v {v.X:R} {v.Y:R} {v.Z:R}");
+                    }
+                    var str = (ix + 1).ToString();
                     if (vertex.Texture != null)
                     {
                         var t = vertex.Texture.Value;
