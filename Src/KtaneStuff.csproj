@@ -75,6 +75,7 @@
     <Compile Include="ExtendedPassword.cs" />
     <Compile Include="FactoryMaze.cs" />
     <Compile Include="FindUnknownModules.cs" />
+    <Compile Include="GridDirection.cs" />
     <Compile Include="GridMatching.cs" />
     <Compile Include="BrokenGuitarChords.cs" />
     <Compile Include="Hogwarts.cs" />
