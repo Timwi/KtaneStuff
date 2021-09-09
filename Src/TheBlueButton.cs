@@ -13,56 +13,11 @@ namespace KtaneStuff
 {
     using static Md;
 
-    static class ColoredButtons
+    static class TheBlueButton
     {
-        public static void TheGrayButton_MakeSymbols()
+        public static void MakeModels()
         {
-            Ut.NewArray<(string name, string svgPathD)>(
-                ("triangle up", "m 5,1.25 4.3301269,7.5 -8.66025409,0 z"),
-                ("triangle down", "m 5,8.75 4.3301269,-7.5 -8.66025409,0 z"),
-                ("circle", "M 8.955,5 A 3.955,3.955 0 0 1 5,8.955 3.955,3.955 0 0 1 1.045,5 3.955,3.955 0 0 1 5,1.045 3.955,3.955 0 0 1 8.955,5 Z"),
-                ("circle with X", "M 4.9746094 1.0449219 A 3.955 3.955 0 0 0 2.7851562 1.7226562 L 5 3.9375 L 7.2148438 1.7226562 A 3.955 3.955 0 0 0 5 1.0449219 A 3.955 3.955 0 0 0 4.9746094 1.0449219 z M 1.7226562 2.7851562 A 3.955 3.955 0 0 0 1.0449219 5 A 3.955 3.955 0 0 0 1.7226562 7.2148438 L 3.9375 5 L 1.7226562 2.7851562 z M 8.2773438 2.7851562 L 6.0625 5 L 8.2773438 7.2148438 A 3.955 3.955 0 0 0 8.9550781 5 A 3.955 3.955 0 0 0 8.2773438 2.7851562 z M 5 6.0625 L 2.7851562 8.2773438 A 3.955 3.955 0 0 0 5 8.9550781 A 3.955 3.955 0 0 0 7.2148438 8.2773438 L 5 6.0625 z"),
-                ("square", "M 1.5,1.5 H 8.5 V 8.5 H 1.5 Z"),
-                ("square with plus", "M 1.5 1.5 L 1.5 4.5 L 4.5 4.5 L 4.5 1.5 L 1.5 1.5 z M 5.5 1.5 L 5.5 4.5 L 8.5 4.5 L 8.5 1.5 L 5.5 1.5 z M 1.5 5.5 L 1.5 8.5 L 4.5 8.5 L 4.5 5.5 L 1.5 5.5 z M 5.5 5.5 L 5.5 8.5 L 8.5 8.5 L 8.5 5.5 L 5.5 5.5 z"),
-                ("diamond", "M 5,1 9,5 5,9 1,5 Z"),
-                ("star", "M 5,0.47745752 6.1067849,3.9540988 9.7552826,3.9323727 6.7908156,6.0593288 7.9389262,9.5225426 5,7.3604325 2.0610736,9.5225424 3.2091844,6.0593288 0.24471746,3.9323724 3.8932151,3.9540988 Z"),
-                ("plus", "M 3.5,1 H 6.5 V 3.5 H 9 V 6.5 H 6.5 V 9 H 3.5 V 6.5 H 1 V 3.5 h 2.5 z")
-            ).ParallelForEach(tup =>
-            {
-                var (name, svgPathD) = tup;
-                Utils.SvgToPng($@"D:\c\KTANE\SingleSelectablePack\Assets\Modules\Gray\Assets\{name}.png",
-                    $@"<svg viewBox='-.1 -.1 10.2 10.2'><path d='{svgPathD}' fill='#1b1e21' stroke='none' /></svg>", 800);
-            });
-        }
-
-        public static void TheYellowButton_MakeModels()
-        {
-            File.WriteAllText(@"D:\c\KTANE\SingleSelectablePack\Assets\Modules\Yellow\Assets\Annulus.obj", GenerateObjFile(LooseModels.Annulus(.5, .725, 32, reverse: true), "Annulus", AutoNormal.Flat));
-        }
-
-        public static void TheWhiteButton_MakeModels()
-        {
-            const int numVertices = 12;
-            const double ir = .5;       // inner radius
-            const double or = .7; // outer radius
-            const double bw = .05;
-            const double h = .03;
-
-            var bézier = Bézier(p(0, 0), p(0, h * .5), p(bw * .5, h), p(bw, h), 6);
-
-            File.WriteAllText(@"D:\c\KTANE\SingleSelectablePack\Assets\Modules\White\Assets\Segment.obj",
-                GenerateObjFile(
-                    CreateMesh(false, false,
-                        Enumerable.Range(0, numVertices)
-                            .Select(i => bézier.Select(pt => pt + p(ir, 0)).Concat(bézier.Reverse().Select(pt => p(or - pt.X, pt.Y))).Select(p => pt(p.X, p.Y, 0).RotateY(120.0 * i / (numVertices - 1))).ToArray())
-                            .Select((pts, fst, lst) => pts.Select((pt, f, l) => pt.WithMeshInfo(fst || lst ? Normal.Mine : Normal.Average, fst || lst ? Normal.Mine : Normal.Average, f || l ? Normal.Mine : Normal.Average, f || l ? Normal.Mine : Normal.Average)).ToArray())
-                            .ToArray()),
-                    "Segment"));
-        }
-
-        public static void TheBlueButton_MakeModels()
-        {
-            File.WriteAllText(@"D:\c\KTANE\SingleSelectablePack\Assets\Modules\Blue\Assets\ColorBlob.obj", GenerateObjFile(TheBlueButton_ColorBlob(), "ColorBlob"));
+            File.WriteAllText(@"D:\c\KTANE\SingleSelectablePack\Assets\Modules\Blue\Assets\ColorBlob.obj", GenerateObjFile(ColorBlob(), "ColorBlob"));
 
             var paths = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\SingleSelectablePack\Lib\Data\BlueButtonSuits.svg")).Root.ElementsI("path").Select(e => e.AttributeI("d").Value).ToArray();
             for (var i = 0; i < paths.Length; i++)
@@ -71,26 +26,7 @@ namespace KtaneStuff
                         .Extrude(depth: 10, bézierSmoothness: .2, includeBackFace: true).Select(vi => vi.Select(v => v.Move(y: -5)).ToArray()), $"Suit{i}", uniqueVertices: false));
         }
 
-        public static void TheTealButton_MakeModels()
-        {
-            const int numVertices = 12;
-            const double ir = .5;       // inner radius
-            const double or = .7; // outer radius
-            const double bw = .05;
-            const double h = .03;
-
-            var bézier = Bézier(p(0, 0), p(0, h * .5), p(bw * .5, h), p(bw, h), 6);
-
-            File.WriteAllText(@"D:\c\KTANE\SingleSelectablePack\Assets\Modules\Teal\Assets\Segment.obj",
-                GenerateObjFile(
-                    CreateMesh(false, false,
-                        Enumerable.Range(0, numVertices)
-                            .Select(i => new[] { p(ir, 0), p(or, 0) }.Select(p => pt(p.X, p.Y, 0).RotateY(45.0 * i / (numVertices - 1)).WithMeshInfo(0, 1, 0)).ToArray())
-                            .ToArray()),
-                    "Segment"));
-        }
-
-        private static IEnumerable<VertexInfo[]> TheBlueButton_ColorBlob()
+        private static IEnumerable<VertexInfo[]> ColorBlob()
         {
             const int steps = 8;
             const double bf = .45;
@@ -149,7 +85,7 @@ namespace KtaneStuff
         const int _gw = 5;  // The Blue Button: polyomino puzzle grid size
         const int _gh = 4;
 
-        private static IEnumerable<(int[] solution, PolyominoPlacement[] polys)> TheBlueButton_SolvePolyominoPuzzle(
+        private static IEnumerable<(int[] solution, PolyominoPlacement[] polys)> SolvePolyominoPuzzle(
             int?[] sofar,
             int pieceIx,
             List<PolyominoPlacement> possiblePlacements,
@@ -216,7 +152,7 @@ namespace KtaneStuff
                             newPlacements.RemoveAll(pl => pl.Polyomino == one && pl.Touches(placement));
                 }
 
-                foreach (var solution in TheBlueButton_SolvePolyominoPuzzle(sofar, pieceIx + 1, newPlacements, notAllowedToTouch, polysSofar, debug: debug))
+                foreach (var solution in SolvePolyominoPuzzle(sofar, pieceIx + 1, newPlacements, notAllowedToTouch, polysSofar, debug: debug))
                     yield return solution;
 
                 polysSofar.RemoveAt(polysSofar.Count - 1);
@@ -225,7 +161,7 @@ namespace KtaneStuff
             }
         }
 
-        public static void TheBlueButton_GatherLetterStatistics()
+        public static void GatherLetterStatistics()
         {
             var dic = new Dictionary<char, int>();
             foreach (var word in File.ReadLines(@"D:\temp\temp.txt"))
@@ -234,7 +170,7 @@ namespace KtaneStuff
             Console.WriteLine(dic.OrderByDescending(k => k.Value).Select(k => k.Key).JoinString());
         }
 
-        public static void TheBlueButton_GatherEdgeStatistics()
+        public static void GatherEdgeStatistics()
         {
             var freq = new Dictionary<char, int>();
             foreach (var word in _words)
@@ -255,7 +191,7 @@ namespace KtaneStuff
                         lock (lockObj)
                             ConsoleUtil.WriteLine($"Proc {proc} = {i}".Color((ConsoleColor) (proc % 8 + 8)));
                     allPlacements.Shuffle(rnd);
-                    var solutionTup = TheBlueButton_SolvePolyominoPuzzle(new int?[_gw * _gh], 1, allPlacements).FirstOrNull();
+                    var solutionTup = SolvePolyominoPuzzle(new int?[_gw * _gh], 1, allPlacements).FirstOrNull();
                     if (solutionTup == null)
                     {
                         Console.WriteLine("dud");
@@ -365,7 +301,7 @@ namespace KtaneStuff
             ['Q'] = 0b01000
         };
 
-        public static void TheBlueButton_FilterWords()
+        public static void FilterWords()
         {
             var rnd = new Random(447);
             var allPlacements = GetAllPolyominoPlacements().Shuffle(rnd);
@@ -378,12 +314,12 @@ namespace KtaneStuff
                 {
                     lock (lockObj)
                         Console.Write($"{word}\r");
-                    return TheBlueButton_GenerateRandomPolyominoSolution(word) == null ? Enumerable.Empty<string>() : new[] { word };
+                    return GenerateRandomPolyominoSolution(word) == null ? Enumerable.Empty<string>() : new[] { word };
                 }).ToArray();
             File.WriteAllLines(@"D:\temp\temp.txt", validWords.Order());
         }
 
-        private static (int[] solution, PolyominoPlacement[] polys, int jumps)? TheBlueButton_GenerateRandomPolyominoSolution(string word, Random rnd = null)
+        private static (int[] solution, PolyominoPlacement[] polys, int jumps)? GenerateRandomPolyominoSolution(string word, Random rnd = null)
         {
             var allPlacements = GetAllPolyominoPlacements().Shuffle(rnd);
             var allJumps = Enumerable.Range(0, 256).ToArray().Shuffle(rnd);     // 4⁴ = 256
@@ -406,7 +342,7 @@ namespace KtaneStuff
                         (poly.Cells.Count() == 5) == ((encoding & 16) != 0);
                 })).ToList();
 
-                var solutionTup = TheBlueButton_SolvePolyominoPuzzle(new int?[_gw * _gh], 1, placements).FirstOrNull();
+                var solutionTup = SolvePolyominoPuzzle(new int?[_gw * _gh], 1, placements).FirstOrNull();
                 if (solutionTup != null)
                     return (solutionTup.Value.solution, solutionTup.Value.polys, jumps);
             }
@@ -421,13 +357,13 @@ namespace KtaneStuff
                     .JoinColoredString(""))
                 .JoinColoredString("\n");
 
-        public static void TheBlueButton_GeneratePuzzle()
+        public static void GeneratePuzzle()
         {
             var rnd = new Random(/*47*/);
 
             tryAgain:
             var word = _words[rnd.Next(0, _words.Length)];
-            var result = TheBlueButton_GenerateRandomPolyominoSolution(word, rnd);
+            var result = GenerateRandomPolyominoSolution(word, rnd);
             if (result == null)
                 goto tryAgain;
 
@@ -457,7 +393,7 @@ namespace KtaneStuff
                     else if (two == givenPolyominoPlacement.Polyomino)
                         placements.RemoveAll(pl => pl.Polyomino == one && pl.Touches(givenPolyominoPlacement));
 
-                return TheBlueButton_SolvePolyominoPuzzle(grid, 2, placements, noAllowTouch, debug: false);
+                return SolvePolyominoPuzzle(grid, 2, placements, noAllowTouch, debug: false);
             }
 
             var notAllowedToTouch = new List<(Polyomino one, Polyomino two)>();

@@ -139,9 +139,12 @@
     <Compile Include="SymbolCycle.cs" />
     <Compile Include="SymbolicCoordinates.cs" />
     <Compile Include="Tennis.cs" />
-    <Compile Include="ColoredButtons.cs" />
+    <Compile Include="TheBlueButton.cs" />
     <Compile Include="TheGamepad.cs" />
+    <Compile Include="TheGrayButton.cs" />
     <Compile Include="ThePlebs.cs" />
+    <Compile Include="TheWhiteButton.cs" />
+    <Compile Include="TheYellowButton.cs" />
     <Compile Include="ToonEnough.cs" />
     <Compile Include="Translatable.cs" />
     <Compile Include="MarbleTumble.cs" />
