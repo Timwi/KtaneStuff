@@ -33,7 +33,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            ThePurpleButton.Experiment();
+            TheBlueButton.MakeModels();
 
 
             Console.WriteLine("Done.");
