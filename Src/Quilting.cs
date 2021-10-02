@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -30,9 +31,19 @@ namespace KtaneStuff
 
                     //Utils.ReplaceInFile(@"D:\temp\temp.svg", "<!--#-->", "<!--##-->", $@"<path fill='none' stroke='black' stroke-width='2' d='{data}'/>");
                     //Utils.ReplaceInFile(@"D:\temp\temp.svg", "<!--%-->", "<!--%%-->", $@"<path fill='none' stroke='red' stroke-width='1' d='{DecodeSvgPath.Do(data, .1).Select(pol => $"M{pol.Select(p => $"{p.X} {p.Y}").JoinString(" ")}").JoinString()}z'/>");
-                    File.WriteAllText($@"D:\c\KTANE\Quilting\Assets\Models\Patches\{Path.GetFileNameWithoutExtension(svgFile.Name)}-{pathIx}.obj", GenerateObjFile(DecodeSvgPath.DecodePieces(data).Extrude(1, .1, true)));
+                    File.WriteAllText($@"D:\c\KTANE\Quilting\Assets\Models\Patches\{Path.GetFileNameWithoutExtension(svgFile.Name)}-{pathIx}.obj", GenerateObjFile(center(DecodeSvgPath.DecodePieces(data).Extrude(1, .1, true))));
                 }
             }
+        }
+
+        private static IEnumerable<VertexInfo[]> center(IEnumerable<VertexInfo[]> source)
+        {
+            var input = source.ToArray();
+            var minX = input.Min(ps => ps.Min(p => p.Location.X));
+            var maxX = input.Max(ps => ps.Max(p => p.Location.X));
+            var minZ = input.Min(ps => ps.Min(p => p.Location.Z));
+            var maxZ = input.Max(ps => ps.Max(p => p.Location.Z));
+            return input.Select(ps => ps.Select(p => p.Move(x: -(minX + maxX) / 2, z: -(minZ + maxZ) / 2)).ToArray()).ToArray();
         }
     }
 }
