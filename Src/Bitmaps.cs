@@ -6,6 +6,7 @@ using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
+using RT.Util.Geometry;
 using RT.Util.Text;
 
 namespace KtaneStuff
@@ -35,9 +36,9 @@ namespace KtaneStuff
             var size = 1.0;
             var diag = size * Math.Sqrt(2);
             var roundSteps = 9;
-            var arr = SmoothBézier(p(0, 0), p(0, f), p(h - f, h), p(h, h), .0001)
+            var arr = GeomUt.SmoothBézier(p(0, 0), p(0, f), p(h - f, h), p(h, h), .0001)
                     .Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average))
-                    .Concat(SmoothBézier(p(w - h, h), p(w - h + f, h), p(w, f), p(w, 0), .0001)
+                    .Concat(GeomUt.SmoothBézier(p(w - h, h), p(w - h + f, h), p(w, f), p(w, 0), .0001)
                         .Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average)))
                 .Select(bi =>
                     Enumerable.Range(0, roundSteps).Select((i, ft, lt) => new { Normal = ft || lt ? Normal.Mine : Normal.Average, Angle = i * 90 / (roundSteps - 1), X = 1, Y = 1 }).Concat(
@@ -232,7 +233,7 @@ namespace KtaneStuff
             var width = .09;
             var roundSteps = 9;
             var innerSize = (width - bevelWidth);
-            var arr = SmoothBézier(p(0, height), p(fbw, height), p(bevelWidth, fh), p(bevelWidth, 0), .0001)
+            var arr = GeomUt.SmoothBézier(p(0, height), p(fbw, height), p(bevelWidth, fh), p(bevelWidth, 0), .0001)
                 .Select((p, first, last) => new BevelPoint(p.X, p.Y, first || last ? Normal.Mine : Normal.Average, first || last ? Normal.Mine : Normal.Average))
                 .Select(bi =>
                     Enumerable.Range(0, roundSteps).Select((i, ft, lt) => new { Normal = ft || lt ? Normal.Mine : Normal.Average, Angle = i * 90 / (roundSteps - 1), X = 1, Y = 1 }).Concat(

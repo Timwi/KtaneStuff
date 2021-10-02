@@ -267,7 +267,7 @@ namespace KtaneStuff
             switch (which)
             {
                 case 1:
-                    var bézier = SmoothBézier(p(c3, h), p(c3 + c2, h), p(w, c1), p(w, 0), .005).ToArray();
+                    var bézier = GeomUt.SmoothBézier(p(c3, h), p(c3 + c2, h), p(w, c1), p(w, 0), .005).ToArray();
                     return CreateMesh(true, false, Enumerable.Range(0, rev)
                         .Select(i => i * 360.0 / rev)
                         .Select((angle, fa, la) => bézier

@@ -17,54 +17,100 @@ namespace KtaneStuff.Modeling
         public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<PointD> polygon, double depth, bool includeBackFace = false, bool flatSideNormals = false) =>
             Extrude(new[] { polygon }, depth, includeBackFace, flatSideNormals);
         public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<IEnumerable<PointD>> polygons, double depth, bool includeBackFace = false, bool flatSideNormals = false) =>
-            extrudeImpl(polygons.Select(poly => poly.Select(p => (pt: p, flat: (object) flatSideNormals))), depth, includeBackFace).SelectMany(x => x);
+            extrudeImpl(polygons.Select(poly => poly.Select(p => (pt: p, normalBefore: (object) flatSideNormals, normalAfter: (object) flatSideNormals))), depth, includeBackFace).SelectMany(x => x);
 
-        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<DecodeSvgPath.PathPiece> pieces, double depth, double bézierSmoothness, bool includeBackFace = false)
+        public static IEnumerable<VertexInfo[]> Extrude(this IEnumerable<DecodeSvgPath.PathPiece> pieces, double depth, double smoothness, bool includeBackFace = false)
         {
             if (pieces == null)
                 throw new ArgumentNullException(nameof(pieces));
-            if (bézierSmoothness <= 0)
-                throw new ArgumentOutOfRangeException(nameof(bézierSmoothness), "The bézierSmoothness parameter cannot be zero or negative.");
+            if (smoothness <= 0)
+                throw new ArgumentOutOfRangeException(nameof(smoothness), "The smoothness parameter cannot be zero or negative.");
 
-            IEnumerable<IEnumerable<(PointD pt, object flat)>> iterator()
+            var convertedPaths = new List<IEnumerable<(PointD pt, object normalBefore, object normalAfter)>>();
+
+            foreach (var subpathGroup in pieces.Split(pp => pp.Type == DecodeSvgPath.PathPieceType.End))
             {
-                foreach (var group in pieces.Split(pp => pp.Type == DecodeSvgPath.PathPieceType.End).Where(gr => gr.Any()).Select(gr => gr.ToArray()))
+                var subpath = subpathGroup.ToArray();
+                if (subpath.Length == 0)
+                    continue;
+                var list = new List<(PointD pt, object normalBefore, object normalAfter)>();
+                var lastPoint = subpath.Last().Points.Last();
+                Pt nrml(PointD p) => pt(0, 1, 0) * pt(p.X, 0, p.Y);
+                foreach (var segment in subpath)
                 {
-                    yield return Enumerable.Range(0, group.Length).SelectMany(grIx =>
+                    if (segment.Type == DecodeSvgPath.PathPieceType.Move || segment.Type == DecodeSvgPath.PathPieceType.Line)
                     {
-                        var prev = group[(grIx + group.Length - 1) % group.Length];
-                        var cur = group[grIx];
-                        var next = group[(grIx + 1) % group.Length];
+                        if (list.Count > 0)
+                            list[list.Count - 1] = (list[list.Count - 1].pt, list[list.Count - 1].normalBefore, true);
+                        list.AddRange(segment.Points.Select((p, first, last) => (pt: p, normalBefore: (object) true, normalAfter: (object) true)));
+                        lastPoint = segment.Points.Last();
+                    }
 
-                        Pt nrml(PointD p) => pt(0, 1, 0) * pt(p.X, 0, p.Y);
-                        var nextNormal = nrml(next.Points[0] - cur.Points[cur.Points.Length - 1]);
-
-                        if (cur.Type == DecodeSvgPath.PathPieceType.Move || cur.Type == DecodeSvgPath.PathPieceType.Line)
-                            return cur.Points.Select(p => (pt: p, flat: (object) true));
-
-                        if (cur.Type == DecodeSvgPath.PathPieceType.Curve)
+                    else if (segment.Type == DecodeSvgPath.PathPieceType.Curve)
+                    {
+                        for (int i = 0; i < segment.Points.Length; i += 3)
                         {
-                            var lastPt = prev.Points[prev.Points.Length - 1];
-                            return Enumerable.Range(0, cur.Points.Length / 3)
-                                .Select((ix, first, last) => SmoothBézier(first ? lastPt : cur.Points[3 * ix - 1], cur.Points[3 * ix], cur.Points[3 * ix + 1], cur.Points[3 * ix + 2], bézierSmoothness)
-                                    .Skip(1)
-                                    .Select((p, frst, lst) => (pt: p, flat: lst ? (object) (nrml(cur.Points[3 * ix + 2] - cur.Points[3 * ix + 1]), last ? nextNormal : nrml(cur.Points[3 * ix + 3] - cur.Points[3 * ix + 2])) : false)))
-                                .SelectMany(x => x)
-                                .ToArray();
+                            var start = lastPoint;
+                            var c1 = segment.Points[i];
+                            var c2 = segment.Points[i + 1];
+                            var end = segment.Points[i + 2];
+                            list[list.Count - 1] = (list[list.Count - 1].pt, list[list.Count - 1].normalBefore, nrml(c1 - start));
+                            list.AddRange(GeomUt.SmoothBézier(lastPoint, c1, c2, end, smoothness)
+                                .Skip(1).Select((p, first, last) => (pt: p, normalBefore: last ? (object) nrml(end - c2) : false, normalAfter: (object) last)));
+                            lastPoint = end;
                         }
+                    }
 
-                        throw new InvalidOperationException();
-                    });
+                    else if (segment.Type == DecodeSvgPath.PathPieceType.Arc && segment is DecodeSvgPath.PathPieceArc arc && arc.Points.Length == 1)
+                    {
+                        var p1 = lastPoint.Rotated(arc.XAxisRotation * Math.PI / 180);
+                        var p2 = arc.Points[0].Rotated(arc.XAxisRotation * Math.PI / 180);
+                        var a = arc.RX;
+                        var b = arc.RY;
+
+                        var r1 = (p1.X - p2.X) / (2 * a);
+                        var r2 = (p1.Y - p2.Y) / (2 * b);
+                        var lambda = Math.Pow(r1, 2) + Math.Pow(r2, 2);
+                        if (lambda > 1)
+                        {
+                            a *= Math.Sqrt(lambda);
+                            b *= Math.Sqrt(lambda);
+                            r1 = (p1.X - p2.X) / (2 * a);
+                            r2 = (p1.Y - p2.Y) / (2 * b);
+                            lambda = 1;
+                        }
+                        var a1 = Math.Atan2(-r1, r2);
+                        var a2 = Math.Asin(Math.Sqrt(lambda));
+                        var t1 = a1 + a2;
+                        var t2 = a1 - a2;
+
+                        var result = GeomUt.SmoothArc(new PointD(p1.X - a * Math.Cos(t1), p1.Y - b * Math.Sin(t1)), a, b, t1, arc.LargeArcFlag ? t2 + 2 * Math.PI : t2, smoothness);
+                        if (arc.SweepFlag ^ arc.LargeArcFlag)
+                            result = result.Select(p => p1 + p2 - p).Reverse();
+                        result = result.Select(p => p.Rotated(-arc.XAxisRotation * Math.PI / 180));
+                        list.AddRange(result.Skip(1).Select((p, first, last) => (pt: last ? arc.Points[0] : p, normalBefore: (object) false, normalAfter: (object) last)));
+                        lastPoint = arc.Points[0];
+                    }
+
+                    else
+                        throw new NotImplementedException();
                 }
+                if (list[list.Count - 1].pt == list[0].pt)
+                {
+                    list[0] = (list[0].pt, list[list.Count - 1].normalBefore, list[0].normalAfter);
+                    list.RemoveAt(list.Count - 1);
+                }
+                convertedPaths.Add(list);
             }
-            return extrudeImpl(iterator(), depth, includeBackFace).SelectMany(x => x);
+
+            return extrudeImpl(convertedPaths, depth, includeBackFace).SelectMany(x => x);
         }
 
-        // The “object normal” object in the tuple can be one of the following:
+        // The “normalBefore/After” object in the tuple can be one of the following:
         //  • true: calculate a flat normal
         //  • false: calculate a smooth normal (average between previous and next faces)
-        //  • (Pt, Pt): actual normals for the face before and after the vertex
-        private static IEnumerable<IEnumerable<VertexInfo[]>> extrudeImpl(IEnumerable<IEnumerable<(PointD pt, object normal)>> polygons, double depth, bool includeBackFace)
+        //  • Pt: actual normal
+        private static IEnumerable<IEnumerable<VertexInfo[]>> extrudeImpl(IEnumerable<IEnumerable<(PointD pt, object normalBefore, object normalAfter)>> polygons, double depth, bool includeBackFace)
         {
             // Walls
             foreach (var path in polygons)
@@ -78,10 +124,10 @@ namespace KtaneStuff.Modeling
                         N2 = pt(0, 1, 0) * pt(q2.P2.pt.X - q2.P1.pt.X, 0, q2.P2.pt.Y - q2.P1.pt.Y)
                     })
                     .SelectConsecutivePairs(true, (p1, p2) => Ut.NewArray(
-                        pt(p1.P.pt.X, depth, p1.P.pt.Y).WithNormal(p1.P.normal is (Pt n1a, Pt n1b) ? n1b : (bool) p1.P.normal ? p1.N2 : p1.N1 + p1.N2),
-                        pt(p2.P.pt.X, depth, p2.P.pt.Y).WithNormal(p2.P.normal is (Pt n2a, Pt n2b) ? n2a : (bool) p2.P.normal ? p2.N1 : p2.N1 + p2.N2),
-                        pt(p2.P.pt.X, 0, p2.P.pt.Y).WithNormal(p2.P.normal is (Pt n3a, Pt n3b) ? n3a : (bool) p2.P.normal ? p2.N1 : p2.N1 + p2.N2),
-                        pt(p1.P.pt.X, 0, p1.P.pt.Y).WithNormal(p1.P.normal is (Pt n4a, Pt n4b) ? n4b : (bool) p1.P.normal ? p1.N2 : p1.N1 + p1.N2)));
+                        pt(p1.P.pt.X, depth, p1.P.pt.Y).WithNormal(p1.P.normalAfter is Pt n1 ? n1 : (bool) p1.P.normalAfter ? p1.N2 : p1.N1 + p1.N2),
+                        pt(p2.P.pt.X, depth, p2.P.pt.Y).WithNormal(p2.P.normalBefore is Pt n2 ? n2 : (bool) p2.P.normalBefore ? p2.N1 : p2.N1 + p2.N2),
+                        pt(p2.P.pt.X, 0, p2.P.pt.Y).WithNormal(p2.P.normalBefore is Pt n3 ? n3 : (bool) p2.P.normalBefore ? p2.N1 : p2.N1 + p2.N2),
+                        pt(p1.P.pt.X, 0, p1.P.pt.Y).WithNormal(p1.P.normalAfter is Pt n4 ? n4 : (bool) p1.P.normalAfter ? p1.N2 : p1.N1 + p1.N2)));
 
             // Front face
             yield return Triangulate(polygons.Select(poly => poly.Select(tup => tup.pt))).Select(ps => ps.Select(p => pt(p.X, depth, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray());
@@ -177,32 +223,6 @@ namespace KtaneStuff.Modeling
         }
 
         private static Pt bé(Pt start, Pt c1, Pt c2, Pt end, double t) => Math.Pow((1 - t), 3) * start + 3 * (1 - t) * (1 - t) * t * c1 + 3 * (1 - t) * t * t * c2 + Math.Pow(t, 3) * end;
-        private static PointD bé(PointD start, PointD c1, PointD c2, PointD end, double t) => Math.Pow((1 - t), 3) * start + 3 * (1 - t) * (1 - t) * t * c1 + 3 * (1 - t) * t * t * c2 + Math.Pow(t, 3) * end;
-
-        public static IEnumerable<PointD> SmoothBézier(PointD start, PointD c1, PointD c2, PointD end, double smoothness)
-        {
-            yield return start;
-
-            var stack = new Stack<Tuple<double, double>>();
-            stack.Push(Tuple.Create(0d, 1d));
-
-            while (stack.Count > 0)
-            {
-                var elem = stack.Pop();
-                var p1 = bé(start, c1, c2, end, elem.Item1);
-                var p2 = bé(start, c1, c2, end, elem.Item2);
-                var midT = (elem.Item1 + elem.Item2) / 2;
-                var midCurve = bé(start, c1, c2, end, midT);
-                var dist = new EdgeD(p1, p2).Distance(midCurve);
-                if (dist <= smoothness)
-                    yield return p2;
-                else
-                {
-                    stack.Push(Tuple.Create(midT, elem.Item2));
-                    stack.Push(Tuple.Create(elem.Item1, midT));
-                }
-            }
-        }
 
         public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, Pt[][] pts, bool flatNormals = false)
         {

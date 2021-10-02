@@ -4,6 +4,7 @@ using System.Linq;
 using KtaneStuff.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
+using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -35,8 +36,8 @@ namespace KtaneStuff
             const double bézierSmoothness = .0001;
             const int roundSteps = 72;
 
-            var curve = SmoothBézier(p(0, height), p(topF, height), p(iRadius, halfHeight + hhFUp), p(iRadius, halfHeight), bézierSmoothness)
-                .Concat(SmoothBézier(p(iRadius, halfHeight), p(iRadius, halfHeight - hhFDown), p(oRadius, baseF), p(oRadius, 0), bézierSmoothness).Skip(1))
+            var curve = GeomUt.SmoothBézier(p(0, height), p(topF, height), p(iRadius, halfHeight + hhFUp), p(iRadius, halfHeight), bézierSmoothness)
+                .Concat(GeomUt.SmoothBézier(p(iRadius, halfHeight), p(iRadius, halfHeight - hhFDown), p(oRadius, baseF), p(oRadius, 0), bézierSmoothness).Skip(1))
                 .ToArray();
 
             return CreateMesh(true, false,
