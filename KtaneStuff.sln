@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KtaneStuff", "Src\KtaneStuff.csproj", "{5BE560A8-9B71-441A-BCAC-FC55E8DA2864}"
 EndProject
@@ -26,6 +26,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RT.Util", "..\..\RT.Util\RT.Util\RT.Util.csproj", "{E9FB021E-C4E9-4A87-B81C-9607AF2C145D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuzzleSolvers", "..\..\PuzzleSolvers\Src\PuzzleSolvers.csproj", "{BEEE96C6-58AC-4A55-A12C-8F42380FE532}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueButtonLib", "..\BunchOfButtons\Lib\BlueButtonLib.csproj", "{4C3C8D4A-C793-467E-B02A-2ADC1937A9FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{BEEE96C6-58AC-4A55-A12C-8F42380FE532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEEE96C6-58AC-4A55-A12C-8F42380FE532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEEE96C6-58AC-4A55-A12C-8F42380FE532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C3C8D4A-C793-467E-B02A-2ADC1937A9FF}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{4C3C8D4A-C793-467E-B02A-2ADC1937A9FF}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{4C3C8D4A-C793-467E-B02A-2ADC1937A9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C3C8D4A-C793-467E-B02A-2ADC1937A9FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
