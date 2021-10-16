@@ -40,7 +40,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            NavyButton.NavyButtonLength4Experiments();
+            NavyButton.Experiment();
 
 
             Console.WriteLine("Done.");
