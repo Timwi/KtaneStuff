@@ -58,6 +58,8 @@
       <Link>Data.cs</Link>
     </Compile>
     <Compile Include="3DMaze.cs" />
+    <Compile Include="Encodings.cs" />
+    <Compile Include="ForestCipher.cs" />
     <Compile Include="Codenames.cs" />
     <Compile Include="CodeStatistics.cs" />
     <Compile Include="Concentration.cs" />
