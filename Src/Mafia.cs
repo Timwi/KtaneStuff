@@ -57,7 +57,7 @@ namespace KtaneStuff
                         .Select(ix => pt(data[ix].X, ix >= 16 ? 5 : 0, data[ix].Y).WithTexture((data[ix].X - minX) / (maxX - minX), (data[ix].Y - minY) / (maxY - minY)))
                         .Reverse().ToArray()), 
                     objName, 
-                    AutoNormal.Flat));
+                    AutoNormal.FlatIfAbsent));
             }
 
             mkFile(@"D:\c\KTANE\Mafia\Assets\Models\GallowsFront.obj", "GallowsFront", @"GSUJ,GJIH,KTVL,USRM,NQPO");

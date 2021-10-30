@@ -145,7 +145,7 @@ namespace KtaneStuff.Modeling
         {
             var facesProcessed = faces;
             if (autoNormal != AutoNormal.None)
-                facesProcessed = faces.Select(face => face.Select(p => new VertexInfo(p.Location, p.Normal ?? (autoNormal == AutoNormal.Flat && face.Length >= 3 ? ((face[2].Location - face[1].Location) * (face[0].Location - face[1].Location)).Normalize() : (Pt?) null), p.Texture)).ToArray());
+                facesProcessed = faces.Select(face => face.Select(p => new VertexInfo(p.Location, (autoNormal == AutoNormal.FlatOverride ? null : p.Normal) ?? (autoNormal == AutoNormal.FlatIfAbsent && face.Length >= 3 ? ((face[2].Location - face[1].Location) * (face[0].Location - face[1].Location)).Normalize() : (Pt?) null), p.Texture)).ToArray());
 
             var facesArr = facesProcessed.ToArray();
 

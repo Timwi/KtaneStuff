@@ -62,7 +62,7 @@ namespace KtaneStuff
 
             var avg = faces.SelectMany(p => p).Average(p => p.Length);
             File.WriteAllText($@"D:\Daten\Upload\Tabletop Simulator\Misc\Temp\{fileCompatibleName}.obj",
-                GenerateObjFile(faces.SelectMany(face => triangulate(face.Select((p, vIx) => (p / avg).WithTexture(getTexturePoint(vIx, face.Length))).ToArray())).ToArray(), fileCompatibleName, AutoNormal.Flat));
+                GenerateObjFile(faces.SelectMany(face => triangulate(face.Select((p, vIx) => (p / avg).WithTexture(getTexturePoint(vIx, face.Length))).ToArray())).ToArray(), fileCompatibleName, AutoNormal.FlatIfAbsent));
 
             static IEnumerable<VertexInfo[]> triangulate(VertexInfo[] vi)
             {
@@ -191,7 +191,7 @@ namespace KtaneStuff
             {
                 Directory.CreateDirectory(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra");
                 var avg = Faces.SelectMany(p => p).Average(p => p.Length);
-                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces.Select(face => face.Select((p, vIx) => (p / avg).WithTexture(getTexturePoint(vIx, face.Length))).ToArray()).ToArray(), FileCompatibleName, AutoNormal.Flat));
+                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces.Select(face => face.Select((p, vIx) => (p / avg).WithTexture(getTexturePoint(vIx, face.Length))).ToArray()).ToArray(), FileCompatibleName, AutoNormal.FlatIfAbsent));
             }
 
             public char GetPortalLetter(int faceIx, int edgeIx)

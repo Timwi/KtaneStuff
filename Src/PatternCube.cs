@@ -254,7 +254,7 @@ namespace KtaneStuff
                 polygons.AddRange(polys.Select((Point[] poly) => poly.Select(pt => p(x1 + w * (pt.X + 1.5), y1 + h * (pt.Y + 5.5 - net.Faces.GetLength(1)))).Reverse().ToArray()));
 
                 var tri = polygons.Triangulate().Select(poly => poly.Select(p => pt(p.X, .15, p.Y).WithTexture(new PointD(.4771284794 * p.X + .46155, -.4771284794 * p.Y + .5337373145))).Reverse().ToArray()).ToArray();
-                File.WriteAllText($@"D:\c\KTANE\PatternCube\Assets\Models\ModuleFront_{net.ID}.obj", GenerateObjFile(tri, $@"ModuleFront_{net.ID}", AutoNormal.Flat));
+                File.WriteAllText($@"D:\c\KTANE\PatternCube\Assets\Models\ModuleFront_{net.ID}.obj", GenerateObjFile(tri, $@"ModuleFront_{net.ID}", AutoNormal.FlatIfAbsent));
             }
 
             File.WriteAllText(@"D:\c\KTANE\PatternCube\Assets\Models\Frame.obj", GenerateObjFile(frame(w), "Frame"));

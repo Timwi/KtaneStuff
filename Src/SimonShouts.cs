@@ -188,7 +188,7 @@ namespace KtaneStuff
             const double t = .1;
             File.WriteAllText(@"D:\c\KTANE\SimonShouts\Assets\Models\Tray.obj", GenerateObjFile(
                 CreateMesh(true, false, Enumerable.Range(0, 4).Select(x => new[] { pt(0, 0, 1), pt(0, h, 1), pt(0, h, 1 - t), pt(0, 0, 1 - t) }.Select(p => p.RotateY(-90 * x)).ToArray()).ToArray(), flatNormals: true),
-                "Tray", AutoNormal.Flat));
+                "Tray", AutoNormal.FlatIfAbsent));
 
 
             // BUTTON COLLIDER

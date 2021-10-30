@@ -51,6 +51,23 @@ namespace KtaneStuff
             ).SelectMany(x => x).ToArray();
         }
 
+        public static VertexInfo[][] Cone(double startZ, double endZ, double baseRadius, int numVertices = 20)
+        {
+            // Create a circle in X/Y space
+            var circle = Enumerable.Range(0, numVertices)
+                .Select(i => new PointD(baseRadius * cos(360.0 * i / numVertices), baseRadius * sin(360.0 * i / numVertices)));
+
+            // Side
+            return Ut.NewArray(
+                Enumerable.Range(0, numVertices)
+                    .Select(i => 360.0 * i / numVertices)
+                    .Select(angle => new { Angle = angle, Point = pt(baseRadius, 0, startZ).RotateZ(angle), Normal = pt(endZ - startZ, 0, baseRadius).RotateZ(angle) })
+                    .SelectConsecutivePairs(true, (p1, p2) => new[] { p1.Point.WithNormal(p1.Normal), p2.Point.WithNormal(p2.Normal), pt(0, 0, endZ).WithNormal(p1.Normal + p2.Normal) }),
+                // Bottom cap
+                new[] { circle.Reverse().Select(c => pt(c.X, c.Y, startZ).WithNormal(0, 0, -1)).ToArray() }
+            ).SelectMany(x => x).ToArray();
+        }
+
         public static IEnumerable<VertexInfo[]> Torus(double outerRadius, double innerRadius, int steps, double startAngle = 0, double endAngle = 360)
         {
             return CreateMesh(true, true,
