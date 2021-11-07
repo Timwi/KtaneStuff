@@ -58,6 +58,7 @@
       <Link>Data.cs</Link>
     </Compile>
     <Compile Include="3DMaze.cs" />
+    <Compile Include="Charms.cs" />
     <Compile Include="Encodings.cs" />
     <Compile Include="ForestCipher.cs" />
     <Compile Include="Codenames.cs" />
@@ -130,6 +131,8 @@
     <Compile Include="PolyhedralMaze.cs" />
     <Compile Include="PerplexingWires.cs" />
     <Compile Include="PointOfOrder.cs" />
+    <Compile Include="Polyomino.cs" />
+    <Compile Include="PolyominoPlacement.cs" />
     <Compile Include="ProperPassword.cs" />
     <Compile Include="Quilting.cs" />
     <Compile Include="RegularCrazyTalk.cs" />
@@ -149,6 +152,7 @@
     <Compile Include="SymbolicCoordinates.cs" />
     <Compile Include="Tennis.cs" />
     <Compile Include="TheBlueButton.cs" />
+    <Compile Include="TheCornflowerButton.cs" />
     <Compile Include="TheGamepad.cs" />
     <Compile Include="TheGrayButton.cs" />
     <Compile Include="ThePlebs.cs" />
@@ -247,10 +251,6 @@
     <ProjectReference Include="..\..\..\RT.Util\RT.Util\RT.Util.csproj">
       <Project>{e9fb021e-c4e9-4a87-b81c-9607af2c145d}</Project>
       <Name>RT.Util</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\BunchOfButtons\Lib\BlueButtonLib.csproj">
-      <Project>{4c3c8d4a-c793-467e-b02a-2adc1937a9ff}</Project>
-      <Name>BlueButtonLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

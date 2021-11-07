@@ -65,7 +65,35 @@ namespace KtaneStuff
             {
                 for (var i = 0; i < 8; i++)
                     if (CanGoTo((GridDirection) i))
-                        yield return Neighbor((GridDirection) i);
+                        yield return NeighborWrap((GridDirection) i);
+            }
+        }
+
+        public IEnumerable<Coord> NeighborsWrap
+        {
+            get
+            {
+                for (var i = 0; i < 8; i++)
+                    yield return NeighborWrap((GridDirection) i);
+            }
+        }
+
+        public IEnumerable<Coord> OrthogonalNeighbors
+        {
+            get
+            {
+                for (var i = 0; i < 8; i += 2)
+                    if (CanGoTo((GridDirection) i))
+                        yield return NeighborWrap((GridDirection) i);
+            }
+        }
+
+        public IEnumerable<Coord> OrthogonalNeighborsWrap
+        {
+            get
+            {
+                for (var i = 0; i < 8; i += 2)
+                    yield return NeighborWrap((GridDirection) i);
             }
         }
     }

@@ -31,7 +31,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            NavyButton.GatherData();
+            Charms.GenerateDiagram();
 
 
             Console.WriteLine("Done.");
