@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RT.Util;
 
 namespace KtaneStuff
 {
@@ -44,7 +45,7 @@ namespace KtaneStuff
             _ => throw new ArgumentOutOfRangeException(nameof(dir), "Invalid GridDirection enum value."),
         };
 
-        public Coord Neighbor(GridDirection dir) => !CanGoTo(dir) ? throw new InvalidOperationException("The grid has no neighbor in that direction.") : NeighborWrap(dir);
+        public Coord? Neighbor(GridDirection dir) => CanGoTo(dir) ? NeighborWrap(dir).Nullable() : null;
 
         public Coord NeighborWrap(GridDirection dir) => dir switch
         {

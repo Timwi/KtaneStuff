@@ -135,6 +135,7 @@
     <Compile Include="PolyominoPlacement.cs" />
     <Compile Include="ProperPassword.cs" />
     <Compile Include="Quilting.cs" />
+    <Compile Include="QuinnMaze.cs" />
     <Compile Include="RegularCrazyTalk.cs" />
     <Compile Include="RubiksCube.cs" />
     <Compile Include="Set.cs" />
