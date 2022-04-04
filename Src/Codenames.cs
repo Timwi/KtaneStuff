@@ -17,24 +17,24 @@ namespace KtaneStuff
                 ("BRKNNBRNBRBBNNRNBRNBRRNBR", "Math/History/Body"),
                 ("RBBRNBNBRRNKNBBRNNRNRBNRB", "Politics/Sports/Tabletop"));
 
-            var readingOrders = Ut.NewArray<Func<int, int>>(
+            var readingOrders = Ut.NewArray<(int start, Func<int, int> step)>(
                 // normal reading order
-                i => (i + 1) % 25,
+                (0, i => (i + 1) % 25),
                 // TR down, then left
-                i => (i / 5 == 4 ? (i % 5 + 24) : i + 5) % 25,
+                (4, i => (i / 5 == 4 ? (i % 5 + 24) : i + 5) % 25),
                 // BR left, then up
-                i => (i + 24) % 25,
+                (24, i => (i + 24) % 25),
                 // BL up, then right
-                i => (i / 5 == 0 ? i % 5 + 21 : i + 20) % 25
+                (20, i => (i / 5 == 0 ? i % 5 + 21 : i + 20) % 25)
             );
 
             var sb = new StringBuilder();
             foreach (var (board, name) in boardInfs)
-                foreach (var step in readingOrders)
+                foreach (var ro in readingOrders)
                 {
                     var b1 = new StringBuilder();
                     var b2 = new StringBuilder();
-                    for (int i = 0, cell = 0; i < 25; i++, cell = step(cell))
+                    for (int i = 0, cell = ro.start; i < 25; i++, cell = ro.step(cell))
                     {
                         b1.Append(board[cell] == 'B' ? 'I' : board[cell] == 'R' ? 'I' : board[cell] == 'N' ? 'K' : board[cell]);
                         b2.Append(board[cell]);
