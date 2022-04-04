@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using CsQuery;
 using KtaneStuff.Modeling;
 using RT.Json;
@@ -42,6 +43,25 @@ namespace KtaneStuff
 
             /// <summary>A mask used to determine the connection type.</summary>
             ConnectionMask = 3 << 1,
+        }
+
+        public static void FaceOffExperiment()
+        {
+            var (name, faces) = Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Txt\Rhombicuboctahedron.txt"));
+            var polyhedron = new PolyhedronInfo("Rhombicuboctahedron", "Rhombicuboctahedron", faces);
+            File.WriteAllText(@"D:\c\KTANE\FaceOff\Assets\Models\Rhombicuboctahedron.obj", polyhedron.GenerateObjFile(null));
+
+            var sb = new StringBuilder();
+            var avg = faces.SelectMany(p => p).Average(p => p.Length);
+            for (var i = 0; i < 26; i++)
+            {
+                var pts = faces[i].Select(p => p / avg).ToArray();
+                var mid = pt(pts.Average(p => p.X), pts.Average(p => p.Y), pts.Average(p => p.Z)) * 1.001;
+                sb.AppendLine($@"symbols[{i}].localPosition = new Vector3({mid.X}f, {mid.Y}f, {mid.Z}f);");
+                var normal = (pts[0] - pts[1]) * (pts[2] - pts[1]);
+                sb.AppendLine($@"symbols[{i}].localRotation = Quaternion.FromToRotation(Vector3.forward, new Vector3({normal.X}f, {normal.Y}f, {normal.Z}f));");
+            }
+            Clipboard.SetText(sb.ToString());
         }
 
         public static void GenerateModelForTabletop()
@@ -187,11 +207,20 @@ namespace KtaneStuff
                 ScaleFactor = 1;
             }
             private PolyhedronInfo() { }    // Classify
-            public void GenerateObjFile(Func<int, int, PointD> getTexturePoint)
+            public void SaveToObjFile(Func<int, int, PointD> getTexturePoint)
             {
                 Directory.CreateDirectory(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra");
+                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", GenerateObjFile(getTexturePoint));
+            }
+            public string GenerateObjFile(Func<int, int, PointD> getTexturePoint)
+            {
                 var avg = Faces.SelectMany(p => p).Average(p => p.Length);
-                File.WriteAllText($@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Polyhedra\{FileCompatibleName}.obj", Md.GenerateObjFile(Faces.Select(face => face.Select((p, vIx) => (p / avg).WithTexture(getTexturePoint(vIx, face.Length))).ToArray()).ToArray(), FileCompatibleName, AutoNormal.FlatIfAbsent));
+                return Md.GenerateObjFile(
+                    Faces
+                        .Select(face => face.Select((p, vIx) => (p / avg).Apply(pt => getTexturePoint == null ? new VertexInfo(pt, null) : pt.WithTexture(getTexturePoint(vIx, face.Length)))).ToArray())
+                        .ToArray(),
+                    FileCompatibleName,
+                    AutoNormal.FlatIfAbsent);
             }
 
             public char GetPortalLetter(int faceIx, int edgeIx)
@@ -342,7 +371,7 @@ GyroelongatedTriangularBicupola".Replace("\r", "").Split('\n');
             try { polyhedra = ClassifyJson.DeserializeFile<List<PolyhedronInfo>>(_masterJsonPath); }
             catch { polyhedra = new List<PolyhedronInfo>(); }
             foreach (var poly in polyhedra)
-                poly.GenerateObjFile((e, edges) => new PointD((x0 + (edges - minEdges) * spacing + radius * cos(360 / edges * e)) / w, (y0 + radius * sin(360 / edges * e)) / h));
+                poly.SaveToObjFile((e, edges) => new PointD((x0 + (edges - minEdges) * spacing + radius * cos(360 / edges * e)) / w, (y0 + radius * sin(360 / edges * e)) / h));
 
             File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Arrow.obj", GenerateObjFile(Arrow(), "Arrow"));
             File.WriteAllText(@"D:\c\KTANE\PolyhedralMaze\Assets\Models\Frame.obj", GenerateObjFile(Frame(), "Frame"));
