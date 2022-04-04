@@ -420,6 +420,22 @@ namespace KtaneStuff
                 new RingInfo { Labels = new[] { "Ano", "Ne" }, Horiz = true, FontSize = .7, HFactor = 14, InnerD = .8, OuterD = .2 }));
         }
 
+        public static void GenerateChartsEspañol()
+        {
+            // Minutes
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Español — El Reloj).html", "<!--MINUTES-START-->", "<!--MINUTES-END-->", generateChart("Special Elite", "Minutos", .4, .1, 1, 1.24, 1000,
+                new RingInfo { Labels = new[] { "Flechas", "Líneas", "Picas" }, Horiz = true, FontSize = .8, HFactor = 32, InnerD = 1, OuterD = 0 },
+                new RingInfo { Labels = new[] { "Rojo", "Verde", "Azul", "Oro", "Negro" }, Horiz = true, FontSize = .35, HFactor = 16, InnerD = .75, OuterD = .25 },
+                new RingInfo { Labels = new[] { "N", "B" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .8, OuterD = .2 },
+                new RingInfo { Labels = new[] { "Au", "Pr" }, Horiz = false, FontSize = .4, HFactor = 12, InnerD = .95, OuterD = 0 }));
+
+            // Hours
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Español — El Reloj).html", "<!--HOURS-START-->", "<!--HOURS-END-->", generateChart("Special Elite", "Horas", .4, .1, 1 / .8, 1, 100,
+                new RingInfo { Labels = new[] { "Arábigos", "Romanos", "Nada" }, Horiz = true, FontSize = .6, HFactor = 32, InnerD = .85, OuterD = .05 },
+                new RingInfo { Labels = new[] { "Plateado", "Dorado" }, Horiz = true, FontSize = .6, HFactor = 20, InnerD = .85, OuterD = .1 },
+                new RingInfo { Labels = new[] { "Iguales", "Diferentes" }, Horiz = true, FontSize = .3, HFactor = 14, InnerD = .7, OuterD = .3 }));
+        }
+
         public static void GenerateChartsFrançais()
         {
             // Minutes
@@ -501,7 +517,7 @@ namespace KtaneStuff
 
             for (int i = 0; i < 60; i++)
                 if (i % 5 == 0)
-                    svg.Append($"<line x1='0' y1='{(circ + innerCirc) * fac}' x2='0' y2='{(circ + 1 + innerCirc) * fac}' transform='rotate({i * 360 / 60})' fill='none' stroke='#000' stroke-width='{.2 * fac}' />");
+                    svg.Append($"<line x1='0' y1='{(circ + innerCirc) * fac}' x2='0' y2='{(circ + (i == 30 ? .7 : 1) + innerCirc) * fac}' transform='rotate({i * 360 / 60})' fill='none' stroke='#000' stroke-width='{.2 * fac}' />");
                 else
                     svg.Append($"<line x1='0' y1='{(circ + .5 + innerCirc) * fac}' x2='0' y2='{(circ + 1 + innerCirc) * fac}' transform='rotate({i * 360 / 60})' fill='none' stroke='#000' stroke-width='{.1 * fac}' />");
             circ++;
