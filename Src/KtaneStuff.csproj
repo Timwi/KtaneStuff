@@ -54,19 +54,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\UltimateCipher\Assets\Scripts\Data.cs">
-      <Link>Data.cs</Link>
-    </Compile>
     <Compile Include="3DMaze.cs" />
     <Compile Include="Charms.cs" />
     <Compile Include="DiscardedExperiments.cs" />
     <Compile Include="Encodings.cs" />
-    <Compile Include="ForestCipher.cs" />
     <Compile Include="Codenames.cs" />
     <Compile Include="CodeStatistics.cs" />
     <Compile Include="Concentration.cs" />
     <Compile Include="Coord.cs" />
-    <Compile Include="CornflowerCipher.cs" />
     <Compile Include="DeBruijnConstraint.cs" />
     <Compile Include="Astrology.cs" />
     <Compile Include="BinaryPuzzle.cs" />
