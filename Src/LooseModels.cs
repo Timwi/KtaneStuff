@@ -51,6 +51,13 @@ namespace KtaneStuff
             ).SelectMany(x => x).ToArray();
         }
 
+        public static IEnumerable<VertexInfo[]> Sphere(double radius, int numLat = 32, int numLong = 32) => CreateMesh(false, true,
+            Enumerable.Range(0, numLat).Select(i => i * 180d / numLat + 90)
+                .Select(latAngle => Enumerable.Range(0, numLong).Select(i => (double) i * 360 / numLong)
+                    .Select(longAngle => pt(1, 0, 0).RotateY(latAngle).RotateZ(longAngle).Apply(p => new MeshVertexInfo(p * radius, p)))
+                    .ToArray())
+                .ToArray());
+
         public static VertexInfo[][] Cone(double startZ, double endZ, double baseRadius, int numVertices = 20)
         {
             // Create a circle in X/Y space
