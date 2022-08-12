@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Media;
+using BlueButtonLib;
 using KtaneStuff.Modeling;
 using RT.Util.ExtensionMethods;
 
@@ -15,35 +16,12 @@ namespace KtaneStuff
     {
         public static void GenerateArrows()
         {
-            // Generates all possible arrows that don’t intersect with themselves
             var dxs = new[] { 0, 1, 1, 1, 0, -1, -1, -1 };
             var dys = new[] { -1, -1, 0, 1, 1, 1, 0, -1 };
-            const int maxArrowLength = 3;
 
-            IEnumerable<(Coord coord, int dir)[]> generateArrows((Coord coord, int dir)[] sofar)
+            foreach (var arrow in AzureButtonArrowInfo.AllArrows.Where(a => a.Directions[0].IsBetween(0, 1)))
             {
-                if (sofar.Length == maxArrowLength)
-                {
-                    yield return sofar;
-                    yield break;
-                }
-
-                var start = sofar.Length == 0 ? new Coord(4, 4, 0, 0) : sofar.Last().coord;
-                for (var dir = 0; dir < 8; dir++)
-                {
-                    var next = start.AddWrap(dxs[dir], dys[dir]);
-                    if (next.Index != 0 && !sofar.Any(tup => tup.coord == next))
-                        foreach (var result in generateArrows(sofar.Insert(sofar.Length, (next, dir))))
-                            yield return result;
-                }
-            }
-            var allArrows = generateArrows(new (Coord coord, int dir)[0]).ToArray();
-
-            Console.WriteLine(allArrows.Length);
-
-            foreach (var arrow in allArrows)
-            {
-                var objName = $"Arrow-{arrow.Select(c => c.dir).JoinString()}";
+                var objName = arrow.ModelName;
 
                 const double torusRadius = .4;
                 var faces = LooseModels.Torus(torusRadius, .075, 32).ToList();
@@ -51,10 +29,10 @@ namespace KtaneStuff
                 var x = 0;
                 var y = 0;
                 int dir = -1;
-                for (var line = 0; line < arrow.Length; line++)
+                for (var line = 0; line < arrow.Directions.Length; line++)
                 {
-                    var start = line == 0 ? new Coord(4, 4, 0, 0) : arrow[line - 1].coord;
-                    var end = arrow[line].coord;
+                    var start = line == 0 ? new BlueButtonLib.Coord(4, 4, 0, 0) : arrow.Coordinates[line - 1];
+                    var end = arrow.Coordinates[line];
 
                     int d(int x1, int x2) => x1 == 0 && x2 == 3 ? -1 : x1 == 3 && x2 == 0 ? 1 : x2 - x1;
                     dir = Enumerable.Range(0, 8).First(dir => dxs[dir] == d(start.X, end.X) && dys[dir] == d(start.Y, end.Y));

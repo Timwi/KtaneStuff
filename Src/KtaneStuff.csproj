@@ -250,6 +250,10 @@
       <Project>{e9fb021e-c4e9-4a87-b81c-9607af2c145d}</Project>
       <Name>RT.Util</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\BunchOfButtons\Lib\BlueButtonLib.csproj">
+      <Project>{4c3c8d4a-c793-467e-b02a-2adc1937a9ff}</Project>
+      <Name>BlueButtonLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
