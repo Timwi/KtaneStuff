@@ -43,7 +43,7 @@ namespace KtaneStuff
                     y += dys[dir];
                 }
                 faces.AddRange(LooseModels.Cone(-.25, .25, .15, 32).Select(face => face.Select(p => p.RotateY(dir * -45).Move(x: x, z: -y)).ToArray()));
-                File.WriteAllText($@"D:\c\KTANE\BunchOfButtons\Assets\Modules\Azure\Assets\Arrows\{objName}.obj", GenerateObjFile(faces, objName));
+                File.WriteAllText($@"D:\c\KTANE\BunchOfButtons\Assets\Modules\Azure\Assets\Arrows\{objName}.obj", GenerateObjFile(faces.Select(face => face.Select(v => v.RotateZ(180)).ToArray()), objName));
             }
         }
     }
