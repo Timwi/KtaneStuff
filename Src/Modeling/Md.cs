@@ -223,6 +223,32 @@ namespace KtaneStuff.Modeling
         }
 
         private static Pt bé(Pt start, Pt c1, Pt c2, Pt end, double t) => Math.Pow((1 - t), 3) * start + 3 * (1 - t) * (1 - t) * t * c1 + 3 * (1 - t) * t * t * c2 + Math.Pow(t, 3) * end;
+        private static PointD bé(PointD start, PointD c1, PointD c2, PointD end, double t) => Math.Pow((1 - t), 3) * start + 3 * (1 - t) * (1 - t) * t * c1 + 3 * (1 - t) * t * t * c2 + Math.Pow(t, 3) * end;
+
+        public static IEnumerable<PointD> SmoothBézier(PointD start, PointD c1, PointD c2, PointD end, double smoothness)
+        {
+            yield return start;
+
+            var stack = new Stack<Tuple<double, double>>();
+            stack.Push(Tuple.Create(0d, 1d));
+
+            while (stack.Count > 0)
+            {
+                var elem = stack.Pop();
+                var p1 = bé(start, c1, c2, end, elem.Item1);
+                var p2 = bé(start, c1, c2, end, elem.Item2);
+                var midT = (elem.Item1 + elem.Item2) / 2;
+                var midCurve = bé(start, c1, c2, end, midT);
+                var dist = new EdgeD(p1, p2).Distance(midCurve);
+                if (dist <= smoothness)
+                    yield return p2;
+                else
+                {
+                    stack.Push(Tuple.Create(midT, elem.Item2));
+                    stack.Push(Tuple.Create(elem.Item1, midT));
+                }
+            }
+        }
 
         public static IEnumerable<VertexInfo[]> CreateMesh(bool closedX, bool closedY, Pt[][] pts, bool flatNormals = false)
         {
