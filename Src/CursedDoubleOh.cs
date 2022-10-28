@@ -121,6 +121,6 @@ namespace KtaneStuff
         }
 
         private static string FindSolution(int position, HashSet<int> positionsTaken, ButtonFunction[] btnFncs, ButtonFunction last) =>
-            DijkstrasAlgorithm.Run(new CDNode(position, btnFncs, last, positionsTaken), 0, (a, b) => a + b, out var totalWeight).Select(i => "ABCD"[i]).JoinString();
+            DijkstrasAlgorithm.Run(new CDNode(position, btnFncs, last, positionsTaken), 0, (a, b) => a + b, out var totalWeight).Select(i => "ABCD"[i.Label]).JoinString();
     }
 }

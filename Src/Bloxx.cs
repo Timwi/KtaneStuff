@@ -162,10 +162,10 @@ namespace KtaneStuff
                 {
                     var node = new BloxxNode { ValidStates = validStates.ToHashSet(), GameState = checkPoints.Last(), DesiredEndState = nextCheckPoint };
                     var path = DijkstrasAlgorithm.Run(node, 0, (a, b) => a + b, out _);
-                    foreach (var tup in path)
+                    foreach (var step in path)
                     {
-                        tup.state.MarkUsed(newGrid, cols);
-                        validStates.Remove(tup.state);
+                        step.Label.state.MarkUsed(newGrid, cols);
+                        validStates.Remove(step.Label.state);
                     }
                     checkPoints.Add(nextCheckPoint);
                 }
@@ -184,7 +184,7 @@ namespace KtaneStuff
             var finalGrid = Ut.NewArray(validPositions.Length, _ => '-');
             // Mark reachable squares
             for (var spIx = 0; spIx < shortestPath.Length; spIx++)
-                shortestPath[spIx].state.MarkUsed(finalGrid, cols, spIx == shortestPath.Length - 1 ? 'X' : '#');
+                shortestPath[spIx].Label.state.MarkUsed(finalGrid, cols, spIx == shortestPath.Length - 1 ? 'X' : '#');
             // Mark start and end location
             checkPoints[0].MarkUsed(finalGrid, cols, checkPoints[0].posChar());
             checkPoints.Last().MarkUsed(finalGrid, cols, 'X');
