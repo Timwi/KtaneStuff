@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueButtonLib", "..\BunchOf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherModulesLib", "..\CompressionCiphers\Lib\CipherModulesLib.csproj", "{5A8A8CF4-0CB8-46C8-90D2-45D28EA7211F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RT.Coordinates", "..\..\RT.Coordinates\RT.Coordinates.csproj", "{80E00597-BD8D-4C94-B112-56A09D1C0D62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{5A8A8CF4-0CB8-46C8-90D2-45D28EA7211F}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{5A8A8CF4-0CB8-46C8-90D2-45D28EA7211F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A8A8CF4-0CB8-46C8-90D2-45D28EA7211F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80E00597-BD8D-4C94-B112-56A09D1C0D62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80E00597-BD8D-4C94-B112-56A09D1C0D62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80E00597-BD8D-4C94-B112-56A09D1C0D62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80E00597-BD8D-4C94-B112-56A09D1C0D62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -306,7 +306,7 @@ namespace KtaneStuff
             if (colors == null)
                 return;
             var colorNames = "red,yellow,green,blue,silver".Split(',');
-            if (colors.Any(c => !colorNames.Any(cn => cn.EqualsNoCase(c))))
+            if (colors.Any(c => !colorNames.Any(cn => cn.EqualsIgnoreCase(c))))
                 return;
             var colorIxs = colors.Select(c => colorNames.IndexOf(c, StringComparer.InvariantCultureIgnoreCase)).Reverse().ToArray();
             var gaps = getIntArr("Gaps? ");

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using KtaneStuff.Modeling;
+using RT.Coordinates;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 using RT.Util.Geometry;
@@ -14,6 +15,7 @@ using RT.Util.Geometry;
 namespace KtaneStuff
 {
     using static Md;
+    using PointD = RT.Util.Geometry.PointD;
 
     sealed class Zoo
     {
@@ -175,12 +177,12 @@ namespace KtaneStuff
                 var xMax = path.Where(ps => ps.Points != null).Max(ps => ps.Points.Max(p => p.X));
                 var yMax = path.Where(ps => ps.Points != null).Max(ps => ps.Points.Max(p => p.Y));
                 var maxRadius = path.Where(ps => ps.Points != null).Max(ps => ps.Points.Max(p => p.Distance(new PointD((xMin + xMax) / 2, (yMin + yMax) / 2))));
-                PointD translatePoint(PointD p) => new PointD(
-                    Math.Round((p.X - (xMin + xMax) / 2) / maxRadius * sizeFactor + hexagon.GetCenter(1).X, 3),
-                    Math.Round((p.Y - (yMin + yMax) / 2) / maxRadius * sizeFactor + hexagon.GetCenter(1).Y, 3));
+                PointD translatePoint(PointD p) => new(
+                    Math.Round((p.X - (xMin + xMax) / 2) / maxRadius * sizeFactor + hexagon.Center.X, 3),
+                    Math.Round((p.Y - (yMin + yMax) / 2) / maxRadius * sizeFactor + hexagon.Center.Y, 3));
                 return
                     (withHexOutline ? $"<path stroke-width='.01' stroke='#000' fill='#fff' d='M {hexagon.GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />" : null) +
-                    arrowAngle.NullOr(aa => svgArrow(aa, hexagon.GetCenter(1).X, hexagon.GetCenter(1).Y, 0, .15)) +
+                    arrowAngle.NullOr(aa => svgArrow(aa, hexagon.Center.X, hexagon.Center.Y, 0, .15)) +
                     $"<path d='{path.Select(pp => pp.Select(translatePoint)).JoinString(" ")}' fill='#000' />" +
                     (withHexOutline ? $"<path class='highlightable' stroke='none' fill='transparent' d='M {hexagon.GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />" : null);
             }
@@ -206,7 +208,7 @@ namespace KtaneStuff
                     <svg class='small-diagram{(ch == '&' ? " v2" : " v1")}' viewBox='-1.7 -1.7 3.4 3.4'>
                         <path stroke-width='.01' stroke='#000' fill='none' d='M {new Hex(0, 0).GetPolygon(1).Select(p => $"{p.X},{p.Y}").JoinString(", ")} z' />
                         {"Parallel,DVI-D,Stereo RCA,Serial,PS/2,RJ-45".Split(',')
-                            .Select((p, i) => new Hex(0, 0).Neighbors[i].GetCenter(1).Apply(cnt => svgArrow(60 * (i - 1) + 180, cnt.X, cnt.Y, 0, -.15)) + $"<text x='0' y='0' transform='rotate({60 * (i - 1) + (i < 3 ? 0 : 180)}) translate(0 {(i < 3 ? -1.25 : 1.4)})' font-family='Special Elite' font-size='.2' text-anchor='middle'>{p}</text>")
+                            .Select((p, i) => new Hex(0, 0).Move((Hex.Direction) i).Center.Apply(cnt => svgArrow(60 * (i - 1) + 180, cnt.X, cnt.Y, 0, -.15)) + $"<text x='0' y='0' transform='rotate({60 * (i - 1) + (i < 3 ? 0 : 180)}) translate(0 {(i < 3 ? -1.25 : 1.4)})' font-family='Special Elite' font-size='.2' text-anchor='middle'>{p}</text>")
                             .JoinString()}
                     </svg>");
 
@@ -309,18 +311,18 @@ namespace KtaneStuff
                     for (int c = counts.Length - 1; c >= 0; c--)
                     {
                         // Check which of these port types can form a line of 5
-                        var eligiblePortTypes = counts[c].Where(pt => Enumerable.Range(0, 5).All(dist => (hex + dist * Hex.GetDirection(portTypeToDir[(int) pt])).Distance < 5)).Take(2).ToArray();
+                        var eligiblePortTypes = counts[c].Where(pt => Enumerable.Range(0, 5).All(dist => hex.Move((Hex.Direction) (int) pt, dist).Distance < 5)).Take(2).ToArray();
                         if (eligiblePortTypes.Length != 1)
                             continue;
 
                         // We found an eligible port type; return the line
-                        return new { Hex = hex, PortType = (PortType?) eligiblePortTypes[0], Line = Enumerable.Range(0, 5).Select(dist => hex + dist * Hex.GetDirection(portTypeToDir[(int) eligiblePortTypes[0]])).ToArray() };
+                        return new { Hex = hex, PortType = (PortType?) eligiblePortTypes[0], Line = Enumerable.Range(0, 5).Select(dist => hex.Move((Hex.Direction) (int) eligiblePortTypes[0], dist)).ToArray() };
                     }
 
                     // Check if the two-step rule works for this hex
                     for (int dir = 0; dir < 6; dir++)
-                        if (Enumerable.Range(0, 5).All(dist => (hex + 2 * dist * Hex.GetDirection(dir)).Distance < 5))
-                            return new { Hex = hex, PortType = (PortType?) null, Line = Enumerable.Range(0, 5).Select(dist => hex + 2 * dist * Hex.GetDirection(dir)).ToArray() };
+                        if (Enumerable.Range(0, 5).All(dist => hex.Move((Hex.Direction) dir, 2 * dist).Distance < 5))
+                            return new { Hex = hex, PortType = (PortType?) null, Line = Enumerable.Range(0, 5).Select(dist => hex.Move((Hex.Direction) dir, 2 * dist)).ToArray() };
 
                     return null;
                 }).ToArray();

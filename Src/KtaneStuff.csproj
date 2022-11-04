@@ -57,6 +57,7 @@
     <Compile Include="3DMaze.cs" />
     <Compile Include="AquaButton.cs" />
     <Compile Include="AzureButton.cs" />
+    <Compile Include="PolygonalMaze.cs" />
     <Compile Include="SapphireButton.cs" />
     <Compile Include="Charms.cs" />
     <Compile Include="DiscardedExperiments.cs" />
@@ -171,7 +172,6 @@
     <Compile Include="Zoo.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="GridGenerator.cs" />
-    <Compile Include="Hex.cs" />
     <Compile Include="Laundry.cs" />
     <Compile Include="Coordinates.cs" />
     <Compile Include="DoubleOh.cs" />
@@ -212,6 +212,10 @@
     <ProjectReference Include="..\..\..\PuzzleSolvers\Src\PuzzleSolvers.csproj">
       <Project>{beee96c6-58ac-4a55-a12c-8f42380fe532}</Project>
       <Name>PuzzleSolvers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\RT.Coordinates\RT.Coordinates.csproj">
+      <Project>{80e00597-bd8d-4c94-b112-56a09d1c0d62}</Project>
+      <Name>RT.Coordinates</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\RT.Dijkstra\Src\RT.Dijkstra.csproj">
       <Project>{1e53ea37-7c37-4185-82fd-d3bf9e4c878e}</Project>

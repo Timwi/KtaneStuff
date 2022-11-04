@@ -6,13 +6,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using KtaneStuff.Modeling;
+using RT.Coordinates;
 using RT.KitchenSink;
-using RT.Serialization;
 using RT.Util;
-using RT.Util.Collections;
-using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
+
+using PointD = RT.Coordinates.PointD;
 
 namespace KtaneStuff
 {
@@ -81,9 +80,9 @@ namespace KtaneStuff
         {
             return CreateMesh(false, true, DecodeSvgPath.Do(@"M 13,0 C 19,0 22,3 22,9 22,15 19,14 19,20 19,28 26,30 26,48 26,58 20,57 13,57", .1)
                 .FirstOrDefault()
-                .SelectConsecutivePairs(true, (p1, p2) => p1 == p2 ? (PointD?) null : p1)
+                .SelectConsecutivePairs(true, (p1, p2) => p1 == p2 ? null : p1.Nullable())
                 .Where(p => p != null)
-                .Select(p => p.Value + new PointD(-13, -57))
+                .Select(p => new PointD(p.Value.X - 13, p.Value.Y - 57))
                 .Select(p => Enumerable.Range(0, 72).Select(i => i * 360 / 72).Select(angle => pt(p.X * cos(angle), -p.Y, p.X * sin(angle))).ToArray())
                 .Reverse()
                 .ToArray());
@@ -192,7 +191,7 @@ namespace KtaneStuff
                     <svg class='legend' viewBox='-325 -375 650 750'>
                         {"red,yellow,green,cyan,blue,pink".Split(',').Select((color, i) => $"<g class='label' transform='rotate({330 + 60 * i})'><text text-anchor='middle' y='-280'>{color}</text><path d='M-124.7-150v-200M124.7-150v-200' /></g>").JoinString()}
                         <polygon class='outline' points='{Hex.LargeHexagonOutline(SubmazeSize, hexSizeFactor).Select(p => $"{p.X},{p.Y}").JoinString(" ")}' />
-                        {Hex.LargeHexagon(SubmazeSize).Select(h => h.GetCenter(hexSizeFactor)).Select(p => $"<circle class='dot' cx='{p.X}' cy='{p.Y}' r='{hexSizeFactor / 12}' />").JoinString()}
+                        {Hex.LargeHexagon(SubmazeSize).Select(h => h.Center * hexSizeFactor).Select(p => $"<circle class='dot' cx='{p.X}' cy='{p.Y}' r='{hexSizeFactor / 12}' />").JoinString()}
                     </svg>");
 
                 // Create the main maze in the manual page
@@ -203,11 +202,11 @@ namespace KtaneStuff
                 {
                     var poly = hex.GetPolygon(hexSizeFactor);
                     for (int dir = 0; dir < 3; dir++)
-                        if (hex.Distance < Size || hex.GetNeighbor(dir).Distance < Size)
+                        if (hex.Distance < Size || hex.Move((Hex.Direction) dir).Distance < Size)
                             wallsSvg.Append($"<line class='wall' id='wall-{hex.Q}-{hex.R}-{dir}' x1='{poly[dir].X}' y1='{poly[dir].Y}' x2='{poly[dir + 1].X}' y2='{poly[dir + 1].Y}' />");
                     if (hex.Distance < Size)
                     {
-                        var p = hex.GetCenter(hexSizeFactor);
+                        var p = hex.Center * hexSizeFactor;
                         markingsSvg.Append($"<circle class='dot' cx='{p.X}' cy='{p.Y}' r='{hexSizeFactor / 12}' />");
                         markingsSvg.Append($"<path class='marking' id='marking-{hex.Q}-{hex.R}' />");
                     }
@@ -226,7 +225,7 @@ namespace KtaneStuff
             File.WriteAllText(path, Regex.Replace(File.ReadAllText(path), @"(?<=<!--##-->).*(?=<!--###-->)", options: RegexOptions.Singleline, replacement: $@"
                 <polygon fill='#000' points='{Hex.LargeHexagonOutline(SubmazeSize, hexWidth).Select(p => $"{p.X + 174},{p.Y + 174}").JoinString(" ")}' />
                 {Hex.LargeHexagon(SubmazeSize)
-                    .Select(h => new { Point = h.GetCenter(hexWidth) + new PointD(174, 174) })
+                    .Select(h => new { Point = h.Center * hexWidth + new PointD(174, 174) })
                     .Select(inf => $"<circle cx='{inf.Point.X}' cy='{inf.Point.Y}' r='{hexWidth / 12}' fill='#fff' />")
                     .JoinString()}
                 {Enumerable.Range(0, 6).Select(i => i * 60).Select(angle => $@"<path fill='#000' d='M0-161l30 10h-60' transform='translate(174, 174) rotate({angle})'/>").JoinString()}

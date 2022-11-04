@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using BlueButtonLib;
 using RT.PostBuild;
 
 [assembly: AssemblyTitle("KtaneStuff")]
@@ -31,7 +32,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            AzureButton.GenerateArrows();
+            PolygonalMaze.Generate();
 
 
             Console.WriteLine("Done.");

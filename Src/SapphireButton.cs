@@ -354,7 +354,6 @@ namespace KtaneStuff
                 }
                 Console.Write($"{solWord} reiterate {++reiterate}\r");
             }
-            next:;
         }
     }
 }
