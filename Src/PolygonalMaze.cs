@@ -45,7 +45,7 @@ namespace KtaneStuff
                 ("Cairo", typeof(Cairo), typeof(Cairo.Vertex), Cairo.Rectangle(4, 4).Cast<object>()),
                 ("Penrose P3", typeof(P3Wrapper), typeof(P3Wrapper.P3Vertex), Enumerable.Range(0, 6)
                     .Select(a => new Penrose(Penrose.Kind.ThickRhomb, default, 2 * a))
-                    .SelectMany(c => c.DeflatedTiles).SelectMany(c => c.DeflatedTiles).SelectMany(c => c.DeflatedTiles).SelectMany(c => c.DeflatedTiles)
+                    .SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct()
                     .Where(c => c.Vertices.All(v => v.Point.Distance < ph / 6 / p3Factor)).Select(c => new P3Wrapper(c)).Cast<object>()),
                 ("Square", typeof(RT.Coordinates.Coord), typeof(RT.Coordinates.Coord.Vertex), RT.Coordinates.Coord.Rectangle(9, 8).Cast<object>()),
                 ("OctoCell", typeof(OctoCell), typeof(OctoCell.Vertex), OctoCell.Rectangle(7, 6).Cast<object>()),
@@ -55,35 +55,60 @@ namespace KtaneStuff
                 ("Tri", typeof(Tri), typeof(Tri.Vertex), Tri.LargeHexagon(3).Cast<object>()),
                 ("Penrose P2", typeof(Penrose), typeof(Penrose.Vertex), Enumerable.Range(0, 6)
                     .Select(a => new Penrose(Penrose.Kind.Dart, new Penrose.Vector(-1, 1, -1, 1).DivideByPhi.Rotate(2 * a), 2 * a))
-                    .SelectMany(c => c.DeflatedTiles).SelectMany(c => c.DeflatedTiles).SelectMany(c => c.DeflatedTiles).SelectMany(c => c.DeflatedTiles)
+                    .SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct()
                     .Where(c => c.Vertices.All(v => v.Point.Distance < ph / 6 / p2Factor)).Cast<object>()),
-                ("Kite", typeof(Kite), typeof(Kite.Vertex), Kite.LargeHexagon(3).Cast<object>()),
+                ("Kite", typeof(Kite), typeof(Kite.Vertex), Kite.LargeHexagon(2).Cast<object>()),
                 ("Rhomb", typeof(Rhomb), typeof(Rhomb.Vertex), Rhomb.LargeHexagon(3).Cast<object>())
             );
+            var allCells = info.SelectMany(inf => inf.cells).ToArray();
 
-            var structure = new Structure<object>(info.SelectMany(c => c.cells),
-                getNeighbors: obj => obj is CircularCell cc ? cc.FindNeighbors(circularCells) : ((INeighbor<object>) obj).Neighbors
-            );
+            var structure = new Structure<object>(allCells, getNeighbors: obj => obj is CircularCell cc ? cc.FindNeighbors(circularCells) : ((INeighbor<object>) obj).Neighbors);
+
+            void connectStr(int[] arr1, int[] arr2) { for (var i = 0; i < arr1.Length; i++) structure.AddLink(allCells[arr2[i]], allCells[arr1[i]]); }
+            void connect(string str1, string str2) => connectStr(str1.Split(',').Select(int.Parse).ToArray(), str2.Split(',').Select(int.Parse).ToArray());
+
+            connect("0,1,2,3,8,14,21", "37,40,53,56,69,72,85");    // Hex ⇒ Cairo
+            connect("263,265,267,36,32,27", "33,34,35,269,271,273");   // Hex ⇒ OctoCell
+            connect("88,87,92,91,96,95,100,99", "365,366,367,359,346,347,336,337");    // Cairo ⇒ Rhombihexadel
+            connect("275,288,301,314,327,334", "364,389,388,386,385,395");  // OctoCell ⇒ Rhombihexadel
+            connect("50,51,66,67,82,83,98", "106,140,147,165,167,168,175");    // OctoCell ⇒ Penrose P3
+            connect("108,126,148,149,151,152,159,176", "191,200,209,218,227,236,245,254");     // Penrose P3 ⇒ Square
+            connect("189,188,187,180,179,177", "401,396,397,407,402,403");  // Penrose P3 ⇒ Floret
+            connect("255,256,257,258,259,260,261,262", "482,483,484,485,462,463,464,465");  // Square ⇒ Circular
+            connect("404,420,421,422,423,433", "481,480,479,478,477,476");  // Floret ⇒ Circular
+            connect("338,349,350,351,352,353,375", "400,408,413,412,411,431,430");  // Rhombihexadel ⇒ Floret
+            connect("328,329,330,331,332,333", "500,486,488,492,496,498");  // OctoCell ⇒ Tri
+            connect("516,538,539,517,499", "583,582,566,565,575");  // Tri ⇒ Penrose P2
+            connect("393,392,391,379,378,377", "579,580,593,594,587,588");  // Rhombihexadel ⇒ Penrose P2
+            connect("429,428,436,435,434", "612,607,599,600,595");  // Floret ⇒ Kite
+            connect("591,590,548,549,572", "611,610,629,628,634");  // Penrose P2 ⇒ Kite
+            connect("475,474,473,472,471,470", "660,658,648,646,639,637");  // Circular ⇒ Rhomb
+            connect("596,606,601,602,619,620", "675,687,686,690,689,693");  // Kite ⇒ Rhomb
 
             var mid = new PointD(pw / 4, ph / 6);
 
+            PointD GetVertexPoint(Vertex v) => (
+                v is Hex.Vertex ? v.Point.RotateDeg(30) * 1.4 + mid :
+                v is Floret.Vertex ? v.Point.RotateDeg(-30) + mid :
+                v is RT.Coordinates.Coord.Vertex ? (v.Point - mid) * .95 + mid :
+                v is Cairo.Vertex ? (v.Point + new PointD(.5, 0) - mid) * .9 + mid :
+                v is OctoCell.Vertex ? v.Point * 1.25 + new PointD(.125, .25) :
+                v is Tri.Vertex ? (v.Point + new PointD(.75, 0.10288568297002608956324573161177) - mid) * .975 + mid :
+                v is Kite.Vertex ? v.Point.RotateDeg(30) * 1.5 + mid :
+                v is Rhomb.Vertex ? v.Point.RotateDeg(30) * .95 + mid :
+                v is Rhombihexadel.Vertex ? v.Point.RotateDeg(30) * .9 + mid :
+                v is Penrose.Vertex ? v.Point * p2Factor + mid :
+                v is P3Wrapper.P3Vertex ? v.Point * p3Factor + mid :
+                v is CircularCell.Vx ? v.Point + mid :
+                v.Point
+            ) + info.IndexOf(tup => tup.vertexType.Equals(v.GetType())).Apply(ix => new PointD(pw / 2 * (ix % 4), ph / 3 * (ix / 4)));
+
+            IEnumerable<Link<Vertex>> GetEdges(object c) => c is CircularCell cc ? cc.FindEdges(circularCells) : ((IHasSvgGeometry) c).Edges;
+
             var svg = structure.Svg(new SvgInstructions
             {
-                GetVertexPoint = v => (
-                        v is Hex.Vertex ? v.Point.RotateDeg(30) * 1.4 + mid :
-                        v is Floret.Vertex ? v.Point.RotateDeg(-30) + mid :
-                        v is RT.Coordinates.Coord.Vertex ? (v.Point - mid) * .95 + mid :
-                        v is Cairo.Vertex ? (v.Point + new PointD(.5, 0) - mid) * .9 + mid :
-                        v is OctoCell.Vertex ? v.Point * 1.25 + new PointD(.125, .25) :
-                        v is Tri.Vertex ? (v.Point + new PointD(.75, 0.10288568297002608956324573161177) - mid) * .975 + mid :
-                        v is Kite.Vertex ? v.Point.RotateDeg(30) * .95 + mid :
-                        v is Rhomb.Vertex ? v.Point.RotateDeg(30) * .95 + mid :
-                        v is Rhombihexadel.Vertex ? v.Point.RotateDeg(30) * .9 + mid :
-                        v is Penrose.Vertex ? v.Point * p2Factor + mid :
-                        v is P3Wrapper.P3Vertex ? v.Point * p3Factor + mid :
-                        v is CircularCell.Vx ? v.Point + mid :
-                        v.Point
-                    ) + info.IndexOf(tup => tup.vertexType.Equals(v.GetType())).Apply(ix => new PointD(pw / 2 * (ix % 4), ph / 3 * (ix / 4))),
+                GetVertexPoint = GetVertexPoint,
+                GetEdges = GetEdges,
                 GetCenter = c => (
                         c is Hex h ? h.Center.RotateDeg(30) * 1.4 + mid :
                         c is Floret f ? f.Center.RotateDeg(-30) + mid :
@@ -91,7 +116,7 @@ namespace KtaneStuff
                         c is Cairo ca ? (ca.Center + new PointD(.5, 0) - mid) * .9 + mid :
                         c is OctoCell o ? o.Center * 1.25 + new PointD(.125, .25) :
                         c is Tri t ? (t.Center + new PointD(.75, 0.10288568297002608956324573161177) - mid) * .975 + mid :
-                        c is Kite k ? k.Center.RotateDeg(30) * .95 + mid :
+                        c is Kite k ? k.Center.RotateDeg(30) * 1.5 + mid :
                         c is Rhomb r ? r.Center.RotateDeg(30) * .95 + mid :
                         c is Rhombihexadel rh ? rh.Center.RotateDeg(30) * .9 + mid :
                         c is Penrose p ? p.Center * p2Factor + mid :
@@ -102,13 +127,37 @@ namespace KtaneStuff
                 SvgAttributes = "xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 38 26' xviewBox='{0} {1} {2} {3}' font-size='.2' text-anchor='middle'",
                 ExtraSvg1 = "<g fill='none' stroke='black' stroke-width='.05'><rect x='0' y='0' width='18' height='24' /><rect x='18' y='0' width='18' height='24' /></g>" +
                     "<path fill='none' stroke='black' stroke-width='.02' d='M0 8h36M0 16h36M9 0v24M27 0v24' />",
-                ExtraSvg4 = info.Select((tup, ix) => $"<text x='{(ix % 4) * pw / 2 + .1}' y='{(ix / 4) * ph / 3 + (.5 * .7) + .1}' font-size='.5' text-anchor='start' stroke='hsl(60, 80%, 90%)' stroke-width='.1' stroke-linejoin='round' paint-order='stroke'>{tup.name}</text>").JoinString(),
-                GetEdges = c => c is CircularCell cc ? cc.FindEdges(circularCells) : null,
                 PerCell = c => $"<circle r='.1' fill='black' fill-opacity='.2' />",
-                PassagesPath = d => $"<path d='{d}' fill='none' stroke-width='.02' stroke='#aaa' stroke-dasharray='.1' />"
+                PassagesSeparate = true,
+                PassagesPaths = (d, c1, c2) => $"<path data-from='{allCells.IndexOf(c1)}' data-to='{allCells.IndexOf(c2)}' d='{d}' fill='none' stroke-width='.02' stroke='#aaa' stroke-dasharray='.1' />",
+                ExtraSvg4 = info.Select((tup, ix) => $"<text x='{(ix % 4) * pw / 2 + .1}' y='{(ix / 4) * ph / 3 + (.5 * .7) + .1}' font-size='.5' text-anchor='start' stroke='hsl(60, 80%, 90%)' stroke-width='.1' stroke-linejoin='round' paint-order='stroke'>{tup.name}</text>").JoinString() +
+                    allCells.Select((cell, ix) => $"<path d='{GridUtils.SvgEdgesPath(GetEdges(cell), GetVertexPoint)}' class='highlightable' fill='transparent' data-cell='{ix}' />").JoinString()
             });
 
-            File.WriteAllText(@"D:\temp\temp.svg", svg);
+            File.WriteAllText(@"D:\temp\temp.html", $@"
+                <html>
+                    <head>
+                        <title>Polygonal Maze planning</title>
+                        <style>
+                            svg {{ width: 100%; }}
+                        </style>
+                    </head>
+                    <body>
+                        {svg}
+                        <script>
+                            let ids = [];
+                            Array.from(document.querySelectorAll('svg path.highlightable')).forEach(cell => {{
+                                let id = +cell.dataset.cell;
+                                cell.onclick = function()
+                                {{
+                                    ids.push(id);
+                                    console.log(ids.join(','));
+                                }};
+                            }});
+                        </script>
+                    </body>
+                </html>
+            ");
         }
 
         class P3Wrapper : INeighbor<P3Wrapper>, INeighbor<object>, IHasSvgGeometry, IEquatable<P3Wrapper>
@@ -121,7 +170,7 @@ namespace KtaneStuff
             public override int GetHashCode() => unchecked(~Tile.GetHashCode());
             public IEnumerable<P3Wrapper> Neighbors => Tile.Neighbors.Select(n => new P3Wrapper(n));
             IEnumerable<object> INeighbor<object>.Neighbors => Neighbors.Cast<object>();
-            public IEnumerable<Link<Vertex>> Edges => Tile.Edges.Select(e => new Link<Vertex>(new P3Vertex((Penrose.Vertex) e.Cells.First()), new P3Vertex((Penrose.Vertex) e.Cells.Last())));
+            public IEnumerable<Link<Vertex>> Edges => Tile.Edges.Select(e => new Link<Vertex>(new P3Vertex((Penrose.Vertex) e.Apart(out var other)), new P3Vertex((Penrose.Vertex) other)));
             public PointD Center => Tile.Center;
 
             public class P3Vertex : Vertex
