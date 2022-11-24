@@ -158,8 +158,11 @@ namespace KtaneStuff
                 }
             svg = $"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 11 11' fill='none' stroke-width='.05' stroke='black' stroke-linecap='round'>{grayLines}{blackLines}</svg>";
             File.WriteAllText(@"D:\Daten\Puzzles\Logic puzzles\Sudoku Maze (puzzle).svg", svg);
-            return;
+            //GenerateGivens(rnd, allValues);
+        }
 
+        private static void GenerateGivens(Random rnd, (int cell, int mask, int value)[] allValues)
+        {
             Console.WriteLine("Generating givens...");
             var givensIxs = Ut.ReduceRequiredSet(Enumerable.Range(0, allValues.Length).ToArray().Shuffle(rnd), skipConsistencyTest: true, test: state =>
             {

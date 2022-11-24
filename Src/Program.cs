@@ -32,7 +32,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            PolygonalMaze.Generate();
+            MarbleTumble.Solver();
 
 
             Console.WriteLine("Done.");

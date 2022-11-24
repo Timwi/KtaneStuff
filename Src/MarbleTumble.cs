@@ -185,14 +185,12 @@ namespace KtaneStuff
         public static void GenerateComponentSvg()
         {
             var path = @"D:\c\KTANE\Public\HTML\img\Component\Marble Tumble.svg";
-            Utils.ReplaceInFile(path, @"<!--%%-->", @"<!--%%%-->", Enumerable.Range(0, 5).Select(ix => $@"<path d='M {
-                (Rnd.Next(0, 10) * Math.PI / 5).Apply(angle =>
-                    CylinderPolygon(ix + .5, ix + 1.5, _marbleSize, _marbleSize, (360 / _numNotches) * Rnd.Next(_gapTrapMins[ix], _gapTrapMaxs[ix] + 1), 0)
-                        .Select(tup => tup.p.Rotated(angle))
-                        .Select(p => p * 300 / 11 + new PointD(166, 348 - 166))
-                        .Select(tup => $"{tup.X},{tup.Y}")
-                        .JoinString(" "))
-            } z' stroke-width='1' stroke='#000' fill='{Rnd.Next(64, 255).Apply(shade => $"#{shade.ToString("X2")}{shade.ToString("X2")}{shade.ToString("X2")}")}' />").JoinString());
+            Utils.ReplaceInFile(path, @"<!--%%-->", @"<!--%%%-->", Enumerable.Range(0, 5).Select(ix => $@"<path d='M {(Rnd.Next(0, 10) * Math.PI / 5).Apply(angle =>
+                                                                                                                          CylinderPolygon(ix + .5, ix + 1.5, _marbleSize, _marbleSize, (360 / _numNotches) * Rnd.Next(_gapTrapMins[ix], _gapTrapMaxs[ix] + 1), 0)
+                                                                                                                              .Select(tup => tup.p.Rotated(angle))
+                                                                                                                              .Select(p => p * 300 / 11 + new PointD(166, 348 - 166))
+                                                                                                                              .Select(tup => $"{tup.X},{tup.Y}")
+                                                                                                                              .JoinString(" "))} z' stroke-width='1' stroke='#000' fill='{Rnd.Next(64, 255).Apply(shade => $"#{shade.ToString("X2")}{shade.ToString("X2")}{shade.ToString("X2")}")}' />").JoinString());
         }
 
         public static void GenerateLogfileAnalyzerSvgs()
@@ -319,7 +317,7 @@ namespace KtaneStuff
             try
             {
                 var result = DijkstrasAlgorithm.Run(new DijNode(gaps.Reverse().ToArray(), gaps.Zip(traps, (g, t) => t - g).Reverse().ToArray(), colorIxs, 5, -1), 0, (a, b) => a + b, out var totalWeight);
-                Console.WriteLine(result.JoinString("\n"));
+                Console.WriteLine(result.Select(step => step.Label).JoinString("\n"));
                 Console.WriteLine($"Total weight: {totalWeight}");
             }
             catch (DijkstraNoSolutionException<int, string> e)

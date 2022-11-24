@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RT.Util;
-using System;
 using KtaneStuff.Modeling;
+using RT.Util;
 
 namespace KtaneStuff
 {
