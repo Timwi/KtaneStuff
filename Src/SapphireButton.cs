@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using BlueButtonLib;
 using PuzzleSolvers;
 using RT.TagSoup;
 using RT.Util;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using RT.Json;
 using RT.Serialization;
@@ -47,7 +48,7 @@ namespace KtaneStuff
                 (pid: "1k2LlhY-BBJQImEHo_S51L_okPiOee6xgdk5mkVwn2ZU", skipSheets: 1, category: "unsolved"),
                 (pid: "1pzoatn2mX1gtKurxt1OBejbutTrKq0kqO9dNohnu33Q", skipSheets: 1, category: "tp"));
 
-            var missions = redownloadMainSheets ? spreadsheets.ParallelSelectMany(spreadsheet => new HClient().Get($"https://spreadsheets.google.com/feeds/worksheets/{spreadsheet.pid}/public/full?alt=json").DataJson["feed"]["entry"].GetList().Skip(spreadsheet.skipSheets).Select(obj =>
+            var missions = redownloadMainSheets ? spreadsheets.ParallelSelectMany(spreadsheet => JsonDict.Parse(new HttpClient().GetStringAsync($"https://spreadsheets.google.com/feeds/worksheets/{spreadsheet.pid}/public/full?alt=json").Result)["feed"]["entry"].GetList().Skip(spreadsheet.skipSheets).Select(obj =>
             {
                 string urltag = null;
                 Match m;
@@ -66,7 +67,7 @@ namespace KtaneStuff
                 if (mission.ModuleIDs != null)
                     return;
                 Console.WriteLine($"Downloading {mission.Title}");
-                var result = new HClient().Get($"https://spreadsheets.google.com/feeds/cells/{mission.Pid}/{mission.Cid}/public/full?alt=json").DataJson;
+                var result = JsonDict.Parse(new HttpClient().GetStringAsync($"https://spreadsheets.google.com/feeds/cells/{mission.Pid}/{mission.Cid}/public/full?alt=json").Result);
                 var moduleIds = new HashSet<string>();
                 Match m;
                 foreach (var obj in result["feed"]["entry"].GetList())

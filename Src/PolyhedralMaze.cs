@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -910,7 +911,7 @@ namespace PolyhedralMaze
                 "http://dmccooey.com/polyhedra/Derived.html"
             ))
             {
-                var response = new HClient().Get(htmlFile);
+                var response = new HttpClient().GetAsync(htmlFile).Result;
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     ConsoleUtil.WriteLine("{0/Red} ({1/DarkRed} {2/DarkRed})".Color(ConsoleColor.DarkRed).Fmt(htmlFile, (int) response.StatusCode, response.StatusCode));
@@ -918,7 +919,7 @@ namespace PolyhedralMaze
                 }
                 ConsoleUtil.WriteLine(htmlFile.Color(ConsoleColor.Green));
 
-                var doc = CQ.CreateDocument(response.DataString);
+                var doc = CQ.CreateDocument(response.Content.ReadAsStringAsync().Result);
                 var lockObj = new object();
                 doc["a"].ParallelForEach(elem =>
                 {
@@ -926,7 +927,7 @@ namespace PolyhedralMaze
                     if (href == null || href.StartsWith("http") || !href.EndsWith(".html"))
                         return;
                     var filename = href.Replace(".html", ".txt");
-                    var resp = new HClient().Get($"http://dmccooey.com/polyhedra/{filename}");
+                    var resp = new HttpClient().GetAsync($"http://dmccooey.com/polyhedra/{filename}").Result;
                     if (resp.StatusCode != System.Net.HttpStatusCode.OK)
                     {
                         lock (lockObj)
@@ -935,7 +936,7 @@ namespace PolyhedralMaze
                     }
                     lock (lockObj)
                     {
-                        File.WriteAllText($@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Txt\{filename}", resp.DataString);
+                        File.WriteAllText($@"D:\c\KTANE\KtaneStuff\DataFiles\PolyhedralMaze\Txt\{filename}", resp.Content.ReadAsStringAsync().Result);
                         ConsoleUtil.WriteLine(" • {0/DarkGreen}".Color(ConsoleColor.DarkGray).Fmt(href));
                     }
                 });

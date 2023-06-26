@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using RT.Serialization;
@@ -15,7 +16,7 @@ namespace KtaneStuff
     {
         public static void GetPlayers()
         {
-            var h = new HClient();
+            var h = new HttpClient();
             var allData = new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, int>>>>();
             foreach (var tournament in new[] { "Wimbledon Championships", "US Open", "French Open" })
             {
@@ -33,8 +34,7 @@ namespace KtaneStuff
                             try
                             {
                                 Console.WriteLine($"Downloading: {tournament} {year} ({(isMale ? "M" : "W")})");
-                                var raw = h.Get($@"https://en.wikipedia.org/w/index.php?title={year}_{tournament.Replace(' ', '_')}_%E2%80%93_{(isMale ? "Men" : "Women")}%27s_Singles&action=raw");
-                                data = raw.DataString;
+                                data = h.GetStringAsync($@"https://en.wikipedia.org/w/index.php?title={year}_{tournament.Replace(' ', '_')}_%E2%80%93_{(isMale ? "Men" : "Women")}%27s_Singles&action=raw").Result;
                                 write = true;
                             }
                             catch (Exception e)

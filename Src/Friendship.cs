@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using CsQuery;
 using KtaneStuff.Modeling;
@@ -233,9 +234,7 @@ XXXX#########".Replace("\r", "").Substring(1).Split('\n').Select(row => row.Reve
                 var pony = kvp.Key;
                 try
                 {
-                    var client = new HClient();
-                    var response = client.Get(@"http://mlp.wikia.com/wiki/" + pony.Replace(' ', '_'));
-                    var str = response.DataString;
+                    var str = new HttpClient().GetStringAsync(@"http://mlp.wikia.com/wiki/" + pony.Replace(' ', '_')).Result;
                     var doc = CQ.CreateDocument(str);
                     var infoboxes = doc["table.infobox"];
                     string color = null;

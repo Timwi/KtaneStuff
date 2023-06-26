@@ -148,6 +148,7 @@
     <Compile Include="SimonSpeaks.cs" />
     <Compile Include="SimonSpins.cs" />
     <Compile Include="SimonStacks.cs" />
+    <Compile Include="SlowMath.cs" />
     <Compile Include="StreetFighter.cs" />
     <Compile Include="SymbolCycle.cs" />
     <Compile Include="SymbolicCoordinates.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="TheYellowButton.cs" />
     <Compile Include="TimwiStats.cs" />
     <Compile Include="ToonEnough.cs" />
+    <Compile Include="TpExtravaganza.cs" />
     <Compile Include="Translatable.cs" />
     <Compile Include="MarbleTumble.cs" />
     <Compile Include="UltimateCipher.cs" />
@@ -256,14 +258,6 @@
     <ProjectReference Include="..\..\..\RT.Util\RT.Util\RT.Util.csproj">
       <Project>{e9fb021e-c4e9-4a87-b81c-9607af2c145d}</Project>
       <Name>RT.Util</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\BunchOfButtons\Lib\BlueButtonLib.csproj">
-      <Project>{4c3c8d4a-c793-467e-b02a-2adc1937a9ff}</Project>
-      <Name>BlueButtonLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CompressionCiphers\Lib\CipherModulesLib.csproj">
-      <Project>{5a8a8cf4-0cb8-46c8-90d2-45d28ea7211f}</Project>
-      <Name>CipherModulesLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

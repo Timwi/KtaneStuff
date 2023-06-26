@@ -1,6 +1,7 @@
 ﻿using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using Microsoft.CSharp;
 using RT.Util;
@@ -12,7 +13,7 @@ namespace KtaneStuff
     {
         public static void MakeGoodsheet()
         {
-            var phrasesFile = new HClient().Get(@"https://raw.githubusercontent.com/Blananas2/ktane-jackAttack/master/Assets/PhraseList.cs").DataString;
+            var phrasesFile = new HttpClient().GetStringAsync(@"https://raw.githubusercontent.com/Blananas2/ktane-jackAttack/master/Assets/PhraseList.cs").Result;
             var csc = new CSharpCodeProvider();
             var parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.Core.dll" });
             parameters.GenerateInMemory = true;

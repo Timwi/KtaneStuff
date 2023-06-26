@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -138,7 +139,7 @@ namespace KtaneStuff
             list.Add(new { Module = "No particular module", LOC = 0L, LOC2 = allExtraFiles.Select(f => f.Length).Sum(), Manual = 0L });
 
             // Copy Excel data to clipboard
-            Clipboard.SetText(list.Select(inf => $"{ inf.Module}\t{inf.LOC}\t{inf.LOC2}\t{inf.Manual}").JoinString("\n"));
+            Clipboard.SetText(list.Select(inf => $"{inf.Module}\t{inf.LOC}\t{inf.LOC2}\t{inf.Manual}").JoinString("\n"));
         }
 
         public static void UpdateModuleIconsHtml()
@@ -165,7 +166,7 @@ namespace KtaneStuff
             Utils.ReplaceInFile(@"D:\Daten\Upload\KTANE\Modules.html", "/*w_s*/", "/*w_e*/", $"{35 * w}px");
         }
 
-        public static JsonList GetLiveJson() => new HClient().Get(@"https://ktane.timwi.de/json/raw").DataJson["KtaneModules"].GetList();
+        public static JsonList GetLiveJson() => JsonDict.Parse(new HttpClient().GetStringAsync(@"https://ktane.timwi.de/json/raw").Result)["KtaneModules"].GetList();
 
         private static void AllComponentSvgsExperimentForTabletop(IEnumerable<string> moduleNames)
         {

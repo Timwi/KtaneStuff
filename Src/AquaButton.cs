@@ -36,69 +36,69 @@ k=13 l=123 m=134 n=1345 o=135 p=1234 q=12345 r=1235 s=234 t=2345 u=136 v=1236 w=
 
         public static void Experiment()
         {
-            var dic = GetNonogramCombinations();
-            var possibilities = dic.Keys.ToArray();
+            //var dic = GetNonogramCombinations();
+            //var possibilities = dic.Keys.ToArray();
 
-            var data = new CipherModulesLib.Data();
-            var rnd = new Random(6);
-            while (true)
-            {
-                var word = data.ChooseWord(6, 6, rnd);
-                var bitmap = new bool[6 * 6];
-                for (var i = 0; i < word.Length; i++)
-                    for (var dot = 0; dot < 6; dot++)
-                        bitmap[2 * (i % 3) + (dot / 3) + 6 * (3 * (i / 3) + (dot % 3))] = BrailleBits[word[i] - 'A'][dot];
+            //var data = new CipherModulesLib.Data();
+            //var rnd = new Random(6);
+            //while (true)
+            //{
+            //    var word = data.ChooseWord(6, 6, rnd);
+            //    var bitmap = new bool[6 * 6];
+            //    for (var i = 0; i < word.Length; i++)
+            //        for (var dot = 0; dot < 6; dot++)
+            //            bitmap[2 * (i % 3) + (dot / 3) + 6 * (3 * (i / 3) + (dot % 3))] = BrailleBits[word[i] - 'A'][dot];
 
-                //for (var row = 0; row < 6; row++)
-                //    Console.WriteLine(Enumerable.Range(0, 6).Select(col => bitmap[col + 6 * row] ? "██" : "░░").JoinString());
+            //    //for (var row = 0; row < 6; row++)
+            //    //    Console.WriteLine(Enumerable.Range(0, 6).Select(col => bitmap[col + 6 * row] ? "██" : "░░").JoinString());
 
-                //Console.WriteLine();
+            //    //Console.WriteLine();
 
-                var nonogramClues = "";
-                // columns
-                for (var col = 0; col < 6; col++)
-                    nonogramClues += nonogramClue(Enumerable.Range(0, 6).Select(y => bitmap[col + 6 * y]));
-                // rows
-                for (var row = 0; row < 6; row++)
-                    nonogramClues += nonogramClue(Enumerable.Range(0, 6).Select(x => bitmap[x + 6 * row]));
+            //    var nonogramClues = "";
+            //    // columns
+            //    for (var col = 0; col < 6; col++)
+            //        nonogramClues += nonogramClue(Enumerable.Range(0, 6).Select(y => bitmap[col + 6 * y]));
+            //    // rows
+            //    for (var row = 0; row < 6; row++)
+            //        nonogramClues += nonogramClue(Enumerable.Range(0, 6).Select(x => bitmap[x + 6 * row]));
 
-                IEnumerable<string[]> recurse(string[] sofar, int[] remaining)
-                {
-                    if (remaining.Length == 0 && sofar.Length == 12)
-                    {
-                        yield return sofar;
-                        yield break;
-                    }
-                    if (remaining.Length == 0 || sofar.Length == 12)
-                        yield break;
+            //    IEnumerable<string[]> recurse(string[] sofar, int[] remaining)
+            //    {
+            //        if (remaining.Length == 0 && sofar.Length == 12)
+            //        {
+            //            yield return sofar;
+            //            yield break;
+            //        }
+            //        if (remaining.Length == 0 || sofar.Length == 12)
+            //            yield break;
 
-                    foreach (var poss in possibilities)
-                        if (remaining.Take(poss.Length).SequenceEqual(poss.Select(ch => ch - '0')))
-                            foreach (var result in recurse(sofar.Insert(sofar.Length, poss), remaining.Remove(0, poss.Length)))
-                                yield return result;
-                }
+            //        foreach (var poss in possibilities)
+            //            if (remaining.Take(poss.Length).SequenceEqual(poss.Select(ch => ch - '0')))
+            //                foreach (var result in recurse(sofar.Insert(sofar.Length, poss), remaining.Remove(0, poss.Length)))
+            //                    yield return result;
+            //    }
 
-                var total = 0;
-                foreach (var combinations in recurse(new string[0], nonogramClues.Select(ch => ch - '0').ToArray()))
-                {
-                    var allSolutions = solveNonogram(combinations.Select(str => dic[str]).ToArray()).ToArray();
-                    var numSolutions = allSolutions.Length;
-                    //if (allSolutions.Length > 0)
-                    //{
-                    //    ConsoleUtil.WriteLine($"{combinations.JoinString(" | ")} = {numSolutions}".Color(numSolutions == 0 ? ConsoleColor.DarkRed : numSolutions == 1 ? ConsoleColor.Green : ConsoleColor.Magenta));
-                    //    ConsoleUtil.WriteLine(outputGrid(allSolutions[0]) + "\n");
-                    //}
-                    total += numSolutions;
-                }
-                //ConsoleUtil.WriteLine($"{word} = {total}".Color(total == 0 ? ConsoleColor.DarkRed : total == 1 ? ConsoleColor.Green : ConsoleColor.Magenta));
-                if (total == 1)
-                {
-                    Console.WriteLine(nonogramClues);
-                    Console.ReadLine();
-                    Console.WriteLine(word);
-                    break;
-                }
-            }
+            //    var total = 0;
+            //    foreach (var combinations in recurse(new string[0], nonogramClues.Select(ch => ch - '0').ToArray()))
+            //    {
+            //        var allSolutions = solveNonogram(combinations.Select(str => dic[str]).ToArray()).ToArray();
+            //        var numSolutions = allSolutions.Length;
+            //        //if (allSolutions.Length > 0)
+            //        //{
+            //        //    ConsoleUtil.WriteLine($"{combinations.JoinString(" | ")} = {numSolutions}".Color(numSolutions == 0 ? ConsoleColor.DarkRed : numSolutions == 1 ? ConsoleColor.Green : ConsoleColor.Magenta));
+            //        //    ConsoleUtil.WriteLine(outputGrid(allSolutions[0]) + "\n");
+            //        //}
+            //        total += numSolutions;
+            //    }
+            //    //ConsoleUtil.WriteLine($"{word} = {total}".Color(total == 0 ? ConsoleColor.DarkRed : total == 1 ? ConsoleColor.Green : ConsoleColor.Magenta));
+            //    if (total == 1)
+            //    {
+            //        Console.WriteLine(nonogramClues);
+            //        Console.ReadLine();
+            //        Console.WriteLine(word);
+            //        break;
+            //    }
+            //}
         }
 
         public static void TestNonogramSolver()
