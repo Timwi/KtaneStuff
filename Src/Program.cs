@@ -34,7 +34,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            TpExtravaganza.FindPopularKtaneTpModules();
+            Souvenir.GenerateContributorsMd();
 
 
             Console.WriteLine("Done.");
