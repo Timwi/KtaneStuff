@@ -16,17 +16,17 @@ namespace KtaneStuff
 {
     using static Md;
 
-    static class ProperPassword
+    static class Puzzword
     {
         public static void CreateSymbolTextures()
         {
-            var svg = @"D:\c\KTANE\KtaneStuff\DataFiles\ProperPassword\Symbols.svg";
+            var svg = @"D:\c\KTANE\KtaneStuff\DataFiles\Puzzword\Symbols.svg";
             var threads = new List<Thread>();
             void export(string area, int size, string filename)
             {
                 var thread = new Thread(() =>
                 {
-                    var cmd = $@"D:\Inkscape\inkscape.exe ""--export-png=D:\c\KTANE\ProperPassword\Assets\Symbols\{filename}"" --export-area={area} --export-width={size} --export-height={size} ""{svg}""";
+                    var cmd = $@"D:\Inkscape\inkscape.exe ""--export-png=D:\c\KTANE\Puzzword\Assets\Symbols\{filename}"" --export-area={area} --export-width={size} --export-height={size} ""{svg}""";
                     Console.WriteLine(cmd);
                     CommandRunner.RunRaw(cmd).Go();
                 });
@@ -78,7 +78,7 @@ namespace KtaneStuff
 ]]"));
             var polygons = polygons3d.Select(poly => poly.Select(pt => p(pt.X, pt.Z)).ToList()).ToList();
 
-            foreach (var path in XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\ProperPassword\Design.svg")).Root.Descendants().Where(e => e.Name.LocalName == "path"))
+            foreach (var path in XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\Puzzword\Design.svg")).Root.Descendants().Where(e => e.Name.LocalName == "path"))
                 foreach (var polygon in DecodeSvgPath.Do(path.AttributeI("d").Value, .1))
                     polygons.Add(polygon.Select(pt => pt / 100 - new PointD(0, 1)).ToList());
 
@@ -88,7 +88,7 @@ namespace KtaneStuff
                 polygons.SelectMany(poly => poly),
                 polygons.SelectMany(poly => poly.SelectConsecutivePairs(closed: true, selector: (p1, p2) => new EdgeD(p1, p2))));
 
-            var json = JsonDict.Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\ProperPassword\MeshEdit.Settings.bak.json"));
+            var json = JsonDict.Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\Puzzword\MeshEdit.Settings.bak.json"));
             foreach (var polygon in result)
             {
                 var face = new JsonList();
