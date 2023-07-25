@@ -279,10 +279,31 @@ namespace KtaneStuff
                             Debugger.Break();
                         if (next.Contains(v1))
                             (v1, v2) = (v2, v1);
-                        var p1 = GetVertexPoint(v1);
-                        var p2 = GetVertexPoint(v2);
-                        var midP = ((p1 + p2) / 2 - (max + min) / 2) / cellSize * (.09 / .7);
-                        var angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI;
+
+                        PointD midP;
+                        double angle;
+                        if (v1 is CircularCell.Vertex cv1 && v2 is CircularCell.Vertex cv2 && cv1.Radius == cv2.Radius)
+                        {
+                            var offset = GetVertexPoint(cv1) - cv1.Point;
+                            var cv1Pos = cv1.Position + 0d;
+                            var cv2Pos = cv2.Position + 0d;
+                            if (cv2Pos < cv1Pos)
+                                cv2Pos += 1;
+                            var midPos = (cv1Pos + cv2Pos) / 2;
+                            midP = offset + new PointD(
+                                cv1.Radius * Math.Cos(Math.PI * (2d * midPos - .5)),
+                                cv1.Radius * Math.Sin(Math.PI * (2d * midPos - .5)));
+                            angle = 360 * midPos;
+                        }
+                        else
+                        {
+                            var p1 = GetVertexPoint(v1);
+                            var p2 = GetVertexPoint(v2);
+                            midP = (p1 + p2) / 2;
+                            angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI;
+                        }
+                        midP -= (max + min) / 2;
+                        midP *= 0.128572 / cellSize;
                         transitions.AddSafe(fromCellIx, $"new Transition({toCellIx}, {midP.X}f, {midP.Y}f, {angle}f)");
                     }
                 }
