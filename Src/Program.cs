@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using RT.PostBuild;
-using RT.Util.ExtensionMethods;
 
 [assembly: AssemblyTitle("KtaneStuff")]
 [assembly: AssemblyDescription("Contains some ancillary code used in the creation of some Keep Talking and Nobody Explodes mods.")]
@@ -34,7 +31,8 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            Souvenir.GenerateContributorsMd();
+            CrazyMaze.Generate();
+            //Souvenir.GenerateContributorsMd();
 
 
             Console.WriteLine("Done.");

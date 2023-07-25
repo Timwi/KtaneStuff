@@ -57,7 +57,7 @@
     <Compile Include="3DMaze.cs" />
     <Compile Include="AquaButton.cs" />
     <Compile Include="AzureButton.cs" />
-    <Compile Include="PolygonalMaze.cs" />
+    <Compile Include="CrazyMaze.cs" />
     <Compile Include="SapphireButton.cs" />
     <Compile Include="Charms.cs" />
     <Compile Include="DiscardedExperiments.cs" />
