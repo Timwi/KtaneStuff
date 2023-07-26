@@ -14,12 +14,13 @@ namespace KtaneStuff
     {
         public static void Generate()
         {
-            const double p2Factor = .75;
             const double p3Factor = .9;
             const double pw = 18;
             const double ph = 24;
+            const double chamfFactor = .7;
+            var chamfOffset = new PointD(0, -.5);
 
-            var denomsAtRadius = new[] { 4, 8, 12, 24 };
+            var denomsAtRadius = new[] { 3, 8, 12, 24 };
             var offsetsAtRadius = new CircleFraction[] { CircleFraction.Zero, new CircleFraction(1, 16), CircleFraction.Zero, new CircleFraction(1, 48) };
 
             var circularCells = Enumerable.Range(0, 4).SelectMany(radius => denomsAtRadius[radius].Apply(d => Enumerable.Range(0, d).Select(i =>
@@ -28,20 +29,17 @@ namespace KtaneStuff
             var info = Ut.NewArray<(string name, Type cellType, Type vertexType, IEnumerable<object> cells)>(
                 ("Hex", typeof(Hex), typeof(Hex.Vertex), Hex.LargeHexagon(4).Cast<object>()),
                 ("Cairo", typeof(Cairo), typeof(Cairo.Vertex), Cairo.Rectangle(4, 4).Cast<object>()),
-                ("Penrose P3", typeof(P3Wrapper), typeof(P3Wrapper.P3Vertex), Enumerable.Range(0, 6)
+                ("Penrose P3", typeof(Penrose), typeof(Penrose.Vertex), Enumerable.Range(0, 6)
                     .Select(a => new Penrose(Penrose.Kind.ThickRhomb, default, 2 * a))
                     .SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct()
-                    .Where(c => c.Vertices.All(v => v.Point.Distance < ph / 6 / p3Factor)).Select(c => new P3Wrapper(c)).Cast<object>()),
-                ("Square", typeof(RT.Coordinates.Coord), typeof(RT.Coordinates.Coord.Vertex), RT.Coordinates.Coord.Rectangle(9, 8).Cast<object>()),
+                    .Where(c => c.Vertices.All(v => v.Point.Distance < ph / 6 / p3Factor)).Cast<object>()),
+                ("Square", typeof(Square), typeof(Square.Vertex), Square.Rectangle(9, 8).Cast<object>()),
                 ("OctoCell", typeof(OctoCell), typeof(OctoCell.Vertex), OctoCell.Rectangle(7, 6).Cast<object>()),
                 ("Rhombihexadel", typeof(Rhombihexadel), typeof(Rhombihexadel.Vertex), Rhombihexadel.LargeHexagon(2).Cast<object>()),
                 ("Floret", typeof(Floret), typeof(Floret.Vertex), Floret.LargeHexagon(2).Cast<object>()),
                 ("Circular", typeof(CircularCell), typeof(CircularCell.Vertex), circularCells.Cast<object>()),
                 ("Tri", typeof(Tri), typeof(Tri.Vertex), Enumerable.Range(0, 6).SelectMany(y => Enumerable.Range(0, 11).Select(x => new Tri(x, y))).Cast<object>()),
-                ("Penrose P2", typeof(Penrose), typeof(Penrose.Vertex), Enumerable.Range(0, 6)
-                    .Select(a => new Penrose(Penrose.Kind.Dart, new Penrose.Vector(-1, 1, -1, 1).DivideByPhi.Rotate(2 * a), 2 * a))
-                    .SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct()
-                    .Where(c => c.Vertices.All(v => v.Point.Distance < ph / 6 / p2Factor)).Cast<object>()),
+                ("Chamf", typeof(Chamf), typeof(Chamf.Vertex), Chamf.Rectangle(4, 4).Cast<object>()),
                 ("Kite", typeof(Kite), typeof(Kite.Vertex), Kite.LargeHexagon(2).Cast<object>()),
                 ("Rhomb", typeof(Rhomb), typeof(Rhomb.Vertex), Rhomb.LargeHexagon(3).Cast<object>())
             );
@@ -49,18 +47,16 @@ namespace KtaneStuff
 
             foreach (var cell in allCells)
             {
-                var realCell = cell is P3Wrapper p ? p.Tile : cell;
-                var str = realCell.ToString();
+                var str = cell.ToString();
                 var parsed = GridUtils.Parse(str);
-                if (!parsed.Equals(realCell))
+                if (!parsed.Equals(cell))
                     Debugger.Break();
             }
 
             IEnumerable<object> GetNeighbors(object cell) => cell is CircularCell cc ? cc.FindNeighbors(circularCells) : ((INeighbor<object>) cell).Neighbors;
             var structure = new Structure<object>(allCells, getNeighbors: GetNeighbors);
 
-            object parse(string str) { var cell = GridUtils.Parse(str); return (cell is Penrose p && (p.TileKind == Penrose.Kind.ThickRhomb || p.TileKind == Penrose.Kind.ThinRhomb)) ? new P3Wrapper(p) : cell; }
-            void addLink(string str1, string str2) => structure.AddLink(parse(str1), parse(str2));
+            void addLink(string str1, string str2) => structure.AddLink(GridUtils.Parse(str1), GridUtils.Parse(str2));
 
             addLink("C(0,0)/3", "H(0,-3)");
             addLink("C(0,1)/0", "H(1,-3)");
@@ -89,28 +85,28 @@ namespace KtaneStuff
             addLink("M(0,-2)/4", "C(2,3)/2");
             addLink("M(0,-2)/3", "C(3,3)/3");
             addLink("F(0,-1)/5", "C(3,3)/2");
-            addLink("C(0,0)", "P(2,0,1,-1)/2/1");
-            addLink("C(0,1)", "P(2,0,1,-1)/3/2");
-            addLink("C(0,2)", "P(2,1,2,0)/2/8");
-            addLink("C(0,3)", "P(2,1,2,0)/2/6");
-            addLink("C(0,4)", "P(1,2,1,1)/3/6");
-            addLink("C(0,5)", "P(0,1,1,1)/2/3");
-            addLink("C(0,6)", "P(0,1,1,1)/3/4");
+            addLink("S(0,0)", "P(2,0,1,-1)/2/1");
+            addLink("S(0,1)", "P(2,0,1,-1)/3/2");
+            addLink("S(0,2)", "P(2,1,2,0)/2/8");
+            addLink("S(0,3)", "P(2,1,2,0)/2/6");
+            addLink("S(0,4)", "P(1,2,1,1)/3/6");
+            addLink("S(0,5)", "P(0,1,1,1)/2/3");
+            addLink("S(0,6)", "P(0,1,1,1)/3/4");
             addLink("M(0,-2)/2", "P(-3,0,-2,2)/2/0");
             addLink("F(0,-1)/0", "P(-2,1,-1,2)/3/6");
             addLink("F(0,-1)/1", "P(-2,1,-1,2)/2/5");
             addLink("F(1,-1)/5", "P(-2,1,0,3)/3/8");
             addLink("F(1,-1)/0", "P(-2,2,0,3)/2/8");
             addLink("P(-2,2,0,3)/2/0", "C(3;41/48→43/48)");
-            addLink("C(0,7)", "F(1,-1)/1");
-            addLink("C(3;43/48→15/16)", "C(1,7)");
-            addLink("C(3;15/16→47/48)", "C(2,7)");
-            addLink("C(3;47/48→1/48)", "C(3,7)");
-            addLink("C(3;1/48→1/16)", "C(4,7)");
-            addLink("C(3;1/16→5/48)", "C(5,7)");
-            addLink("C(3;5/48→7/48)", "C(6,7)");
-            addLink("C(3;7/48→3/16)", "C(7,7)");
-            addLink("C(3;3/16→11/48)", "C(8,7)");
+            addLink("S(0,7)", "F(1,-1)/1");
+            addLink("C(3;43/48→15/16)", "S(1,7)");
+            addLink("C(3;15/16→47/48)", "S(2,7)");
+            addLink("C(3;47/48→1/48)", "S(3,7)");
+            addLink("C(3;1/48→1/16)", "S(4,7)");
+            addLink("C(3;1/16→5/48)", "S(5,7)");
+            addLink("C(3;5/48→7/48)", "S(6,7)");
+            addLink("C(3;7/48→3/16)", "S(7,7)");
+            addLink("C(3;3/16→11/48)", "S(8,7)");
             addLink("M(-1,0)/5", "O(6,1)");
             addLink("M(-2,1)/2", "O(6,2)");
             addLink("O(6,3)", "M(-1,1)/4");
@@ -121,20 +117,18 @@ namespace KtaneStuff
             addLink("T(5,0)", "O(3,5)");
             addLink("T(7,0)", "O(4,5)");
             addLink("T(9,0)", "O(5,5)");
-            addLink("P(0,-2,0,-2)/0/2", "O(6,5)");
+            addLink("H(0,0)/2", "O(6,5)");
             addLink("F(0,-1)/4", "M(1,-2)/5");
             addLink("F(-1,0)/0", "M(1,-2)/3");
             addLink("F(-1,0)/5", "M(1,-2)/2");
             addLink("M(2,-2)/5", "F(-1,0)/4");
             addLink("M(2,-2)/4", "F(-1,0)/3");
             addLink("M(2,-1)/5", "F(-1,1)/5");
-            addLink("T(10,0)", "M(0,1)/4");
-            addLink("M(0,1)/3", "P(1,-1,0,-2)/0/6");
-            addLink("M(0,1)/2", "P(1,-1,0,-2)/0/2");
-            addLink("P(2,0,0,-2)/0/6", "M(0,1)/1");
-            addLink("M(1,0)/3", "P(2,0,0,-2)/0/4");
-            addLink("P(2,0,1,-1)/0/8", "M(1,0)/2");
-            addLink("P(2,0,1,-1)/0/4", "M(1,0)/1");
+            addLink("M(0,1)/4", "T(10,0)");
+            addLink("M(0,1)/3", "H(0,0)/1");
+            addLink("M(0,1)/2", "H(1,0)/1");
+            addLink("M(1,0)/2", "H(2,0)/1");
+            addLink("M(1,0)/1", "H(3,0)/1");
             addLink("K(-1,1)/5", "M(2,-1)/4");
             addLink("K(-1,0)/4", "M(1,-1)/1");
             addLink("C(3;13/16→41/48)", "F(1,-1)/2");
@@ -143,7 +137,7 @@ namespace KtaneStuff
             addLink("C(3;11/16→35/48)", "F(1,0)/2");
             addLink("F(1,0)/3", "C(3;31/48→11/16)");
             addLink("F(0,1)/1", "C(3;29/48→31/48)");
-            addLink("F(-1,1)/4", "P(2,0,2,0)/0/8");
+            addLink("F(-1,1)/4", "H(4,0)/2");
             addLink("K(-1,0)/5", "F(-1,1)/3");
             addLink("K(-1,0)/0", "F(-1,1)/2");
             addLink("F(0,1)/4", "K(0,-1)/4");
@@ -156,14 +150,14 @@ namespace KtaneStuff
             addLink("R(0,-2)/2", "C(3;19/48→7/16)");
             addLink("R(0,-2)/0", "C(3;17/48→19/48)");
             addLink("R(1,-2)/0", "C(3;5/16→17/48)");
-            addLink("P(0,-2,0,-2)/0/4", "T(10,2)");
-            addLink("T(10,3)", "P(-1,-1,-1,0)/0/0");
-            addLink("T(10,4)", "P(-1,-1,-1,0)/0/4");
-            addLink("T(10,5)", "P(-2,0,-2,2)/0/0");
-            addLink("K(-1,1)/4", "P(2,0,2,0)/0/6");
-            addLink("K(-1,1)/3", "P(0,1,1,1)/0/0");
-            addLink("K(0,1)/4", "P(0,1,1,1)/0/6");
-            addLink("K(0,1)/3", "P(-2,2,0,2)/0/0");
+            addLink("H(0,1)/2", "T(10,2)");
+            addLink("T(10,3)", "H(0,2)/2");
+            addLink("T(10,4)", "H(0,3)/2");
+            addLink("T(10,5)", "H(0,4)/1");
+            addLink("K(-1,1)/4", "H(4,1)/2");
+            addLink("H(4,2)/2", "K(-1,1)/3");
+            addLink("H(4,3)/2", "K(0,1)/4");
+            addLink("H(3,4)/1", "K(0,1)/3");
             addLink("R(-2,1)/2", "K(0,-1)/1");
             addLink("R(-2,2)/2", "K(1,-1)/0");
             addLink("K(1,-1)/1", "R(-2,2)/1");
@@ -176,16 +170,16 @@ namespace KtaneStuff
             PointD GetVertexPoint(Vertex v) => (
                 v is Hex.Vertex ? v.Point.RotateDeg(30) * 1.4 + mid :
                 v is Floret.Vertex ? v.Point.RotateDeg(-30) + mid :
-                v is RT.Coordinates.Coord.Vertex ? (v.Point - mid) * .95 + mid :
+                v is Square.Vertex ? (v.Point - mid) * .95 + mid :
                 v is Cairo.Vertex ? (v.Point + new PointD(.5, 0) - mid) * .9 + mid :
                 v is OctoCell.Vertex ? v.Point * 1.25 + new PointD(.125, .25) :
                 v is Tri.Vertex ? (v.Point + new PointD(.75, 0.10288568297002608956324573161177) - mid) * .975 + mid :
                 v is Kite.Vertex ? v.Point.RotateDeg(30) * 1.5 + mid :
                 v is Rhomb.Vertex ? v.Point.RotateDeg(30) * .95 + mid :
                 v is Rhombihexadel.Vertex ? v.Point.RotateDeg(30) * .9 + mid :
-                v is Penrose.Vertex ? v.Point * p2Factor + mid :
-                v is P3Wrapper.P3Vertex ? v.Point * p3Factor + mid :
+                v is Penrose.Vertex ? v.Point * p3Factor + mid :
                 v is CircularCell.Vertex ? v.Point + mid :
+                v is Chamf.Vertex ? (v.Point - mid + chamfOffset) * chamfFactor + mid :
                 v.Point
             ) + info.IndexOf(tup => tup.vertexType.Equals(v.GetType())).Apply(ix => new PointD(pw / 2 * (ix % 4), ph / 3 * (ix / 4)));
 
@@ -194,20 +188,58 @@ namespace KtaneStuff
             PointD? GetCenter(object c) => (
                     c is Hex h ? h.Center.RotateDeg(30) * 1.4 + mid :
                     c is Floret f ? f.Center.RotateDeg(-30) + mid :
-                    c is RT.Coordinates.Coord co ? (co.Center - mid) * .95 + mid :
+                    c is Square co ? (co.Center - mid) * .95 + mid :
                     c is Cairo ca ? (ca.Center + new PointD(.5, 0) - mid) * .9 + mid :
                     c is OctoCell o ? o.Center * 1.25 + new PointD(.125, .25) :
                     c is Tri t ? (t.Center + new PointD(.75, 0.10288568297002608956324573161177) - mid) * .975 + mid :
                     c is Kite k ? k.Center.RotateDeg(30) * 1.5 + mid :
                     c is Rhomb r ? r.Center.RotateDeg(30) * .95 + mid :
                     c is Rhombihexadel rh ? rh.Center.RotateDeg(30) * .9 + mid :
-                    c is Penrose p ? p.Center * p2Factor + mid :
-                    c is P3Wrapper pe ? pe.Center * p3Factor + mid :
+                    c is Penrose p ? p.Center * p3Factor + mid :
                     c is CircularCell cc ? cc.Center + mid :
+                    c is Chamf ch ? (ch.Center - mid + chamfOffset) * chamfFactor + mid :
                     null
                 ) + info.IndexOf(tup => tup.cellType.Equals(c.GetType())).Apply(ix => new PointD(pw / 2 * (ix % 4), ph / 3 * (ix / 4)));
 
+
+            /*      — ## Test SVG output
             var rnd = new Random(347);
+            var svg = structure.Svg(new SvgInstructions
+            {
+                GetVertexPoint = GetVertexPoint,
+                GetEdges = GetEdges,
+                GetCenter = GetCenter,
+                SvgAttributes = "xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 38 26' font-size='.2' text-anchor='middle'",
+                PerCell = c => $"<text font-size='.2' y='.07' text-anchor='middle' font-family='Agency FB' stroke='white' paint-order='stroke' stroke-width='.1'>{c}</text>",// $"<circle r='.1' fill='black' fill-opacity='.2' />",
+                ExtraSvg1 = "<g fill='none' stroke='black' stroke-width='.05'><rect x='0' y='0' width='18' height='24' /><rect x='18' y='0' width='18' height='24' /></g>" +
+                    "<path fill='none' stroke='black' stroke-width='.02' d='M0 8h36M0 16h36M9 0v24M27 0v24' />",
+                ExtraSvg3 = info.Select((tup, ix) => $"<text x='{(ix % 4) * pw / 2 + .1}' y='{(ix / 4) * ph / 3 + (.5 * .7) + .1}' font-size='.5' text-anchor='start' stroke='hsl(60, 80%, 90%)' stroke-width='.1' stroke-linejoin='round' paint-order='stroke'>{tup.name} ({tup.cells.Count()})</text>").JoinString()
+            });
+
+            File.WriteAllText(@"D:\temp\temp.html", $@"
+                <html>
+                    <head>
+                        <title>Polygonal Maze planning</title>
+                        <style>
+                            svg {{ width: 100%; }}
+                        </style>
+                    </head>
+                    <body>
+                        {svg}
+                        <script>
+                            let ids = [];
+                            Array.from(document.querySelectorAll('svg path.highlightable')).forEach(cell => {{
+                                cell.onclick = function()
+                                {{
+                                    console.log(cell.dataset.cell);
+                                }};
+                            }});
+                        </script>
+                    </body>
+                </html>
+            ");
+            File.WriteAllText(@"D:\temp\temp.svg", svg);
+            */
 
             string encode(int ix) => $"{(char) ('A' + ix / 26)}{(char) ('A' + ix % 26)}";
             var manualSvg = structure.Svg(new SvgInstructions
@@ -219,12 +251,21 @@ namespace KtaneStuff
                 SvgAttributes = null,
                 PerCell = c => $"<text y='.14' id='cell-label-{allCells.IndexOf(c)}'>{encode(allCells.IndexOf(c))}</text>",
 
+                OutlinePath = d => $"<path d='{d}' class='outline' />",
+
                 PassagesSeparate = true,
                 PassagesPaths = (d, c1, c2) => $"<path id='wall-{allCells.IndexOf(c1)}-{allCells.IndexOf(c2)}' class='wall' d='{d}' />",
-                BridgeSvg = (c1, p1, c2, p2) => $"<g id='bridge-{allCells.IndexOf(c1)}-{allCells.IndexOf(c2)}' class='bridge'>{SvgInstructions.DrawBridge(p1, p2)}</g>"
+                BridgeSvg = (c1, center1, c2, center2) =>
+                {
+                    var control1 = ((center1 * 2 + center2) / 3 - center1).RotateDeg(30) + center1;
+                    var control2 = ((center1 + center2 * 2) / 3 - center2).RotateDeg(-30) + center2;
+                    var d = $"M{center1.X} {center1.Y}C{control1.X} {control1.Y} {control2.X} {control2.Y} {center2.X} {center2.Y}";
+                    var path = $"<path d='{d}' class='bridge-out' /><path d='{d}' class='bridge-in' />";
+                    return $@"<g id='bridge-{allCells.IndexOf(c1)}-{allCells.IndexOf(c2)}' class='bridge'>{path}</g>";
+                }
             });
 
-            var highlightables = allCells.Select(cell => $"<path d='{GridUtils.SvgEdgesPath(GetEdges(cell), GetVertexPoint)}' class='highlightable' data-cell='{cell}' />").JoinString();
+            var highlightables = allCells.Select(cell => $"<path d='{GridUtils.SvgEdgesPath(GetEdges(cell), GetVertexPoint)}' class='highlightable' />").JoinString();
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Crazy Maze.html", "<!--%%-->", "<!--%%%-->", manualSvg);
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Crazy Maze.html", "<!--@@-->", "<!--@@@-->", highlightables);
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Crazy Maze.html", "<!--##-->", "<!--###-->", highlightables);
@@ -235,7 +276,7 @@ namespace KtaneStuff
                     dic[allCells.IndexOf(cell)].Add(allCells.IndexOf(lnk.Other(cell)));
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Crazy Maze.html", "/*@*/", "/*@@*/", dic.Select(kvp => $@"[{kvp.Order().JoinString(",")}]").JoinString(","));
 
-            // Find bounds of each cells
+            // Find bounds of each cell
             (PointD min, PointD max) getBounds(IEnumerable<Link<Vertex>> edges)
             {
                 var minX = edges.SelectMany(lnk => lnk).Min(v => GetVertexPoint(v).X);
@@ -255,7 +296,7 @@ namespace KtaneStuff
             }
             var cellSize = Math.Max(maxWidth, maxHeight);
 
-            var transitions = new Dictionary<int, List<string>>();
+            var transitions = new Dictionary<int, List<(string str, double angle)>>();
             var bridgeTransitions = new Dictionary<int, int>();
             foreach (var (lnkCell1, lnkCell2) in structure.Links)
                 foreach (var (fromC, toC) in new[] { (lnkCell1, lnkCell2), (lnkCell2, lnkCell1) })
@@ -282,35 +323,46 @@ namespace KtaneStuff
 
                         PointD midP;
                         double angle;
+                        var p1 = GetVertexPoint(v1);
+                        var p2 = GetVertexPoint(v2);
                         if (v1 is CircularCell.Vertex cv1 && v2 is CircularCell.Vertex cv2 && cv1.Radius == cv2.Radius)
                         {
-                            var offset = GetVertexPoint(cv1) - cv1.Point;
-                            var cv1Pos = cv1.Position + 0d;
-                            var cv2Pos = cv2.Position + 0d;
-                            if (cv2Pos < cv1Pos)
-                                cv2Pos += 1;
-                            var midPos = (cv1Pos + cv2Pos) / 2;
+                            var offset = p1 - cv1.Point;
+
+                            var gc = Ut.Gcd(cv2.Position.Denominator, cv1.Position.Denominator);
+                            var n1 = cv2.Position.Numerator * cv1.Position.Denominator / gc;
+                            var n2 = cv1.Position.Numerator * cv2.Position.Denominator / gc;
+                            var cd = cv2.Position.Denominator * cv1.Position.Denominator / gc;
+
+                            var nMin = Math.Min(n1, n2);
+                            var nMax = Math.Max(n1, n2);
+                            double midPos;
+                            if (2 * (nMax - nMin) > cd)
+                                midPos = (nMin + nMax + cd) * .5 / cd;
+                            else
+                                midPos = (nMin + nMax) * .5 / cd;
+
                             midP = offset + new PointD(
                                 cv1.Radius * Math.Cos(Math.PI * (2d * midPos - .5)),
                                 cv1.Radius * Math.Sin(Math.PI * (2d * midPos - .5)));
-                            angle = 360 * midPos;
                         }
                         else
-                        {
-                            var p1 = GetVertexPoint(v1);
-                            var p2 = GetVertexPoint(v2);
                             midP = (p1 + p2) / 2;
-                            angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI;
-                        }
                         midP -= (max + min) / 2;
                         midP *= 0.128572 / cellSize;
-                        transitions.AddSafe(fromCellIx, $"new Transition({toCellIx}, {midP.X}f, {midP.Y}f, {angle}f)");
+                        angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI;
+                        transitions.AddSafe(fromCellIx, ($"new Transition({toCellIx}, {midP.X}f, {midP.Y}f, {angle}f)", angle));
                     }
                 }
             if (transitions.Keys.Any(k => k != 0 && !transitions.ContainsKey(k - 1)))
                 Debugger.Break();
             Utils.ReplaceInFile(@"D:\c\KTANE\CrazyMaze\Assets\CellTransitions.cs", "/*!*/", "/*!!*/",
-                Enumerable.Range(0, allCells.Length).Select(cellIx => $"new CellTransitions({(bridgeTransitions.TryGetValue(cellIx, out var bt) ? bt.ToString() : "null")}, new[] {{ {transitions[cellIx].JoinString(", ")} }})").JoinString(",\r\n"));
+                Enumerable.Range(0, allCells.Length).Select(cellIx =>
+                {
+                    var bridgeValue = bridgeTransitions.TryGetValue(cellIx, out var bt) ? bt.ToString() : "null";
+                    var transitionStrings = transitions[cellIx].OrderBy(tup => (tup.angle + 360.001) % 360).Select(tup => tup.str).JoinString(", ");
+                    return $"new CellTransitions({bridgeValue}, new[] {{ {transitionStrings} }})";
+                }).JoinString(",\r\n"));
 
             // Generate sprites
             Enumerable.Range(0, allCells.Length).ParallelForEach(Environment.ProcessorCount, (cellIx, proc) =>
@@ -337,32 +389,6 @@ namespace KtaneStuff
                     Console.WriteLine(cmd);
                 CommandRunner.RunRaw(cmd).Go();
             });
-        }
-
-        class P3Wrapper : INeighbor<P3Wrapper>, INeighbor<object>, IHasSvgGeometry, IEquatable<P3Wrapper>
-        {
-            public Penrose Tile { get; private set; }
-            public P3Wrapper(Penrose tile) { Tile = tile; }
-
-            public bool Equals(P3Wrapper other) => other.Tile.Equals(Tile);
-            public override bool Equals(object obj) => obj is P3Wrapper other && Equals(other);
-            public override int GetHashCode() => unchecked(~Tile.GetHashCode());
-            public IEnumerable<P3Wrapper> Neighbors => Tile.Neighbors.Select(n => new P3Wrapper(n));
-            IEnumerable<object> INeighbor<object>.Neighbors => Neighbors.Cast<object>();
-            public IEnumerable<Link<Vertex>> Edges => Tile.Edges.Select(e => new Link<Vertex>(new P3Vertex((Penrose.Vertex) e.Apart(out var other)), new P3Vertex((Penrose.Vertex) other)));
-            public PointD Center => Tile.Center;
-            public override string ToString() => Tile.ToString();
-
-            public class P3Vertex : Vertex
-            {
-                public P3Vertex(Penrose.Vertex pv) { P3V = pv; }
-                public Penrose.Vertex P3V { get; private set; }
-
-                public override PointD Point => P3V.Point;
-                public override bool Equals(Vertex other) => other is P3Vertex p && p.P3V.Equals(P3V);
-                public override bool Equals(object obj) => obj is P3Vertex p && p.P3V.Equals(P3V);
-                public override int GetHashCode() => unchecked(~P3V.GetHashCode());
-            }
         }
     }
 }
