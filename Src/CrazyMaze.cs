@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using RT.Coordinates;
 using RT.TagSoup;
 using RT.Util;
@@ -201,46 +202,6 @@ namespace KtaneStuff
                     null
                 ) + info.IndexOf(tup => tup.cellType.Equals(c.GetType())).Apply(ix => new PointD(pw / 2 * (ix % 4), ph / 3 * (ix / 4)));
 
-
-            /*      — ## Test SVG output
-            var rnd = new Random(347);
-            var svg = structure.Svg(new SvgInstructions
-            {
-                GetVertexPoint = GetVertexPoint,
-                GetEdges = GetEdges,
-                GetCenter = GetCenter,
-                SvgAttributes = "xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 38 26' font-size='.2' text-anchor='middle'",
-                PerCell = c => $"<text font-size='.2' y='.07' text-anchor='middle' font-family='Agency FB' stroke='white' paint-order='stroke' stroke-width='.1'>{c}</text>",// $"<circle r='.1' fill='black' fill-opacity='.2' />",
-                ExtraSvg1 = "<g fill='none' stroke='black' stroke-width='.05'><rect x='0' y='0' width='18' height='24' /><rect x='18' y='0' width='18' height='24' /></g>" +
-                    "<path fill='none' stroke='black' stroke-width='.02' d='M0 8h36M0 16h36M9 0v24M27 0v24' />",
-                ExtraSvg3 = info.Select((tup, ix) => $"<text x='{(ix % 4) * pw / 2 + .1}' y='{(ix / 4) * ph / 3 + (.5 * .7) + .1}' font-size='.5' text-anchor='start' stroke='hsl(60, 80%, 90%)' stroke-width='.1' stroke-linejoin='round' paint-order='stroke'>{tup.name} ({tup.cells.Count()})</text>").JoinString()
-            });
-
-            File.WriteAllText(@"D:\temp\temp.html", $@"
-                <html>
-                    <head>
-                        <title>Polygonal Maze planning</title>
-                        <style>
-                            svg {{ width: 100%; }}
-                        </style>
-                    </head>
-                    <body>
-                        {svg}
-                        <script>
-                            let ids = [];
-                            Array.from(document.querySelectorAll('svg path.highlightable')).forEach(cell => {{
-                                cell.onclick = function()
-                                {{
-                                    console.log(cell.dataset.cell);
-                                }};
-                            }});
-                        </script>
-                    </body>
-                </html>
-            ");
-            File.WriteAllText(@"D:\temp\temp.svg", svg);
-            */
-
             string encode(int ix) => $"{(char) ('A' + ix / 26)}{(char) ('A' + ix % 26)}";
             var manualSvg = structure.Svg(new SvgInstructions
             {
@@ -296,85 +257,114 @@ namespace KtaneStuff
             }
             var cellSize = Math.Max(maxWidth, maxHeight);
 
-            var transitions = new Dictionary<int, List<(string str, double angle)>>();
             var bridgeTransitions = new Dictionary<int, int>();
             foreach (var (lnkCell1, lnkCell2) in structure.Links)
                 foreach (var (fromC, toC) in new[] { (lnkCell1, lnkCell2), (lnkCell2, lnkCell1) })
+                    if (GetEdges(fromC).ToArray().IndexOf(GetEdges(toC).ToArray().Contains) == -1)
+                        bridgeTransitions[allCells.IndexOf(fromC)] = allCells.IndexOf(toC);
+
+            var transitions = new Dictionary<int, List<string>>();
+
+            for (var cellIx = 0; cellIx < allCells.Length; cellIx++)
+            {
+                var (min, max) = getBounds(GetEdges(allCells[cellIx]));
+                var edges = GetEdges(allCells[cellIx]).ToArray();
+                var arrows = new List<string>();
+                var fIx = 0;
+                var fAngle = double.MaxValue;
+                for (var edgeIx = 0; edgeIx < edges.Length; edgeIx++)
                 {
-                    var (min, max) = getBounds(GetEdges(fromC));
-                    var fromCellIx = allCells.IndexOf(fromC);
-                    var toCellIx = allCells.IndexOf(toC);
-                    var fromEs = GetEdges(fromC).ToArray();
-                    var toEs = GetEdges(toC).ToArray();
-                    var fromEIx = fromEs.IndexOf(toEs.Contains);
-                    var toEIx = toEs.IndexOf(fromEs.Contains);
-                    if ((fromEIx == -1) != (toEIx == -1))
-                        Debugger.Break();
-                    if (fromEIx == -1)
-                        bridgeTransitions[fromCellIx] = toCellIx;
-                    else
+                    var toCell = Enumerable.Range(0, allCells.Length).Where(ix => ix != cellIx && GetEdges(allCells[ix]).Contains(edges[edgeIx])).FirstOrNull();
+                    var (v1, v2) = edges[edgeIx];
+                    var p1 = GetVertexPoint(v1);
+                    var p2 = GetVertexPoint(v2);
+                    var center = GetCenter(allCells[cellIx]).Value;
+
+                    var fAng = Math.Atan2(p1.X - center.X - 0.001, p1.Y - center.Y);    // swapping X and Y to get the -π/π threshold to point up
+                    if (fAng < fAngle)
                     {
-                        var (v1, v2) = fromEs[fromEIx];
-                        var next = fromEs[(fromEIx + 1) % fromEs.Length];
-                        if (next.Contains(v1) == next.Contains(v2))
-                            Debugger.Break();
-                        if (next.Contains(v1))
-                            (v1, v2) = (v2, v1);
-
-                        PointD midP;
-                        double angle;
-                        var p1 = GetVertexPoint(v1);
-                        var p2 = GetVertexPoint(v2);
-                        if (v1 is CircularCell.Vertex cv1 && v2 is CircularCell.Vertex cv2 && cv1.Radius == cv2.Radius)
-                        {
-                            var offset = p1 - cv1.Point;
-
-                            var gc = Ut.Gcd(cv2.Position.Denominator, cv1.Position.Denominator);
-                            var n1 = cv2.Position.Numerator * cv1.Position.Denominator / gc;
-                            var n2 = cv1.Position.Numerator * cv2.Position.Denominator / gc;
-                            var cd = cv2.Position.Denominator * cv1.Position.Denominator / gc;
-
-                            var nMin = Math.Min(n1, n2);
-                            var nMax = Math.Max(n1, n2);
-                            double midPos;
-                            if (2 * (nMax - nMin) > cd)
-                                midPos = (nMin + nMax + cd) * .5 / cd;
-                            else
-                                midPos = (nMin + nMax) * .5 / cd;
-
-                            midP = offset + new PointD(
-                                cv1.Radius * Math.Cos(Math.PI * (2d * midPos - .5)),
-                                cv1.Radius * Math.Sin(Math.PI * (2d * midPos - .5)));
-                        }
-                        else
-                            midP = (p1 + p2) / 2;
-                        midP -= (max + min) / 2;
-                        midP *= 0.128572 / cellSize;
-                        angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI;
-                        transitions.AddSafe(fromCellIx, ($"new Transition({toCellIx}, {midP.X}f, {midP.Y}f, {angle}f)", angle));
+                        fAngle = fAng;
+                        fIx = edgeIx;
                     }
+
+                    PointD midP;
+                    double angle;
+                    if (v1 is CircularCell.Vertex cv1 && v2 is CircularCell.Vertex cv2 && cv1.Radius == cv2.Radius)
+                    {
+                        var offset = p1 - cv1.Point;
+
+                        var gc = Ut.Gcd(cv2.Position.Denominator, cv1.Position.Denominator);
+                        var n1 = cv2.Position.Numerator * cv1.Position.Denominator / gc;
+                        var n2 = cv1.Position.Numerator * cv2.Position.Denominator / gc;
+                        var cd = cv2.Position.Denominator * cv1.Position.Denominator / gc;
+
+                        var nMin = Math.Min(n1, n2);
+                        var nMax = Math.Max(n1, n2);
+                        double midPos;
+                        if (2 * (nMax - nMin) > cd)
+                            midPos = (nMin + nMax + cd) * .5 / cd;
+                        else
+                            midPos = (nMin + nMax) * .5 / cd;
+
+                        midP = offset + new PointD(
+                            cv1.Radius * Math.Cos(Math.PI * (2d * midPos - .5)),
+                            cv1.Radius * Math.Sin(Math.PI * (2d * midPos - .5)));
+                    }
+                    else
+                        midP = (p1 + p2) / 2;
+                    midP -= (max + min) / 2;
+                    midP *= 0.128572 / cellSize;
+                    angle = Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI;
+                    arrows.Add($"new Transition({toCell?.ToString() ?? "null"}, {midP.X}f, {midP.Y}f, {angle}f)");
                 }
+                if (fIx > 0)
+                {
+                    arrows.AddRange(arrows.Take(fIx).ToArray());
+                    arrows.RemoveRange(0, fIx);
+                }
+                transitions[cellIx] = arrows;
+            }
+
             if (transitions.Keys.Any(k => k != 0 && !transitions.ContainsKey(k - 1)))
                 Debugger.Break();
-            Utils.ReplaceInFile(@"D:\c\KTANE\CrazyMaze\Assets\CellTransitions.cs", "/*!*/", "/*!!*/",
-                Enumerable.Range(0, allCells.Length).Select(cellIx =>
-                {
-                    var bridgeValue = bridgeTransitions.TryGetValue(cellIx, out var bt) ? bt.ToString() : "null";
-                    var transitionStrings = transitions[cellIx].OrderBy(tup => (tup.angle + 360.001) % 360).Select(tup => tup.str).JoinString(", ");
-                    return $"new CellTransitions({bridgeValue}, new[] {{ {transitionStrings} }})";
-                }).JoinString(",\r\n"));
 
             // Generate sprites
-            Enumerable.Range(0, allCells.Length).ParallelForEach(Environment.ProcessorCount, (cellIx, proc) =>
+            var knownSpriteShapes = new Dictionary<string, (int shapeId, int representativeCellIx)>();
+            var cellToSpriteShape = new int[allCells.Length];
+            var nextSprite = 0;
+            for (var cellIx = 0; cellIx < allCells.Length; cellIx++)
             {
-                if (File.Exists($@"D:\c\KTANE\CrazyMaze\Assets\CellSprites\cell-{cellIx}.png"))
-                    return;
+                var edges = GetEdges(allCells[cellIx]).ToArray();
+                var (min, max) = getBounds(edges);
+                var midP = (min + max) / 2;
+
+                // Deduplicate identical shapes
+                var str = edges.ConsecutivePairs(true)
+                    .Select(pair => GetVertexPoint(pair.Item1.Intersect(pair.Item2).First()) - midP)
+                    .Select(v => $"({v.X:0.00},{v.Y:0.00})")
+                    .JoinString();
+                if (knownSpriteShapes.TryGetValue(str, out var tup))
+                    cellToSpriteShape[cellIx] = tup.shapeId;
+                else
+                {
+                    int shapeId = cellToSpriteShape[cellIx] = nextSprite;
+                    knownSpriteShapes[str] = (shapeId, cellIx);
+                    nextSprite++;
+                }
+            }
+
+            knownSpriteShapes.Values.ParallelForEach(Environment.ProcessorCount, (tup, proc) =>
+            {
+                var (shapeId, cellIx) = tup;
+
                 const int pngSize = 500;
+                if (File.Exists($@"D:\c\KTANE\CrazyMaze\Assets\CellSprites\shape-{shapeId}.png"))
+                    return;
+
                 var edges = GetEdges(allCells[cellIx]).ToArray();
                 var (min, max) = getBounds(edges);
                 var midP = (min + max) / 2;
                 double leftX = midP.X - cellSize / 2, topY = midP.Y - cellSize / 2;
-
                 var strc = new Structure<object>(new[] { allCells[cellIx] }, getNeighbors: c => Enumerable.Empty<object>());
                 File.WriteAllText($@"D:\temp\temp-{proc}.svg", strc.Svg(new SvgInstructions
                 {
@@ -384,11 +374,49 @@ namespace KtaneStuff
                     GetCenter = GetCenter,
                     GetVertexPoint = GetVertexPoint
                 }));
-                var cmd = $@"D:\Inkscape\bin\inkscape.exe ""--export-filename=D:\c\KTANE\CrazyMaze\Assets\CellSprites\cell-{cellIx}.png"" --export-width={pngSize} --export-height={pngSize} ""D:\temp\temp-{proc}.svg""";
+                var cmd = $@"D:\Inkscape\bin\inkscape.exe ""--export-filename=D:\c\KTANE\CrazyMaze\Assets\CellSprites\shape-{shapeId}.png"" --export-width={pngSize} --export-height={pngSize} ""D:\temp\temp-{proc}.svg""";
                 lock (allCells)
                     Console.WriteLine(cmd);
                 CommandRunner.RunRaw(cmd).Go();
             });
+
+            Utils.ReplaceInFile(@"D:\c\KTANE\CrazyMaze\Assets\CellTransitions.cs", "/*!*/", "/*!!*/",
+                Enumerable.Range(0, allCells.Length).Select(cellIx =>
+                {
+                    var bridgeValue = bridgeTransitions.TryGetValue(cellIx, out var bt) ? bt.ToString() : "null";
+                    var transitionStrings = transitions[cellIx].JoinString(", ");
+                    return $"new CellTransitions({bridgeValue}, {cellToSpriteShape[cellIx]}, new[] {{ {transitionStrings} }})";
+                }).JoinString(",\r\n"));
+
+            //*      — ## Test SVG output
+            var rnd = new Random(347);
+            var svg = structure.Svg(new SvgInstructions
+            {
+                GetVertexPoint = GetVertexPoint,
+                GetEdges = GetEdges,
+                GetCenter = GetCenter,
+                SvgAttributes = "xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 38 26' font-size='.2' text-anchor='middle'",
+                PerCell = c => $"<text font-size='.2' y='.07' text-anchor='middle' font-family='Agency FB' stroke='white' paint-order='stroke' stroke-width='.1'>{cellToSpriteShape[allCells.IndexOf(c)]}</text>",// $"<circle r='.1' fill='black' fill-opacity='.2' />",
+                ExtraSvg1 = "<g fill='none' stroke='black' stroke-width='.05'><rect x='0' y='0' width='18' height='24' /><rect x='18' y='0' width='18' height='24' /></g>" +
+                    "<path fill='none' stroke='black' stroke-width='.02' d='M0 8h36M0 16h36M9 0v24M27 0v24' />",
+                ExtraSvg3 = info.Select((tup, ix) => $"<text x='{(ix % 4) * pw / 2 + .1}' y='{(ix / 4) * ph / 3 + (.5 * .7) + .1}' font-size='.5' text-anchor='start' stroke='hsl(60, 80%, 90%)' stroke-width='.1' stroke-linejoin='round' paint-order='stroke'>{tup.name} ({tup.cells.Count()})</text>").JoinString()
+            });
+
+            File.WriteAllText(@"D:\temp\temp.html", $@"
+                <html>
+                    <head>
+                        <title>Crazy Maze planning</title>
+                        <style>
+                            svg {{ width: 100%; }}
+                        </style>
+                    </head>
+                    <body>
+                        {svg}
+                    </body>
+                </html>
+            ");
+            File.WriteAllText(@"D:\temp\temp.svg", svg);
+            /**/
         }
     }
 }
