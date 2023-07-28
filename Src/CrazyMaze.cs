@@ -203,7 +203,7 @@ namespace KtaneStuff
                 ) + info.IndexOf(tup => tup.cellType.Equals(c.GetType())).Apply(ix => new PointD(pw / 2 * (ix % 4), ph / 3 * (ix / 4)));
 
             string encode(int ix) => $"{(char) ('A' + ix / 26)}{(char) ('A' + ix % 26)}";
-            var manualSvg = structure.Svg(new SvgInstructions
+            var svgInstructions = new SvgInstructions
             {
                 GetVertexPoint = GetVertexPoint,
                 GetEdges = GetEdges,
@@ -216,17 +216,13 @@ namespace KtaneStuff
 
                 PassagesSeparate = true,
                 PassagesPaths = (d, c1, c2) => $"<path id='wall-{allCells.IndexOf(c1)}-{allCells.IndexOf(c2)}' class='wall' d='{d}' />",
-                BridgeSvg = (c1, center1, c2, center2) =>
-                {
-                    var control1 = ((center1 * 2 + center2) / 3 - center1).RotateDeg(30) + center1;
-                    var control2 = ((center1 + center2 * 2) / 3 - center2).RotateDeg(-30) + center2;
-                    var d = $"M{center1.X} {center1.Y}C{control1.X} {control1.Y} {control2.X} {control2.Y} {center2.X} {center2.Y}";
-                    var path = $"<path d='{d}' class='bridge-out' /><path d='{d}' class='bridge-in' />";
-                    return $@"<g id='bridge-{allCells.IndexOf(c1)}-{allCells.IndexOf(c2)}' class='bridge'>{path}</g>";
-                }
-            });
+                BridgeSvg = (c1, c2, d) => $"<g id='bridge-{allCells.IndexOf(c1)}-{allCells.IndexOf(c2)}' class='bridge'><path d='{d}' class='bridge-out' /><path d='{d}' class='bridge-in' /></g>",
 
-            var highlightables = allCells.Select(cell => $"<path d='{GridUtils.SvgEdgesPath(GetEdges(cell), GetVertexPoint)}' class='highlightable' />").JoinString();
+                Precision = 2
+            };
+            var manualSvg = structure.Svg(svgInstructions);
+
+            var highlightables = allCells.Select(cell => $"<path d='{GridUtils.SvgEdgesPath(GetEdges(cell), GetVertexPoint, svgInstructions.Round)}' class='highlightable' />").JoinString();
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Crazy Maze.html", "<!--%%-->", "<!--%%%-->", manualSvg);
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Crazy Maze.html", "<!--@@-->", "<!--@@@-->", highlightables);
             Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\Crazy Maze.html", "<!--##-->", "<!--###-->", highlightables);
