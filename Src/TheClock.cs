@@ -407,14 +407,14 @@ namespace KtaneStuff
         public static void GenerateChartsČeština()
         {
             // Minutes
-            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Čeština — Hodiny).html", "<!--MINUTES-START-->", "<!--MINUTES-END-->", generateChart("Special Elite", "Minuty", .4, .1, 1, 1.24, 1000,
-                new RingInfo { Labels = new[] { "Šipky", "Linky", "Ryče" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .75, OuterD = .2 },
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Čeština — Hodiny) (Frank & adamcz).html", "<!--MINUTES-START-->", "<!--MINUTES-END-->", generateChart("Special Elite", "Minuty", .4, .1, 1, 1.24, 1000,
+                new RingInfo { Labels = new[] { "Šipky", "Linky", "Piky" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .75, OuterD = .2 },
                 new RingInfo { Labels = new[] { "Červená", "Zelená", "Modrá", "Zlatá", "Černá" }, Horiz = true, FontSize = .35, HFactor = 16, InnerD = .65, OuterD = .35 },
                 new RingInfo { Labels = new[] { "Č", "B" }, Horiz = true, FontSize = .5, HFactor = 20, InnerD = .65, OuterD = .35 },
                 new RingInfo { Labels = new[] { "Ano", "Ne" }, Horiz = false, FontSize = .4, HFactor = 12, InnerD = .95, OuterD = 0 }));
 
             // Hours
-            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Čeština — Hodiny).html", "<!--HOURS-START-->", "<!--HOURS-END-->", generateChart("Special Elite", "Hodiny", .4, .1, 1 / .8, 1, 100,
+            Utils.ReplaceInFile(@"D:\c\KTANE\Public\HTML\The Clock translated (Čeština — Hodiny) (Frank & adamcz).html", "<!--HOURS-START-->", "<!--HOURS-END-->", generateChart("Special Elite", "Hodiny", .4, .1, 1 / .8, 1, 100,
                 new RingInfo { Labels = new[] { "Arabská", "Římská", "Žádná" }, Horiz = true, FontSize = .7, HFactor = 32, InnerD = .75, OuterD = .2 },
                 new RingInfo { Labels = new[] { "Stříbrná", "Zlatá" }, Horiz = true, FontSize = .6, HFactor = 20, InnerD = .7, OuterD = .3 },
                 new RingInfo { Labels = new[] { "Ano", "Ne" }, Horiz = true, FontSize = .7, HFactor = 14, InnerD = .8, OuterD = .2 }));
