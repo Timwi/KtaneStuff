@@ -1,358 +1,198 @@
 ﻿using System;
+using RT.Util.ExtensionMethods;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using PuzzleSolvers;
-using RT.TagSoup;
 using RT.Util;
 using RT.Util.Consoles;
-using RT.Util.ExtensionMethods;
+using System.Text.RegularExpressions;
+using System.IO;
+using PuzzleSolvers;
 
 namespace KtaneStuff
 {
     static class SapphireButton
     {
-        public static void GenerateDoubleSlitherlink_Abandoned()
+        private static int[] _simpleLettersCache;
+        private static int[] _simpleLetters => _simpleLettersCache ??= Braille.BrailleRaw.Where(ltr => ltr.Bit.Length == 1).OrderBy(ltr => ltr.Bit).Select(ltr => ltr.Dots).ToArray();
+
+        private static readonly string[] _words = new string[]
         {
-            var rnd = new Random(47);
-            var solutionWord = "LINK";
-            var w = 5;
-            var h = solutionWord.Length;
-            var desire = Enumerable.Range(0, solutionWord.Length).SelectMany(ltr => Enumerable.Range(0, w).Select(bit => ((solutionWord[ltr] - 'A' + 1) & (1 << (w - 1 - bit))) != 0)).ToArray();
-            foreach (var solutionGrid in Solve(new MultiSlitherlinkState(5, solutionWord.Length, 2), null, desire, rnd))
-            {
-                for (var y = 0; y < h; y++)
-                {
-                    var gridsStrs = Enumerable.Range(0, solutionGrid.segments.Length).Select(g => Enumerable.Range(0, w).Select(bit => solutionGrid.sofar[bit + w * y][g] ? "██" : "░░").JoinString()).JoinString("   ");
-                    var solutionGridStr = Enumerable.Range(0, w).Select(bit => desire[bit + w * y] ? "██" : "░░").JoinString();
-                    Console.WriteLine($"{gridsStrs}   {solutionGridStr}");
-                }
-                Console.WriteLine();
+            "abacus", "abduct", "abject", "ablaze", "aboard", "abound", "abroad", "abrupt", "absent", "absorb", "absurd", "abused", "abuser", "abuses", "acacia", "accede", "accent", "accept", "access", "accord", "accost", "accrue", "accuse", "acetic", "aching", "acidic", "acquit", "across", "acting", "action", "active", "actors", "actual", "acuity", "acumen", "adagio", "addict", "adding", "adhere", "adjoin", "adjust", "admire", "admits", "adored", "adrift", "adults", "advent", "adverb", "advert", "advice", "advise", "aerial", "affair", "affect", "affine", "affirm", "afford", "afghan", "afield", "aflame", "afloat", "afraid", "afresh", "africa", "agency", "agenda", "agents", "aghast", "agreed", "agrees", "aiming", "airbag", "airing", "alaska", "albeit", "albino", "albums", "alcove", "aliens", "alkali", "allege", "allele", "allied", "allies", "allows", "allude", "allure", "almond", "almost", "alpaca", "alpine", "alumna", "alumni", "always", "amazed", "amazon", "ambush", "amends", "amidst", "amoeba", "amoral", "amount", "amulet", "amused", "analog", "anchor", "anemia", "anemic", "angels", "angina", "angled", "angler", "angles", "angora", "animal", "ankles", "anklet", "annual", "anoint", "anorak", "answer", "anthem", "antics", "antler", "anyhow", "anyone", "anyway", "aortic", "apache", "apathy", "apiece", "apogee", "appall", "appeal", "appear", "append", "apples", "applet", "arcade", "arcana", "arcane", "arched", "archer", "arches", "archly", "arctic", "ardent", "argued", "argues", "arisen", "arises", "armada", "armful", "armies", "arming", "armory", "armour", "armpit", "around", "arouse", "arrest", "arrive", "arrows", "artery", "artful", "artist", "ascend", "ascent", "ashore", "asking", "asleep", "aspect", "aspire", "assent", "assert", "assess", "assets", "assign", "assist", "assume", "assure", "asthma", "astral", "astray", "astute", "asylum", "atomic", "atonal", "atrium", "attach", "attack", "attain", "attend", "attest", "attire", "attune", "august", "auntie", "author", "autism", "autumn", "avatar", "avenge", "avenue", "averse", "aviary", "avidly", "avoids", "avowal", "avowed", "awaken", "awards", "awhile", "awning", "azalea",
+            "babble", "babies", "baboon", "backed", "backer", "backup", "baddie", "badger", "baffle", "bagged", "bagger", "baggie", "baited", "bakery", "baking", "baldly", "ballad", "ballet", "ballot", "balsam", "bamboo", "banana", "banded", "bandit", "banged", "banger", "banish", "banked", "banker", "banned", "banner", "banter", "banzai", "baobab", "barbed", "barber", "barely", "barium", "barker", "barley", "barman", "barnet", "barons", "barred", "barrel", "barren", "barter", "basalt", "basics", "basins", "basket", "basque", "basset", "bather", "batten", "batter", "battle", "bauble", "bazaar", "beacon", "beaded", "beagle", "beaker", "beamed", "bearer", "beasts", "beaten", "beater", "beauty", "beaver", "became", "beckon", "become", "bedbug", "bedlam", "bedpan", "beeper", "beetle", "befall", "before", "beggar", "begged", "begins", "behalf", "behave", "behead", "behest", "behind", "behold", "beings", "belief", "bellow", "belong", "belted", "bemoan", "benign", "berate", "bereft", "berlin", "beside", "bestow", "betray", "better", "bettor", "beware", "beyond", "biased", "biceps", "bicker", "bidder", "bigger", "bigwig", "biking", "bikini", "billow", "binary", "binder", "biogas", "bionic", "biopic", "biopsy", "biotic", "birder", "birdie", "births", "bisect", "bishop", "bisque", "bistro", "biting", "bitten", "bitter", "blacks", "blades", "blamed", "blanch", "blasts", "blazer", "bleach", "bleary", "blight", "blithe", "blocks", "blocky", "blonde", "bloody", "blotch", "blouse", "blower", "bluish", "blurry", "boards", "boasts", "bobble", "bobcat", "bodega", "bodice", "bodies", "bodily", "boggle", "boiled", "boiler", "boldly", "bolero", "bolted", "bombed", "bomber", "bonbon", "bonded", "bonnet", "bonobo", "bonsai", "boogie", "booked", "bookie", "boomer", "booted", "border", "boreal", "boring", "borrow", "bosses", "boston", "botany", "bother", "bottle", "bottom", "bought", "bounce", "bouncy", "bounds", "bounty", "bovine", "bowing", "bowler", "bowtie", "boxcar", "boxing", "boyish", "brains", "brainy", "braise", "brakes", "branch", "brands", "brandy", "brassy", "brawny", "brazen", "brazil", "breach", "breaks", "breast", "breath", "breech", "breeds", "breeze", "breezy", "bricks", "bridal", "bridge", "bridle", "bright", "brings", "broach", "brogue", "broken", "broker", "bronze", "brooch", "brooks", "browse", "bruise", "brunch", "brushy", "brutal", "bubble", "bubbly", "bucket", "buckle", "budget", "buffed", "buffer", "buffet", "bugger", "builds", "bullet", "bumble", "bummed", "bummer", "bumper", "bundle", "bungee", "bungle", "bunker", "burden", "bureau", "burger", "burial", "buried", "burlap", "burned", "burner", "burrow", "bursts", "busboy", "bushel", "bushes", "busily", "busing", "busman", "busted", "bustle", "butane", "butler", "butter", "button", "buyers", "buying", "buyout", "buzzer", "bygone", "bypass",
+            "cables", "cackle", "cactus", "caesar", "caiman", "calico", "called", "caller", "callus", "calmly", "calves", "camera", "camper", "campus", "canada", "canals", "canary", "cancel", "cancer", "candid", "candle", "candor", "canine", "canned", "cannon", "canola", "canopy", "canter", "canvas", "canyon", "capped", "captor", "carbon", "careen", "career", "carers", "caress", "caring", "carnal", "carpal", "carpet", "carrot", "cartel", "carton", "carved", "casein", "cashew", "casing", "casino", "casket", "caster", "castle", "casual", "catchy", "cation", "catnap", "catnip", "cattle", "caught", "causal", "caused", "causes", "caveat", "cavern", "caviar", "caving", "cavity", "ceased", "celery", "cellar", "celtic", "cement", "censor", "census", "center", "centre", "cereal", "cervix", "cesium", "chains", "chairs", "chaise", "chakra", "chalet", "chalky", "chance", "change", "chapel", "charge", "charts", "chaser", "chaste", "chatty", "checks", "cheeks", "cheeky", "cheers", "cheery", "cheese", "cheesy", "cheque", "cherry", "cherub", "chewed", "chicks", "chiefs", "chilly", "chisel", "chives", "choice", "choked", "choker", "choose", "choppy", "choral", "chords", "chorus", "chosen", "chrome", "chubby", "chunks", "chunky", "church", "cicada", "cinder", "cinema", "cipher", "circle", "circus", "cities", "citing", "citrus", "civics", "claims", "clammy", "clamor", "classy", "clause", "clawed", "cleave", "clench", "clergy", "cleric", "clerks", "clever", "cliche", "client", "cliffs", "climax", "clinch", "clingy", "clinic", "clique", "clocks", "cloned", "clones", "closed", "closer", "closes", "closet", "clothe", "clouds", "cloudy", "clover", "clumpy", "clumsy", "clunky", "clutch", "coarse", "coasts", "coated", "cobalt", "cobble", "cobweb", "cocoon", "coddle", "codify", "coding", "coerce", "coffee", "coffer", "coffin", "cognac", "cohere", "cohort", "coiled", "colder", "coldly", "collar", "colony", "colors", "column", "combat", "comedy", "coming", "commit", "common", "compel", "comply", "concur", "condor", "confer", "consul", "convex", "convey", "convoy", "cooked", "cooker", "cookie", "cooled", "cooler", "copied", "copier", "copies", "coping", "copper", "corded", "cordon", "cornea", "corned", "corner", "cornet", "corona", "corpse", "corpus", "corral", "corset", "cortex", "cosmic", "cosmos", "costly", "cotton", "counts", "county", "couple", "coupon", "course", "courts", "cousin", "covent", "covers", "covert", "coward", "cowboy", "coyote", "crabby", "cracks", "cradle", "crafty", "cranky", "cranny", "crater", "crayon", "crazed", "creaky", "creamy", "crease", "create", "credit", "creepy", "creole", "cretin", "crewed", "crimes", "cringe", "crises", "crisis", "crisps", "crispy", "critic", "crocus", "crotch", "crouch", "crowds", "cruise", "crummy", "crunch", "crusty", "crutch", "crying", "cubism", "cubist", "cuckoo", "cuddle", "cuddly", "cupped", "curate", "curdle", "curfew", "curled", "curler", "cursed", "cursor", "curtly", "curtsy", "curved", "curves", "custom", "cutesy", "cutlet", "cutter", "cyborg", "cycles", "cyclic", "cymbal", "cystic",
+            "dabble", "dagger", "daikon", "dainty", "damage", "dampen", "damper", "damsel", "danced", "dancer", "dances", "dander", "danger", "dangle", "danish", "dapper", "dapple", "daring", "darken", "darker", "darkly", "darned", "dashed", "dasher", "dating", "dawdle", "dazzle", "deaden", "deadly", "deafen", "dealer", "dearly", "deaths", "debase", "debate", "debris", "debtor", "debunk", "decade", "decamp", "decant", "deceit", "decent", "decide", "decode", "decree", "deduce", "deduct", "deemed", "deepen", "deeper", "deeply", "deface", "defame", "defang", "defeat", "defect", "defend", "defile", "define", "deform", "defray", "deftly", "defuse", "degree", "delays", "delete", "delude", "deluge", "deluxe", "demand", "demean", "demise", "demons", "demote", "demure", "denial", "denied", "denier", "denies", "denote", "dental", "dented", "denude", "depart", "depend", "depict", "deploy", "deport", "depose", "depths", "deputy", "derail", "deride", "derive", "dermal", "desert", "design", "desire", "desist", "despot", "detach", "detail", "detain", "detect", "detest", "detour", "device", "devils", "devise", "devoid", "devote", "devour", "devout", "diadem", "dialog", "diaper", "diatom", "dictum", "diesel", "differ", "digest", "digger", "digits", "dilate", "dilute", "dimmed", "dimmer", "dimple", "dinghy", "dining", "dinner", "dioxin", "dipole", "direct", "disarm", "disbar", "discus", "dishes", "dismal", "dismay", "disown", "dispel", "disuse", "dither", "divers", "divert", "divest", "divide", "divine", "diving", "doable", "docile", "docket", "doctor", "doggie", "doings", "dollar", "dollop", "domain", "domino", "donate", "donkey", "donors", "doodad", "doodle", "doomed", "dorsal", "dosage", "doting", "dotted", "double", "doubly", "doubts", "doughy", "dovish", "downed", "downer", "dozens", "drafty", "dragon", "drains", "draped", "drawer", "dreams", "dreamy", "dreary", "dredge", "drench", "dressy", "drinks", "drippy", "drivel", "driven", "driver", "drives", "droopy", "drowse", "drowsy", "drudge", "drying", "duffel", "dugout", "dulled", "dumbly", "dumped", "duplex", "duress", "durian", "during", "duster", "duties", "dyeing", "dynamo",
+            "eagles", "earful", "earned", "earner", "earthy", "easier", "easily", "easing", "easter", "eatery", "eating", "echoed", "echoes", "eclair", "eczema", "edging", "edible", "edited", "editor", "eerily", "effect", "effigy", "effort", "eggnog", "egoism", "egress", "eighth", "eighty", "either", "elapse", "elated", "elbows", "elders", "eldest", "eleven", "elicit", "elites", "elixir", "elvish", "embalm", "embark", "emblem", "embody", "emboss", "embryo", "emerge", "empire", "employ", "enable", "enamel", "encase", "encode", "encore", "endear", "ending", "endure", "energy", "enfold", "engage", "engine", "engulf", "enigma", "enjoin", "enjoys", "enlist", "enmity", "enough", "enrage", "enrich", "enroll", "ensure", "entail", "enters", "entice", "entire", "entity", "entomb", "entrap", "entree", "enzyme", "equals", "equate", "equine", "equity", "erased", "eraser", "eroded", "errand", "errant", "errors", "ersatz", "escape", "eschew", "escort", "essays", "estate", "esteem", "ethics", "ethnic", "eulogy", "eureka", "europe", "evenly", "events", "evolve", "exceed", "except", "excess", "excise", "excite", "excuse", "exempt", "exhale", "exhort", "exhume", "exiled", "exists", "exodus", "exotic", "expand", "expect", "expend", "expert", "expire", "expiry", "export", "expose", "extant", "extend", "extent", "extort", "extras", "eyeful", "eyelid",
+            "fabled", "fabric", "facade", "facets", "facial", "facile", "facing", "factor", "fading", "failed", "fairly", "fakery", "faking", "falcon", "fallen", "falter", "family", "famine", "famous", "fandom", "farmed", "farmer", "fasten", "faster", "father", "fathom", "fatten", "faucet", "faults", "faulty", "favour", "feared", "fedora", "feeble", "feebly", "feeder", "feeler", "feisty", "feline", "felled", "fellow", "felony", "female", "fenced", "fencer", "fences", "fender", "fennel", "ferret", "fester", "fetish", "fetter", "feudal", "fiance", "fiasco", "fibres", "fibula", "fickle", "fiddle", "fidget", "fields", "fierce", "fifths", "fights", "figure", "filial", "filing", "filled", "filler", "fillet", "filmed", "filter", "filthy", "finale", "finals", "finder", "finely", "finery", "finest", "finger", "finish", "finite", "firing", "firmly", "fiscal", "fisher", "fisted", "fitted", "fitter", "fixate", "fixing", "fizzle", "flabby", "flames", "flanks", "flared", "flashy", "flatly", "flaunt", "flavor", "flawed", "fleece", "fleshy", "flexor", "flight", "flimsy", "flinch", "flirty", "flocks", "floods", "floors", "floppy", "floral", "flowed", "flower", "fluent", "fluffy", "fluids", "flurry", "fluted", "flying", "flyway", "fodder", "foetus", "foiled", "folded", "folder", "follow", "fondle", "fondly", "fondue", "foodie", "footer", "forage", "forbid", "forced", "forces", "forego", "forest", "forged", "forger", "forget", "forgot", "forked", "formal", "format", "formed", "former", "fossil", "foster", "fought", "fouled", "fourth", "fowler", "framed", "framer", "frames", "france", "franco", "francs", "frayed", "freaky", "freely", "freeze", "french", "frenzy", "fresco", "friday", "fridge", "friend", "fright", "frigid", "frilly", "fringe", "frisky", "frizzy", "frolic", "fronts", "frosty", "frothy", "frozen", "frugal", "fruits", "fruity", "frying", "fueled", "fulfil", "fulham", "fuller", "fumble", "funded", "funder", "fungal", "fungus", "funnel", "furrow", "fusion", "futile", "future",
+            "gadfly", "gadget", "gaelic", "gaffer", "gaggle", "gaiety", "gained", "gainer", "galaxy", "galley", "gallon", "gallop", "galore", "gambit", "gamble", "gamely", "gamete", "gaming", "gander", "gangly", "gantry", "gaping", "garage", "garble", "garden", "gargle", "garish", "garlic", "garner", "garnet", "gasket", "gasped", "gather", "gazebo", "gazing", "geared", "geezer", "geisha", "gelato", "gender", "geneva", "genial", "genius", "genome", "gentle", "gently", "gentry", "gerbil", "german", "getter", "geyser", "ghetto", "ghosts", "giants", "giblet", "gifted", "giggle", "gilded", "ginger", "girder", "girdle", "girlie", "giving", "gladly", "glance", "glands", "glared", "glassy", "glazed", "glider", "glitch", "global", "gloomy", "glossy", "gloved", "gloves", "glower", "glumly", "gluten", "glycol", "gnarly", "goalie", "goatee", "gobble", "goblet", "goblin", "goggle", "golden", "golfer", "goodly", "gopher", "gospel", "gossip", "gothic", "gotten", "govern", "graded", "grader", "grades", "graham", "grains", "grainy", "granny", "grants", "grapes", "graphs", "grassy", "grated", "grater", "gravel", "graven", "graves", "grazed", "grease", "greasy", "greece", "greedy", "greens", "grieve", "grille", "grimly", "grinch", "grisly", "gritty", "grocer", "groggy", "groove", "groovy", "grotto", "grouch", "ground", "groups", "grovel", "grower", "growth", "grubby", "grudge", "grumpy", "grunge", "grungy", "guards", "guests", "guided", "guides", "guilty", "guinea", "guitar", "gullet", "gunman", "gunmen", "gunner", "gurgle", "gurney", "gusher", "gutted", "gutter", "guzzle", "gypsum", "gyrate",
+            "habits", "hacker", "hadron", "haggis", "haggle", "hairdo", "halted", "halter", "halved", "halves", "hamlet", "hammer", "hamper", "handed", "handle", "hangar", "hanger", "hanker", "happen", "harass", "harbor", "harden", "harder", "hardly", "harrow", "hassle", "hasten", "hatred", "hauled", "hauler", "having", "hazard", "hazing", "headed", "header", "healed", "healer", "health", "hearer", "hearse", "hearth", "hearts", "hearty", "heated", "heater", "heaved", "heaven", "heckle", "hectic", "hedges", "height", "helium", "helmet", "helped", "helper", "herald", "herbal", "herder", "hereby", "herein", "heresy", "hermit", "hernia", "heroes", "heroic", "heyday", "hiatus", "hiccup", "hidden", "hiding", "higher", "highly", "hijack", "hiking", "hinder", "hinged", "hinges", "hippie", "hiring", "hissed", "hither", "hitman", "hitter", "hoarse", "hobbit", "hobble", "hobnob", "hockey", "holder", "holdup", "holler", "hollow", "homage", "homely", "homing", "honcho", "honest", "honour", "hooded", "hoodie", "hooked", "hookup", "hooper", "hoopla", "hooray", "hooves", "hoping", "hopper", "horned", "horrid", "horror", "horses", "horsey", "hostel", "hotbed", "hotdog", "hotels", "hottie", "hounds", "hourly", "housed", "houses", "howler", "hubbub", "hubris", "huddle", "hugely", "hugged", "hugger", "humane", "humans", "humble", "humbly", "humbug", "hummer", "hummus", "humour", "humped", "hunger", "hungry", "hunker", "hunted", "hunter", "hurdle", "hurrah", "hushed", "hustle", "hybrid", "hymnal", "hyphen",
+            "iambic", "icebox", "icecap", "icicle", "iconic", "ideals", "idiocy", "idling", "ignite", "ignore", "iguana", "images", "imbibe", "immune", "impact", "impair", "impale", "impart", "impede", "impish", "import", "impose", "improv", "impure", "incest", "inches", "incite", "income", "indeed", "indent", "indian", "indict", "indies", "indigo", "indium", "indoor", "induce", "induct", "infamy", "infant", "infect", "infest", "infill", "infirm", "inflow", "influx", "inform", "infuse", "ingest", "inhale", "inject", "injure", "injury", "inkpot", "inland", "inmate", "innate", "inning", "inputs", "insane", "insect", "insert", "inside", "insist", "instep", "instil", "insult", "insure", "intact", "intake", "intend", "intent", "intern", "intuit", "invade", "invent", "invert", "invest", "invite", "invoke", "inward", "iodide", "iodine", "ionize", "ironed", "ironic", "island", "israel", "issued", "issuer", "issues", "itself",
+            "jabber", "jackal", "jacked", "jacker", "jacket", "jagged", "jaguar", "jailed", "jailer", "jailor", "jammed", "jammer", "jangle", "jangly", "jargon", "jarred", "jasper", "jazzed", "jerked", "jersey", "jester", "jetlag", "jetway", "jewels", "jewish", "jicama", "jiggle", "jigsaw", "jingle", "jingly", "jinxed", "jinxes", "jiving", "jockey", "jogger", "joined", "joiner", "joints", "jokers", "jokily", "joking", "jostle", "joules", "jovial", "joyful", "joyous", "judged", "judger", "judges", "juggle", "juiced", "juicer", "juices", "jumble", "jumped", "jumper", "jungle", "junior", "junker", "junkie", "juried", "juries", "jurors", "justly",
+            "kaboom", "karate", "karmic", "kazoos", "keeled", "keenly", "keeper", "kelvin", "kennel", "kernel", "kettle", "keypad", "khakis", "kibble", "kicked", "kicker", "kiddie", "kidnap", "kidney", "killed", "killer", "kimono", "kindle", "kindly", "kingly", "kipper", "kissed", "kisser", "kisses", "kitsch", "kitten", "klaxon", "knight", "knives", "knocks", "knotty", "knower", "korean", "kosher", "kraken",
+            "labels", "labour", "lacked", "lackey", "lactic", "ladder", "laddie", "ladies", "lagged", "lagoon", "lambda", "lamely", "lament", "lancer", "landed", "lapdog", "lapsed", "laptop", "larder", "larger", "larvae", "lasers", "lashes", "lasted", "lastly", "lately", "latent", "latest", "lather", "latter", "lauded", "laughs", "launch", "lavish", "lawful", "lawman", "lawyer", "layers", "laying", "layman", "layoff", "layout", "lazily", "lazuli", "leaded", "leader", "league", "leaked", "leaker", "leaned", "leaper", "learns", "learnt", "leased", "leases", "leaven", "leaver", "leaves", "lector", "ledger", "leeway", "legacy", "legate", "legato", "legend", "legged", "legion", "legume", "lemony", "lender", "length", "lenses", "lesion", "lessen", "lesser", "lesson", "lethal", "letter", "levels", "levity", "liable", "libido", "lichen", "licked", "lidded", "lifted", "lifter", "lights", "likely", "liking", "limber", "limbic", "limits", "limply", "linear", "lineup", "linger", "lining", "linked", "liquid", "liquor", "listed", "listen", "litany", "litmus", "litres", "litter", "little", "lively", "livery", "living", "lizard", "loaded", "loader", "loafer", "loaned", "loaner", "loathe", "locale", "locals", "locate", "locked", "locker", "locket", "lockup", "locust", "lodged", "lodger", "logger", "loiter", "london", "lonely", "longed", "longer", "looked", "looker", "lookup", "looped", "loosen", "looted", "looter", "lordly", "losers", "losing", "losses", "lotion", "louder", "loudly", "lounge", "lovely", "lovers", "loving", "lowest", "lugged", "lumbar", "lumber", "lunacy", "lupine", "luster", "luxury", "lychee", "lyrics",
+            "madame", "madden", "madman", "maggot", "magnet", "magpie", "maiden", "mailed", "mailer", "maimed", "mainly", "makers", "makeup", "making", "malady", "malice", "malign", "mallet", "malted", "mammal", "manage", "manger", "mangle", "maniac", "manned", "manner", "mantis", "mantle", "mantra", "manual", "manure", "maraca", "marble", "marcel", "margin", "marine", "marked", "marker", "market", "markup", "marmot", "maroon", "marrow", "marshy", "martin", "martyr", "marvel", "mascot", "mashed", "masher", "masked", "masque", "masses", "massif", "master", "mating", "matrix", "matron", "matted", "matter", "mature", "mayday", "mayfly", "mayhem", "meadow", "meager", "measly", "medals", "meddle", "median", "medium", "medley", "meekly", "mellow", "melody", "melted", "member", "memoir", "memory", "menace", "menial", "mental", "mentee", "mentor", "merely", "merged", "merger", "merits", "merlot", "metals", "meteor", "method", "methyl", "metres", "metric", "mettle", "mexico", "miasma", "micron", "midday", "middle", "midget", "midway", "mighty", "mignon", "milady", "mildew", "mildly", "milled", "miller", "mimosa", "minced", "minded", "miners", "mingle", "mining", "minion", "minnow", "minuet", "minute", "mirage", "mirror", "misery", "misfit", "mishap", "misled", "missed", "misses", "missus", "mister", "misuse", "mitten", "mixing", "moaned", "mobile", "models", "modern", "modest", "modify", "module", "modulo", "molded", "molder", "molten", "moment", "monday", "mongol", "monies", "monkey", "months", "morale", "morals", "morbid", "morgan", "morgue", "mormon", "morsel", "mortal", "mortar", "mosaic", "mosque", "mostly", "mother", "motifs", "motion", "motive", "motley", "motors", "mousse", "mouths", "movies", "moving", "muddle", "muffin", "muffle", "mugger", "mullet", "mumble", "murder", "murmur", "murphy", "muscle", "museum", "musing", "musket", "muster", "mutant", "mutate", "mutely", "mutiny", "mutter", "mutton", "mutual", "muzzle", "myopic", "myriad", "myself", "mystic", "mythic", "mythos",
+            "namely", "naming", "napalm", "napkin", "narrow", "nation", "native", "nature", "naught", "nausea", "nearby", "nearer", "nearly", "neatly", "nebula", "nectar", "needed", "needle", "negate", "nelson", "nephew", "nerves", "nested", "nester", "nestle", "nether", "nettle", "neural", "neuron", "neuter", "newbie", "newest", "newish", "newton", "nibble", "nicely", "nicest", "nickel", "nights", "nimble", "nimbly", "nimbus", "ninety", "ninjas", "nipple", "nitric", "nitwit", "nobles", "nobody", "nodded", "nodule", "noggin", "noises", "noodle", "nordic", "normal", "norman", "nosier", "nosily", "notary", "notate", "notice", "notify", "noting", "notion", "nought", "novels", "novice", "nozzle", "nuance", "nubile", "nuclei", "nudger", "nudges", "nudist", "nudity", "nugget", "numbed", "number", "numbly", "nursed", "nurses", "nutmeg", "nuzzle",
+            "obeyed", "object", "oblige", "oblong", "oboist", "obsess", "obtain", "obtuse", "occult", "occupy", "occurs", "oceans", "ocelot", "octane", "octave", "ocular", "oculus", "oddity", "offend", "offers", "office", "offset", "oilman", "oldest", "olives", "omelet", "onions", "online", "onward", "oozing", "opaque", "opened", "opener", "openly", "operas", "opiate", "opioid", "oppose", "optics", "opting", "option", "oracle", "orally", "orange", "orator", "orchid", "ordain", "ordeal", "orders", "organs", "orient", "origin", "ornate", "orphan", "osmium", "others", "ounces", "ousted", "ouster", "outage", "outbid", "outcry", "outdid", "outfit", "outfox", "outing", "outlaw", "outlet", "output", "outrun", "outset", "outwit", "overdo", "overly", "owlish", "owners", "owning", "oxford", "oxtail", "oxygen", "oyster",
+            "pacify", "pacing", "packed", "packet", "padded", "paddle", "paella", "paging", "pagoda", "pained", "paired", "palace", "palate", "pallet", "pallor", "paltry", "pamper", "panama", "pander", "panels", "pantry", "papacy", "papaya", "papers", "papery", "parade", "parcel", "pardon", "parent", "pariah", "paring", "parity", "parked", "parlay", "parlor", "parody", "parole", "parrot", "parsec", "parson", "parted", "partly", "passed", "passer", "passes", "pastel", "pastor", "pastry", "patchy", "patent", "pathos", "patrol", "patron", "patted", "patten", "paunch", "pauper", "paused", "paving", "payday", "payers", "paying", "payoff", "payout", "peachy", "peaked", "peanut", "pearce", "pearls", "pearly", "pebble", "pecker", "pectin", "pedant", "peddle", "peeled", "peeler", "peeper", "peered", "peeved", "pellet", "pelvic", "pelvis", "pencil", "people", "pepper", "peptic", "period", "perish", "permit", "person", "peruse", "pester", "pestle", "petals", "petite", "petrol", "pewter", "pharma", "phased", "phases", "phenol", "phlegm", "phobia", "phobic", "phoned", "phones", "phoney", "photon", "photos", "phrase", "picked", "picker", "picket", "pickle", "pickup", "picnic", "pidgin", "pieces", "pierce", "pigeon", "piglet", "pigpen", "pigsty", "pileup", "pilfer", "pillar", "pillow", "pilots", "pimple", "pinata", "pincer", "pinkie", "pinned", "piping", "piracy", "pirate", "pissed", "pistol", "pitted", "pizazz", "placed", "placer", "places", "placid", "plague", "plains", "planar", "planes", "planet", "plants", "plaque", "plasma", "plates", "played", "player", "please", "pledge", "plenty", "plexus", "pliant", "pliers", "plight", "plough", "plowed", "plunge", "plural", "pocket", "podium", "poetic", "poetry", "points", "pointy", "poised", "poison", "police", "policy", "polish", "polite", "pollen", "pommel", "poncho", "ponder", "ponies", "poodle", "pooled", "poorer", "poorly", "poplar", "popped", "popper", "porous", "portal", "porter", "posing", "possum", "postal", "posted", "poster", "potato", "potent", "potion", "potted", "potter", "pounce", "pounds", "poured", "powder", "powers", "praise", "prance", "praxis", "prayed", "prayer", "preach", "prefab", "prefer", "prefix", "preset", "presto", "pretty", "priced", "prices", "pricey", "priest", "primal", "primed", "primer", "primly", "prince", "prints", "priory", "prison", "prissy", "privet", "prized", "prizes", "probes", "profit", "prompt", "propel", "proper", "proton", "proved", "proven", "proves", "prying", "pseudo", "psyche", "psycho", "public", "pucker", "puddle", "pueblo", "puffed", "puffin", "pulled", "puller", "pulley", "pulpit", "pulsar", "pulsed", "pulses", "pumice", "pummel", "pumped", "pumper", "pundit", "punish", "pupils", "puppet", "purely", "purify", "purist", "purity", "purple", "pursue", "pushed", "pusher", "putrid", "putter", "puzzle", "python",
+            "quacks", "quails", "quaint", "quaker", "qualms", "quarks", "quarry", "quartz", "quasar", "quaver", "queasy", "quebec", "queens", "quench", "queued", "queues", "quiche", "quills", "quince", "quinoa", "quirks", "quirky", "quiver", "quorum", "quotas", "quoted", "quoter", "quotes",
+            "rabbit", "rabble", "rabies", "racial", "racing", "racket", "radial", "radian", "radios", "radish", "radium", "radius", "raffle", "rafter", "ragged", "raging", "ragtag", "raised", "raises", "raisin", "raking", "ramble", "rancid", "rancor", "random", "ranged", "ranges", "ranked", "ransom", "rapier", "rappel", "rapper", "raptor", "rarely", "rarity", "rascal", "rashes", "rather", "ratify", "rating", "ration", "ratios", "rattle", "ravine", "raving", "ravish", "reader", "really", "reaper", "reason", "rebels", "reboot", "reborn", "rebuff", "rebuke", "recall", "recant", "recast", "recede", "recent", "recess", "recipe", "recite", "reckon", "recode", "recoil", "record", "rectal", "rectum", "recuse", "redden", "redeem", "redial", "redraw", "reduce", "refers", "refill", "refine", "reflex", "reflux", "reform", "refuel", "refuge", "refund", "refuse", "refute", "regain", "regale", "regard", "regent", "reggae", "regime", "region", "regret", "regrow", "rehash", "reheat", "reject", "rejoin", "relate", "relent", "relics", "relied", "relief", "relies", "relish", "relive", "reload", "remain", "remake", "remark", "remedy", "remind", "remiss", "remote", "remove", "rename", "render", "renege", "renown", "rental", "rented", "renter", "reopen", "repair", "repeal", "repeat", "repent", "replay", "report", "repose", "repute", "reread", "rescue", "reseal", "resent", "reside", "resign", "resist", "resize", "resort", "rested", "result", "resume", "retail", "retain", "retake", "retest", "retina", "retire", "retort", "return", "revamp", "reveal", "reverb", "revere", "revert", "review", "revile", "revise", "revive", "revoke", "revolt", "reward", "rewind", "rewire", "rework", "rhesus", "rhumba", "rhythm", "ribald", "ribbed", "ribbon", "richer", "riches", "richly", "ridden", "riddle", "riders", "ridged", "ridges", "riding", "rifles", "rigged", "rigger", "rights", "rimmed", "ringed", "ringer", "rinsed", "rioter", "ripped", "ripper", "ripple", "rising", "risque", "ritual", "rivals", "rivers", "roadie", "roared", "robber", "robots", "robust", "rocker", "rocket", "rococo", "rodent", "rolled", "roller", "romans", "rookie", "roomie", "rooted", "roping", "rosary", "roster", "rotary", "rotate", "rotted", "rotten", "rotund", "rounds", "router", "routes", "rovers", "roving", "rowing", "rubbed", "rubber", "rubble", "rubric", "ruckus", "rudder", "rudely", "rudest", "rueful", "ruffle", "rugged", "ruined", "rulers", "ruling", "rumble", "rumour", "rumple", "runner", "runoff", "runway", "rushed", "rusher", "russia", "rusted", "rustic", "rustle", "rutted",
+            "sacked", "sacred", "sadden", "saddle", "sadism", "sadist", "safari", "safely", "safest", "safety", "sagely", "sailed", "sailor", "saints", "salads", "salami", "salary", "saline", "saliva", "salmon", "saloon", "salted", "salute", "sample", "sandal", "sanity", "sapper", "sarong", "sashay", "satire", "saucer", "sauted", "savage", "savant", "saving", "savior", "savory", "sawing", "saying", "scalar", "scaled", "scales", "scanty", "scarab", "scarce", "scared", "scenes", "scenic", "schema", "scheme", "schism", "school", "sconce", "scorch", "scored", "scorer", "scores", "scotch", "scouts", "scrape", "scraps", "scrawl", "scream", "screen", "screws", "screwy", "scribe", "script", "scroll", "scruff", "sculpt", "scurry", "scurvy", "scythe", "seabed", "sealed", "sealer", "seaman", "seamen", "seance", "search", "seared", "season", "seated", "secede", "second", "secret", "sector", "secure", "sedate", "seduce", "seeded", "seeing", "seeker", "seemed", "seemly", "seesaw", "seethe", "seized", "seldom", "select", "seller", "senate", "sender", "senile", "senior", "sensed", "senses", "sensor", "sentry", "sepsis", "septal", "septet", "septic", "septum", "sequel", "sequin", "seraph", "serene", "serial", "series", "sermon", "served", "server", "serves", "sesame", "settee", "settle", "sevens", "severe", "sewage", "sewing", "sextet", "sexual", "shabby", "shaded", "shades", "shadow", "shafts", "shaggy", "shaken", "shaker", "shaman", "shanty", "shaped", "shapes", "shared", "shares", "shaved", "shaven", "shears", "sheath", "sheets", "sheila", "shekel", "shells", "shelve", "sherry", "shield", "shifts", "shifty", "shimmy", "shiner", "shirts", "shiver", "shocks", "shoddy", "shogun", "shores", "shorts", "should", "shouts", "shovel", "showed", "shower", "shrewd", "shriek", "shrill", "shrimp", "shrine", "shrink", "shroud", "shrubs", "shtick", "shucks", "sicken", "sickle", "sickly", "siding", "sienna", "sierra", "siesta", "sifted", "sifter", "sighed", "sights", "signal", "signed", "signer", "silent", "silken", "silver", "simian", "simile", "simmer", "simple", "simply", "sinful", "singed", "singer", "single", "sinker", "sinner", "siphon", "sipped", "sister", "sitcom", "sitter", "sizing", "sizzle", "skater", "sketch", "skewed", "skewer", "skiing", "skills", "skimpy", "skinny", "skirts", "skybox", "slalom", "slater", "slaves", "slayer", "sleaze", "sleazy", "sledge", "sleepy", "sleeve", "sleigh", "sleuth", "sliced", "slicer", "slices", "slider", "slides", "slight", "slinky", "sliver", "slogan", "sloped", "slopes", "sloppy", "slouch", "slough", "slowed", "slower", "slowly", "sludge", "slurry", "slushy", "smarmy", "smarts", "smells", "smelly", "smiled", "smiles", "smithy", "smoked", "smoker", "smooch", "smooth", "smudge", "smugly", "snakes", "snappy", "snarky", "snatch", "snazzy", "sneaky", "sneeze", "sniper", "snippy", "snitch", "snobby", "snoopy", "snooty", "snooze", "snugly", "soaked", "soaker", "soccer", "social", "socket", "sodden", "sodium", "sodomy", "soften", "softer", "softie", "softly", "soiled", "soiree", "solace", "solder", "solely", "solemn", "solids", "solved", "solver", "somber", "sombre", "sonata", "sonnet", "sooner", "soothe", "sorbet", "sordid", "sorely", "sorrow", "sorted", "sorter", "sought", "sounds", "source", "soured", "sourly", "soviet", "sowing", "spacer", "spaces", "spared", "sparse", "speaks", "speech", "speedo", "speeds", "speedy", "spells", "spends", "sphere", "spiced", "spider", "spigot", "spiked", "spinal", "spines", "spiral", "spirit", "splash", "spleen", "splice", "splint", "spoils", "spoken", "sponge", "spongy", "spooky", "sports", "sporty", "spotty", "spouse", "sprain", "sprang", "sprawl", "spread", "spring", "sprint", "sprite", "spritz", "sprout", "spruce", "spunky", "spying", "squads", "squall", "square", "squash", "squawk", "squeak", "squeal", "squint", "squire", "squirm", "squirt", "squish", "stable", "stacks", "staged", "stages", "stairs", "stakes", "stalls", "stamen", "stamps", "stance", "stands", "stanza", "staple", "starch", "stared", "starry", "starts", "starve", "stasis", "stated", "states", "static", "statue", "status", "stayed", "steady", "steamy", "steely", "steers", "stench", "stereo", "stewed", "sticks", "sticky", "stifle", "stigma", "stingy", "stinky", "stitch", "stocks", "stocky", "stolen", "stolid", "stoned", "stones", "stooge", "stored", "stores", "storey", "storms", "stormy", "strafe", "strain", "strand", "straps", "strata", "streak", "stream", "street", "stress", "strict", "stride", "strife", "strike", "string", "stripe", "strips", "strive", "strobe", "strode", "stroke", "stroll", "strong", "struck", "strung", "stubby", "stucco", "studio", "stuffy", "stumpy", "stupid", "stupor", "sturdy", "styles", "stylus", "stymie", "subdue", "submit", "subset", "subtle", "subtly", "suburb", "subway", "succor", "sucked", "sucker", "suckle", "sudden", "suffer", "suffix", "sugary", "suited", "suitor", "sulfur", "sullen", "sultry", "summed", "summer", "summit", "summon", "sundae", "sunday", "sunder", "sundry", "sunken", "sunlit", "sunset", "suntan", "superb", "supine", "supper", "supple", "supply", "surely", "surfer", "survey", "suture", "swampy", "swanky", "swathe", "sweaty", "sweets", "swerve", "switch", "swivel", "swords", "symbol", "syntax", "syrupy", "system",
+            "tables", "tablet", "tackle", "tactic", "tagged", "tailor", "taking", "talbot", "talent", "talked", "talker", "talkie", "taller", "tallow", "tamale", "tamers", "taming", "tamper", "tampon", "tandem", "tangle", "tanker", "tanned", "taping", "tapped", "target", "tariff", "tarmac", "tarred", "tartan", "tartar", "tartly", "tassel", "tasted", "taster", "tastes", "tattle", "tattoo", "taught", "tavern", "tawdry", "taxing", "teacup", "teapot", "teased", "teaser", "techie", "techno", "tedium", "teensy", "teepee", "teeter", "teller", "temper", "temple", "tenant", "tended", "tender", "tendon", "tennis", "tenpin", "tensor", "tenths", "tenure", "termed", "terror", "tested", "tester", "tether", "tetris", "thanks", "thatch", "thawed", "theirs", "theism", "themed", "themes", "theory", "theses", "thesis", "thighs", "things", "thingy", "thinks", "thinly", "thirds", "thirst", "thirty", "thorax", "thorny", "though", "thrall", "thrash", "thread", "threat", "thrice", "thrift", "thrill", "thrive", "throat", "throes", "throne", "throng", "thrown", "throws", "thrush", "thrust", "thusly", "thwack", "thwart", "ticker", "ticket", "tickle", "tidbit", "tiding", "tiered", "tigers", "tights", "tiling", "tilted", "timber", "timbre", "timely", "timing", "tinder", "tingle", "tinker", "tinkle", "tinned", "tinsel", "tinted", "tipped", "tippet", "tiptoe", "tirade", "tiring", "tissue", "titled", "titles", "titter", "toasty", "toddle", "toffee", "toggle", "toilet", "tokens", "tomato", "tomboy", "tomcat", "tongue", "tonnes", "tonsil", "tooled", "toothy", "topics", "topped", "topper", "topple", "torpid", "torpor", "torque", "torrid", "tossed", "toucan", "touchy", "toupee", "tousle", "toward", "towels", "towers", "towing", "toxics", "traced", "tracer", "traces", "tracks", "tracts", "traded", "trader", "trades", "tragic", "trains", "traits", "trance", "trashy", "trauma", "travel", "treats", "treaty", "treble", "tremor", "trench", "trends", "trendy", "triage", "trials", "tribal", "tribes", "tricks", "tricky", "trifle", "triple", "tripod", "trippy", "trivia", "troops", "trophy", "tropic", "trough", "troupe", "trowel", "truant", "trucks", "trudge", "truism", "trusts", "trusty", "truths", "trying", "tryout", "tubing", "tucked", "tucker", "tugged", "tumble", "tumour", "tumult", "tundra", "tuning", "tunnel", "turban", "turbid", "turgid", "turkey", "turned", "turnip", "turret", "turtle", "tussle", "tutors", "tuxedo", "twelve", "twenty", "twinge", "twisty", "twitch", "tycoon", "typing", "typist", "tyrant",
+            "ulcers", "ultima", "umpire", "unable", "unbend", "unbind", "unborn", "unclip", "unclog", "uncoil", "uncork", "uncurl", "undead", "undone", "unease", "uneasy", "uneven", "unfair", "unfelt", "unfold", "unfurl", "unholy", "unhook", "unhurt", "unions", "unique", "unison", "united", "unjust", "unkind", "unless", "unlike", "unload", "unlock", "unmask", "unpack", "unpaid", "unplug", "unread", "unreal", "unrest", "unripe", "unroll", "unruly", "unsafe", "unsaid", "unseal", "unseen", "unsold", "unsung", "unsure", "untidy", "untied", "untold", "untrue", "unused", "unveil", "unwell", "unwind", "unwise", "unworn", "unwrap", "upbeat", "update", "upheld", "uphill", "uphold", "upkeep", "uplift", "uplink", "upload", "uproar", "uproot", "upshot", "upside", "uptake", "uptick", "uptime", "uptown", "upward", "urchin", "urgent", "urging", "urinal", "usable", "useful", "uterus", "utmost", "utopia",
+            "vacant", "vacate", "vacuum", "vainly", "valley", "valued", "values", "valves", "vandal", "vanish", "vanity", "vapour", "varied", "varies", "vastly", "vaults", "vector", "veggie", "veiled", "veined", "velvet", "vendor", "vented", "venues", "verbal", "verify", "vermin", "versed", "verses", "versus", "vertex", "vessel", "vexing", "viable", "victim", "victor", "videos", "viewed", "viewer", "vigour", "viking", "vilify", "villas", "violet", "violin", "virgin", "virtue", "visage", "vision", "visits", "visual", "voiced", "voices", "voided", "volley", "volume", "voodoo", "vortex", "voters", "voting", "vowels", "voyage", "voyeur", "vulgar",
+            "waddle", "wading", "waffle", "wagons", "waited", "waiter", "waiver", "waking", "walked", "walker", "walled", "wallet", "walnut", "walrus", "wander", "waning", "wanted", "wanton", "warden", "warder", "warily", "warmed", "warmer", "warmly", "warmth", "warned", "warped", "wasabi", "washed", "washer", "wasted", "wastes", "waters", "watery", "waving", "waxing", "weaken", "weaker", "weakly", "wealth", "weaned", "weapon", "wearer", "weasel", "webbed", "webcam", "wedded", "weekly", "weenie", "weevil", "weight", "weirdo", "welded", "welder", "wetter", "whales", "wheels", "wheeze", "wheezy", "whilst", "whimsy", "whiner", "whinny", "whisky", "whiten", "whites", "wholly", "wicked", "widely", "widest", "widget", "widows", "wiener", "wiggle", "wildly", "willow", "wilted", "winded", "window", "winery", "winged", "winner", "winter", "wintry", "wiping", "wiring", "wisdom", "wisely", "wished", "wishes", "wither", "within", "wizard", "wobble", "wobbly", "woeful", "wolves", "wombat", "wonder", "wooded", "wooden", "wooing", "woolen", "woolly", "worked", "worker", "worlds", "worsen", "worthy", "wounds", "wraith", "wreath", "wrench", "wretch", "wrists", "writer", "writes", "writhe", "wyvern",
+            "xenons", "xylose",
+            "yachts", "yearly", "yelled", "yeller", "yellow", "yields", "yippee", "yonder", "youths", "yuppie",
+            "zagged", "zapped", "zapper", "zealot", "zebras", "zenith", "zeroes", "zigged", "zigzag", "zinger", "zipped", "zipper", "zodiac", "zombie", "zoning", "zoomed", "zygote"
+        };
 
-                var (values, anyNull) = solutionGrid.GetCellValues().Value;
-                var allClues = new List<(int ix, int clue)>();
-                for (var i = 0; i < w * h; i++)
-                    foreach (var cl in values[i])
-                        allClues.Add((i, cl));
-                allClues.Shuffle(rnd);
-
-                var reqClues = Ut.ReduceRequiredSet(Enumerable.Range(0, allClues.Count), skipConsistencyTest: true, test: state =>
-                {
-                    var clueSet = state.SetToTest;
-                    var statusStr = Enumerable.Range(0, allClues.Count).Select(ix => clueSet.Contains(ix) ? "█" : "░").JoinString();
-
-                    var testClues = new int[w * h][];
-                    foreach (var clueIx in clueSet)
-                        testClues[allClues[clueIx].ix] = testClues[allClues[clueIx].ix] == null ? new[] { allClues[clueIx].clue } : testClues[allClues[clueIx].ix].Insert(0, allClues[clueIx].clue);
-
-                    var numSolutions = Solve(new MultiSlitherlinkState(5, solutionWord.Length, 2), testClues, desiredXor: null, rnd: null).Take(2).ToArray();
-                    var solutionUnique = numSolutions.Length == 1;
-                    ConsoleUtil.WriteLine($@"(""{statusStr}"", {solutionUnique.ToString().ToLowerInvariant()}),".Color(solutionUnique ? ConsoleColor.Green : ConsoleColor.Red) + new string(' ', w * h + 4));
-                    return solutionUnique;
-                });
-
-                foreach (var req in reqClues)
-                    Console.WriteLine($"{(char) ('A' + allClues[req].ix % w)}{1 + allClues[req].ix / w} = {allClues[req].clue}");
-                Debugger.Break();
-            }
-        }
-
-        static IEnumerable<MultiSlitherlinkState> Solve(MultiSlitherlinkState cur, int[][] clues, bool[] desiredXor, Random rnd)
+        public static void Experiment()
         {
-            var ix = cur.sofar.IndexOf(b => b == null);
-            if (ix == -1)
-            {
-                yield return cur;
-                yield break;
-            }
+            var columnClueSolutions = new Dictionary<string, List<int>>();
+            for (var i = 0; i < (1 << 6); i++)
+                columnClueSolutions.AddSafe(Enumerable.Range(0, 6).Select(bit => (i & (1 << bit)) != 0).GroupConsecutive().Where(gr => gr.Key).Select(gr => gr.Count).JoinString(" "), i);
 
-            var ofs = rnd == null ? 0 : rnd.Next(0, (1 << cur.segments.Length));
+            var rnd = new Random(347);
+            var word = _words.PickRandom(rnd);
+            var (origBitmap, origClues) = GetNonogramClues(word);
+            var origResult = origBitmap.Reverse().Aggregate(0UL, (p, n) => (p << 1) | (n ? 1UL : 0UL));
 
-            for (var ir = 0; ir < (1 << cur.segments.Length); ir++)
+            //File.WriteAllText(@"D:\temp\temp.txt", "");
+
+            IEnumerable<(ulong bitmap, int[][] clues)> recurse(ulong[] bitmapsSoFar, ulong maskSoFar, int[][] cluesSoFar, int cluesIxFront, int cluesIxBack, int remainingClueTotal, int recursionDepth)
             {
-                var i = (ir + ofs) % (1 << cur.segments.Length);
-                if (desiredXor != null)
+                //var firstValid = bitmapsSoFar.IndexOf(b => (b & maskSoFar) == (origResult & maskSoFar));
+                //if (firstValid != -1)
+                //    File.AppendAllText(@"D:\temp\temp.txt", $"{firstValid,4} {new string(' ', recursionDepth)}{visualizeBitmap(bitmapsSoFar[0], " ")} /{bitmapsSoFar.Length,3} | {visualizeBitmap(maskSoFar, " ")} | {cluesIxFront} {cluesIxBack} {remainingClueTotal} || {cluesSoFar.Select(clues => clues.JoinString(" ")).JoinString(" | ")}\n");
+
+                if (cluesSoFar.Length == 12)
                 {
-                    var xor = false;
-                    var j = i;
-                    while (j > 0)
-                    {
-                        xor = !xor;
-                        j &= j - 1;
-                    }
-                    if (xor != desiredXor[ix])
-                        continue;
+                    if (maskSoFar == 0xFFFFFFFFFUL)
+                        foreach (var bmp in bitmapsSoFar)
+                            yield return (bmp, new[] { 0, 2, 4, 6, 8, 10, 11, 9, 7, 5, 3, 1 }.Select(ix => cluesSoFar[ix]).ToArray());
+                    yield break;
                 }
 
-                var newState = cur.SetPixel(ix, Enumerable.Range(0, cur.segments.Length).Select(ix => (i & (1 << ix)) != 0).ToArray());
-                if (newState.IsValid(clues))
-                    foreach (var solution in Solve(newState, clues, desiredXor, rnd))
-                        yield return solution;
-            }
-        }
+                if (remainingClueTotal + (origClues.Length - cluesIxFront - cluesIxBack) > 7 * (12 - cluesSoFar.Length))
+                    yield break;
 
-        public sealed class MultiSlitherlinkState
-        {
-            public int w, h;
-            public bool[][] sofar;     // indexed by cell, then grid
-            public List<(int ix1, int ix2)>[] segments;     // indexed by grid
-            public int[] closedLoops;   // indexed by grid
-
-            public MultiSlitherlinkState(int width, int height, int numGrids)
-            {
-                w = width;
-                h = height;
-                sofar = new bool[width * height][];
-                segments = Ut.NewArray(numGrids, _ => new List<(int ix1, int ix2)>());
-                closedLoops = new int[numGrids];
-            }
-
-            private MultiSlitherlinkState() { }
-
-            void addLine(int g, int ix1, int ix2)
-            {
-                var segm = segments[g];
-                var e1 = segm.IndexOf(tup => tup.ix1 == ix1 || tup.ix2 == ix1);
-                var e2 = segm.IndexOf(tup => tup.ix1 == ix2 || tup.ix2 == ix2);
-                if (e1 != -1 && e2 == e1)
+                if (cluesSoFar.Length % 2 != 0)
                 {
-                    closedLoops[g]++;
-                    segm.RemoveAt(e1);
-                }
-                else if (e1 != -1 && e2 != -1)
-                {
-                    var o1 = segm[e1].ix1 == ix1 ? segm[e1].ix2 : segm[e1].ix1;
-                    var o2 = segm[e2].ix1 == ix2 ? segm[e2].ix2 : segm[e2].ix1;
-                    segm.RemoveAt(Math.Max(e1, e2));
-                    segm.RemoveAt(Math.Min(e1, e2));
-                    segm.Add((o1, o2));
-                }
-                else if (e1 != -1)
-                    segm[e1] = (ix2, segm[e1].ix1 == ix1 ? segm[e1].ix2 : segm[e1].ix1);
-                else if (e2 != -1)
-                    segm[e2] = (ix1, segm[e2].ix1 == ix2 ? segm[e2].ix2 : segm[e2].ix1);
-                else
-                    segm.Add((ix1, ix2));
-            }
-
-            public MultiSlitherlinkState SetPixel(int ix, bool[] vs)
-            {
-                if (vs == null)
-                    throw new ArgumentNullException(nameof(vs));
-                if (vs.Length != segments.Length)
-                    throw new ArgumentException($"‘vs’ array has size {vs.Length} but expected size {segments.Length}.", nameof(vs));
-                var x = ix % w;
-                var y = ix / w;
-                if (x < 0 || x >= w || y < 0 || y >= h)
-                    throw new ArgumentException($"‘ix’ is {ix} but expected 0–{w * h - 1}.", nameof(ix));
-                var n = Clone();
-                n.sofar[ix] = vs;
-
-                for (var g = 0; g < segments.Length; g++)
-                {
-                    var v = vs[g];
-                    if (x > 0 ? n.sofar[ix - 1]?[g] == !v : v)
-                        n.addLine(g, x + (w + 1) * y, x + (w + 1) * (y + 1));
-                    if (x < w - 1 ? n.sofar[ix + 1]?[g] == !v : v)
-                        n.addLine(g, x + 1 + (w + 1) * y, x + 1 + (w + 1) * (y + 1));
-                    if (y > 0 ? n.sofar[ix - w]?[g] == !v : v)
-                        n.addLine(g, x + (w + 1) * y, x + 1 + (w + 1) * y);
-                    if (y < h - 1 ? n.sofar[ix + w]?[g] == !v : v)
-                        n.addLine(g, x + (w + 1) * (y + 1), x + 1 + (w + 1) * (y + 1));
-                }
-                return n;
-            }
-
-            private MultiSlitherlinkState Clone() => new()
-            {
-                w = w,
-                h = h,
-                sofar = sofar.Select(s => s?.ToArray()).ToArray(),
-                segments = segments.Select(s => s.ToList()).ToArray(),
-                closedLoops = closedLoops.ToArray()
-            };
-
-            public bool IsValid(int[][] clues, bool antiKnight = false, bool antiBishop = false)  // indexed by cell location; inner array is list of numbers for that cell
-            {
-                // Check for lexicographical ordering
-                var notChecked = Enumerable.Range(1, segments.Length - 1).ToList();
-                for (var cell = 0; cell < w * h; cell++)
-                    if (sofar[cell] != null)
-                        foreach (var g in notChecked.ToArray())
-                        {
-                            if (sofar[cell][g] && !sofar[cell][g - 1])
-                                notChecked.Remove(g);
-                            else if (!sofar[cell][g] && sofar[cell][g - 1])
-                                return false;
-                        }
-
-                // Cancel if there is a prematurely closed loop
-                for (var g = 0; g < segments.Length; g++)
-                    if (closedLoops[g] > 1 || (closedLoops[g] == 1 && segments[g].Count > 0))
-                        return false;
-
-                // If sofar is filled, and we don’t need to check for given clues or anti-knight or anti-bishop, then we are done
-                if (clues == null && !antiKnight && !antiBishop && sofar.All(s => s != null))
-                    return closedLoops.All(c => c == 1);
-
-                // Calculate the values of each cell in order to check against given clues, anti-knight or anti-bishop
-                if (GetCellValues(clues) is not (int[][] values, bool anyNull))
-                    return false;
-
-                if (antiKnight)
-                    for (var cell = 0; cell < w * h; cell++)
-                        if (values[cell] != null)
-                            foreach (var knight in AntiKnightConstraint.KnightsMoves(cell, w, h, toroidal: false))
-                                for (var g = 0; g < segments.Length; g++)
-                                    if (values[knight] != null && values[knight][g] == values[cell][g])
-                                        return false;
-
-                if (antiBishop)
-                    for (var cell = 0; cell < w * h; cell++)
-                        if (values[cell] != null)
-                            foreach (var bishop in AntiBishopConstraint.BishopsMoves(cell, w, h))
-                                for (var g = 0; g < segments.Length; g++)
-                                    if (values[bishop] != null && values[bishop][g] == values[cell][g])
-                                        return false;
-
-                return anyNull || closedLoops.All(c => c == 1);
-            }
-
-            public (int[][] values, bool anyNull)? GetCellValues(int[][] checkClues = null)
-            {
-                var values = new int[w * h][];
-                var anyNull = false;
-                for (var cell = 0; cell < w * h; cell++)
-                {
-                    if (sofar[cell] == null)
+                    // do a row
+                    for (var numCl = (origClues.Length - cluesIxFront - cluesIxBack).ClipMax(3); numCl >= 0; numCl--)
                     {
-                        anyNull = true;
-                        continue;
-                    }
-                    values[cell] = new int[segments.Length];
-
-                    var x = cell % w;
-                    var y = cell / w;
-                    var hasNull = false;
-                    for (var g = 0; g < segments.Length; g++)
-                    {
-                        // No checkerboard patterns allowed
-                        if (x > 0 && y > 0 &&
-                                sofar[cell] != null && sofar[cell - 1] != null && sofar[cell - w] != null && sofar[cell - w - 1] != null &&
-                                sofar[cell - w - 1][g] == sofar[cell][g] && sofar[cell - w][g] != sofar[cell][g] && sofar[cell - 1][g] != sofar[cell][g])
-                            return null;
-
-                        var v = sofar[cell][g];
-                        var nd = 0;
-                        if (x > 0) { if (sofar[cell - 1] == null) hasNull = true; else if (sofar[cell - 1][g] != v) nd++; } else if (v) nd++;
-                        if (x < w - 1) { if (sofar[cell + 1] == null) hasNull = true; else if (sofar[cell + 1][g] != v) nd++; } else if (v) nd++;
-                        if (y > 0) { if (sofar[cell - w] == null) hasNull = true; else if (sofar[cell - w][g] != v) nd++; } else if (v) nd++;
-                        if (y < h - 1) { if (sofar[cell + w] == null) hasNull = true; else if (sofar[cell + w][g] != v) nd++; } else if (v) nd++;
-                        values[cell][g] = nd;
-                    }
-                    if (hasNull)
-                    {
-                        values[cell] = null;
-                        continue;
-                    }
-                    if (checkClues == null || checkClues[cell] == null || checkClues[cell].Length == 0)
-                        continue;
-
-                    var nDiff = values[cell].ToList();
-                    for (var cl = 0; cl < checkClues[cell].Length; cl++)
-                        if (!nDiff.Remove(checkClues[cell][cl]))
-                            return null;
-                }
-                return (values, anyNull);
-            }
-
-            public string Visualize(int g) => Enumerable.Range(0, w * h).Select(c => sofar[c] == null ? "??" : sofar[c][g] ? "██" : "░░").Split(w).Select(r => r.JoinString()).JoinString("\n");
-
-            public string VisualizeAll() => Enumerable.Range(0, segments.Length).Select(g => Visualize(g).Split('\n')).Aggregate((p, n) => p.Zip(n, (a, b) => $"{a}    {b}").ToArray()).JoinString("\n");
-        }
-
-        private static readonly string[] _words = new[] { "ABIDE", "ABORT", "ABOUT", "ABOVE", "ABYSS", "ACIDS", "ACORN", "ACRES", "ACTED", "ACTOR", "ACUTE", "ADDER", "ADDLE", "ADIEU", "ADIOS", "ADMIN", "ADMIT", "ADOPT", "ADORE", "ADORN", "ADULT", "AFFIX", "AFTER", "AGILE", "AGING", "AGORA", "AGREE", "AHEAD", "AIDED", "AIMED", "AIOLI", "AIRED", "AISLE", "ALARM", "ALBUM", "ALIAS", "ALIBI", "ALIEN", "ALIGN", "ALIKE", "ALIVE", "ALLAY", "ALLEN", "ALLOT", "ALLOY", "ALOFT", "ALONE", "ALONG", "ALOOF", "ALOUD", "ALPHA", "ALTAR", "ALTER", "AMASS", "AMAZE", "AMBLE", "AMINO", "AMISH", "AMISS", "AMONG", "AMPLE", "AMUSE", "ANGLE", "ANGLO", "ANGRY", "ANGST", "ANIME", "ANION", "ANISE", "ANKLE", "ANNEX", "ANNOY", "ANNUL", "ANTIC", "ANVIL", "AORTA", "APNEA", "APPLE", "APRON", "AREAS", "ARENA", "ARGUE", "ARISE", "ARMED", "ARMOR", "AROSE", "ASHEN", "ASHES", "ASIAN", "ASIDE", "ASSET", "ASTER", "ASTIR", "ATOLL", "ATOMS", "ATONE", "ATTIC", "AUDIO", "AUDIT", "AUGUR", "AUNTY", "AVAIL", "AVIAN", "AVOID", "AWAIT", "AWAKE", "AWARE", "AWASH", "AXIAL", "AXIOM", "AXION", "AZTEC", "BIBLE", "BIDET", "BIGHT", "BILGE", "BILLS", "BINGE", "BINGO", "BIOME", "BIRCH", "BIRDS", "BIRTH", "BISON", "BITER", "BLADE", "BLAME", "BLAND", "BLARE", "BLAZE", "BLEAT", "BLEED", "BLEEP", "BLIMP", "BLIND", "BLING", "BLINK", "BLISS", "BLITZ", "BLOND", "BLOOM", "BLOOP", "BLUES", "BLUNT", "BLUSH", "BOGGY", "BOGUS", "BOLTS", "BONDS", "BONED", "BONER", "BONES", "BONNY", "BONUS", "BOOST", "BOOTH", "BOOTS", "BORAX", "BORED", "BORER", "BORNE", "BORON", "BOTCH", "BOUGH", "BOULE", "BRACE", "BRAID", "BRAIN", "BRAKE", "BRAND", "BRASH", "BRASS", "BRAVE", "BRAWL", "BRAWN", "BRAZE", "BREAD", "BREAK", "BREAM", "BREED", "BRIAR", "BRIBE", "BRICK", "BRIDE", "BRIEF", "BRIER", "BRINE", "BRING", "BRINK", "BRINY", "BRISK", "BROIL", "BRONX", "BROOM", "BROTH", "BRUNT", "BRUSH", "BRUTE", "BUCKS", "BUDDY", "BUDGE", "BUGGY", "BUILD", "BUILT", "BULBS", "BULGE", "BULLS", "BUMPY", "BUNCH", "BUNNY", "BUSES", "BUZZY", "BYLAW", "BYWAY", "CABBY", "CABIN", "CABLE", "CACHE", "CAIRN", "CAKES", "CALLS", "CALVE", "CALYX", "CAMPS", "CAMPY", "CANAL", "CANED", "CANNY", "CANON", "CARDS", "CARVE", "CASED", "CASES", "CASTE", "CATCH", "CAULK", "CAUSE", "CAVES", "CEASE", "CEDED", "CELLS", "CENTS", "CHAFE", "CHAFF", "CHAIN", "CHAIR", "CHALK", "CHAMP", "CHANT", "CHAOS", "CHAPS", "CHARM", "CHART", "CHARY", "CHASE", "CHASM", "CHEAP", "CHEAT", "CHECK", "CHEMO", "CHESS", "CHEST", "CHICK", "CHIDE", "CHILD", "CHILI", "CHILL", "CHIME", "CHINA", "CHIPS", "CHORD", "CHORE", "CHOSE", "CHUCK", "CHUNK", "CHUTE", "CINCH", "CITED", "CITES", "CIVET", "CIVIC", "CIVIL", "CLADE", "CLAIM", "CLANK", "CLASH", "CLASS", "CLAWS", "CLEAN", "CLEAR", "CLEAT", "CLICK", "CLIFF", "CLIMB", "CLING", "CLONE", "CLOSE", "CLOTH", "CLOUD", "CLOUT", "CLOVE", "CLUBS", "CLUCK", "CLUES", "CLUNG", "CLUNK", "COINS", "COLIC", "COLON", "COLOR", "COMAL", "COMES", "COMIC", "COMMA", "CONCH", "CONIC", "CORAL", "CORGI", "CORNY", "CORPS", "COSTS", "COTTA", "COUCH", "COUGH", "COULD", "COUNT", "COVEN", "COYLY", "CRACK", "CRANE", "CRANK", "CRASH", "CRASS", "CRATE", "CRAVE", "CREAK", "CREAM", "CREED", "CREWS", "CRIED", "CRIES", "CRIME", "CRONE", "CROPS", "CROSS", "CRUDE", "CRUEL", "CRUSH", "CUBBY", "CUBIT", "CUMIN", "CUTIE", "CYCLE", "CYNIC", "CZECH", "DACHA", "DAILY", "DALLY", "DANCE", "DATED", "DATES", "DATUM", "DEALS", "DEALT", "DEATH", "DEBIT", "DEBTS", "DEBUG", "DEBUT", "DECAF", "DECAL", "DECOR", "DECOY", "DEEDS", "DEIST", "DELFT", "DELVE", "DEMUR", "DENIM", "DENSE", "DESKS", "DETER", "DETOX", "DEUCE", "DEVIL", "DICED", "DIETS", "DIGIT", "DIMLY", "DINAR", "DINER", "DINGY", "DIRTY", "DISCO", "DISCS", "DISKS", "DITCH", "DITTY", "DITZY", "DIVAN", "DIVED", "DIVER", "DIVOT", "DIVVY", "DOGGY", "DOGMA", "DOING", "DOLLS", "DOMED", "DONOR", "DONUT", "DOORS", "DORIC", "DOSED", "DOSES", "DOTTY", "DOUGH", "DOUSE", "DRAFT", "DRAIN", "DRAMA", "DRANK", "DREAM", "DRESS", "DRIED", "DRIER", "DRIFT", "DRILL", "DRILY", "DRINK", "DRIVE", "DROLL", "DRONE", "DROPS", "DROVE", "DRUGS", "DRUMS", "DRUNK", "DRYER", "DUCAT", "DUCKS", "DUMMY", "DUNCE", "DUNES", "DUTCH", "DUVET", "DWARF", "DWELL", "DYING", "EAGLE", "EARED", "EARLY", "EARTH", "EASED", "EASEL", "EATEN", "ECLAT", "EDEMA", "EDICT", "EDIFY", "EGRET", "EIDER", "EIGHT", "ELATE", "ELDER", "ELECT", "ELIDE", "ELITE", "ELUDE", "EMCEE", "EMOTE", "ENACT", "ENEMA", "ENNUI", "ENSUE", "ENTER", "ENVOY", "ETHIC", "ETHOS", "ETUDE", "EVADE", "EVICT", "EXACT", "EXALT", "EXAMS", "EXILE", "EXIST", "EXTRA", "EXUDE", "FAILS", "FAINT", "FAIRY", "FAITH", "FALLS", "FALSE", "FAMED", "FANCY", "FATAL", "FATED", "FATTY", "FATWA", "FAULT", "FAVOR", "FECAL", "FEINT", "FETAL", "FIBRE", "FIFTH", "FIFTY", "FIGHT", "FILCH", "FILED", "FILET", "FILLE", "FILLS", "FILLY", "FILMS", "FILMY", "FILTH", "FINAL", "FINDS", "FINED", "FINNY", "FIRED", "FIRMS", "FIRST", "FISTS", "FLAIL", "FLAIR", "FLATS", "FLEET", "FLING", "FLIRT", "FLOOR", "FLORA", "FLOUT", "FLUID", "FLUNG", "FLYBY", "FOGGY", "FOIST", "FOLIC", "FOLIO", "FOLLY", "FONTS", "FORAY", "FORGO", "FORMS", "FORTE", "FORTH", "FORTY", "FORUM", "FOUNT", "FOVEA", "FRAIL", "FRAUD", "FREED", "FRIED", "FRILL", "FRISK", "FRONT", "FRUIT", "FUELS", "FULLY", "FUNNY", "FUSED", "FUTON", "FUZZY", "GHOUL", "GIANT", "GIDDY", "GIFTS", "GIMPY", "GIRLS", "GIRLY", "GIRTH", "GIVEN", "GIZMO", "GLAND", "GLEAM", "GLEAN", "GLIAL", "GLINT", "GLOOM", "GLORY", "GLUED", "GLUON", "GOING", "GOLLY", "GOOFY", "GOOPY", "GRAFT", "GRAIN", "GRAND", "GRANT", "GRASS", "GRATE", "GRAVE", "GRAVY", "GREAT", "GREED", "GREEN", "GREET", "GRILL", "GRIME", "GRIMY", "GRIND", "GRIPS", "GROIN", "GROOM", "GROSS", "GROUT", "GRUEL", "GRUMP", "GRUNT", "GUANO", "GUARD", "GUAVA", "GUEST", "GUILD", "GUILT", "GUISE", "GULLS", "GULLY", "GUMMY", "GUNKY", "GUNNY", "GUSHY", "GUSTY", "GUTSY", "GYRUS", "HABIT", "HAIKU", "HAIRS", "HAIRY", "HALAL", "HALVE", "HAMMY", "HANDS", "HANDY", "HANGS", "HARDY", "HAREM", "HARPY", "HARSH", "HASTE", "HASTY", "HATCH", "HATED", "HATES", "HAUNT", "HAVEN", "HAZEL", "HEADS", "HEADY", "HEARD", "HEARS", "HEART", "HEATH", "HEAVE", "HEAVY", "HEELS", "HEIRS", "HEIST", "HELIX", "HELLO", "HENRY", "HILLS", "HILLY", "HINDI", "HINDU", "HINTS", "HIRED", "HITCH", "HOBBY", "HOIST", "HOLLY", "HOMED", "HONOR", "HORNS", "HORSE", "HOSEL", "HOTLY", "HOUND", "HUBBY", "HUGGY", "HULLO", "HUMAN", "HUMID", "HUMOR", "ICHOR", "ICILY", "ICING", "ICONS", "IDEAL", "IDEAS", "IDIOM", "IDIOT", "IDLED", "IDYLL", "IGLOO", "ILIAC", "ILIUM", "IMAGO", "IMBUE", "IMPLY", "INANE", "INCAN", "INCUS", "INDEX", "INDIA", "INDIE", "INFRA", "INGOT", "INLAY", "INLET", "INPUT", "INSET", "INTRO", "INUIT", "IONIC", "IRISH", "IRONY", "ISLET", "ISSUE", "ITEMS", "IVORY", "JOINS", "JOINT", "JOULE", "JUMBO", "JUNTA", "KANJI", "KARAT", "KARMA", "KIDDO", "KILLS", "KINDA", "KINDS", "KINGS", "KITTY", "KNAVE", "KNEES", "KNELT", "KNIFE", "KNOBS", "KNOLL", "KNOTS", "KUDOS", "KUDZU", "LABOR", "LACED", "LACKS", "LADLE", "LAITY", "LAMBS", "LAMPS", "LANDS", "LANES", "LAPIN", "LAPSE", "LARGE", "LARVA", "LASER", "LASSO", "LATCH", "LATER", "LATHE", "LATIN", "LATTE", "LAUGH", "LAWNS", "LAYER", "LAYUP", "LEACH", "LEADS", "LEAFY", "LEANT", "LEAPT", "LEARN", "LEASE", "LEASH", "LEAVE", "LEDGE", "LEECH", "LEGGY", "LEMMA", "LEMON", "LEMUR", "LIANA", "LIDAR", "LIEGE", "LIFTS", "LIGHT", "LIKEN", "LIKES", "LILAC", "LIMBO", "LIMBS", "LIMIT", "LINED", "LINEN", "LINER", "LINES", "LINGO", "LINKS", "LIONS", "LIPID", "LISTS", "LITER", "LITRE", "LIVED", "LIVEN", "LIVER", "LIVES", "LIVID", "LLAMA", "LOBBY", "LOFTY", "LOGIC", "LOGON", "LOLLY", "LONER", "LOONY", "LOOPS", "LOOPY", "LOOSE", "LORDS", "LORRY", "LOSER", "LOSES", "LOTTO", "LOTUS", "LOUSE", "LOVED", "LOVER", "LOVES", "LOYAL", "LUCID", "LUCRE", "LUMEN", "LUMPS", "LUMPY", "LUNAR", "LUNCH", "LUNGE", "LUNGS", "LUSTY", "LYING", "LYMPH", "LYNCH", "LYRIC", "MADAM", "MADLY", "MAGIC", "MAGMA", "MAINS", "MAJOR", "MALAY", "MALTA", "MAMBO", "MANGO", "MANGY", "MANIA", "MANIC", "MANLY", "MANOR", "MASKS", "MATCH", "MATED", "MATHS", "MATTE", "MAVEN", "MAXIM", "MAYAN", "MAYOR", "MEALS", "MEANS", "MEANT", "MEATY", "MEDAL", "MEDIA", "MEDIC", "MEETS", "MELON", "MESON", "METAL", "MICRO", "MIDST", "MIGHT", "MILES", "MILLS", "MIMIC", "MINCE", "MINDS", "MINED", "MINES", "MINOR", "MINTY", "MINUS", "MIRED", "MIRTH", "MISTY", "MITRE", "MOGUL", "MOIST", "MOLAR", "MOLDY", "MONTH", "MOONY", "MOORS", "MOOSE", "MORAL", "MORAY", "MORPH", "MOTEL", "MOTIF", "MOTOR", "MOTTO", "MOULD", "MOUND", "MOUNT", "MOUSE", "MOUTH", "MOVED", "MOVIE", "MUCUS", "MUDDY", "MUGGY", "MULCH", "MULTI", "MUMMY", "MUNCH", "MUSED", "MUSIC", "MUSTY", "MUTED", "MUZZY", "MYTHS", "NADIR", "NAILS", "NAIVE", "NAMED", "NAMES", "NANNY", "NARCO", "NASAL", "NATAL", "NATTY", "NAVAL", "NAVEL", "NEATH", "NECKS", "NEEDS", "NEEDY", "NEIGH", "NESTS", "NEWLY", "NEXUS", "NICER", "NICHE", "NIECE", "NIFTY", "NIGHT", "NIGRA", "NINTH", "NITRO", "NOBLE", "NOBLY", "NOISE", "NOMAD", "NOMES", "NONCE", "NOOSE", "NORMS", "NORSE", "NORTH", "NOSES", "NOTCH", "NOTED", "NOTES", "NOVEL", "NUDGE", "NUTTY", "NYLON", "NYMPH", "OFFER", "OFTEN", "OILED", "OLDER", "OLDIE", "OLIVE", "OMANI", "ONION", "ONSET", "OOMPH", "OPINE", "OPIUM", "OPTIC", "ORBIT", "ORDER", "OTHER", "OTTER", "OUGHT", "OUNCE", "OUTDO", "OUTER", "OVOID", "OVULE", "OXBOW", "OXIDE", "PHASE", "PHONE", "PHOTO", "PIANO", "PIECE", "PIGGY", "PILAF", "PILED", "PILLS", "PILOT", "PINCH", "PINTS", "PISTE", "PITCH", "PIVOT", "PIXEL", "PIXIE", "PLACE", "PLAIN", "PLAIT", "PLANE", "PLANS", "PLANT", "PLATE", "PLAYS", "PLEAS", "PLEAT", "PLOTS", "PLUMB", "PLUME", "PLUMP", "POINT", "POLAR", "POLIO", "POLLS", "POLYP", "PONDS", "POOLS", "PORCH", "PORTS", "POSED", "POSIT", "POSTS", "POUCH", "PREEN", "PRICE", "PRICY", "PRIDE", "PRIMA", "PRIME", "PRIMP", "PRINT", "PRION", "PRIOR", "PRISE", "PRISM", "PRIVY", "PRIZE", "PROMO", "PRONE", "PRONG", "PROOF", "PROSE", "PROUD", "PROVE", "PRUDE", "PRUNE", "PUDGY", "PULLS", "PUNCH", "PUNIC", "PYLON", "QUAIL", "QUALM", "QUASI", "QUEEN", "QUELL", "QUILL", "QUILT", "QUINT", "RABBI", "RADAR", "RADIO", "RAGGY", "RAIDS", "RAILS", "RAINY", "RAISE", "RALLY", "RANCH", "RANGE", "RANGY", "RATED", "RATIO", "RATTY", "RAZOR", "REACH", "REACT", "READS", "REALM", "REARM", "RECAP", "RECON", "RECTO", "REDLY", "REEDY", "REHAB", "REINS", "RELIC", "REMIT", "RENTS", "RESTS", "RETRO", "RHINO", "RIDGE", "RIFLE", "RIGHT", "RIGID", "RIGOR", "RILED", "RINGS", "RINSE", "RIOTS", "RISEN", "RISES", "RISKS", "RITZY", "RIVAL", "RIVEN", "RIVET", "ROBOT", "ROILY", "ROLLS", "ROMAN", "ROOFS", "ROOMS", "ROOTS", "ROSIN", "ROTOR", "ROUGE", "ROUGH", "ROUTE", "ROYAL", "RUDDY", "RUGBY", "RUINS", "RULED", "RUMBA", "RUMMY", "RUMOR", "RUNIC", "RUNNY", "RUNTY", "SABLE", "SADLY", "SAFER", "SAGGY", "SAILS", "SAINT", "SALAD", "SALES", "SALLY", "SALON", "SALSA", "SALTS", "SALTY", "SALVE", "SAMBA", "SANDS", "SANDY", "SATED", "SATIN", "SATYR", "SAUCE", "SAUCY", "SAUDI", "SAUNA", "SAVED", "SAVER", "SAVOR", "SAVVY", "SAXON", "SCALD", "SCALE", "SCALP", "SCALY", "SCAMP", "SCANT", "SCAPE", "SCARE", "SCARF", "SCARP", "SCARS", "SCARY", "SCENE", "SCENT", "SCHMO", "SCOFF", "SCOLD", "SCONE", "SCOOP", "SCOOT", "SCOPE", "SCORE", "SCORN", "SCOTS", "SCOUR", "SCOUT", "SCRAM", "SCRAP", "SCREE", "SCREW", "SCRIM", "SCRIP", "SCRUB", "SCRUM", "SCUBA", "SCULL", "SEALS", "SEAMS", "SEAMY", "SEATS", "SEDAN", "SEEDS", "SEEDY", "SEEMS", "SEGUE", "SEIZE", "SELLS", "SENDS", "SENSE", "SETUP", "SEXES", "SHADE", "SHADY", "SHAFT", "SHAKE", "SHALE", "SHALL", "SHAME", "SHANK", "SHAPE", "SHARD", "SHARE", "SHARP", "SHAVE", "SHAWL", "SHEAF", "SHEAR", "SHEEN", "SHEET", "SHELF", "SHELL", "SHIFT", "SHILL", "SHINE", "SHINY", "SHIPS", "SHIRE", "SHIRT", "SHONE", "SHOOT", "SHOPS", "SHORE", "SHORN", "SHORT", "SHOTS", "SHOUT", "SHOVE", "SHUNT", "SHUSH", "SIDES", "SIDLE", "SIEGE", "SIGHT", "SIGIL", "SIGNS", "SILLY", "SILTY", "SINCE", "SINEW", "SINGE", "SINGS", "SINUS", "SITAR", "SITES", "SIXTH", "SIXTY", "SIZED", "SIZES", "SKALD", "SKANK", "SKATE", "SKEIN", "SKIER", "SKIES", "SKIFF", "SKILL", "SKIMP", "SKINS", "SKIRT", "SKULL", "SLABS", "SLAIN", "SLAKE", "SLANG", "SLANT", "SLASH", "SLATE", "SLEEP", "SLEET", "SLICE", "SLIDE", "SLIME", "SLIMY", "SLING", "SLINK", "SLOPE", "SLOSH", "SLOTH", "SLOTS", "SLUMP", "SLUSH", "SLYLY", "SMALL", "SMART", "SMASH", "SMEAR", "SMELL", "SMELT", "SMILE", "SMITE", "SNAIL", "SNAKE", "SNARE", "SNARL", "SNEER", "SNIDE", "SNIFF", "SNIPE", "SNOOP", "SNORE", "SNORT", "SNOUT", "SOFTY", "SOGGY", "SOILS", "SOLAR", "SOLID", "SOLVE", "SONAR", "SONGS", "SONIC", "SOOTH", "SORRY", "SORTS", "SOUGH", "SOULS", "SOUTH", "STAFF", "STAGE", "STAIN", "STAIR", "STAKE", "STALE", "STALL", "STAMP", "STAND", "START", "STASH", "STATE", "STEAD", "STEAL", "STEAM", "STEEL", "STEEP", "STEER", "STEMS", "STENO", "STIFF", "STILE", "STILL", "STILT", "STING", "STINK", "STINT", "STOIC", "STOLE", "STOMP", "STONE", "STONY", "STOOL", "STOOP", "STOPS", "STORE", "STORK", "STORM", "STORY", "STOUT", "STOVE", "STRAP", "STRAW", "STREP", "STREW", "STRIP", "STRUM", "STRUT", "STUCK", "STUDY", "STUMP", "STUNT", "SUAVE", "SUEDE", "SUITE", "SUITS", "SULLY", "SUNNY", "SUNUP", "SUSHI", "SWALE", "SWAMI", "SWAMP", "SWANK", "SWANS", "SWARD", "SWARM", "SWASH", "SWATH", "SWAZI", "SWEAR", "SWEAT", "SWELL", "SWIFT", "SWILL", "SWINE", "SWING", "SWIPE", "SWIRL", "SWISH", "SWISS", "SWOON", "SWOOP", "SWORD", "SWORE", "SWORN", "SWUNG", "TACIT", "TAFFY", "TAILS", "TAINT", "TAKEN", "TALLY", "TALON", "TAMED", "TAMIL", "TANGO", "TANGY", "TARDY", "TAROT", "TARRY", "TASKS", "TATTY", "TAUNT", "TAWNY", "TAXES", "TAXON", "TEACH", "TEAMS", "TEARS", "TEARY", "TEASE", "TECHY", "TEDDY", "TEENS", "TEENY", "TEETH", "TELLS", "TELLY", "TENOR", "TENSE", "TENTH", "TENTS", "TEXAS", "THANK", "THEIR", "THEME", "THESE", "THETA", "THIGH", "THINE", "THING", "THINK", "THIRD", "THONG", "THORN", "THOSE", "THUMB", "TIARA", "TIBIA", "TIDAL", "TIGHT", "TILDE", "TILED", "TILES", "TILTH", "TIMED", "TIMES", "TIMID", "TINES", "TINNY", "TIPSY", "TIRED", "TITLE", "TOMMY", "TONAL", "TONED", "TONGS", "TONIC", "TONNE", "TOOLS", "TOONS", "TOOTH", "TOPIC", "TOPSY", "TOQUE", "TORCH", "TORSO", "TORTE", "TORUS", "TOTAL", "TOTEM", "TOUCH", "TOXIC", "TOXIN", "TRACT", "TRAIL", "TRAIN", "TRAIT", "TRAMS", "TRAWL", "TREAD", "TREAT", "TRIAD", "TRIAL", "TRIED", "TRIKE", "TRILL", "TRITE", "TROLL", "TROOP", "TROUT", "TRUCE", "TRUCK", "TRULY", "TRUST", "TRUTH", "TUBBY", "TULIP", "TUMMY", "TUNED", "TUNIC", "TUTEE", "TUTOR", "TWANG", "TWEAK", "TWINS", "TWIRL", "TWIST", "TYING", "UDDER", "ULCER", "ULNAR", "ULTRA", "UMBRA", "UNCAP", "UNCLE", "UNCUT", "UNDER", "UNDUE", "UNFED", "UNFIT", "UNHIP", "UNIFY", "UNION", "UNITE", "UNITS", "UNITY", "UNLIT", "UNMET", "UNSAY", "UNTIE", "UNTIL", "UNZIP", "USAGE", "USHER", "USING", "USUAL", "UTTER", "UVULA", "VAGUE", "VALET", "VALID", "VALOR", "VALUE", "VAPOR", "VAULT", "VAUNT", "VEDIC", "VEINS", "VEINY", "VENAL", "VENOM", "VICAR", "VIEWS", "VIGIL", "VIGOR", "VILLA", "VINES", "VINYL", "VIRAL", "VIRUS", "VISIT", "VISOR", "VITAL", "VIVID", "VIXEN", "VOGUE", "VOTED", "VOUCH", "VROOM", "WAGON", "WAIST", "WAITS", "WAIVE", "WALKS", "WALLS", "WALTZ", "WANTS", "WARDS", "WARES", "WARNS", "WASTE", "WATCH", "WAVED", "WAVES", "WAXEN", "WEARS", "WEARY", "WEAVE", "WEBBY", "WELLS", "WETLY", "WHALE", "WHEAT", "WHEEL", "WHICH", "WHILE", "WHINE", "WHITE", "WHORL", "WHOSE", "WIDTH", "WIELD", "WILLS", "WIMPY", "WINCE", "WINCH", "WINDS", "WINES", "WINGS", "WITCH", "WITTY", "WIVES", "WOMAN", "WORDS", "WORKS", "WORLD", "WORMS", "WORMY", "WORSE", "WORST", "WORTH", "WOULD", "WOUND", "XENON", "YARDS", "YAWNS", "YEARN", "YEARS", "YOUNG", "YOUTH", "YUCCA", "YUMMY", "ZILCH", "ZINGY", "ZONAL", "ZONES" };
-
-        public static void TranspositionExperiment()
-        {
-            //0 = /
-            //1 = cw
-            //2 = ccw
-            //3 = \
-
-            bool[] bitsFromWord(string word) => Enumerable.Range(0, 5).SelectMany(ltr => Enumerable.Range(0, 5).Select(bit => ((word[ltr] - 'A' + 1) & (1 << (4 - bit))) != 0)).ToArray();
-            string wordFromBits(bool[] bits) => Enumerable.Range(0, 5).Select(row => Enumerable.Range(0, 5).Select(bit => bits[bit + 5 * row]).Aggregate(0, (p, n) => p * 2 + (n ? 1 : 0))).Select(i => (char) ('A' + i - 1)).JoinString();
-            bool[] transpose(bool[] bits, int mode) => Enumerable.Range(0, 25).Select(ix => (ix / 5).Apply(row => (ix % 5).Apply(col => bits[((mode & 1) != 0 ? row : 4 - row) + 5 * ((mode & 2) != 0 ? col : 4 - col)]))).ToArray();
-            int reverseMode(int mode) => (mode >> 1) | ((mode & 1) << 1);
-
-            List<ConsoleColoredString> outputBits(bool[] bits) => Enumerable.Range(0, 5)
-                .Select(row => Enumerable.Range(0, 5).Select(bit => bits[bit + 5 * row] ? "██".Color(ConsoleColor.Green) : "░░".Color(ConsoleColor.DarkBlue)).JoinColoredString())
-                .ToList();
-
-            var words = _words.ToHashSet();
-            var times = new List<double>();
-            var rnd = new Random(247);
-
-            var solWordIx = rnd.Next(0, _words.Length);
-            var solWord = _words[solWordIx];
-            var solRawBits = bitsFromWord(solWord);
-
-            var start = DateTime.UtcNow;
-            var reiterate = 0;
-            while (true)
-            {
-                var xor1WordIx = rnd.Next(0, _words.Length);
-                if (xor1WordIx == solWordIx)
-                    continue;
-                var xor1Word = _words[xor1WordIx];
-                var xor1RawBits = bitsFromWord(xor1Word);
-
-                var xor2ofs = rnd.Next(0, _words.Length);
-                for (var xor2WordIxR = 0; xor2WordIxR < 1000; xor2WordIxR++)
-                {
-                    var xor2WordIx = (xor2WordIxR + xor2ofs) % _words.Length;
-                    if (xor2WordIx == xor1WordIx || xor2WordIx == solWordIx)
-                        continue;
-                    var xor2Word = _words[xor2WordIx];
-                    var xor2RawBits = bitsFromWord(xor2Word);
-                    for (var xor1Mode = 0; xor1Mode < 4; xor1Mode++)
-                    {
-                        var xor1Bits = transpose(xor1RawBits, xor1Mode);
-                        for (var xor2Mode = 0; xor2Mode < 4; xor2Mode++)
-                        {
-                            var xor2Bits = transpose(xor2RawBits, xor2Mode);
-                            var xor3Bits = xor1Bits.Zip(xor2Bits, (a, b) => a ^ b).Zip(solRawBits, (a, b) => a ^ b).ToArray();
-                            for (var xor3Mode = 0; xor3Mode < 4; xor3Mode++)
+                        var theseCl = origClues.Subarray(origClues.Length - cluesIxBack - numCl, numCl);
+                        var sum = theseCl.Sum();
+                        if (sum + theseCl.Length > 7)
+                            continue;
+                        var rowUnderConsideration = cluesSoFar.Length / 2;
+                        var rowBitmaps = columnClueSolutions[theseCl.JoinString(" ")].Select(rowInt => nonoMakeColOrRow(rowInt, column: false) << (6 * (5 - rowUnderConsideration))).ToArray();
+                        var newMask = nonoMakeColOrRow(0x3F, column: false) << (6 * (5 - rowUnderConsideration));
+                        var newBitmaps = new List<ulong>();
+                        foreach (var oldBmp in bitmapsSoFar)
+                            foreach (var newBmp in rowBitmaps)
                             {
-                                var xor3RawBits = transpose(xor3Bits, reverseMode(xor3Mode));
-                                var xor3Word = wordFromBits(xor3RawBits);
-                                if (xor3Word != xor1Word && xor3Word != xor2Word && xor3Word != solWord && words.Contains(xor3Word))
-                                {
-                                    var time = (DateTime.UtcNow - start).TotalSeconds;
-                                    times.Add(time);
-                                    var mean = times.Average();
-                                    Console.WriteLine($"{xor1Word}/{xor1Mode} ^ {xor2Word}/{xor2Mode} ^ {xor3Word}/{xor3Mode} = ?");
-                                    Console.ReadLine();
-                                    Console.WriteLine($"{solWord} (took {time:0.0} sec; mean={mean:0.0} sec; std={Math.Sqrt(times.Sum(t => Math.Pow(t - mean, 2))) / Math.Sqrt(times.Count)}");
-                                    ConsoleUtil.WriteLine(
-                                        outputBits(xor1RawBits)
-                                            .Zip(outputBits(xor1Bits), (p, n) => p + " → " + n)
-                                            .Zip(outputBits(xor2RawBits), (p, n) => p + "   ^   " + n)
-                                            .Zip(outputBits(xor2Bits), (p, n) => p + " → " + n)
-                                            .Zip(outputBits(xor3RawBits), (p, n) => p + "   ^   " + n)
-                                            .Zip(outputBits(xor3Bits), (p, n) => p + " → " + n)
-                                            .Zip(outputBits(solRawBits), (p, n) => p + "   =   " + n)
-                                            .JoinColoredString("\n"));
-                                    Console.WriteLine();
-                                    Console.ReadLine();
-                                    return;
-                                }
+                                var cmp = maskSoFar & newMask;
+                                if ((oldBmp & cmp) == (newBmp & cmp))
+                                    newBitmaps.Add(oldBmp | newBmp);
                             }
-                        }
+                        if (newBitmaps.Count == 0)
+                            continue;
+                        foreach (var result in recurse(newBitmaps.ToArray(), maskSoFar | newMask, cluesSoFar.Append(theseCl), cluesIxFront, cluesIxBack + numCl, remainingClueTotal - sum, recursionDepth + 1))
+                            yield return result;
                     }
                 }
-                Console.Write($"{solWord} reiterate {++reiterate}\r");
+                else
+                {
+                    // do a column
+                    for (var numCl = (origClues.Length - cluesIxFront - cluesIxBack).ClipMax(3); numCl >= 0; numCl--)
+                    {
+                        var theseCl = origClues.Subarray(cluesIxFront, numCl);
+                        var sum = theseCl.Sum();
+                        if (sum + theseCl.Length > 7)
+                            continue;
+                        var colUnderConsideration = cluesSoFar.Length / 2;
+                        var colBitmaps = columnClueSolutions[theseCl.JoinString(" ")].Select(colInt => nonoMakeColOrRow(colInt, column: true) << colUnderConsideration).ToArray();
+                        var newMask = nonoMakeColOrRow(0x3F, column: true) << colUnderConsideration;
+                        var newBitmaps = new List<ulong>();
+                        foreach (var oldBmp in bitmapsSoFar)
+                            foreach (var newBmp in colBitmaps)
+                            {
+                                var cmp = maskSoFar & newMask;
+                                if ((oldBmp & cmp) == (newBmp & cmp))
+                                    newBitmaps.Add(oldBmp | newBmp);
+                            }
+                        if (newBitmaps.Count == 0)
+                            continue;
+                        foreach (var result in recurse(newBitmaps.ToArray(), maskSoFar | newMask, cluesSoFar.Append(theseCl), cluesIxFront + numCl, cluesIxBack, remainingClueTotal - sum, recursionDepth + 1))
+                            yield return result;
+                    }
+                }
             }
+
+            var allSolutions = recurse(new ulong[] { 0 }, 0, new int[0][], 0, 0, origClues.Sum(), 0).ToList();
+            var givens = new List<int>();
+            while (allSolutions.Count > 1)
+            {
+                // Find the most restricting true given
+                var numFalses = new int[36];
+                foreach (var (bitmap, clues) in allSolutions)
+                {
+                    for (var bit = 0; bit < 36; bit++)
+                        if ((bitmap & (1UL << bit)) == 0)
+                            numFalses[bit]++;
+                }
+                var mostRestrictingIx = Enumerable.Range(0, 36).Where(ix => !origBitmap[ix]).MinElement(ix => numFalses[ix]);
+                givens.Add(mostRestrictingIx);
+                allSolutions.RemoveAll(tup => (tup.bitmap & (1UL << mostRestrictingIx)) != 0);
+            }
+            ConsoleUtil.WriteLine($"Clues: {origClues.JoinString(" ").Color(ConsoleColor.Green)}", null);
+            ConsoleUtil.WriteLine($"False givens: {givens.Order().Select(ix => $"{(char) ('A' + (ix % 6))}{(ix / 6 + 1)}").JoinString("; ").Color(ConsoleColor.Cyan)}", null);
+            Console.ReadLine();
+
+            Console.WriteLine(word);
+            Console.WriteLine(Enumerable.Range(0, 6).Select(row => Enumerable.Range(0, 6).Select(col => origBitmap[col + 6 * row] ? "██" : "░░").JoinString()).JoinString("\n"));
+
+            //var c = 0;
+            //var numTrues = new int[36];
+            //foreach (var (bitmap, clues) in recurse(new ulong[] { givens.Aggregate(0UL, (p, n) => p | ((n.val ? 1UL : 0UL) << n.cell)) }, givens.Aggregate(0UL, (p, n) => p | (1UL << n.cell)), new int[0][], 0, 0, origClues.Sum(), 0))
+            //{
+            //    c++;
+            //    for (var bit = 0; bit < 36; bit++)
+            //        if ((bitmap & (1UL << bit)) != 0)
+            //            numTrues[bit]++;
+            //    //Console.WriteLine(Enumerable.Range(0, 6).Select(row => Enumerable.Range(0, 6).Select(col => (bitmap & (1UL << (col + 6 * row))) != 0 ? "██" : "░░").JoinString()).JoinString("\n"));
+            //    //Console.WriteLine(clues.Select(clueSet => clueSet.JoinString(" ")).JoinString(" | "));
+            //    //Console.ReadLine();
+            //}
+            //Console.WriteLine($"Total solutions: {c}");
+            //ConsoleUtil.WriteLine("Trues:".Color(ConsoleColor.Green));
+            //ConsoleUtil.WriteLine(Enumerable.Range(0, 6).Select(row => Enumerable.Range(0, 6).Select(col =>
+            //    numTrues[col + 6 * row].ToString().PadLeft(4, ' ').Color(origBitmap[col + 6 * row] ? ConsoleColor.Yellow : ConsoleColor.DarkMagenta)).JoinColoredString()).JoinColoredString("\n"));
+            //ConsoleUtil.WriteLine("Falses:".Color(ConsoleColor.Red));
+            //ConsoleUtil.WriteLine(Enumerable.Range(0, 6).Select(row => Enumerable.Range(0, 6).Select(col =>
+            //    (c - numTrues[col + 6 * row]).ToString().PadLeft(4, ' ').Color(origBitmap[col + 6 * row] ? ConsoleColor.DarkMagenta : ConsoleColor.Yellow)).JoinColoredString()).JoinColoredString("\n"));
+        }
+
+        private static string visualizeBitmap(ulong bitmap, string sep = null) => Enumerable.Range(0, 6).Select(row => Enumerable.Range(0, 6).Select(col => (bitmap & (1UL << (col + 6 * row))) != 0 ? "█" : "░").JoinString()).JoinString(sep ?? "\n");
+
+        private static ulong nonoMakeColOrRow(int bits, bool column)
+        {
+            var result = 0UL;
+            for (var i = 0; i < 6; i++)
+                result |= ((ulong) ((bits >> i) & 1)) << (column ? 6 * i : i);
+            return result;
+        }
+
+        private static (bool[] bitmap, int[] clues) GetNonogramClues(string word)
+        {
+            var bitmap = Ut.NewArray(36, ix => (_simpleLetters[word[(ix % 6) / 2 + 3 * (ix / 18)] - 'a'] & (1 << (3 * (ix % 2) + (ix / 6) % 3))) != 0);
+            var clues = new List<int>();
+            for (var col = 0; col < 6; col++)
+                clues.AddRange(Enumerable.Range(0, 6).Select(y => bitmap[col + 6 * y]).GroupConsecutive().Where(gr => gr.Key).Select(gr => gr.Count));
+            for (var row = 0; row < 6; row++)
+                clues.AddRange(Enumerable.Range(0, 6).Select(x => bitmap[x + 6 * row]).GroupConsecutive().Where(gr => gr.Key).Select(gr => gr.Count));
+            return (bitmap, clues.ToArray());
         }
     }
 }

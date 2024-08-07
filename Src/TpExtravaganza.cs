@@ -14,13 +14,13 @@ namespace KtaneStuff
         public static void FindPopularKtaneTpModules()
         {
             string[] recentLogFiles;
-            var recentPath = @"D:\temp\KTANE\recent_logfiles.txt";
+            var recentPath = @"F:\KtaneLogfilesAnalysis\files.txt";
             if (File.Exists(recentPath))
                 recentLogFiles = File.ReadAllLines(recentPath);
             else
             {
                 var list = new List<string>();
-                foreach (var file in new DirectoryInfo(@"D:\temp\KTANE").EnumerateFiles("*.txt"))
+                foreach (var file in new DirectoryInfo(@"F:\KtaneLogfilesAnalysis").EnumerateFiles("*.txt"))
                 //if (File.GetLastWriteTimeUtc(file.FullName) >= DateTime.UtcNow.AddDays(-100))
                 {
                     Console.Write($"{file.Name}\r");
@@ -37,7 +37,7 @@ namespace KtaneStuff
             var popularity = new Dictionary<string, int>();
             foreach (var filename in recentLogFiles)
             {
-                var log = File.ReadAllLines(Path.Combine(@"D:\temp\KTANE", filename));
+                var log = File.ReadAllLines(Path.Combine(@"F:\KtaneLogfilesAnalysis", filename));
                 var bgFound = false;
                 string[] moduleNames = null;
                 foreach (var bg in log)
@@ -73,7 +73,7 @@ namespace KtaneStuff
                         if (Regex.Match(chatLine, @"^\[TwitchPlays\] \[IRCConnection\] \[M\] .* \((?:#[0-9A-F]{6})?(?:, \d+)?\): !(\d+) +(?:claim|claimview|viewclaim|cv)$") is Match m && m.Success)
                             moduleIds = new[] { int.Parse(m.Groups[1].Value) };
                         else if (Regex.Match(chatLine, @"^\[TwitchPlays\] \[IRCConnection\] \[M\] .* \((?:#[0-9A-F]{6})?(?:, \d+)?\): !claim +([\d ]+)$") is Match m2 && m2.Success)
-                            moduleIds = m2.Groups[1].Value.Split(' ').Select(int.Parse).ToArray();
+                            moduleIds = m2.Groups[1].Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
                         if (moduleIds != null)
                         {
                             foreach (var moduleId in moduleIds)
@@ -89,7 +89,7 @@ namespace KtaneStuff
                 busted:;
             }
 
-            File.WriteAllLines(@"D:\temp\KTANE\popularity.txt", popularity.OrderByDescending(v => v.Value).Select(v => $"{v.Value}\t{v.Key}"));
+            File.WriteAllLines(@"D:\temp\KTANE-tp-popularity.txt", popularity.OrderByDescending(v => v.Value).Select(v => $"{v.Value}\t{v.Key}"));
         }
     }
 }

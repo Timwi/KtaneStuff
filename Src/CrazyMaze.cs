@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using RT.Coordinates;
 using RT.TagSoup;
 using RT.Util;
@@ -30,7 +29,7 @@ namespace KtaneStuff
             var info = Ut.NewArray<(string name, Type cellType, Type vertexType, IEnumerable<object> cells)>(
                 ("Hex", typeof(Hex), typeof(Hex.Vertex), Hex.LargeHexagon(4).Cast<object>()),
                 ("Cairo", typeof(Cairo), typeof(Cairo.Vertex), Cairo.Rectangle(4, 4).Cast<object>()),
-                ("Penrose P3", typeof(Penrose), typeof(Penrose.Vertex), Enumerable.Range(0, 6)
+                ("Penrose P3", typeof(Penrose), typeof(Pentavector.Vertex), Enumerable.Range(0, 6)
                     .Select(a => new Penrose(Penrose.Kind.ThickRhomb, default, 2 * a))
                     .SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct().SelectMany(c => c.DeflatedTiles).Distinct()
                     .Where(c => c.Vertices.All(v => v.Point.Distance < ph / 6 / p3Factor)).Cast<object>()),
@@ -178,7 +177,7 @@ namespace KtaneStuff
                 v is Kite.Vertex ? v.Point.RotateDeg(30) * 1.5 + mid :
                 v is Rhomb.Vertex ? v.Point.RotateDeg(30) * .95 + mid :
                 v is Rhombihexadel.Vertex ? v.Point.RotateDeg(30) * .9 + mid :
-                v is Penrose.Vertex ? v.Point * p3Factor + mid :
+                v is Pentavector.Vertex ? v.Point * p3Factor + mid :
                 v is CircularCell.Vertex ? v.Point + mid :
                 v is Chamf.Vertex ? (v.Point - mid + chamfOffset) * chamfFactor + mid :
                 v.Point
@@ -210,7 +209,7 @@ namespace KtaneStuff
                 GetCenter = GetCenter,
 
                 SvgAttributes = null,
-                PerCell = c => $"<text y='.14' id='cell-label-{allCells.IndexOf(c)}'>{encode(allCells.IndexOf(c))}</text>",
+                PerCellAfter = c => $"<text y='.14' id='cell-label-{allCells.IndexOf(c)}'>{encode(allCells.IndexOf(c))}</text>",
 
                 OutlinePath = d => $"<path d='{d}' class='outline' />",
 
@@ -392,7 +391,7 @@ namespace KtaneStuff
                 GetEdges = GetEdges,
                 GetCenter = GetCenter,
                 SvgAttributes = "xmlns='http://www.w3.org/2000/svg' viewBox='-1 -1 38 26' font-size='.2' text-anchor='middle'",
-                PerCell = c => $"<text font-size='.2' y='.07' text-anchor='middle' font-family='Agency FB' stroke='white' paint-order='stroke' stroke-width='.1'>{cellToSpriteShape[allCells.IndexOf(c)]}</text>",// $"<circle r='.1' fill='black' fill-opacity='.2' />",
+                PerCellAfter = c => $"<text font-size='.2' y='.07' text-anchor='middle' font-family='Agency FB' stroke='white' paint-order='stroke' stroke-width='.1'>{cellToSpriteShape[allCells.IndexOf(c)]}</text>",// $"<circle r='.1' fill='black' fill-opacity='.2' />",
                 ExtraSvg1 = "<g fill='none' stroke='black' stroke-width='.05'><rect x='0' y='0' width='18' height='24' /><rect x='18' y='0' width='18' height='24' /></g>" +
                     "<path fill='none' stroke='black' stroke-width='.02' d='M0 8h36M0 16h36M9 0v24M27 0v24' />",
                 ExtraSvg3 = info.Select((tup, ix) => $"<text x='{(ix % 4) * pw / 2 + .1}' y='{(ix / 4) * ph / 3 + (.5 * .7) + .1}' font-size='.5' text-anchor='start' stroke='hsl(60, 80%, 90%)' stroke-width='.1' stroke-linejoin='round' paint-order='stroke'>{tup.name} ({tup.cells.Count()})</text>").JoinString()

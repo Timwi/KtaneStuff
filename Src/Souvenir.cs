@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using KtaneStuff.Modeling;
 using RT.Util;
+using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 
@@ -81,6 +83,26 @@ namespace KtaneStuff
             sb.Append($"## Others\n\n{remTable.ToString().Split('\n').Select(r => r.Trim()).Where(row => !string.IsNullOrWhiteSpace(row) && !Regex.IsMatch(row, @"^-*\|-*$")).Select(row => $"    {row.Replace("|", "│").Replace("=│=", "═╪═").Replace("=", "═")}").JoinString("\n")}\n\n");
 
             File.WriteAllText($@"{SouvenirPath}\CONTRIBUTORS.md", sb.ToString());
+        }
+
+        public static void FindHangingCoroutinesInLogfiles()
+        {
+            //foreach (var file in new DirectoryInfo(@"F:\KtaneLogfiles").EnumerateFiles("*.txt", SearchOption.TopDirectoryOnly))
+            //foreach (var file in new DirectoryInfo(@"D:\temp").EnumerateFiles("*.txt", SearchOption.TopDirectoryOnly))
+            foreach (var file in new DirectoryInfo(@"C:\Users\Timwi\AppData\LocalLow\Steel Crate Games\Keep Talking and Nobody Explodes").EnumerateFiles("*.txt", SearchOption.TopDirectoryOnly))
+            {
+                var contents = File.ReadLines(file.FullName);
+                var running = new Dictionary<string, int>();
+                foreach (var line in contents)
+                {
+                    var m = Regex.Match(line, @"^[<‹]Souvenir #\d+[>›] Module (\w+): (Start processing|Finished processing)\.$");
+                    if (m.Success)
+                        running.IncSafe(m.Groups[1].Value, m.Groups[2].Value.Equals("Start processing") ? 1 : -1);
+                }
+                foreach (var kvp in running)
+                    if (kvp.Value != 0)
+                        ConsoleUtil.WriteLine($"{file.Name.Color(ConsoleColor.Red)}: {kvp.Key.Color(ConsoleColor.Cyan)} is {kvp.Value.ToString().Color(ConsoleColor.Magenta)}", null);
+            }
         }
     }
 }

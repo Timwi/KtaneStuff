@@ -116,7 +116,7 @@ namespace KtaneStuff
             var offset = .025;
 
             var outline = new[] { p(0, 0), p(innerRadius * cos(angle), innerRadius * sin(angle)), p(outerRadius, 0), p(innerRadius * cos(-angle), innerRadius * sin(-angle)) };
-            var midPoint = Intersect.LineWithLine(new EdgeD(outline[0], outline[2]), new EdgeD(outline[1], outline[3]));
+            var midPoint = Intersect.LineWithLine(new EdgeD(outline[0], outline[2]), new EdgeD(outline[1], outline[3])).point.Value;
 
             for (int i = 0; i < 6; i++)
             {

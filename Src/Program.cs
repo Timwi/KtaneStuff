@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Linq;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using KtaneStuff.Modeling;
 using RT.PostBuild;
+using RT.KitchenSink;
 
 [assembly: AssemblyTitle("KtaneStuff")]
 [assembly: AssemblyDescription("Contains some ancillary code used in the creation of some Keep Talking and Nobody Explodes mods.")]
@@ -31,8 +36,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            CrazyMaze.Generate();
-            //Souvenir.GenerateContributorsMd();
+            Flyswatting.DoStuff();
 
 
             Console.WriteLine("Done.");
