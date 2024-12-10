@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -128,8 +129,7 @@ namespace KtaneStuff
             });
 
             var offset = omitAxes ? 0 : 14;
-            return $@"<svg viewBox='{-offset} {-offset} {25 * xSize + 5 + offset} {25 * ySize + 5 + offset}' class='tmaze'>{
-                extra +
+            return $@"<svg viewBox='{-offset} {-offset} {25 * xSize + 5 + offset} {25 * ySize + 5 + offset}' class='tmaze'>{extra +
                 // For the “lines” (cheat sheet only) below
                 (labels == null || !highlightCorridors ? null : $"<defs><clipPath id='mainmaze'><rect x='0' y='0' width='{25 * xSize + 5}' height='{25 * ySize + 5}' /></clipPath></defs>") +
                 // Polygons
@@ -145,8 +145,7 @@ namespace KtaneStuff
                     .Select(rowIx => Enumerable.Range(0, 9)
                         .Select(colIx => colIx < 8 && rowIx < 8 && labels[rowIx][colIx] != ' ' ? $"<text class='cell' x='{25 * colIx + 15}' y='{25 * rowIx + (labels[rowIx][colIx] == '*' ? 25 : 22)}'>{labels[rowIx][colIx]}</text>" : null)
                         .JoinString())
-                    .JoinString())
-            }</svg>";
+                    .JoinString())}</svg>";
         }
 
         private enum Direction { Up, Down, Left, Right }
@@ -356,6 +355,29 @@ namespace KtaneStuff
             var cmd = $@"D:\Inkscape\bin\inkscape.exe --export-type=""png"" ""--export-filename={outputFile}"" --export-width={width} ""{path}""";
             CommandRunner.RunRaw(cmd).Go();
             File.Delete(path);
+        }
+
+        /// <summary>
+        ///     Brings the elements of the given list into a random order.</summary>
+        /// <typeparam name="T">
+        ///     Type of the list.</typeparam>
+        /// <param name="list">
+        ///     List to shuffle.</param>
+        /// <param name="rnd">
+        ///     Random number generator.</param>
+        /// <returns>
+        ///     The list operated on.</returns>
+        public static T Shuffle<T>(this T list, MonoRandom rnd = null) where T : IList
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+            for (int j = list.Count; j >= 1; j--)
+            {
+                int item = rnd == null ? Rnd.Next(0, j) : rnd.Next(0, j);
+                if (item < j - 1)
+                    (list[j - 1], list[item]) = (list[item], list[j - 1]);
+            }
+            return list;
         }
     }
 }

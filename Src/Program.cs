@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Linq;
-using System.Diagnostics;
-using System.IO;
+using System.Collections.Generic;
+using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using KtaneStuff.Modeling;
 using RT.PostBuild;
-using RT.KitchenSink;
+using RT.Util.ExtensionMethods;
 
-[assembly: AssemblyTitle("KtaneStuff")]
-[assembly: AssemblyDescription("Contains some ancillary code used in the creation of some Keep Talking and Nobody Explodes mods.")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("KtaneStuff")]
 [assembly: AssemblyCopyright("Copyright © Timwi 2016–2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("95055383-2e25-42be-97b7-e1411a695e1d")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
 
 namespace KtaneStuff
 {
@@ -36,7 +27,7 @@ namespace KtaneStuff
                 return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-            Flyswatting.DoStuff();
+            Souvenir.UpdateJs();
 
 
             Console.WriteLine("Done.");

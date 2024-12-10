@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using KtaneStuff.Modeling;
+using RT.Json;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
@@ -103,6 +104,21 @@ namespace KtaneStuff
                     if (kvp.Value != 0)
                         ConsoleUtil.WriteLine($"{file.Name.Color(ConsoleColor.Red)}: {kvp.Key.Color(ConsoleColor.Cyan)} is {kvp.Value.ToString().Color(ConsoleColor.Magenta)}", null);
             }
+        }
+
+        public static void UpdateJs()
+        {
+            var file = File.ReadAllLines(@"D:\c\KTANE\Public\HTML\js\Modules\Souvenir.js");
+            var modules = Ktane.GetLiveJson().ToDictionary(md => md["Name"].GetString(), md => (id: md["ModuleID"].GetString(), filename: md.Safe["FileName"]?.GetString() ?? md["Name"].GetString()));
+            for (var i = 0; i < file.Length; i++)
+                if (file[i].RegexMatch(@"name: ""([^""]*)"",\tid: ""\?""", out var m) && modules.Get(m.Groups[1].Value.Replace("’", "'"), null) is { } tup)
+                {
+                    file[i] = file[i].Remove(m.Index, m.Length).Insert(m.Index, $"name: \"{m.Groups[1].Value}\",\tid: \"{tup.id}\"");
+                    var json = JsonDict.Parse(File.ReadAllText($@"D:\c\KTANE\Public\JSON\{tup.filename}.json"));
+                    json["Souvenir"] = new JsonDict { ["Status"] = "Supported" };
+                    File.WriteAllText($@"D:\c\KTANE\Public\JSON\{tup.filename}.json", json.ToStringIndented());
+                }
+            File.WriteAllLines(@"D:\c\KTANE\Public\HTML\js\Modules\Souvenir.js", file);
         }
     }
 }

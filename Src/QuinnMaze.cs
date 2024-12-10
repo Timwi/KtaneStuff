@@ -77,7 +77,7 @@ namespace KtaneStuff
                 var newRegions = new List<(int cell, int nonwallMask)[]>();
                 var myRegion = Enumerable.Range(0, 4)
                     .Where(dir => (walls & (1 << dir)) == 0 && cell.Neighbor((GridDirection) (2 * dir)) is Coord neigh && sofar[neigh.Index] == null)
-                    .Select(dir => (cell: cell.Neighbor((GridDirection) (2 * dir)).Value.Index, nonwallMask: 1 << ((dir + 2) % 4)))
+                    .Select(dir => (cell: cell.Neighbor((GridDirection) (2 * dir)).Index, nonwallMask: 1 << ((dir + 2) % 4)))
                     .ToList();
                 foreach (var region in regions)
                 {
@@ -234,7 +234,7 @@ namespace KtaneStuff
                 var newAreas = new List<(int cell, int nonwallMask)[]>();
                 var myArea = Enumerable.Range(0, 4)
                     .Where(dir => (walls & (1 << dir)) == 0 && cell.Neighbor((GridDirection) (2 * dir)) is Coord neigh && sofar[neigh.Index] == null)
-                    .Select(dir => (cell: cell.Neighbor((GridDirection) (2 * dir)).Value.Index, nonwallMask: 1 << ((dir + 2) % 4)))
+                    .Select(dir => (cell: cell.Neighbor((GridDirection) (2 * dir)).Index, nonwallMask: 1 << ((dir + 2) % 4)))
                     .ToList();
                 foreach (var area in areas)
                 {
