@@ -1,172 +1,160 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using RT.Util;
+﻿using RT.Util;
 using RT.Util.ExtensionMethods;
 
-namespace KtaneStuff
+namespace KtaneStuff;
+
+internal sealed class ExtendedPassword
 {
-    sealed class ExtendedPassword
+    private string _goalword;
+    private string[,] _displaysText = new string[6, 6];
+    public static string[] Words = ["ADJUST", "ANCHOR", "BOWTIE", "BUTTON", "CIPHER", "CORNER", "DAMPEN", "DEMOTE", "ENLIST", "EVOLVE", "FORGET", "FINISH", "GEYSER", "GLOBAL", "HAMMER", "HELIUM", "INDIGO", "IGNITE", "JIGSAW", "JULIET", "KARATE", "KEYPAD", "LAMBDA", "LISTEN", "MATTER", "MEMORY", "NEBULA", "NICKEL", "OVERDO", "OXYGEN", "PEANUT", "PHOTON", "QUARTZ", "QUEBEC", "RESIST", "RIDDLE", "SIERRA", "STRIKE", "TEAPOT", "TWENTY", "UNTOLD", "ULTIMA", "VICTOR", "VIOLET", "WITHER", "WRENCH", "XENONS", "XYLOSE", "YELLOW", "YOGURT", "ZENITH", "ZODIAC"];
+
+    private void addWordToDisplaysText(string word)
     {
-        private string goalword;
-        private string[,] displaysText = new string[6, 6];
-        public static string[] words = new string[] { "ADJUST", "ANCHOR", "BOWTIE", "BUTTON", "CIPHER", "CORNER", "DAMPEN", "DEMOTE", "ENLIST", "EVOLVE", "FORGET", "FINISH", "GEYSER", "GLOBAL", "HAMMER", "HELIUM", "INDIGO", "IGNITE", "JIGSAW", "JULIET", "KARATE", "KEYPAD", "LAMBDA", "LISTEN", "MATTER", "MEMORY", "NEBULA", "NICKEL", "OVERDO", "OXYGEN", "PEANUT", "PHOTON", "QUARTZ", "QUEBEC", "RESIST", "RIDDLE", "SIERRA", "STRIKE", "TEAPOT", "TWENTY", "UNTOLD", "ULTIMA", "VICTOR", "VIOLET", "WITHER", "WRENCH", "XENONS", "XYLOSE", "YELLOW", "YOGURT", "ZENITH", "ZODIAC" };
-
-        private void addWordToDisplaysText(string word)
+        var num = word == _goalword ? -1 : Rnd.Next(0, word.Length);
+        for (var i = 0; i < _displaysText.GetLength(0); i++)
         {
-            int num;
-            if (word == this.goalword)
+            var flag = false;
+            var num2 = 0;
+            while (num2 < _displaysText.GetLength(1) && _displaysText[i, num2] != null)
             {
-                num = -1;
-            }
-            else
-            {
-                num = Rnd.Next(0, word.Length);
-            }
-            for (int i = 0; i < this.displaysText.GetLength(0); i++)
-            {
-                bool flag = false;
-                int num2 = 0;
-                while (num2 < this.displaysText.GetLength(1) && this.displaysText[i, num2] != null)
+                if (_displaysText[i, num2] == word.Substring(i, 1))
                 {
-                    if (this.displaysText[i, num2] == word.Substring(i, 1))
-                    {
-                        flag = true;
-                        break;
-                    }
-                    num2++;
+                    flag = true;
+                    break;
                 }
-                if (num2 < this.displaysText.GetLength(1) && !flag && num != i)
-                {
-                    this.displaysText[i, num2] = word.Substring(i, 1);
-                }
+                num2++;
+            }
+            if (num2 < _displaysText.GetLength(1) && !flag && num != i)
+            {
+                _displaysText[i, num2] = word.Substring(i, 1);
             }
         }
+    }
 
-        public void Init()
+    public void Init()
+    {
+        var num = Rnd.Next(0, Words.Length);
+        _goalword = Words[num];
+        var list = new List<string>(Words);
+        list.RemoveAt(num);
+        addWordToDisplaysText(_goalword);
+        while (!displaysTextFull())
         {
-            int num = Rnd.Next(0, words.Length);
-            this.goalword = words[num];
-            List<string> list = new List<string>(words);
-            list.RemoveAt(num);
-            this.addWordToDisplaysText(this.goalword);
-            while (!this.displaysTextFull())
-            {
-                int index = Rnd.Next(0, list.Count);
-                this.addWordToDisplaysText(list[index]);
-                list.RemoveAt(index);
-                this.ensureUniqueSolution();
-            }
+            var index = Rnd.Next(0, list.Count);
+            addWordToDisplaysText(list[index]);
+            list.RemoveAt(index);
+            ensureUniqueSolution();
         }
+    }
 
-        private void ensureUniqueSolution()
+    private void ensureUniqueSolution()
+    {
+        for (var i = 0; i < Words.Length; i++)
         {
-            for (int i = 0; i < words.Length; i++)
+            if (Words[i] != _goalword)
             {
-                if (words[i] != this.goalword)
+                var num = 0;
+                for (var j = 0; j < _displaysText.GetLength(0); j++)
                 {
-                    int num = 0;
-                    for (int j = 0; j < this.displaysText.GetLength(0); j++)
+                    for (var k = 0; k < _displaysText.GetLength(1); k++)
                     {
-                        for (int k = 0; k < this.displaysText.GetLength(1); k++)
+                        if (Words[i].Substring(j, 1) == _displaysText[j, k])
                         {
-                            if (words[i].Substring(j, 1) == this.displaysText[j, k])
-                            {
-                                num++;
-                                break;
-                            }
+                            num++;
+                            break;
                         }
                     }
-                    if (num == this.displaysText.GetLength(0))
+                }
+                if (num == _displaysText.GetLength(0))
+                {
+                    var num2 = Rnd.Next(0, _displaysText.GetLength(0));
+                    while (_goalword.Substring(num2, 1) == Words[i].Substring(num2, 1))
                     {
-                        int num2 = Rnd.Next(0, this.displaysText.GetLength(0));
-                        while (this.goalword.Substring(num2, 1) == words[i].Substring(num2, 1))
-                        {
-                            num2 = Rnd.Next(0, this.displaysText.GetLength(0));
-                        }
-                        this.removeLetterFromPosition(num2, words[i].Substring(num2, 1));
+                        num2 = Rnd.Next(0, _displaysText.GetLength(0));
                     }
+                    removeLetterFromPosition(num2, Words[i].Substring(num2, 1));
                 }
             }
         }
+    }
 
-        private void removeLetterFromPosition(int position, string letter)
+    private void removeLetterFromPosition(int position, string letter)
+    {
+        var num = -1;
+        var a = string.Empty;
+        var num2 = _displaysText.GetLength(1) - 1;
+        for (var i = 0; i < _displaysText.GetLength(1); i++)
         {
-            int num = -1;
-            string a = string.Empty;
-            int num2 = this.displaysText.GetLength(1) - 1;
-            for (int i = 0; i < this.displaysText.GetLength(1); i++)
+            if (_displaysText[position, i] == letter)
             {
-                if (this.displaysText[position, i] == letter)
-                {
-                    num = i;
-                }
-                if (this.displaysText[position, i] != null)
-                {
-                    a = this.displaysText[position, i];
-                    num2 = i;
-                }
+                num = i;
             }
-            if (num != -1)
+            if (_displaysText[position, i] != null)
             {
-                if (a != letter)
-                {
-                    this.displaysText[position, num] = this.displaysText[position, num2];
-                }
-                this.displaysText[position, num2] = null;
+                a = _displaysText[position, i];
+                num2 = i;
             }
         }
-
-        private bool displaysTextFull()
+        if (num != -1)
         {
-            bool result = true;
-            for (int i = 0; i < this.displaysText.GetLength(0); i++)
+            if (a != letter)
             {
-                if (this.displaysText[i, this.displaysText.GetLength(1) - 1] == null)
-                {
-                    result = false;
-                }
+                _displaysText[position, num] = _displaysText[position, num2];
             }
-            return result;
+            _displaysText[position, num2] = null;
         }
+    }
 
-        public static void DoStatistics()
+    private bool displaysTextFull()
+    {
+        var result = true;
+        for (var i = 0; i < _displaysText.GetLength(0); i++)
         {
-            const int numColumns = 3;
-
-            var permutations = new[] { 0, 1, 2, 3, 4, 5 }.Subsequences().Where(s => s.Count() == numColumns).Select(s => s.ToArray()).ToArray();
-            var bestPermutationCounts = new Dictionary<string, int>();
-            var wordCounts = new Dictionary<int, int>();
-            for (int i = 0; i < 1000; i++)
+            if (_displaysText[i, _displaysText.GetLength(1) - 1] == null)
             {
-                var x = new ExtendedPassword();
-                x.Init();
-                var displays = Enumerable.Range(0, 6).Select(displayIx => Enumerable.Range(0, x.displaysText.GetLength(1)).Select(chIx => x.displaysText[displayIx, chIx]).JoinString()).ToArray();
-
-                int[] bestPermutation = null;
-                int bestNumSolutions = 0;
-                foreach (var permutation in permutations)
-                {
-                    var numSolutions = words.Count(w =>
-                    {
-                        foreach (var ix in permutation)
-                            if (!displays[ix].Contains(w[ix]))
-                                return false;
-                        return true;
-                    });
-                    if (bestPermutation == null || numSolutions < bestNumSolutions)
-                    {
-                        bestPermutation = permutation;
-                        bestNumSolutions = numSolutions;
-                    }
-                }
-                bestPermutationCounts.IncSafe(bestPermutation.JoinString());
-                wordCounts.IncSafe(bestNumSolutions);
+                result = false;
             }
-
-            Console.WriteLine(bestPermutationCounts.OrderByDescending(kvp => kvp.Value).Select(kvp => $"{kvp.Key} = {kvp.Value}").JoinString("\n"));
-            Console.WriteLine("---");
-            Console.WriteLine(wordCounts.OrderByDescending(kvp => kvp.Value).Select(kvp => $"{kvp.Key} = {kvp.Value}").JoinString("\n"));
         }
+        return result;
+    }
+
+    public static void DoStatistics()
+    {
+        const int numColumns = 3;
+
+        var permutations = new[] { 0, 1, 2, 3, 4, 5 }.Subsequences().Where(s => s.Count() == numColumns).Select(s => s.ToArray()).ToArray();
+        var bestPermutationCounts = new Dictionary<string, int>();
+        var wordCounts = new Dictionary<int, int>();
+        for (var i = 0; i < 1000; i++)
+        {
+            var x = new ExtendedPassword();
+            x.Init();
+            var displays = Enumerable.Range(0, 6).Select(displayIx => Enumerable.Range(0, x._displaysText.GetLength(1)).Select(chIx => x._displaysText[displayIx, chIx]).JoinString()).ToArray();
+
+            int[] bestPermutation = null;
+            var bestNumSolutions = 0;
+            foreach (var permutation in permutations)
+            {
+                var numSolutions = Words.Count(w =>
+                {
+                    foreach (var ix in permutation)
+                        if (!displays[ix].Contains(w[ix]))
+                            return false;
+                    return true;
+                });
+                if (bestPermutation == null || numSolutions < bestNumSolutions)
+                {
+                    bestPermutation = permutation;
+                    bestNumSolutions = numSolutions;
+                }
+            }
+            bestPermutationCounts.IncSafe(bestPermutation.JoinString());
+            wordCounts.IncSafe(bestNumSolutions);
+        }
+
+        Console.WriteLine(bestPermutationCounts.OrderByDescending(kvp => kvp.Value).Select(kvp => $"{kvp.Key} = {kvp.Value}").JoinString("\n"));
+        Console.WriteLine("---");
+        Console.WriteLine(wordCounts.OrderByDescending(kvp => kvp.Value).Select(kvp => $"{kvp.Key} = {kvp.Value}").JoinString("\n"));
     }
 }

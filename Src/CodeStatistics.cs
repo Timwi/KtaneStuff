@@ -1,21 +1,16 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
+﻿using System.Text.RegularExpressions;
 using RT.Json;
-using RT.Util;
 using RT.Util.ExtensionMethods;
 
-namespace KtaneStuff
-{
-    static class CodeStatistics
-    {
-        public static string DataFile = @"D:\Daten\KTANE\Timwi module data.json";
+namespace KtaneStuff;
 
-        public static void Do()
-        {
-            var lines = @"
+internal static class CodeStatistics
+{
+    public static string DataFile = @"D:\Daten\KTANE\Timwi module data.json";
+
+    public static void Do()
+    {
+        var lines = @"
 Tic Tac Toe/TicTacToe/2016-10-07
     D:\c\KTANE\TicTacToe\Assets\TicTacToeModule.cs
 
@@ -360,55 +355,54 @@ Variety/Variety/2021-07-14
     D:\c\KTANE\Variety\Assets\Items\Wire\WirePrefab.cs
 ".UnifyLineEndings().Split("\r\n");
 
-            var data = new JsonList();
-            (string moduleName, string moduleId, string published, List<string> files) curModule = default;
-            int fairLength(string content) => Regex.Replace(content, @"\s+", " ").Length;
-            int fairFileLength(string file) => fairLength(File.ReadAllText(file));
+        var data = new JsonList();
+        (string moduleName, string moduleId, string published, List<string> files) curModule = default;
+        int fairLength(string content) => content.RegexReplace(@"\s+", " ").Length;
+        int fairFileLength(string file) => fairLength(File.ReadAllText(file));
 
-            void commit()
+        void commit()
+        {
+            if (curModule.moduleName == null)
+                return;
+            var dic = new JsonDict
             {
-                if (curModule.moduleName == null)
-                    return;
-                var dic = new JsonDict
-                {
-                    ["name"] = curModule.moduleName,
-                    ["id"] = curModule.moduleId,
-                    ["published"] = curModule.published,
-                    ["cs-files"] = curModule.files.ToJsonList(),
-                    ["cs-size"] = curModule.files.Sum(f => fairFileLength(f)),
-                    ["ext-cs-size"] = 0,
-                    ["js-size"] = Regex.Matches(File.ReadAllText($@"D:\c\KTANE\Public\HTML\{curModule.moduleName.Replace("’", "'")}.html"), @"<script>.*?</script>", RegexOptions.Singleline).Cast<Match>().Sum(m => fairLength(m.Value))
-                };
-                var extPath = $@"D:\c\KTANE\KtaneStuff\Src\{curModule.moduleId}.cs";
-                if (File.Exists(extPath))
-                {
-                    dic["ext-cs-files"] = new JsonList { extPath };
-                    dic["ext-cs-size"] = fairFileLength(extPath);
-                }
-                data.Add(dic);
-            }
-
-            for (var lineIx = 0; lineIx < lines.Length; lineIx++)
+                ["name"] = curModule.moduleName,
+                ["id"] = curModule.moduleId,
+                ["published"] = curModule.published,
+                ["cs-files"] = curModule.files.ToJsonList(),
+                ["cs-size"] = curModule.files.Sum(fairFileLength),
+                ["ext-cs-size"] = 0,
+                ["js-size"] = File.ReadAllText($@"D:\c\KTANE\Public\HTML\{curModule.moduleName.Replace("’", "'")}.html").RegexMatches(@"<script>.*?</script>", RegexOptions.Singleline).Sum(m => fairLength(m.Value))
+            };
+            var extPath = $@"D:\c\KTANE\KtaneStuff\Src\{curModule.moduleId}.cs";
+            if (File.Exists(extPath))
             {
-                var line = lines[lineIx];
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-                if (line.StartsWith(" "))
-                    curModule.files.Add(line.Trim());
-                else
-                {
-                    commit();
-                    var spl = line.Split('/');
-                    curModule = (spl[0], spl[1], spl[2], new List<string>());
-                }
+                dic["ext-cs-files"] = new JsonList { extPath };
+                dic["ext-cs-size"] = fairFileLength(extPath);
             }
-            commit();
-
-            //File.WriteAllText(DataFile, data.ToStringIndented());
-            Clipboard.SetText(data
-                .Where(entry => entry["name"].GetString() != "Souvenir")
-                .Select(entry => $"{entry["name"]}\t{entry["cs-size"]}\t{entry["ext-cs-size"]}\t{entry["js-size"]}\t{entry["cs-size"].GetLong() + entry["ext-cs-size"].GetLong() + entry["js-size"].GetLong()}\t{entry["published"]}")
-                .JoinString("\n"));
+            data.Add(dic);
         }
+
+        for (var lineIx = 0; lineIx < lines.Length; lineIx++)
+        {
+            var line = lines[lineIx];
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+            if (line.StartsWith(" "))
+                curModule.files.Add(line.Trim());
+            else
+            {
+                commit();
+                var spl = line.Split('/');
+                curModule = (spl[0], spl[1], spl[2], new List<string>());
+            }
+        }
+        commit();
+
+        //File.WriteAllText(DataFile, data.ToStringIndented());
+        Clipboard.SetText(data
+            .Where(entry => entry["name"].GetString() != "Souvenir")
+            .Select(entry => $"{entry["name"]}\t{entry["cs-size"]}\t{entry["ext-cs-size"]}\t{entry["js-size"]}\t{entry["cs-size"].GetLong() + entry["ext-cs-size"].GetLong() + entry["js-size"].GetLong()}\t{entry["published"]}")
+            .JoinString("\n"));
     }
 }

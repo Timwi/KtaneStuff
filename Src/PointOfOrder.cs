@@ -1,310 +1,302 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using RT.TagSoup;
+﻿using RT.TagSoup;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 
-namespace KtaneStuff
+namespace KtaneStuff;
+
+public static class PointOfOrder
 {
-    public static class PointOfOrder
+    private enum suit { Spades, Hearts, Clubs, Diamonds }
+    private enum rank { Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King }
+    private struct playingCard(int card) : IEquatable<playingCard>
     {
-        enum Suit { Spades, Hearts, Clubs, Diamonds }
-        enum Rank { Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King }
-        struct PlayingCard : IEquatable<PlayingCard>
+        private int _card = card;
+        public readonly suit Suit => (suit) (_card % 4);
+        public readonly rank Rank => (rank) (_card / 4);
+        public static playingCard GetRandom(Random rnd = null) => new(rnd == null ? Rnd.Next(13 * 4) : rnd.Next(13 * 4));
+        public static playingCard[] AllCards = Enumerable.Range(0, 13 * 4).Select(i => new playingCard(i)).ToArray();
+        public override readonly string ToString() => "A23456789TJQK"[(int) Rank] + "" + "♠♥♣♦"[(int) Suit];
+        public readonly bool Equals(playingCard other) => _card == other._card;
+        public override readonly int GetHashCode() => _card;
+        public override readonly bool Equals(object obj) => obj is playingCard card && card._card == _card;
+        public static bool operator ==(playingCard one, playingCard two) => one._card == two._card;
+        public static bool operator !=(playingCard one, playingCard two) => one._card != two._card;
+    }
+
+    private const int _numActiveRules = 2;
+    private const int _numPlayedCards = 5;
+
+    public static void Test()
+    {
+        var ruleCombinationHistogram = new Dictionary<string, int>();
+        var numCorrectCardsHistorgram = new Dictionary<int, Dictionary<string, int>>();
+        var numWrongCardsHistorgram = new Dictionary<int, Dictionary<string, int>>();
+
+        const int numIter = 2000;
+        var rnd = new Random();
+        var numRules = 0;
+        for (var iter = 0; iter < numIter; iter++)
         {
-            private int _card;
-            public Suit Suit => (Suit) (_card % 4);
-            public Rank Rank => (Rank) (_card / 4);
-            public PlayingCard(int card) { _card = card; }
-            public static PlayingCard GetRandom(Random rnd = null) => new PlayingCard(rnd == null ? Rnd.Next(13 * 4) : rnd.Next(13 * 4));
-            public static PlayingCard[] AllCards = Enumerable.Range(0, 13 * 4).Select(i => new PlayingCard(i)).ToArray();
-            public override string ToString() => "A23456789TJQK"[(int) Rank] + "" + "♠♥♣♦"[(int) Suit];
-            public bool Equals(PlayingCard other) => _card == other._card;
-            public override int GetHashCode() => _card;
-            public override bool Equals(object obj) => obj is PlayingCard && ((PlayingCard) obj)._card == _card;
-            public static bool operator ==(PlayingCard one, PlayingCard two) => one._card == two._card;
-            public static bool operator !=(PlayingCard one, PlayingCard two) => one._card != two._card;
+            var rules = getRules(Edgework.Generate(5, 10, false, rnd));
+            numRules = rules.Length;
+            var puzzle = generatePuzzle(rules, rnd);
+
+            var rulesIndexesStr = puzzle.ActiveRuleIndexes.Order().Select(r => r + 1).JoinString(",");
+            ruleCombinationHistogram.IncSafe(rulesIndexesStr);
+            numCorrectCardsHistorgram.IncSafe(puzzle.CorrectCards.Length, rulesIndexesStr);
+            numWrongCardsHistorgram.IncSafe(puzzle.WrongCards.Length, rulesIndexesStr);
         }
 
-        const int _numActiveRules = 2;
-        const int _numPlayedCards = 5;
-
-        public static void Test()
+        foreach (var kvp in ruleCombinationHistogram.OrderBy(k => k.Key))
+            Console.WriteLine($"{kvp.Key} = {kvp.Value * 100.0 / numIter:0.0}%");
+        Console.WriteLine($"Factor: {ruleCombinationHistogram.Max(k => k.Value) / (double) ruleCombinationHistogram.Min(k => k.Value):0.0}");
+        Console.WriteLine();
+        for (var i = 0; i < numRules; i++)
+            Console.WriteLine($"Rule #{i + 1} = {ruleCombinationHistogram.Where(p => p.Key.Contains((i + 1).ToString())).Sum(p => p.Value) * 100.0 / numIter:0.0}%");
+        Console.WriteLine();
+        ConsoleUtil.WriteLine("Distribution of number of correct cards:".Color(ConsoleColor.White));
+        var tt = new TextTable { ColumnSpacing = 2 };
+        var rulesIndexesStrs = ruleCombinationHistogram.Keys.Order().ToArray();
+        for (var col = 0; col < rulesIndexesStrs.Length; col++)
+            tt.SetCell(col + 1, 0, rulesIndexesStrs[col].Color(ConsoleColor.White));
+        for (var i = numCorrectCardsHistorgram.Keys.Max(); i >= 0; i--)
         {
-            var ruleCombinationHistogram = new Dictionary<string, int>();
-            var numCorrectCardsHistorgram = new Dictionary<int, Dictionary<string, int>>();
-            var numWrongCardsHistorgram = new Dictionary<int, Dictionary<string, int>>();
-
-            const int numIter = 2000;
-            var rnd = new Random();
-            var numRules = 0;
-            for (int iter = 0; iter < numIter; iter++)
-            {
-                var rules = getRules(Edgework.Generate(5, 10, false, rnd));
-                numRules = rules.Length;
-                var puzzle = generatePuzzle(rules, rnd);
-
-                var rulesIndexesStr = puzzle.ActiveRuleIndexes.Order().Select(r => r + 1).JoinString(",");
-                ruleCombinationHistogram.IncSafe(rulesIndexesStr);
-                numCorrectCardsHistorgram.IncSafe(puzzle.CorrectCards.Length, rulesIndexesStr);
-                numWrongCardsHistorgram.IncSafe(puzzle.WrongCards.Length, rulesIndexesStr);
-            }
-
-            foreach (var kvp in ruleCombinationHistogram.OrderBy(k => k.Key))
-                Console.WriteLine($"{kvp.Key} = {kvp.Value * 100.0 / numIter:0.0}%");
-            Console.WriteLine($"Factor: {ruleCombinationHistogram.Max(k => k.Value) / (double) ruleCombinationHistogram.Min(k => k.Value):0.0}");
-            Console.WriteLine();
-            for (int i = 0; i < numRules; i++)
-                Console.WriteLine($"Rule #{i + 1} = {ruleCombinationHistogram.Where(p => p.Key.Contains((i + 1).ToString())).Sum(p => p.Value) * 100.0 / numIter:0.0}%");
-            Console.WriteLine();
-            ConsoleUtil.WriteLine("Distribution of number of correct cards:".Color(ConsoleColor.White));
-            var tt = new TextTable { ColumnSpacing = 2 };
-            var rulesIndexesStrs = ruleCombinationHistogram.Keys.Order().ToArray();
-            for (int col = 0; col < rulesIndexesStrs.Length; col++)
-                tt.SetCell(col + 1, 0, rulesIndexesStrs[col].Color(ConsoleColor.White));
-            for (int i = numCorrectCardsHistorgram.Keys.Max(); i >= 0; i--)
-            {
-                tt.SetCell(0, i + 1, $"{i} cards".Color(ConsoleColor.White), alignment: HorizontalTextAlignment.Right);
-                for (int col = 0; col < rulesIndexesStrs.Length; col++)
-                    tt.SetCell(col + 1, i + 1, numCorrectCardsHistorgram.Get(i, null)?.Get(rulesIndexesStrs[col]).NullOr(val => $"{val * 100.0 / numIter:0.0}%".Color(ConsoleColor.Cyan)) ?? "", alignment: HorizontalTextAlignment.Right);
-                //Console.WriteLine($"{i} correct cards: {numCorrectCardsHistorgram.Get(i, 0) * 100.0 / numIter:0.0}%");
-            }
-            tt.WriteToConsole();
-            //Console.WriteLine();
-            //ConsoleUtil.WriteLine("Distribution of number of wrong cards:".Color(ConsoleColor.White));
-            //for (int i = numWrongCardsHistorgram.Keys.Max(); i >= 0; i--)
-            //    Console.WriteLine($"{i} wrong cards: {numWrongCardsHistorgram.Get(i, 0) * 100.0 / numIter:0.0}%");
+            tt.SetCell(0, i + 1, $"{i} cards".Color(ConsoleColor.White), alignment: HorizontalTextAlignment.Right);
+            for (var col = 0; col < rulesIndexesStrs.Length; col++)
+                tt.SetCell(col + 1, i + 1, numCorrectCardsHistorgram.Get(i, null)?.Get(rulesIndexesStrs[col]).NullOr(val => $"{val * 100.0 / numIter:0.0}%".Color(ConsoleColor.Cyan)) ?? "", alignment: HorizontalTextAlignment.Right);
+            //Console.WriteLine($"{i} correct cards: {numCorrectCardsHistorgram.Get(i, 0) * 100.0 / numIter:0.0}%");
         }
+        tt.WriteToConsole();
+        //Console.WriteLine();
+        //ConsoleUtil.WriteLine("Distribution of number of wrong cards:".Color(ConsoleColor.White));
+        //for (int i = numWrongCardsHistorgram.Keys.Max(); i >= 0; i--)
+        //    Console.WriteLine($"{i} wrong cards: {numWrongCardsHistorgram.Get(i, 0) * 100.0 / numIter:0.0}%");
+    }
 
-        sealed class Puzzle
+    private sealed class puzzle
+    {
+        public playingCard[] Pile;
+        public playingCard[] CorrectCards;
+        public playingCard[] WrongCards;
+        public int[] ActiveRuleIndexes;
+    }
+
+    private static puzzle generatePuzzle(Func<playingCard, List<playingCard>, bool>[] rules, Random rnd, int[] activeRulesIxs = null)
+    {
+        var specificRules = activeRulesIxs != null;
+
+        retry:
+        if (!specificRules)
+            activeRulesIxs = Enumerable.Range(0, rules.Length).ToList().Shuffle(rnd).Take(_numActiveRules).ToArray();
+
+        //Console.WriteLine("Active rules: " + activeRulesIxs.Select(r => r + 1).JoinString(", "));
+        var activeRules = activeRulesIxs.Select(i => rules[i]).ToArray();
+        var inactiveRulesIxs = Enumerable.Range(0, rules.Length).Except(activeRulesIxs).ToArray();
+        var inactiveRules = inactiveRulesIxs.Select(i => rules[i]).ToArray();
+
+        var pile = new List<playingCard> { playingCard.GetRandom(rnd) };
+        playingCard[] correctCards = null;
+        playingCard[] wrongCards = null;
+
+        bool recurse()
         {
-            public PlayingCard[] Pile;
-            public PlayingCard[] CorrectCards;
-            public PlayingCard[] WrongCards;
-            public int[] ActiveRuleIndexes;
-        }
+            // For the first 𝑛−1 cards, only make sure that they satisfy the two active rules.
+            var permissibleCards = playingCard.AllCards.Where(c => !pile.Contains(c) && activeRules.All(rule => rule(c, pile)));
 
-        private static Puzzle generatePuzzle(Func<PlayingCard, List<PlayingCard>, bool>[] rules, Random rnd, int[] activeRulesIxs = null)
-        {
-            var specificRules = activeRulesIxs != null;
-
-            retry:
-            if (!specificRules)
-                activeRulesIxs = Enumerable.Range(0, rules.Length).ToList().Shuffle(rnd).Take(_numActiveRules).ToArray();
-
-            //Console.WriteLine("Active rules: " + activeRulesIxs.Select(r => r + 1).JoinString(", "));
-            var activeRules = activeRulesIxs.Select(i => rules[i]).ToArray();
-            var inactiveRulesIxs = Enumerable.Range(0, rules.Length).Except(activeRulesIxs).ToArray();
-            var inactiveRules = inactiveRulesIxs.Select(i => rules[i]).ToArray();
-
-            var pile = new List<PlayingCard> { PlayingCard.GetRandom(rnd) };
-            PlayingCard[] correctCards = null;
-            PlayingCard[] wrongCards = null;
-
-            bool recurse()
+            if (pile.Count == _numPlayedCards - 1)
             {
-                // For the first 𝑛−1 cards, only make sure that they satisfy the two active rules.
-                var permissibleCards = PlayingCard.AllCards.Where(c => !pile.Contains(c) && activeRules.All(rule => rule(c, pile)));
-
-                if (pile.Count == _numPlayedCards - 1)
+                // For the 𝑛th card, also make sure that the pile as a whole doesn’t satisfy any inactive rule
+                permissibleCards = permissibleCards.Where(c =>
                 {
-                    // For the 𝑛th card, also make sure that the pile as a whole doesn’t satisfy any inactive rule
-                    permissibleCards = permissibleCards.Where(c =>
+                    var newPile = new List<playingCard>();
+                    var iar = new bool[inactiveRules.Length];
+                    for (var i = 0; i < pile.Count; i++)
                     {
-                        var newPile = new List<PlayingCard>();
-                        var iar = new bool[inactiveRules.Length];
-                        for (int i = 0; i < pile.Count; i++)
-                        {
-                            newPile.Add(pile[i]);
-                            var nextCard = i == pile.Count - 1 ? c : pile[i + 1];
-                            for (int j = 0; j < inactiveRules.Length; j++)
-                                iar[j] = iar[j] || !inactiveRules[j](nextCard, newPile);
-                        }
-                        return !iar.Contains(false);
-                    });
-                }
-
-                if (pile.Count == _numPlayedCards)
-                {
-                    // Choose a “correct” card
-                    correctCards = permissibleCards.ToArray();
-                    if (correctCards.Length == 0)
-                        return false;
-
-                    wrongCards = PlayingCard.AllCards.Where(c => !pile.Contains(c) && !correctCards.Contains(c) && activeRules.Count(rule => rule(c, pile)) == _numActiveRules - 1).ToArray();
-                    if (wrongCards.Length < 4)
-                        return false;
-
-                    return true;
-                }
-                else
-                {
-                    foreach (var pCard in permissibleCards.ToList().Shuffle(rnd))
-                    {
-                        pile.Add(pCard);
-                        if (recurse())
-                            return true;
-                        pile.RemoveAt(pile.Count - 1);
+                        newPile.Add(pile[i]);
+                        var nextCard = i == pile.Count - 1 ? c : pile[i + 1];
+                        for (var j = 0; j < inactiveRules.Length; j++)
+                            iar[j] = iar[j] || !inactiveRules[j](nextCard, newPile);
                     }
+                    return !iar.Contains(false);
+                });
+            }
+
+            if (pile.Count == _numPlayedCards)
+            {
+                // Choose a “correct” card
+                correctCards = permissibleCards.ToArray();
+                if (correctCards.Length == 0)
+                    return false;
+
+                wrongCards = playingCard.AllCards.Where(c => !pile.Contains(c) && !correctCards.Contains(c) && activeRules.Count(rule => rule(c, pile)) == _numActiveRules - 1).ToArray();
+                return wrongCards.Length >= 4;
+            }
+            else
+            {
+                foreach (var pCard in permissibleCards.ToList().Shuffle(rnd))
+                {
+                    pile.Add(pCard);
+                    if (recurse())
+                        return true;
+                    pile.RemoveAt(pile.Count - 1);
                 }
+            }
+            return false;
+        }
+
+        if (!recurse() || correctCards.Length > 9)
+            goto retry;
+
+        return new puzzle
+        {
+            Pile = pile.ToArray(),
+            CorrectCards = correctCards,
+            WrongCards = wrongCards,
+            ActiveRuleIndexes = activeRulesIxs
+        };
+    }
+
+    private static Func<playingCard, List<playingCard>, bool>[] getRules(Edgework edgework)
+    {
+        var serial = edgework.SerialNumber;
+        var serial1Letter = char.IsLetter(serial[0]);
+        var serial2Letter = char.IsLetter(serial[1]);
+        var allowedSuits = (serial1Letter
+                ? serial2Letter ? "01;12;23;30" : "03;10;21;32"
+                : serial2Letter ? "12;23;30;01" : "32;03;10;21").Split(';');
+        ConsoleUtil.WriteLine("{0/White} Allowed suits: {1}".Color(null).Fmt("Rule 1:", allowedSuits.Select((s, i) => "♠♥♣♦"[i].Color(ConsoleColor.Cyan) + " → " + s.Select(ch => "♠♥♣♦"[ch - '0'].ToString().Color(ConsoleColor.Green)).JoinColoredString("/".Color(ConsoleColor.DarkGray))).JoinColoredString("; ".Color(ConsoleColor.DarkGray))));
+        // OUTDATED Debug.LogFormat(serial1Letter
+        // OUTDATED     ? serial2Letter
+        // OUTDATED         ? "[Point of Order #{0}] Rule 2: No two consecutive cards of same suit."
+        // OUTDATED         : "[Point of Order #{0}] Rule 2: Can’t have ♠ touch ♣ or ♥ touch ♦."
+        // OUTDATED     : serial2Letter
+        // OUTDATED         ? "[Point of Order #{0}] Rule 2: Can’t have ♠ touch ♥ or ♣ touch ♦."
+        // OUTDATED         : "[Point of Order #{0}] Rule 2: Can’t have ♠ touch ♦ or ♣ touch ♥.", _moduleId);
+
+        var divisibleBy = (serial[3] - 'A' + 1) % 3 + 3;
+        ConsoleUtil.WriteLine("{0/White} Alternating divisibility by {1/Cyan}".Color(null).Fmt("Rule 2:", divisibleBy));
+        // OUTDATED Debug.LogFormat("[Point of Order #{0}] Rule 3: Ranks must alternate between being divisible by {1} and not.", _moduleId, divisibleBy);
+
+        var difference = (serial[4] - 'A' + 1) % 3 + 2;
+        ConsoleUtil.WriteLine("{0/White} Rank difference of {1/Cyan}{2/DarkGray}{3/Cyan}".Color(null).Fmt("Rule 3:", difference, "–", difference + 1));
+        // OBSOLETE Debug.LogFormat("[Point of Order #{0}] Rule 4: Consecutive ranks must have a difference between {1} and {2} (with wraparound allowed).", _moduleId, difference, difference + 3);
+
+        // OBSOLETE var suitAssocNum = ((serial[2] - '0') % 2 == 0 ? 1 : 0) + ((serial[5] - '0') % 2 == 0 ? 2 : 0);
+        // OBSOLETE var suitAssoc = new[] { "0123", "0213", "0123", "0321" }[suitAssocNum].Select(ch => (Suit) (ch - '0')).ToArray();
+        // OBSOLETE var numAABatteries = edgework.GetNumAABatteries();
+        // OBSOLETE var numDBatteries = edgework.GetNumDBatteries();
+        // OBSOLETE var permissibleRankDifferences =
+        // OBSOLETE     numAABatteries > numDBatteries ? new[] { 1, 3, 5, 7, 9, 11, 13 } :
+        // OBSOLETE     numAABatteries < numDBatteries ? new[] { 0, 2, 4, 6, 8, 10, 12 } : new[] { 2, 3, 5, 7, 11 };
+
+        // OBSOLETE Debug.LogFormat("[Point of Order #{0}] Rule 5: {1} OR {2} rank difference", _moduleId,
+        // OBSOLETE     suitAssocNum == 0 ? "Same suit" : string.Format("Associated suit (♠↔{0}, {1}↔{2})", "♣♥♦"[suitAssocNum - 1], "♥♣♣"[suitAssocNum - 1], "♦♦♥"[suitAssocNum - 1]),
+        // OBSOLETE     numAABatteries > numDBatteries ? "odd" : numAABatteries < numDBatteries ? "even" : "prime");
+
+        return Ut.NewArray<Func<playingCard, List<playingCard>, bool>>(
+            // OLD // Rule 1: Ranks must be 2×ascending+1×descending / 2×descending+1×ascending / alternate between descending and ascending
+            // OLD (card, cards) =>
+            // OLD {
+            // OLD     if (card.Rank == cards.Last().Rank)
+            // OLD         return false;
+            // OLD     if (cards.Count < 2)
+            // OLD         return true;
+
+            // OLD     if (lit < unlit)    // 2×asc, 1×desc
+            // OLD     {
+            // OLD         if (cards[1].Rank < cards[0].Rank)
+            // OLD             return (card.Rank > cards.Last().Rank) ^ (cards.Count % 3 == 1);
+            // OLD         if (cards.Count < 3)
+            // OLD             return true;
+            // OLD         if (cards[2].Rank < cards[1].Rank)
+            // OLD             return (card.Rank > cards.Last().Rank) ^ (cards.Count % 3 == 2);
+            // OLD         return (card.Rank > cards.Last().Rank) ^ (cards.Count % 3 == 0);
+            // OLD     }
+
+            // OLD     if (lit > unlit)     // 2×desc, 1×asc
+            // OLD     {
+            // OLD         if (cards[1].Rank > cards[0].Rank)
+            // OLD             return (card.Rank < cards.Last().Rank) ^ (cards.Count % 3 == 1);
+            // OLD         if (cards.Count < 3)
+            // OLD             return true;
+            // OLD         if (cards[2].Rank > cards[1].Rank)
+            // OLD             return (card.Rank < cards.Last().Rank) ^ (cards.Count % 3 == 2);
+            // OLD         return (card.Rank < cards.Last().Rank) ^ (cards.Count % 3 == 0);
+            // OLD     }
+
+            // OLD     // alternate between desc and asc
+            // OLD     return card.Rank != cards.Last().Rank && ((card.Rank > cards.Last().Rank) ^ (cards[1].Rank > cards[0].Rank) ^ (cards.Count % 2 != 0));
+            // OLD },
+
+            // OLD // Rule 2: No two consecutive cards of associated suits
+            // OLD (card, cards) => serial1Letter
+            // OLD     ? serial2Letter
+            // OLD         ? card.Suit != cards.Last().Suit
+            // OLD         : card.Suit == Suit.Spades ? cards.Last().Suit != Suit.Clubs : card.Suit == Suit.Clubs ? cards.Last().Suit != Suit.Spades : card.Suit == Suit.Diamonds ? cards.Last().Suit != Suit.Hearts : cards.Last().Suit != Suit.Diamonds
+            // OLD     : serial2Letter
+            // OLD         ? card.Suit == Suit.Spades ? cards.Last().Suit != Suit.Hearts : card.Suit == Suit.Hearts ? cards.Last().Suit != Suit.Spades : card.Suit == Suit.Diamonds ? cards.Last().Suit != Suit.Clubs : cards.Last().Suit != Suit.Diamonds
+            // OLD         : card.Suit == Suit.Spades ? cards.Last().Suit != Suit.Diamonds : card.Suit == Suit.Diamonds ? cards.Last().Suit != Suit.Spades : card.Suit == Suit.Hearts ? cards.Last().Suit != Suit.Clubs : cards.Last().Suit != Suit.Hearts,
+
+            // NEW Rule 1: Consecutive cards of associated suits
+            (card, cards) => allowedSuits[(int) cards.Last().Suit].Contains((char) ('0' + (int) card.Suit)),
+
+            // NEW Rule 2: Ranks must alternate between being divisible by 𝑛 and not.
+            (card, cards) => (((int) card.Rank + 1) % divisibleBy == 0) ^ (((int) cards.Last().Rank + 1) % divisibleBy == 0),
+
+            // NEW Rule 3: Consecutive ranks must have a difference of 𝑛 .. (𝑛+1) (with wraparound allowed).
+            (card, cards) =>
+            {
+                var thisRank = (int) card.Rank;
+                var lastRank = (int) cards.Last().Rank;
+                for (var i = 0; i < 2; i++)
+                    if (thisRank == (lastRank + difference + i) % 13 || thisRank == ((lastRank - difference - i) % 13 + 13) % 13)
+                        return true;
                 return false;
             }
 
-            if (!recurse() || correctCards.Length > 9)
-                goto retry;
+            // OLD // Rule 5: Consecutive cards must have associated suits or ranks
+            // OLD (card, cards) =>
+            // OLD {
+            // OLD     if (suitAssocNum == 0 && card.Suit == cards.Last().Suit)
+            // OLD         return true;
+            // OLD     else if (suitAssocNum > 0 && card.Suit == suitAssoc[1 ^ Array.IndexOf(suitAssoc, cards.Last().Suit)])
+            // OLD         return true;
+            // OLD     return permissibleRankDifferences.Contains(Math.Abs((int) card.Rank - (int) cards.Last().Rank));
+            // OLD }
+        );
+    }
 
-            return new Puzzle
-            {
-                Pile = pile.ToArray(),
-                CorrectCards = correctCards,
-                WrongCards = wrongCards,
-                ActiveRuleIndexes = activeRulesIxs
-            };
-        }
+    public static void CreateRaffleHtml()
+    {
+        var rnd = new Random(10);
 
-        static Func<PlayingCard, List<PlayingCard>, bool>[] getRules(Edgework edgework)
-        {
-            var serial = edgework.SerialNumber;
-            var serial1Letter = char.IsLetter(serial[0]);
-            var serial2Letter = char.IsLetter(serial[1]);
-            var allowedSuits = (serial1Letter
-                    ? serial2Letter ? "01;12;23;30" : "03;10;21;32"
-                    : serial2Letter ? "12;23;30;01" : "32;03;10;21").Split(';');
-            ConsoleUtil.WriteLine("{0/White} Allowed suits: {1}".Color(null).Fmt("Rule 1:", allowedSuits.Select((s, i) => "♠♥♣♦"[i].Color(ConsoleColor.Cyan) + " → " + s.Select(ch => "♠♥♣♦"[ch - '0'].ToString().Color(ConsoleColor.Green)).JoinColoredString("/".Color(ConsoleColor.DarkGray))).JoinColoredString("; ".Color(ConsoleColor.DarkGray))));
-            // OUTDATED Debug.LogFormat(serial1Letter
-            // OUTDATED     ? serial2Letter
-            // OUTDATED         ? "[Point of Order #{0}] Rule 2: No two consecutive cards of same suit."
-            // OUTDATED         : "[Point of Order #{0}] Rule 2: Can’t have ♠ touch ♣ or ♥ touch ♦."
-            // OUTDATED     : serial2Letter
-            // OUTDATED         ? "[Point of Order #{0}] Rule 2: Can’t have ♠ touch ♥ or ♣ touch ♦."
-            // OUTDATED         : "[Point of Order #{0}] Rule 2: Can’t have ♠ touch ♦ or ♣ touch ♥.", _moduleId);
+        var conditions = Ut.NewArray<Func<Edgework, bool>>(
+            //ew => ew.GetNumLitIndicators() < ew.GetNumUnlitIndicators(),
+            //ew => ew.GetNumLitIndicators() > ew.GetNumUnlitIndicators(),
+            //ew => ew.GetNumLitIndicators() == ew.GetNumUnlitIndicators(),
+            ew => char.IsLetter(ew.SerialNumber[0]) && char.IsLetter(ew.SerialNumber[1]),
+            ew => !char.IsLetter(ew.SerialNumber[0]) && char.IsLetter(ew.SerialNumber[1]),
+            ew => char.IsLetter(ew.SerialNumber[0]) && !char.IsLetter(ew.SerialNumber[1]),
+            ew => !char.IsLetter(ew.SerialNumber[0]) && !char.IsLetter(ew.SerialNumber[1]),
+            ew => (ew.SerialNumber[3] - 'A') % 3 == 0,
+            ew => (ew.SerialNumber[3] - 'A') % 3 == 1,
+            ew => (ew.SerialNumber[3] - 'A') % 3 == 2,
+            ew => (ew.SerialNumber[4] - 'A') % 3 == 0,
+            ew => (ew.SerialNumber[4] - 'A') % 3 == 1,
+            ew => (ew.SerialNumber[4] - 'A') % 3 == 2
+        );
 
-            var divisibleBy = (serial[3] - 'A' + 1) % 3 + 3;
-            ConsoleUtil.WriteLine("{0/White} Alternating divisibility by {1/Cyan}".Color(null).Fmt("Rule 2:", divisibleBy));
-            // OUTDATED Debug.LogFormat("[Point of Order #{0}] Rule 3: Ranks must alternate between being divisible by {1} and not.", _moduleId, divisibleBy);
-
-            var difference = (serial[4] - 'A' + 1) % 3 + 2;
-            ConsoleUtil.WriteLine("{0/White} Rank difference of {1/Cyan}{2/DarkGray}{3/Cyan}".Color(null).Fmt("Rule 3:", difference, "–", difference + 1));
-            // OBSOLETE Debug.LogFormat("[Point of Order #{0}] Rule 4: Consecutive ranks must have a difference between {1} and {2} (with wraparound allowed).", _moduleId, difference, difference + 3);
-
-            // OBSOLETE var suitAssocNum = ((serial[2] - '0') % 2 == 0 ? 1 : 0) + ((serial[5] - '0') % 2 == 0 ? 2 : 0);
-            // OBSOLETE var suitAssoc = new[] { "0123", "0213", "0123", "0321" }[suitAssocNum].Select(ch => (Suit) (ch - '0')).ToArray();
-            // OBSOLETE var numAABatteries = edgework.GetNumAABatteries();
-            // OBSOLETE var numDBatteries = edgework.GetNumDBatteries();
-            // OBSOLETE var permissibleRankDifferences =
-            // OBSOLETE     numAABatteries > numDBatteries ? new[] { 1, 3, 5, 7, 9, 11, 13 } :
-            // OBSOLETE     numAABatteries < numDBatteries ? new[] { 0, 2, 4, 6, 8, 10, 12 } : new[] { 2, 3, 5, 7, 11 };
-
-            // OBSOLETE Debug.LogFormat("[Point of Order #{0}] Rule 5: {1} OR {2} rank difference", _moduleId,
-            // OBSOLETE     suitAssocNum == 0 ? "Same suit" : string.Format("Associated suit (♠↔{0}, {1}↔{2})", "♣♥♦"[suitAssocNum - 1], "♥♣♣"[suitAssocNum - 1], "♦♦♥"[suitAssocNum - 1]),
-            // OBSOLETE     numAABatteries > numDBatteries ? "odd" : numAABatteries < numDBatteries ? "even" : "prime");
-
-            return Ut.NewArray<Func<PlayingCard, List<PlayingCard>, bool>>(
-                // OLD // Rule 1: Ranks must be 2×ascending+1×descending / 2×descending+1×ascending / alternate between descending and ascending
-                // OLD (card, cards) =>
-                // OLD {
-                // OLD     if (card.Rank == cards.Last().Rank)
-                // OLD         return false;
-                // OLD     if (cards.Count < 2)
-                // OLD         return true;
-
-                // OLD     if (lit < unlit)    // 2×asc, 1×desc
-                // OLD     {
-                // OLD         if (cards[1].Rank < cards[0].Rank)
-                // OLD             return (card.Rank > cards.Last().Rank) ^ (cards.Count % 3 == 1);
-                // OLD         if (cards.Count < 3)
-                // OLD             return true;
-                // OLD         if (cards[2].Rank < cards[1].Rank)
-                // OLD             return (card.Rank > cards.Last().Rank) ^ (cards.Count % 3 == 2);
-                // OLD         return (card.Rank > cards.Last().Rank) ^ (cards.Count % 3 == 0);
-                // OLD     }
-
-                // OLD     if (lit > unlit)     // 2×desc, 1×asc
-                // OLD     {
-                // OLD         if (cards[1].Rank > cards[0].Rank)
-                // OLD             return (card.Rank < cards.Last().Rank) ^ (cards.Count % 3 == 1);
-                // OLD         if (cards.Count < 3)
-                // OLD             return true;
-                // OLD         if (cards[2].Rank > cards[1].Rank)
-                // OLD             return (card.Rank < cards.Last().Rank) ^ (cards.Count % 3 == 2);
-                // OLD         return (card.Rank < cards.Last().Rank) ^ (cards.Count % 3 == 0);
-                // OLD     }
-
-                // OLD     // alternate between desc and asc
-                // OLD     return card.Rank != cards.Last().Rank && ((card.Rank > cards.Last().Rank) ^ (cards[1].Rank > cards[0].Rank) ^ (cards.Count % 2 != 0));
-                // OLD },
-
-                // OLD // Rule 2: No two consecutive cards of associated suits
-                // OLD (card, cards) => serial1Letter
-                // OLD     ? serial2Letter
-                // OLD         ? card.Suit != cards.Last().Suit
-                // OLD         : card.Suit == Suit.Spades ? cards.Last().Suit != Suit.Clubs : card.Suit == Suit.Clubs ? cards.Last().Suit != Suit.Spades : card.Suit == Suit.Diamonds ? cards.Last().Suit != Suit.Hearts : cards.Last().Suit != Suit.Diamonds
-                // OLD     : serial2Letter
-                // OLD         ? card.Suit == Suit.Spades ? cards.Last().Suit != Suit.Hearts : card.Suit == Suit.Hearts ? cards.Last().Suit != Suit.Spades : card.Suit == Suit.Diamonds ? cards.Last().Suit != Suit.Clubs : cards.Last().Suit != Suit.Diamonds
-                // OLD         : card.Suit == Suit.Spades ? cards.Last().Suit != Suit.Diamonds : card.Suit == Suit.Diamonds ? cards.Last().Suit != Suit.Spades : card.Suit == Suit.Hearts ? cards.Last().Suit != Suit.Clubs : cards.Last().Suit != Suit.Hearts,
-
-                // NEW Rule 1: Consecutive cards of associated suits
-                (card, cards) => allowedSuits[(int) cards.Last().Suit].Contains((char) ('0' + (int) card.Suit)),
-
-                // NEW Rule 2: Ranks must alternate between being divisible by 𝑛 and not.
-                (card, cards) => (((int) card.Rank + 1) % divisibleBy == 0) ^ (((int) cards.Last().Rank + 1) % divisibleBy == 0),
-
-                // NEW Rule 3: Consecutive ranks must have a difference of 𝑛 .. (𝑛+1) (with wraparound allowed).
-                (card, cards) =>
-                {
-                    var thisRank = (int) card.Rank;
-                    var lastRank = (int) cards.Last().Rank;
-                    for (int i = 0; i < 2; i++)
-                        if (thisRank == (lastRank + difference + i) % 13 || thisRank == ((lastRank - difference - i) % 13 + 13) % 13)
-                            return true;
-                    return false;
-                }
-
-                // OLD // Rule 5: Consecutive cards must have associated suits or ranks
-                // OLD (card, cards) =>
-                // OLD {
-                // OLD     if (suitAssocNum == 0 && card.Suit == cards.Last().Suit)
-                // OLD         return true;
-                // OLD     else if (suitAssocNum > 0 && card.Suit == suitAssoc[1 ^ Array.IndexOf(suitAssoc, cards.Last().Suit)])
-                // OLD         return true;
-                // OLD     return permissibleRankDifferences.Contains(Math.Abs((int) card.Rank - (int) cards.Last().Rank));
-                // OLD }
-            );
-        }
-
-        public static void CreateRaffleHtml()
-        {
-            var rnd = new Random(10);
-
-            var conditions = Ut.NewArray<Func<Edgework, bool>>(
-                //ew => ew.GetNumLitIndicators() < ew.GetNumUnlitIndicators(),
-                //ew => ew.GetNumLitIndicators() > ew.GetNumUnlitIndicators(),
-                //ew => ew.GetNumLitIndicators() == ew.GetNumUnlitIndicators(),
-                ew => char.IsLetter(ew.SerialNumber[0]) && char.IsLetter(ew.SerialNumber[1]),
-                ew => !char.IsLetter(ew.SerialNumber[0]) && char.IsLetter(ew.SerialNumber[1]),
-                ew => char.IsLetter(ew.SerialNumber[0]) && !char.IsLetter(ew.SerialNumber[1]),
-                ew => !char.IsLetter(ew.SerialNumber[0]) && !char.IsLetter(ew.SerialNumber[1]),
-                ew => (ew.SerialNumber[3] - 'A') % 3 == 0,
-                ew => (ew.SerialNumber[3] - 'A') % 3 == 1,
-                ew => (ew.SerialNumber[3] - 'A') % 3 == 2,
-                ew => (ew.SerialNumber[4] - 'A') % 3 == 0,
-                ew => (ew.SerialNumber[4] - 'A') % 3 == 1,
-                ew => (ew.SerialNumber[4] - 'A') % 3 == 2
-            );
-
-            File.WriteAllText(@"D:\c\KTANE\Public\HTML\Point of Order.html", new HTML { class_ = "no-js" }._(
-                new HEAD(
-                    new TITLE("Point of Order"),
-                    new META { httpEquiv = "Content-Type", content = "text/html; charset=UTF-8" },
-                    new META { httpEquiv = "X-UA-Compatible", content = "IE=edge" },
-                    new META { name = "viewport", content = "initial-scale=1" },
-                    new SCRIPT { src = "js/highlighter.js" },
-                    new LINK { rel = "stylesheet", type = "text/css", href = "css/font.css" },
-                    new STYLELiteral($@"
+        File.WriteAllText(@"D:\c\KTANE\Public\HTML\Point of Order.html", new HTML { class_ = "no-js" }._(
+            new HEAD(
+                new TITLE("Point of Order"),
+                new META { httpEquiv = "Content-Type", content = "text/html; charset=UTF-8" },
+                new META { httpEquiv = "X-UA-Compatible", content = "IE=edge" },
+                new META { name = "viewport", content = "initial-scale=1" },
+                new SCRIPT { src = "js/highlighter.js" },
+                new LINK { rel = "stylesheet", type = "text/css", href = "css/font.css" },
+                new STYLELiteral($@"
                         @font-face {{
                             font-family: 'Anonymous Pro';
                             font-style: normal;
@@ -547,192 +539,185 @@ namespace KtaneStuff
                             .example .card.wrong {{
                                 border: 2px solid #c42;
                             }}
-                            {Enumerable.Range(0, 4).SelectMany(suit => Enumerable.Range(0, 13).Select(rank => $".example .card.{(Rank) rank}.{(Suit) suit} {{ background-image: url(img/Point%20of%20Order/{(Rank) rank}%20of%20{(Suit) suit}.png); }}")).JoinString()}
+                            {Enumerable.Range(0, 4).SelectMany(suit => Enumerable.Range(0, 13).Select(rank => $".example .card.{(rank) rank}.{(suit) suit} {{ background-image: url(img/Point%20of%20Order/{(rank) rank}%20of%20{(suit) suit}.png); }}")).JoinString()}
                             {Enumerable.Range(0, 5).Select(ix => $".example .pile .card:nth-child({ix + 1}) {{ left: {20 + 15 * ix}px; top: {5 + 2 * ix}px; transform: rotate({-20 + 10 * ix}deg); }}").JoinString()}
                             {Enumerable.Range(0, 5).Select(ix => $".example .choices .card:nth-child({ix + 1}) {{ left: {180 + 75 * ix}px; top: 10px; }}").JoinString()}
                             {Enumerable.Range(0, 5).Select(ix => $".example .choices .card.correct:nth-child({ix + 1}), .example .choices .card.wrong:nth-child({ix + 1}) {{ left: {178 + 75 * ix}px; top: 8px; }}").JoinString()}
                     ")),
 
-                new BODY(
-                    new Func<object>(() =>
+            new BODY(
+                new Func<object>(() =>
+                {
+                    // Find 4 sets of edgework which between them cover all conditions
+                    // for 4 edgeworks, OLD rules: seed=4049
+                    var seed = 20;
+                    retry:
+                    seed++;
+                    var conditionsSatisfied = new bool[conditions.Length];
+                    var rnd2 = new Random(seed);
+                    var edgeworks = Ut.NewArray(4, _ => Edgework.Generate(5, 10, false, rnd2));
+                    for (var i = 0; i < edgeworks.Length; i++)
+                        for (var j = 0; j < conditions.Length; j++)
+                            conditionsSatisfied[j] = conditionsSatisfied[j] || conditions[j](edgeworks[i]);
+                    if (conditionsSatisfied.Any(c => c == false))
+                        goto retry;
+
+                    var fullResults = new List<object>();
+                    var counterExampleIndex = new List<object>();
+                    // Generate examples (one for each rule combination) for every set of edgework
+                    foreach (var ew in edgeworks)
                     {
-                        // Find 4 sets of edgework which between them cover all conditions
-                        // for 4 edgeworks, OLD rules: seed=4049
-                        var seed = 20;
-                        retry:
-                        seed++;
-                        var conditionsSatisfied = new bool[conditions.Length];
-                        var rnd2 = new Random(seed);
-                        var edgeworks = Ut.NewArray(4, _ => Edgework.Generate(5, 10, false, rnd2));
-                        for (int i = 0; i < edgeworks.Length; i++)
-                            for (int j = 0; j < conditions.Length; j++)
-                                conditionsSatisfied[j] = conditionsSatisfied[j] || conditions[j](edgeworks[i]);
-                        if (conditionsSatisfied.Any(c => c == false))
-                            goto retry;
-
-                        var fullResults = new List<object>();
-                        var counterExampleIndex = new List<object>();
-                        // Generate examples (one for each rule combination) for every set of edgework
-                        foreach (var ew in edgeworks)
-                        {
-                            Console.WriteLine();
-                            Console.WriteLine("Edgework: " + ew);
-
-                            var rules = getRules(ew);
-
-                            // EDGEWORK HTML
-                            fullResults.Add(edgeworkHtml(ew));
-
-                            // EXAMPLES
-                            foreach (var ss in Enumerable.Range(0, rules.Length).Subsequences())
-                            {
-                                var activeRuleIxs = ss.ToArray();
-                                if (activeRuleIxs.Length != _numActiveRules)
-                                    continue;
-
-                                Console.WriteLine("Active rules: " + activeRuleIxs.Select(ix => ix + 1).JoinString(", "));
-                                for (int i = 0; i < 3; i++)
-                                {
-                                    var puzzle = generatePuzzle(rules, rnd, activeRuleIxs);
-                                    var choices = puzzle.CorrectCards.Shuffle(rnd).Take(1).Concat(puzzle.WrongCards.Shuffle(rnd).Take(3)).ToArray().Shuffle(rnd);
-                                    fullResults.Add(exampleHtml(puzzle.Pile, choices, choices.IndexOf(puzzle.CorrectCards.Contains)));
-                                }
-                            }
-                        }
-
                         Console.WriteLine();
-                        fullResults.Add(new H1("Counter-examples"));
+                        Console.WriteLine("Edgework: " + ew);
 
-                        // Generate counter-examples
-                        foreach (var example in Ut.NewArray(
-                            new
-                            {
-                                Phrase = "Make a Full House from Two Pair",
-                                FullPhrase = (string) null,
-                                Author = "luc537#4890",
-                                Id = "full-house-from-two-pair",
-                                GetCounterExample = new Func<Puzzle, Edgework, Tuple<PlayingCard, PlayingCard>>((puzzle, edgework) =>
-                                {
-                                    var pair1 = puzzle.Pile.UniquePairs().FirstOrNull(p => p.Item1.Rank == p.Item2.Rank);
-                                    if (pair1 == null)
-                                        return null;
-                                    var pair2 = puzzle.Pile.UniquePairs().FirstOrNull(p => p.Item1.Rank == p.Item2.Rank && p.Item1.Rank != pair1.Value.Item1.Rank);
-                                    if (pair2 == null)
-                                        return null;
-                                    return puzzle.WrongCards.Where(card => card.Rank == pair1.Value.Item1.Rank || card.Rank == pair2.Value.Item1.Rank).FirstOrNull().NullOr(cc => Tuple.Create(cc, puzzle.CorrectCards[0]));
-                                })
-                            },
-                            new
-                            {
-                                Phrase = "Groups of ranks",
-                                FullPhrase = "Consider the following groups of ranks: 5/10; 3/6/9; 4/8/Q. If the 2nd and 4th cards in the pile are from a single set and no other cards in the pile are from that set, then all ranks within the set are valid to play.",
-                                Author = "Storm Vision#6438",
-                                Id = "rank-sets",
-                                GetCounterExample = new Func<Puzzle, Edgework, Tuple<PlayingCard, PlayingCard>>((puzzle, edgework) =>
-                                {
-                                    var sets = new[] { new[] { Rank.Five, Rank.Ten }, new[] { Rank.Three, Rank.Six, Rank.Nine }, new[] { Rank.Four, Rank.Eight, Rank.Queen } };
-                                    var applicableSetIx = sets.IndexOf(s => !s.Contains(puzzle.Pile[0].Rank) && s.Contains(puzzle.Pile[1].Rank) && !s.Contains(puzzle.Pile[2].Rank) && s.Contains(puzzle.Pile[3].Rank) && !s.Contains(puzzle.Pile[4].Rank));
-                                    if (applicableSetIx == -1)
-                                        return null;
-                                    return puzzle.WrongCards.Where(card => sets[applicableSetIx].Contains(card.Rank)).FirstOrNull().NullOr(cc => Tuple.Create(cc, puzzle.CorrectCards[0]));
-                                })
-                            }
-                        ))
+                        var rules = getRules(ew);
+
+                        // EDGEWORK HTML
+                        fullResults.Add(edgeworkHtml(ew));
+
+                        // EXAMPLES
+                        foreach (var ss in Enumerable.Range(0, rules.Length).Subsequences())
                         {
-                            ConsoleUtil.WriteLine("Generating counter-example for: " + example.Phrase.Color(ConsoleColor.Magenta));
+                            var activeRuleIxs = ss.ToArray();
+                            if (activeRuleIxs.Length != _numActiveRules)
+                                continue;
 
-                            // Keep trying to find a counter-example
-                            while (true)
+                            Console.WriteLine("Active rules: " + activeRuleIxs.Select(ix => ix + 1).JoinString(", "));
+                            for (var i = 0; i < 3; i++)
                             {
-                                var edgework = Edgework.Generate(5, 7, false, rnd);
-                                if (edgework.Widgets.Any(w => w.Type == WidgetType.Indicator && !Indicator.WellKnown.Contains(w.Indicator.Value.Label)))
-                                    continue;
-                                var rules = getRules(edgework);
-                                var puzzle = generatePuzzle(rules, rnd);
-                                var counterExample = example.GetCounterExample(puzzle, edgework);
-                                if (counterExample == null)
-                                    continue;
-                                // Counter-example found!
-                                var counterCard = counterExample.Item1;
-                                var correctCard = counterExample.Item2;
-
-                                var choices = puzzle.WrongCards.Shuffle(rnd).Where(wc => wc != counterCard).Take(2).Concat(correctCard).Concat(counterCard).ToArray().Shuffle(rnd);
-                                fullResults.Add(new DIV { class_ = "counter-example", id = example.Id }._(
-                                    new H2(new SPAN { class_ = "rule" }._(example.Phrase), " ", new SPAN { class_ = "author" }._(example.Author)),
-                                    example.FullPhrase == null ? null : new P { class_ = "full-phrase" }._(example.FullPhrase),
-                                    edgeworkHtml(edgework),
-                                    exampleHtml(puzzle.Pile, choices, choices.IndexOf(correctCard), choices.IndexOf(counterCard))));
-                                counterExampleIndex.Add(new LI(new A { href = "#" + example.Id }._(new SPAN { class_ = "rule" }._(example.Phrase), " ", new SPAN { class_ = "author" }._(example.Author))));
-                                goto endOfCounterExample;
+                                var puzzle = generatePuzzle(rules, rnd, activeRuleIxs);
+                                var choices = puzzle.CorrectCards.Shuffle(rnd).Take(1).Concat(puzzle.WrongCards.Shuffle(rnd).Take(3)).ToArray().Shuffle(rnd);
+                                fullResults.Add(exampleHtml(puzzle.Pile, choices, choices.IndexOf(puzzle.CorrectCards.Contains)));
                             }
-                            endOfCounterExample:;
                         }
+                    }
 
-                        return Ut.NewArray<object>(
-                            new DIV { class_ = "text" }._(
-                                new H1("Point of Order!"),
-                                new P("Welcome to the exciting world of figuring stuff out."),
-                                new P(new EM("Point of Order"), @" is a new modded module for “Keep Talking and Nobody Explodes”.
+                    Console.WriteLine();
+                    fullResults.Add(new H1("Counter-examples"));
+
+                    // Generate counter-examples
+                    foreach (var example in Ut.NewArray(
+                        new
+                        {
+                            Phrase = "Make a Full House from Two Pair",
+                            FullPhrase = (string) null,
+                            Author = "luc537#4890",
+                            Id = "full-house-from-two-pair",
+                            GetCounterExample = new Func<puzzle, Edgework, Tuple<playingCard, playingCard>>((puzzle, edgework) =>
+                            {
+                                var pair1 = puzzle.Pile.UniquePairs().FirstOrNull(p => p.Item1.Rank == p.Item2.Rank);
+                                if (pair1 == null)
+                                    return null;
+                                var pair2 = puzzle.Pile.UniquePairs().FirstOrNull(p => p.Item1.Rank == p.Item2.Rank && p.Item1.Rank != pair1.Value.Item1.Rank);
+                                return pair2 == null
+                                    ? (Tuple<playingCard, playingCard>) null
+                                    : puzzle.WrongCards.Where(card => card.Rank == pair1.Value.Item1.Rank || card.Rank == pair2.Value.Item1.Rank).FirstOrNull().NullOr(cc => Tuple.Create(cc, puzzle.CorrectCards[0]));
+                            })
+                        },
+                        new
+                        {
+                            Phrase = "Groups of ranks",
+                            FullPhrase = "Consider the following groups of ranks: 5/10; 3/6/9; 4/8/Q. If the 2nd and 4th cards in the pile are from a single set and no other cards in the pile are from that set, then all ranks within the set are valid to play.",
+                            Author = "Storm Vision#6438",
+                            Id = "rank-sets",
+                            GetCounterExample = new Func<puzzle, Edgework, Tuple<playingCard, playingCard>>((puzzle, edgework) =>
+                            {
+                                var sets = new[] { new[] { rank.Five, rank.Ten }, [rank.Three, rank.Six, rank.Nine], [rank.Four, rank.Eight, rank.Queen] };
+                                var applicableSetIx = sets.IndexOf(s => !s.Contains(puzzle.Pile[0].Rank) && s.Contains(puzzle.Pile[1].Rank) && !s.Contains(puzzle.Pile[2].Rank) && s.Contains(puzzle.Pile[3].Rank) && !s.Contains(puzzle.Pile[4].Rank));
+                                return applicableSetIx == -1
+                                    ? (Tuple<playingCard, playingCard>) null
+                                    : puzzle.WrongCards.Where(card => sets[applicableSetIx].Contains(card.Rank)).FirstOrNull().NullOr(cc => Tuple.Create(cc, puzzle.CorrectCards[0]));
+                            })
+                        }
+                    ))
+                    {
+                        ConsoleUtil.WriteLine("Generating counter-example for: " + example.Phrase.Color(ConsoleColor.Magenta));
+
+                        // Keep trying to find a counter-example
+                        while (true)
+                        {
+                            var edgework = Edgework.Generate(5, 7, false, rnd);
+                            if (edgework.Widgets.Any(w => w.Type == WidgetType.Indicator && !Indicator.WellKnown.Contains(w.Indicator.Value.Label)))
+                                continue;
+                            var rules = getRules(edgework);
+                            var puzzle = generatePuzzle(rules, rnd);
+                            var counterExample = example.GetCounterExample(puzzle, edgework);
+                            if (counterExample == null)
+                                continue;
+                            // Counter-example found!
+                            var counterCard = counterExample.Item1;
+                            var correctCard = counterExample.Item2;
+
+                            var choices = puzzle.WrongCards.Shuffle(rnd).Where(wc => wc != counterCard).Take(2).Concat(correctCard).Concat(counterCard).ToArray().Shuffle(rnd);
+                            fullResults.Add(new DIV { class_ = "counter-example", id = example.Id }._(
+                                new H2(new SPAN { class_ = "rule" }._(example.Phrase), " ", new SPAN { class_ = "author" }._(example.Author)),
+                                example.FullPhrase == null ? null : new P { class_ = "full-phrase" }._(example.FullPhrase),
+                                edgeworkHtml(edgework),
+                                exampleHtml(puzzle.Pile, choices, choices.IndexOf(correctCard), choices.IndexOf(counterCard))));
+                            counterExampleIndex.Add(new LI(new A { href = "#" + example.Id }._(new SPAN { class_ = "rule" }._(example.Phrase), " ", new SPAN { class_ = "author" }._(example.Author))));
+                            goto endOfCounterExample;
+                        }
+                        endOfCounterExample:;
+                    }
+
+                    return Ut.NewArray<object>(
+                        new DIV { class_ = "text" }._(
+                            new H1("Point of Order!"),
+                            new P("Welcome to the exciting world of figuring stuff out."),
+                            new P(new EM("Point of Order"), @" is a new modded module for “Keep Talking and Nobody Explodes”.
                                     This module is an homage to a card game in which the fundamental premise is that the
                                     rules of the game are not explained; players merely receive hints as they play and must figure out
                                     the rules on their own through logical deduction and trial and error."),
-                                new P("In keeping with the tradition of said game, the manual for ", new EM("Point of Order"), @"
+                            new P("In keeping with the tradition of said game, the manual for ", new EM("Point of Order"), @"
                                     is withheld until the community has deduced the rules correctly."),
-                                new P { class_ = "eye-catching" }._(@"The goal is to collaboratively identify all of the rules and
+                            new P { class_ = "eye-catching" }._(@"The goal is to collaboratively identify all of the rules and
                                     form a full manual. Your prestige and recognition will be proportional to how many of the
                                     rules you figured out."),
-                                new P(@"Below, we present several hints on which cards are legal
+                            new P(@"Below, we present several hints on which cards are legal
                                     to play. Each example shows a pile of five cards on the module, a choice of four cards to play, and
                                     a green border indicating which would be the only correct selection (out of those four). In addition,
                                     you are free to ", new A { href = "http://steamcommunity.com/sharedfiles/filedetails/?id=955137794" }._("subscribe to the mod"), @" and experiment with
                                     it on your own."),
-                                new P(@"Every participant may take a “guess” by writing a manual (or fragment of a manual)
+                            new P(@"Every participant may take a “guess” by writing a manual (or fragment of a manual)
                                     and submitting it to me (", new CODE("Timwi#0551"), @" on Discord). If any part of the guess is correct, that part
                                     of the manual is published, allowing subsequent guesses to use it as a scaffold. For any part that is
                                     wrong, I will point out which example on this page contradicts it. If no contradiction is already
                                     on the page, I will add one, thus providing everyone with more hints. How exactly your proposed
                                     rules are split into “parts” is up to my own discretion."),
-                                new P(@"Guesses may be made an unlimited number of times, but you cannot submit a new
+                            new P(@"Guesses may be made an unlimited number of times, but you cannot submit a new
                                     guess until your previous guess has been addressed. Manuals may be written in any format
                                     that I can read, including PDF, HTML, Google Docs or Microsoft Word. (Scans of
                                     handwritten pages might be a stretch, but if your handwriting is beautiful then go for it.)"),
-                                new H2(new A { href = "Point of Order incomplete manual.html" }._("Incomplete manual so far")),
-                                new H4("Known information:"),
-                                new UL(
-                                    new LI("The color or pattern on the back of the cards does not matter."),
-                                    new LI("The number of strikes on the bomb does not matter."),
-                                    new LI("The other modules on the bomb do not matter, nor how many of them are solved or unsolved."),
-                                    new LI("Given any specific module (set of 5 exposed cards) with the same edgework, there are multiple valid cards; however, only one will show as an option in any particular set of 4 possible answers. (Credit: OceanWaves)"),
-                                    new LI("You can not play the same value card that was just played. (Credit: onewingedangel30)"),
-                                    new LI("Given any particular module, there is a subset of ranks and suits, such that every combination of rank/suit of those subsets is a valid answer. (Credit: OceanWaves)"),
-                                    new LI("The first, second, fourth and fifth characters of the serial number matter. No other edgework matters. (Credit: samfun123)"),
-                                    new LI("The cards in the pile are a sequence, and the next card to be played is determined by the previous cards. (Credit: onewingedangel30)"),
-                                    new LI("The previous cards played all follow a specific set of rules which the defuser/expert must follow to play the next card. (Credit: OceanWaves)")),
-                                new H4("Counter-examples:"),
-                                new UL(counterExampleIndex)),
-                            fullResults);
-                    })
-                )
-            ).ToString());
-        }
-
-        private static object exampleHtml(PlayingCard[] pile, PlayingCard[] choices, int correctIndex, int? counterExampleIndex = null)
-        {
-            return new DIV { class_ = "example" }._(
-                new DIV { class_ = "pile" }._(pile.Select(card => new DIV { class_ = $"card {card.Rank} {card.Suit}" })),
-                new DIV { class_ = "choices" }._(Enumerable.Range(0, choices.Length).Select(ix => new DIV { class_ = $"card {choices[ix].Rank} {choices[ix].Suit} {(correctIndex == ix ? "correct" : counterExampleIndex == ix ? "wrong" : "")}" })));
-        }
-
-        private static object edgeworkHtml(Edgework edgework)
-        {
-            return new DIV { class_ = "edgework" }._(
-                new DIV { class_ = "widget serial" }._(edgework.SerialNumber),
-                edgework.Widgets.Any(w => w.Type == WidgetType.BatteryHolder) ? new DIV { class_ = "widget separator" } : null,
-                edgework.Widgets.Where(w => w.Type == WidgetType.BatteryHolder).Select(w => new DIV { class_ = $"widget battery {(w.BatteryType == BatteryType.BatteryAA ? "aa" : "d")}" }),
-                edgework.Widgets.Any(w => w.Type == WidgetType.Indicator) ? new DIV { class_ = "widget separator" } : null,
-                edgework.Widgets.Where(w => w.Type == WidgetType.Indicator).Select(w => new DIV { class_ = $"widget indicator {(w.Indicator.Value.Type == IndicatorType.Lit ? "lit" : "unlit")}" }._(new SPAN { class_ = "label" }._(w.Indicator.Value.Label))),
-                edgework.Widgets.Any(w => w.Type == WidgetType.PortPlate) ? new DIV { class_ = "widget separator" } : null,
-                edgework.Widgets.Where(w => w.Type == WidgetType.PortPlate).Select(w => new DIV { class_ = $"widget portplate" }._(w.PortTypes.Select(p => new SPAN { class_ = p.ToString().ToLowerInvariant() }))));
-        }
+                            new H2(new A { href = "Point of Order incomplete manual.html" }._("Incomplete manual so far")),
+                            new H4("Known information:"),
+                            new UL(
+                                new LI("The color or pattern on the back of the cards does not matter."),
+                                new LI("The number of strikes on the bomb does not matter."),
+                                new LI("The other modules on the bomb do not matter, nor how many of them are solved or unsolved."),
+                                new LI("Given any specific module (set of 5 exposed cards) with the same edgework, there are multiple valid cards; however, only one will show as an option in any particular set of 4 possible answers. (Credit: OceanWaves)"),
+                                new LI("You can not play the same value card that was just played. (Credit: onewingedangel30)"),
+                                new LI("Given any particular module, there is a subset of ranks and suits, such that every combination of rank/suit of those subsets is a valid answer. (Credit: OceanWaves)"),
+                                new LI("The first, second, fourth and fifth characters of the serial number matter. No other edgework matters. (Credit: samfun123)"),
+                                new LI("The cards in the pile are a sequence, and the next card to be played is determined by the previous cards. (Credit: onewingedangel30)"),
+                                new LI("The previous cards played all follow a specific set of rules which the defuser/expert must follow to play the next card. (Credit: OceanWaves)")),
+                            new H4("Counter-examples:"),
+                            new UL(counterExampleIndex)),
+                        fullResults);
+                })
+            )
+        ).ToString());
     }
+
+    private static Tag exampleHtml(playingCard[] pile, playingCard[] choices, int correctIndex, int? counterExampleIndex = null) => new DIV { class_ = "example" }._(
+            new DIV { class_ = "pile" }._(pile.Select(card => new DIV { class_ = $"card {card.Rank} {card.Suit}" })),
+            new DIV { class_ = "choices" }._(Enumerable.Range(0, choices.Length).Select(ix => new DIV { class_ = $"card {choices[ix].Rank} {choices[ix].Suit} {(correctIndex == ix ? "correct" : counterExampleIndex == ix ? "wrong" : "")}" })));
+
+    private static Tag edgeworkHtml(Edgework edgework) => new DIV { class_ = "edgework" }._(
+            new DIV { class_ = "widget serial" }._(edgework.SerialNumber),
+            edgework.Widgets.Any(w => w.Type == WidgetType.BatteryHolder) ? new DIV { class_ = "widget separator" } : null,
+            edgework.Widgets.Where(w => w.Type == WidgetType.BatteryHolder).Select(w => new DIV { class_ = $"widget battery {(w.BatteryType == BatteryType.BatteryAA ? "aa" : "d")}" }),
+            edgework.Widgets.Any(w => w.Type == WidgetType.Indicator) ? new DIV { class_ = "widget separator" } : null,
+            edgework.Widgets.Where(w => w.Type == WidgetType.Indicator).Select(w => new DIV { class_ = $"widget indicator {(w.Indicator.Value.Type == IndicatorType.Lit ? "lit" : "unlit")}" }._(new SPAN { class_ = "label" }._(w.Indicator.Value.Label))),
+            edgework.Widgets.Any(w => w.Type == WidgetType.PortPlate) ? new DIV { class_ = "widget separator" } : null,
+            edgework.Widgets.Where(w => w.Type == WidgetType.PortPlate).Select(w => new DIV { class_ = $"widget portplate" }._(w.PortTypes.Select(p => new SPAN { class_ = p.ToString().ToLowerInvariant() }))));
 }

@@ -67,7 +67,7 @@ dotnet_style_prefer_inferred_tuple_names = true
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true
 dotnet_style_prefer_simplified_boolean_expressions = true
 dotnet_style_prefer_simplified_interpolation = true
-dotnet_style_prefer_collection_expression = false
+dotnet_style_prefer_collection_expression = true
 
 # Field preferences
 dotnet_style_readonly_field = false
@@ -343,8 +343,17 @@ resharper_member_can_be_private_local_highlighting = none
 dotnet_diagnostic.xUnit2013.severity = none
 
 # CA1866: Use char overload (not available in netstandard2.0)
-dotnet_diagnostic.CA1866.severity = none
+dotnet_diagnostic.ca1866.severity = none
 
 # IDE0070: Use System.HashCode.Combine (not available in netstandard2.0)
 dotnet_diagnostic.ide0070.severity = none
+
+# CA1861: Avoid constant arrays as arguments
+dotnet_diagnostic.ca1861.severity = none
+
+# IDE0305: .ToArray()/.ToList()
+dotnet_diagnostic.ide0305.severity = none
+
+# CS9236: Compiling requires binding the lambda expression at least 100 times
+dotnet_diagnostic.cs9236.severity = none
 

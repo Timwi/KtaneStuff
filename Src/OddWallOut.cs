@@ -7,71 +7,71 @@ namespace KtaneStuff;
 
 #pragma warning disable CS0162 // Unreachable code
 
-class MazeGenerator(int size, MonoRandom rand)
+static class OddWallOut
 {
-    private bool[][] _visited;
-    private char[] _charArr;
-
-    public string GenerateMaze()
+    class mazeGenerator(int size, MonoRandom rand)
     {
-        _visited = new bool[size][];
-        for (int i = 0; i < _visited.Length; i++)
-            _visited[i] = new bool[size];
-        _charArr = Enumerable.Repeat('█', (size * 2 + 1) * (size * 2 + 1)).ToArray();
-        for (int a = 0; a < size; a++)
-            for (int b = 0; b < size; b++)
-                _charArr[(a * (size * 2 + 1) * 2) + (b * 2) + size * 2 + 2] = ' ';
-        var x = rand.Next(0, size);
-        var y = rand.Next(0, size);
-        generate(x, y);
-        return new string(_charArr);
-    }
+        private bool[][] _visited;
+        private char[] _charArr;
 
-    private void generate(int x, int y)
-    {
-        _visited[x][y] = true;
-        var arr = Enumerable.Range(0, 4).ToArray();
-        rand.ShuffleFisherYates(arr);
-        var curPos = (x * (size * 2 + 1) * 2) + (y * 2) + (size * 2 + 2);
-        for (int i = 0; i < 4; i++)
+        public string GenerateMaze()
         {
-            switch (arr[i])
+            _visited = new bool[size][];
+            for (int i = 0; i < _visited.Length; i++)
+                _visited[i] = new bool[size];
+            _charArr = Enumerable.Repeat('█', (size * 2 + 1) * (size * 2 + 1)).ToArray();
+            for (int a = 0; a < size; a++)
+                for (int b = 0; b < size; b++)
+                    _charArr[(a * (size * 2 + 1) * 2) + (b * 2) + size * 2 + 2] = ' ';
+            var x = rand.Next(0, size);
+            var y = rand.Next(0, size);
+            generate(x, y);
+            return new string(_charArr);
+        }
+
+        private void generate(int x, int y)
+        {
+            _visited[x][y] = true;
+            var arr = Enumerable.Range(0, 4).ToArray();
+            rand.ShuffleFisherYates(arr);
+            var curPos = (x * (size * 2 + 1) * 2) + (y * 2) + (size * 2 + 2);
+            for (int i = 0; i < 4; i++)
             {
-                case 0:
-                    if (y != 0 && !_visited[x][y - 1])
-                    {
-                        _charArr[curPos - 1] = ' ';
-                        generate(x, y - 1);
-                    }
-                    break;
-                case 1:
-                    if (x != size - 1 && !_visited[x + 1][y])
-                    {
-                        _charArr[curPos + (size * 2 + 1)] = ' ';
-                        generate(x + 1, y);
-                    }
-                    break;
-                case 2:
-                    if (y != size - 1 && !_visited[x][y + 1])
-                    {
-                        _charArr[curPos + 1] = ' ';
-                        generate(x, y + 1);
-                    }
-                    break;
-                case 3:
-                    if (x != 0 && !_visited[x - 1][y])
-                    {
-                        _charArr[curPos - (size * 2 + 1)] = ' ';
-                        generate(x - 1, y);
-                    }
-                    break;
+                switch (arr[i])
+                {
+                    case 0:
+                        if (y != 0 && !_visited[x][y - 1])
+                        {
+                            _charArr[curPos - 1] = ' ';
+                            generate(x, y - 1);
+                        }
+                        break;
+                    case 1:
+                        if (x != size - 1 && !_visited[x + 1][y])
+                        {
+                            _charArr[curPos + (size * 2 + 1)] = ' ';
+                            generate(x + 1, y);
+                        }
+                        break;
+                    case 2:
+                        if (y != size - 1 && !_visited[x][y + 1])
+                        {
+                            _charArr[curPos + 1] = ' ';
+                            generate(x, y + 1);
+                        }
+                        break;
+                    case 3:
+                        if (x != 0 && !_visited[x - 1][y])
+                        {
+                            _charArr[curPos - (size * 2 + 1)] = ' ';
+                            generate(x - 1, y);
+                        }
+                        break;
+                }
             }
         }
     }
-}
 
-static class OddWallOut
-{
     const int _size = 4;
     const int _sttpo = 2 * _size + 1;
     const int _numColors = 4;
@@ -83,7 +83,7 @@ static class OddWallOut
         for (var seed = 0; seed < 500; seed++)
         {
             var rnd = new MonoRandom(seed);
-            var gen = new MazeGenerator(_size, rnd);
+            var gen = new mazeGenerator(_size, rnd);
             var maze = gen.GenerateMaze();
             var walls = Enumerable.Range(0, _sttpo * _sttpo / 2).Select(ix => 2 * ix + 1).Where(ix => (!toroidal || (ix % _sttpo != _sttpo - 1 && ix / _sttpo != _sttpo - 1)) && maze[ix] == '█').ToArray().Shuffle(rnd);
             var firstNonEdgeWall = walls.IndexOf(ix => ix % _sttpo != 0 && ix % _sttpo != _sttpo - 1 && ix / _sttpo != 0 && ix / _sttpo != _sttpo - 1);

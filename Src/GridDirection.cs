@@ -1,14 +1,13 @@
-﻿namespace KtaneStuff
+﻿namespace KtaneStuff;
+
+public enum GridDirection
 {
-    public enum GridDirection
-    {
-        Up,
-        UpRight,
-        Right,
-        DownRight,
-        Down,
-        DownLeft,
-        Left,
-        UpLeft
-    }
+    Up,
+    UpRight,
+    Right,
+    DownRight,
+    Down,
+    DownLeft,
+    Left,
+    UpLeft
 }

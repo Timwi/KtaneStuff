@@ -6,7 +6,7 @@ using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff;
 
-static class CrazyMaze
+internal static class CrazyMaze
 {
     public static void Generate()
     {
@@ -291,12 +291,7 @@ static class CrazyMaze
 
                     var nMin = Math.Min(n1, n2);
                     var nMax = Math.Max(n1, n2);
-                    double midPos;
-                    if (2 * (nMax - nMin) > cd)
-                        midPos = (nMin + nMax + cd) * .5 / cd;
-                    else
-                        midPos = (nMin + nMax) * .5 / cd;
-
+                    var midPos = 2 * (nMax - nMin) > cd ? (nMin + nMax + cd) * .5 / cd : (nMin + nMax) * .5 / cd;
                     midP = offset + new PointD(
                         cv1.Radius * Math.Cos(Math.PI * (2d * midPos - .5)),
                         cv1.Radius * Math.Sin(Math.PI * (2d * midPos - .5)));
@@ -338,7 +333,7 @@ static class CrazyMaze
                 cellToSpriteShape[cellIx] = tup.shapeId;
             else
             {
-                int shapeId = cellToSpriteShape[cellIx] = nextSprite;
+                var shapeId = cellToSpriteShape[cellIx] = nextSprite;
                 knownSpriteShapes[str] = (shapeId, cellIx);
                 nextSprite++;
             }
@@ -356,7 +351,7 @@ static class CrazyMaze
             var (min, max) = getBounds(edges);
             var midP = (min + max) / 2;
             double leftX = midP.X - cellSize / 2, topY = midP.Y - cellSize / 2;
-            var strc = new Structure<object>(new[] { allCells[cellIx] }, getNeighbors: c => Enumerable.Empty<object>());
+            var strc = new Structure<object>(new[] { allCells[cellIx] }, getNeighbors: c => []);
             File.WriteAllText($@"D:\temp\temp-{proc}.svg", strc.Svg(new SvgInstructions
             {
                 SvgAttributes = (_, _, _, _) => $"xmlns='http://www.w3.org/2000/svg' viewBox='{leftX} {topY} {cellSize} {cellSize}' font-size='.2' text-anchor='middle'",

@@ -2,31 +2,30 @@
 using System.Xml.Linq;
 using RT.Modeling;
 using RT.Util.ExtensionMethods;
+using static RT.Modeling.Md;
 
-namespace KtaneStuff
+namespace KtaneStuff;
+
+internal static class Polygons
 {
-    using static Md;
-
-    static class Polygons
+    public static void GenerateSvgs()
     {
-        public static void GenerateSvgs()
+        foreach (var objFile in new DirectoryInfo(@"D:\Daten\Upload\KTANE\TasThing\Polygons\objs").EnumerateFiles("*.obj"))
         {
-            foreach (var objFile in new DirectoryInfo(@"D:\Daten\Upload\KTANE\TasThing\Polygons\objs").EnumerateFiles("*.obj"))
-            {
-                var (name, polygons) = ParseObjFile(objFile.FullName);
-                Console.WriteLine(name);
+            var (name, polygons) = ParseObjFile(objFile.FullName);
+            Console.WriteLine(name);
 
-                File.WriteAllText(Path.Combine(@"D:\Daten\Upload\KTANE\TasThing\Polygons\svgs", Path.GetFileNameWithoutExtension(objFile.FullName) + ".svg"), $@"
+            File.WriteAllText(Path.Combine(@"D:\Daten\Upload\KTANE\TasThing\Polygons\svgs", Path.GetFileNameWithoutExtension(objFile.FullName) + ".svg"), $@"
                     <svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""-1.1 -1.1 2.2 2.2"">
                         {polygons.Select(polygon => $@"<path d=""M {polygon.Select(p => $"{p.Location.X} {-p.Location.Z}").JoinString(" L ")}"" />").JoinString()}
                     </svg>
                 ");
-            }
         }
+    }
 
-        public static void ExtractSvgPaths()
-        {
-            var conditions = @"The serial number contains a vowel.
+    public static void ExtractSvgPaths()
+    {
+        var conditions = @"The serial number contains a vowel.
 The serial number does not contain a vowel.
 The serial number’s last digit is even.
 The serial number’s last digit is odd.
@@ -62,17 +61,16 @@ The number of indicators is odd.
 The bomb was started on a weekend (Saturday or Sunday).
 A “Blind Alley”, “Tap Code”, “Braille” or “A Mistake” module is present.".Replace("\r", "").Split("\n");
 
-            var sb = new StringBuilder();
-            var i = 0;
-            foreach (var objFile in new DirectoryInfo(@"D:\Daten\Upload\KTANE\TasThing\Polygons\svgs-modified").EnumerateFiles("*.svg"))
-            {
-                var xml = XDocument.Parse(File.ReadAllText(objFile.FullName));
-                var path = xml.Root.ElementI("path");
-                var transform = path.AttributeI("transform");
-                sb.AppendLine($"<tr><td><svg class='polygon {(Path.GetFileNameWithoutExtension(objFile.Name))}' viewBox='{(transform != null ? "0.05 0.05 2.1 2.1" : "-1.05 -1.05 2.1 2.1")}'><path d='{path.AttributeI("d").Value}' /></svg></td><td>{conditions[i]}</td></tr>");
-                i++;
-            }
-            Clipboard.SetText(sb.ToString());
+        var sb = new StringBuilder();
+        var i = 0;
+        foreach (var objFile in new DirectoryInfo(@"D:\Daten\Upload\KTANE\TasThing\Polygons\svgs-modified").EnumerateFiles("*.svg"))
+        {
+            var xml = XDocument.Parse(File.ReadAllText(objFile.FullName));
+            var path = xml.Root.ElementI("path");
+            var transform = path.AttributeI("transform");
+            sb.AppendLine($"<tr><td><svg class='polygon {(Path.GetFileNameWithoutExtension(objFile.Name))}' viewBox='{(transform != null ? "0.05 0.05 2.1 2.1" : "-1.05 -1.05 2.1 2.1")}'><path d='{path.AttributeI("d").Value}' /></svg></td><td>{conditions[i]}</td></tr>");
+            i++;
         }
+        Clipboard.SetText(sb.ToString());
     }
 }

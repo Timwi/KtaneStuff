@@ -1,43 +1,40 @@
-﻿using System;
-using RT.Util.ExtensionMethods;
-using System.Linq;
-using RT.Util;
-using System.IO;
+﻿using RT.Util.ExtensionMethods;
 
-namespace KtaneStuff
+namespace KtaneStuff;
+
+internal static class LondonUnderground
 {
-    static class LondonUnderground
+    private static readonly string[][] _stations = [
+        ["Stonebridge Park", "Harlesden", "Willesden Junction", "Kensal Green", "Queen’s Park", "Kilburn Park", "Maida Vale", "Warwick Avenue", "Paddington", "Edgware Road", "Marylebone", "Baker Street", "Regent’s Park", "Oxford Circus", "Piccadilly Circus", "Charing Cross", "Embankment", "Waterloo", "Lambeth North", "Elephant & Castle"],
+        ["Hanger Lane", "Ealing Broadway", "West Acton", "North Acton", "East Acton", "White City/Wood Lane", "Shepherd’s Bush", "Holland Park", "Notting Hill Gate", "Queensway", "Lancaster Gate", "Marble Arch", "Bond Street", "Oxford Circus", "Tottenham Court Road", "Holborn", "Chancery Lane", "St. Paul’s", "Monument/Bank", "Liverpool Street", "Bethnal Green", "Mile End", "Stratford", "Leyton", "Leytonstone"],
+        ["Hammersmith", "Goldhawk Road", "Shepherd’s Bush Market", "White City/Wood Lane", "Latimer Road", "Ladbroke Grove", "Westbourne Park", "Royal Oak", "Paddington", "Edgware Road", "Bayswater", "Notting Hill Gate", "High Street Kensington", "Gloucester Road", "South Kensington", "Sloane Square", "Victoria", "St. James’s Park", "Westminster", "Embankment", "Temple", "Blackfriars", "Mansion House", "Cannon Street", "Monument/Bank", "Tower Hill", "Aldgate", "Liverpool Street", "Moorgate", "Barbican", "Farringdon", "King’s Cross St. Pancras", "Euston Square", "Great Portland Street", "Baker Street"],
+        ["Ealing Broadway", "Ealing Common", "Acton Town", "Chiswick Park", "Turnham Green", "Stamford Brook", "Ravenscourt Park", "Hammersmith", "Barons Court", "West Kensington", "Earl’s Court", "Gloucester Road", "South Kensington", "Sloane Square", "Victoria", "St. James’s Park", "Westminster", "Embankment", "Temple", "Blackfriars", "Mansion House", "Cannon Street", "Monument/Bank", "Tower Hill", "Aldgate East", "Whitechapel", "Stepney Green", "Mile End", "Bow Road", "Bromley-by-Bow", "West Ham", "Plaistow", "Upton Park", "East Ham", "High Street Kensington", "Notting Hill Gate", "Bayswater", "Paddington", "Edgware Road"],
+        ["Hammersmith", "Goldhawk Road", "Shepherd’s Bush Market", "White City/Wood Lane", "Latimer Road", "Ladbroke Grove", "Westbourne Park", "Royal Oak", "Paddington", "Edgware Road", "Baker Street", "Great Portland Street", "Euston Square", "King’s Cross St. Pancras", "Farringdon", "Barbican", "Moorgate", "Liverpool Street", "Aldgate East", "Whitechapel", "Stepney Green", "Mile End", "Bow Road", "Bromley-by-Bow", "West Ham", "Plaistow", "Upton Park", "East Ham"],
+        ["Neasden", "Dollis Hill", "Willesden Green", "Kilburn", "West Hampstead", "Finchley Road", "Swiss Cottage", "St. John’s Wood", "Baker Street", "Bond Street", "Green Park", "Westminster", "Waterloo", "Southwark", "London Bridge", "Bermondsey", "Canada Water", "Canary Wharf", "North Greenwich", "Canning Town", "West Ham", "Stratford"],
+        ["Finchley Road", "Baker Street", "Great Portland Street", "Euston Square", "King’s Cross St. Pancras", "Farringdon", "Barbican", "Moorgate", "Liverpool Street", "Aldgate"],
+        ["Clapham South", "Clapham Common", "Clapham North", "Stockwell", "Oval", "Kennington", "Waterloo", "Embankment", "Charing Cross", "Leicester Square", "Tottenham Court Road", "Goodge Street", "Warren Street", "Euston", "Mornington Crescent", "Camden Town", "Chalk Farm", "Belsize Park", "Hampstead", "Golders Green", "Brent Cross", "Hendon Central", "Elephant & Castle", "Borough", "London Bridge", "Monument/Bank", "Moorgate", "Old Street", "Angel", "King’s Cross St. Pancras", "Kentish Town", "Tufnell Park", "Archway", "Highgate", "East Finchley"],
+        ["Northfields", "South Ealing", "Acton Town", "Turnham Green", "Hammersmith", "Barons Court", "Earl’s Court", "Gloucester Road", "South Kensington", "Knightsbridge", "Hyde Park Corner", "Green Park", "Piccadilly Circus", "Leicester Square", "Covent Garden", "Holborn", "Russell Square", "King’s Cross St. Pancras", "Caledonian Road", "Holloway Road", "Arsenal", "Finsbury Park", "Manor House", "Turnpike Lane", "Wood Green", "Bounds Green", "Ealing Common", "North Ealing", "Park Royal"],
+        ["Brixton", "Stockwell", "Vauxhall", "Pimlico", "Victoria", "Green Park", "Oxford Circus", "Warren Street", "Euston", "King’s Cross St. Pancras", "Highbury & Islington", "Finsbury Park", "Seven Sisters", "Tottenham Hale", "Blackhorse Road", "Walthamstow Central"]
+    ];
+    private static readonly string[] _lines = ["Bakerloo Line", "Central Line", "Circle Line", "District Line", "Hammersmith & City Line", "Jubilee Line", "Metropolitan Line", "Northern Line", "Piccadilly Line", "Victoria Line"];
+    private static readonly string[] _cssNames = ["bakerloo", "central", "circle", "district", "hammersmith-and-city", "jubilee", "metropolitan", "northern", "piccadilly", "victoria"];
+    private static readonly string[] _lineAbbrevs = ["B", "Ce", "Ci", "D", "H", "J", "M", "N", "P", "V"];
+
+    public static void CreateGoodsheet()
     {
-        private static readonly string[][] _stations = Ut.NewArray(
-            new[] { "Stonebridge Park", "Harlesden", "Willesden Junction", "Kensal Green", "Queen’s Park", "Kilburn Park", "Maida Vale", "Warwick Avenue", "Paddington", "Edgware Road", "Marylebone", "Baker Street", "Regent’s Park", "Oxford Circus", "Piccadilly Circus", "Charing Cross", "Embankment", "Waterloo", "Lambeth North", "Elephant & Castle" },
-            new[] { "Hanger Lane", "Ealing Broadway", "West Acton", "North Acton", "East Acton", "White City/Wood Lane", "Shepherd’s Bush", "Holland Park", "Notting Hill Gate", "Queensway", "Lancaster Gate", "Marble Arch", "Bond Street", "Oxford Circus", "Tottenham Court Road", "Holborn", "Chancery Lane", "St. Paul’s", "Monument/Bank", "Liverpool Street", "Bethnal Green", "Mile End", "Stratford", "Leyton", "Leytonstone" },
-            new[] { "Hammersmith", "Goldhawk Road", "Shepherd’s Bush Market", "White City/Wood Lane", "Latimer Road", "Ladbroke Grove", "Westbourne Park", "Royal Oak", "Paddington", "Edgware Road", "Bayswater", "Notting Hill Gate", "High Street Kensington", "Gloucester Road", "South Kensington", "Sloane Square", "Victoria", "St. James’s Park", "Westminster", "Embankment", "Temple", "Blackfriars", "Mansion House", "Cannon Street", "Monument/Bank", "Tower Hill", "Aldgate", "Liverpool Street", "Moorgate", "Barbican", "Farringdon", "King’s Cross St. Pancras", "Euston Square", "Great Portland Street", "Baker Street" },
-            new[] { "Ealing Broadway", "Ealing Common", "Acton Town", "Chiswick Park", "Turnham Green", "Stamford Brook", "Ravenscourt Park", "Hammersmith", "Barons Court", "West Kensington", "Earl’s Court", "Gloucester Road", "South Kensington", "Sloane Square", "Victoria", "St. James’s Park", "Westminster", "Embankment", "Temple", "Blackfriars", "Mansion House", "Cannon Street", "Monument/Bank", "Tower Hill", "Aldgate East", "Whitechapel", "Stepney Green", "Mile End", "Bow Road", "Bromley-by-Bow", "West Ham", "Plaistow", "Upton Park", "East Ham", "High Street Kensington", "Notting Hill Gate", "Bayswater", "Paddington", "Edgware Road" },
-            new[] { "Hammersmith", "Goldhawk Road", "Shepherd’s Bush Market", "White City/Wood Lane", "Latimer Road", "Ladbroke Grove", "Westbourne Park", "Royal Oak", "Paddington", "Edgware Road", "Baker Street", "Great Portland Street", "Euston Square", "King’s Cross St. Pancras", "Farringdon", "Barbican", "Moorgate", "Liverpool Street", "Aldgate East", "Whitechapel", "Stepney Green", "Mile End", "Bow Road", "Bromley-by-Bow", "West Ham", "Plaistow", "Upton Park", "East Ham" },
-            new[] { "Neasden", "Dollis Hill", "Willesden Green", "Kilburn", "West Hampstead", "Finchley Road", "Swiss Cottage", "St. John’s Wood", "Baker Street", "Bond Street", "Green Park", "Westminster", "Waterloo", "Southwark", "London Bridge", "Bermondsey", "Canada Water", "Canary Wharf", "North Greenwich", "Canning Town", "West Ham", "Stratford" },
-            new[] { "Finchley Road", "Baker Street", "Great Portland Street", "Euston Square", "King’s Cross St. Pancras", "Farringdon", "Barbican", "Moorgate", "Liverpool Street", "Aldgate" },
-            new[] { "Clapham South", "Clapham Common", "Clapham North", "Stockwell", "Oval", "Kennington", "Waterloo", "Embankment", "Charing Cross", "Leicester Square", "Tottenham Court Road", "Goodge Street", "Warren Street", "Euston", "Mornington Crescent", "Camden Town", "Chalk Farm", "Belsize Park", "Hampstead", "Golders Green", "Brent Cross", "Hendon Central", "Elephant & Castle", "Borough", "London Bridge", "Monument/Bank", "Moorgate", "Old Street", "Angel", "King’s Cross St. Pancras", "Kentish Town", "Tufnell Park", "Archway", "Highgate", "East Finchley" },
-            new[] { "Northfields", "South Ealing", "Acton Town", "Turnham Green", "Hammersmith", "Barons Court", "Earl’s Court", "Gloucester Road", "South Kensington", "Knightsbridge", "Hyde Park Corner", "Green Park", "Piccadilly Circus", "Leicester Square", "Covent Garden", "Holborn", "Russell Square", "King’s Cross St. Pancras", "Caledonian Road", "Holloway Road", "Arsenal", "Finsbury Park", "Manor House", "Turnpike Lane", "Wood Green", "Bounds Green", "Ealing Common", "North Ealing", "Park Royal" },
-            new[] { "Brixton", "Stockwell", "Vauxhall", "Pimlico", "Victoria", "Green Park", "Oxford Circus", "Warren Street", "Euston", "King’s Cross St. Pancras", "Highbury & Islington", "Finsbury Park", "Seven Sisters", "Tottenham Hale", "Blackhorse Road", "Walthamstow Central" });
-        private static readonly string[] _lines = new[] { "Bakerloo Line", "Central Line", "Circle Line", "District Line", "Hammersmith & City Line", "Jubilee Line", "Metropolitan Line", "Northern Line", "Piccadilly Line", "Victoria Line" };
-        private static readonly string[] _cssNames = new[] { "bakerloo", "central", "circle", "district", "hammersmith-and-city", "jubilee", "metropolitan", "northern", "piccadilly", "victoria" };
-        private static readonly string[] _lineAbbrevs = new[] { "B", "Ce", "Ci", "D", "H", "J", "M", "N", "P", "V" };
-
-        public static void CreateGoodsheet()
+        var lineHtmls = _lines.Order().Select(line =>
         {
-            var lineHtmls = _lines.Order().Select(line =>
+            var lineIx = _lines.IndexOf(line);
+            return $@"<td><ol>{_stations[lineIx].Select(station =>
             {
-                var lineIx = _lines.IndexOf(line);
-                return $@"<td><ol>{_stations[lineIx].Select(station =>
-                {
-                    var connections = Enumerable.Range(0, _stations.Length).Where(ix => ix != lineIx && _stations[ix].Contains(station)).ToArray();
-                    var name = connections.Length == 0 ? station.HtmlEscape() : $"<em>{station.HtmlEscape()}</em>";
-                    var arrow = connections.Length == 0 ? null : " → ";
-                    return $@"<li>{name}{arrow}{connections.Select(c => $@"<span class=""{_cssNames[c]}"">{_lineAbbrevs[c]}</span>").JoinString(" ")}</li>";
-                }).JoinString()}</ol></td>";
-            }).ToArray<object>();
+                var connections = Enumerable.Range(0, _stations.Length).Where(ix => ix != lineIx && _stations[ix].Contains(station)).ToArray();
+                var name = connections.Length == 0 ? station.HtmlEscape() : $"<em>{station.HtmlEscape()}</em>";
+                var arrow = connections.Length == 0 ? null : " → ";
+                return $@"<li>{name}{arrow}{connections.Select(c => $@"<span class=""{_cssNames[c]}"">{_lineAbbrevs[c]}</span>").JoinString(" ")}</li>";
+            }).JoinString()}</ol></td>";
+        }).ToArray<object>();
 
-            File.WriteAllText(@"D:\c\KTANE\Public\HTML\The London Underground optimized (Timwi & ZekNikZ).html", @"<!DOCTYPE html>
+        File.WriteAllText(@"D:\c\KTANE\Public\HTML\The London Underground optimized (Timwi & ZekNikZ).html", @"<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv=""content-type"" content=""text/html; charset=UTF-8"">
@@ -237,6 +234,5 @@ namespace KtaneStuff
     </div>
 </body>
 </html>".Fmt(lineHtmls));
-        }
     }
 }
