@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+﻿using System.Xml.Linq;
+using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
@@ -373,7 +369,7 @@ namespace KtaneStuff
                     System.Diagnostics.Debugger.Break();
                 var pathD = group.ElementsI("path").Single().AttributeI("d").Value;
                 var name = $"{id}{(id < 'α' ? "u" : "c")}";
-                var model = DecodeSvgPath.DecodePieces(pathD).Extrude(2, .01, true);
+                var model = SvgPath.Decode(pathD).Extrude(2, .01, true);
                 widths["ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω".IndexOf(id)] = model.Max(face => face.Max(v => v.Location.X)) - model.Min(face => face.Min(v => v.Location.X));
                 File.WriteAllText($@"D:\c\KTANE\BunchOfButtons\Assets\Modules\Navy\Assets\{name}.obj", Md.GenerateObjFile(model, name));
             }

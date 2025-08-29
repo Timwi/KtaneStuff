@@ -5,6 +5,7 @@
     <TargetFrameworks>net8.0-windows</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWindowsForms>True</UseWindowsForms>
+    <Configurations>Debug-Nuget;Debug-locallibs;Release</Configurations>
 
     <Version>1.0.0.9999</Version>
     <Authors>Timwi</Authors>
@@ -12,17 +13,26 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CsQuery.NETStandard" Version="1.3.6.1" />
-    <PackageReference Include="RT.Coordinates" Version="3.1.0" />
-    <PackageReference Include="RT.Dijkstra" Version="1.0.27" />
-    <PackageReference Include="RT.Generex" Version="2.0.2" />
+  <ItemGroup Condition="'$(Configuration)' == 'Debug-locallibs'">
+    <ProjectReference Include="..\..\..\RT.Coordinates\RT.Coordinates.csproj" />
+    <ProjectReference Include="..\..\..\RT.Modeling\RT.Modeling.csproj" />
+    <ProjectReference Include="..\..\..\RT.Servers\Src\RT.Servers.csproj" />
+    <ProjectReference Include="..\..\..\RT.Util\RT.Util\RT.Util.csproj" />
+    <ProjectReference Include="..\..\..\RT.Util\RT.Util.Core\RT.Util.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Debug-locallibs'">
+    <PackageReference Include="RT.Coordinates" Version="4.0.0" />
+    <PackageReference Include="RT.Modeling" Version="1.7.0" />
     <PackageReference Include="RT.Servers" Version="1.1.509" />
     <PackageReference Include="RT.TagSoup" Version="1.1.52" />
-    <PackageReference Include="RT.Util" Version="2.0.1776" />
+    <PackageReference Include="RT.Util" Version="2.0.1811" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="RT.Dijkstra" Version="1.0.27" />
+    <PackageReference Include="RT.Generex" Version="2.2.0" />
+    <PackageReference Include="CsQuery.NETStandard" Version="1.3.6.1" />
     <ProjectReference Include="..\..\..\PuzzleSolvers\Src\PuzzleSolvers.csproj" />
   </ItemGroup>
 

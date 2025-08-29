@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.IO;
-using System.Linq;
+﻿using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Media;
-using KtaneStuff.Modeling;
+using RT.Geometry;
 using RT.KitchenSink;
+using RT.Modeling;
+using RT.Serialization;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
-using RT.Serialization;
 
 namespace KtaneStuff
 {
@@ -196,7 +191,7 @@ namespace KtaneStuff
 
         class PathStuff
         {
-            public List<DecodeSvgPath.PathPiece> Path;
+            public List<SvgPiece> Path;
             public double X, Y, W, H;
         }
 
@@ -224,28 +219,28 @@ namespace KtaneStuff
                         if (spacing != null && arabic && (i == 0 || i >= 10))
                             x += (i == 0 || i == 10) ? spacing[0] : spacing[1];
                     }
-                    var path = new List<DecodeSvgPath.PathPiece>();
+                    var path = new List<SvgPiece>();
                     for (int j = 0; j < gp.PointCount; j++)
                     {
                         var type =
-                            ((PathPointType) gp.PathTypes[j]).HasFlag(PathPointType.Bezier) ? DecodeSvgPath.PathPieceType.Curve :
-                            ((PathPointType) gp.PathTypes[j]).HasFlag(PathPointType.Line) ? DecodeSvgPath.PathPieceType.Line : DecodeSvgPath.PathPieceType.Move;
-                        if (type == DecodeSvgPath.PathPieceType.Curve)
+                            ((PathPointType) gp.PathTypes[j]).HasFlag(PathPointType.Bezier) ? SvgPieceType.Curve :
+                            ((PathPointType) gp.PathTypes[j]).HasFlag(PathPointType.Line) ? SvgPieceType.Line : SvgPieceType.Move;
+                        if (type == SvgPieceType.Curve)
                         {
-                            path.Add(new DecodeSvgPath.PathPiece(DecodeSvgPath.PathPieceType.Curve, gp.PathPoints.Subarray(j, 3).Select(p => new PointD(p)).ToArray()));
+                            path.Add(new SvgPiece(SvgPieceType.Curve, gp.PathPoints.Subarray(j, 3).Select(p => new PointD(p)).ToArray()));
                             j += 2;
                         }
                         else
-                            path.Add(new DecodeSvgPath.PathPiece(type, gp.PathPoints.Subarray(j, 1).Select(p => new PointD(p)).ToArray()));
+                            path.Add(new SvgPiece(type, gp.PathPoints.Subarray(j, 1).Select(p => new PointD(p)).ToArray()));
 
                         if (((PathPointType) gp.PathTypes[j]).HasFlag(PathPointType.CloseSubpath))
-                            path.Add(DecodeSvgPath.PathPiece.End);
+                            path.Add(SvgPiece.End);
                     }
 
-                    var x1 = path.Where(p => p.Type != DecodeSvgPath.PathPieceType.End).SelectMany(p => p.Points).Min(p => p.X);
-                    var x2 = path.Where(p => p.Type != DecodeSvgPath.PathPieceType.End).SelectMany(p => p.Points).Max(p => p.X);
-                    var y1 = path.Where(p => p.Type != DecodeSvgPath.PathPieceType.End).SelectMany(p => p.Points).Min(p => p.Y);
-                    var y2 = path.Where(p => p.Type != DecodeSvgPath.PathPieceType.End).SelectMany(p => p.Points).Max(p => p.Y);
+                    var x1 = path.Where(p => p.Type != SvgPieceType.End).SelectMany(p => p.Points).Min(p => p.X);
+                    var x2 = path.Where(p => p.Type != SvgPieceType.End).SelectMany(p => p.Points).Max(p => p.X);
+                    var y1 = path.Where(p => p.Type != SvgPieceType.End).SelectMany(p => p.Points).Min(p => p.Y);
+                    var y2 = path.Where(p => p.Type != SvgPieceType.End).SelectMany(p => p.Points).Max(p => p.Y);
                     var w = x2 - x1;
                     var h = y2 - y1;
                     stuffs.Add(new PathStuff { Path = path, X = x1, Y = y1, W = w, H = h });
@@ -255,12 +250,12 @@ namespace KtaneStuff
             {
                 var angle = i * 360 / 12 - 90;
                 var path = stuffs[i].Path.Select(pth => pth.Select(p => new PointD((p.X - stuffs[i].X - stuffs[i].W / 2) * factor + numberRadius * cos(angle), (p.Y - stuffs[i].Y - stuffs[i].H / 2) * factor + numberRadius * sin(angle)))).ToList();
-                var furthest = path.Where(p => p.Type != DecodeSvgPath.PathPieceType.End).SelectMany(p => p.Points).Max(p => p.Distance());
+                var furthest = path.Where(p => p.Type != SvgPieceType.End).SelectMany(p => p.Points).Max(p => p.Length);
                 var newRadius = numberRadius - (furthest - numberRadius);
                 path = stuffs[i].Path.Select(pth => pth.Select(p => new PointD((p.X - stuffs[i].X - stuffs[i].W / 2) * factor + newRadius * cos(angle), (p.Y - stuffs[i].Y - stuffs[i].H / 2) * factor + newRadius * sin(angle)))).ToList();
 
                 //var reverse = false;
-                var stuff = DecodeSvgPath.Do(path, bézierSmoothness);
+                var stuff = path.Smooth(bézierSmoothness);
                 PointD[][] ts;
                 try { ts = stuff.Triangulate().ToArray(); }
                 catch (InvalidOperationException)
@@ -341,8 +336,7 @@ namespace KtaneStuff
                     <circle cx='0' cy='0' r='1' fill='#fff' stroke='#000' stroke-width='.01' />
                     {Enumerable.Range(0, 2)
                         .Select(i => $"<path transform='rotate({-angles[i]})' d='M {new[] { p(-thickness[i] * 2, -backLength[i]), p(0, -backLength[i] * 4 / 5), p(thickness[i] * 2, -backLength[i]), p(thickness[i] / 5, length[i] * .85), p(thickness[i] * 4, length[i] * .77), p(0, length[i]), p(-thickness[i] * 4, length[i] * .77), p(-thickness[i] / 5, length[i] * .85) }.Select(p => $"{p.X},{p.Y}").JoinString(" ")} z' stroke='none' fill='#000' />")
-                        .JoinString()
-                    }
+                        .JoinString()}
                     {Enumerable.Range(1, 12).Select(i => $"<path transform='translate({.8 * cos(i * 30 + 270)}, {.8 * sin(i * 30 + 270) + .05})' d='{Utils.FontToSvgPath(i.ToString(), "Agency FB", .35f).JoinString(" ")}' fill='#000' />").JoinString()}
                 ");
         }
@@ -471,7 +465,7 @@ namespace KtaneStuff
             var innerCirc = 1;
             var offset = rings.Aggregate(180, (p, n) => p / n.Labels.Length);
 
-            IEnumerable<DecodeSvgPath.PathPiece> createPath(string str, double fontSize)
+            IEnumerable<SvgPiece> createPath(string str, double fontSize)
             {
                 if (string.IsNullOrEmpty(str))
                     throw new ArgumentNullException(nameof(str));
@@ -480,7 +474,7 @@ namespace KtaneStuff
                 var ft = new FormattedText(str, System.Globalization.CultureInfo.CurrentCulture, System.Windows.FlowDirection.LeftToRight, typeFaceToUse, fontSize, System.Windows.Media.Brushes.Black, 1.25);
                 ft.TextAlignment = System.Windows.TextAlignment.Center;
                 var geometry = ft.BuildGeometry(new System.Windows.Point(0, 0));
-                return DecodeSvgPath.DecodePieces(geometry.GetFlattenedPathGeometry().Figures.JoinString());
+                return SvgPath.Decode(geometry.GetFlattenedPathGeometry().Figures.JoinString());
             }
 
             foreach (var ring in rings)
@@ -538,7 +532,7 @@ namespace KtaneStuff
 
         private static IEnumerable<VertexInfo[]> AmPm(string text)
         {
-            var faces = DecodeSvgPath.Do(Utils.FontToSvgPath(text, "Proxima Nova ExCn Rg", 1), .01).Triangulate();
+            var faces = Utils.FontToSvgPath(text, "Proxima Nova ExCn Rg", 1).Smooth(.01).Triangulate();
             var minX = faces.Min(f => f.Min(p => p.X));
             var maxX = faces.Max(f => f.Max(p => p.X));
             var minY = faces.Min(f => f.Min(p => p.Y));

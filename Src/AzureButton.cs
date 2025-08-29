@@ -1,13 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
-using RT.Util.ExtensionMethods;
+﻿using RT.Modeling;
 
 namespace KtaneStuff
 {
-    using static Md;
-
     static class AzureButton
     {
         public static void GenerateArrows()

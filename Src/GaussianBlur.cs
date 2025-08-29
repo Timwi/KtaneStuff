@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
-namespace KtaneStuff.Modeling
+namespace KtaneStuff
 {
     public class GaussianBlur
     {
@@ -42,7 +38,7 @@ namespace KtaneStuff.Modeling
                 _alpha[i] = (int) ((source[i] & 0xff000000) >> 24);
                 _red[i] = (source[i] & 0xff0000) >> 16;
                 _green[i] = (source[i] & 0x00ff00) >> 8;
-                _blue[i] = (source[i] & 0x0000ff);
+                _blue[i] = source[i] & 0x0000ff;
             });
         }
 
@@ -93,7 +89,7 @@ namespace KtaneStuff.Modeling
 
         private int[] boxesForGauss(int sigma, int n)
         {
-            var wIdeal = Math.Sqrt((12 * sigma * sigma / n) + 1);
+            var wIdeal = Math.Sqrt(12 * sigma * sigma / n + 1);
             var wl = (int) Math.Floor(wIdeal);
             if (wl % 2 == 0) wl--;
             var wu = wl + 2;

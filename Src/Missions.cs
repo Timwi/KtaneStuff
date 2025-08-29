@@ -9,7 +9,7 @@ using RT.Serialization;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
+using RT.Geometry;
 
 namespace KtaneStuff
 {

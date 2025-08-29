@@ -1,7 +1,5 @@
-﻿using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+﻿using RT.Geometry;
+using RT.Modeling;
 
 namespace KtaneStuff
 {
@@ -26,7 +24,7 @@ namespace KtaneStuff
             const string svgPath = "m 0.01929863,0.48908235 h -0.03970005 v -0.82653266 q -0.08160561,0.0584473 -0.15604317,0.10255846 l -0.006617,-0.00772 Q -0.08160561,-0.35454335 0,-0.48908238 q 0.08160561,0.13453903 0.18306128,0.24647105 l -0.006617,0.00772 Q 0.09924966,-0.2828624 0.0192982,-0.33744998 Z";
 
             File.WriteAllText(@"D:\c\KTANE\BunchOfButtons\Assets\Modules\Cornflower\Assets\Arrow.obj",
-                GenerateObjFile(DecodeSvgPath.DecodePieces(svgPath).Extrude(.025, .1, true), "Arrow"));
+                GenerateObjFile(SvgPath.Decode(svgPath).Extrude(.025, .1, true), "Arrow"));
             File.WriteAllText(@"D:\c\KTANE\BunchOfButtons\Assets\Modules\Cornflower\Assets\Node.obj",
                 GenerateObjFile(LooseModels.Cylinder(0, .05, .075, 36), "Node"));
         }

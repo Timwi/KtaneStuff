@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
+﻿using System.Drawing.Imaging;
 using System.Text;
-using System.Threading;
-using KtaneStuff.Modeling;
 using RT.Coordinates;
+using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
     using static Md;
-    using PointD = RT.Util.Geometry.PointD;
 
     sealed class Zoo
     {

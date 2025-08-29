@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
-using KtaneStuff.Modeling;
+﻿using System.Drawing.Imaging;
+using RT.Modeling;
 using RT.TagSoup;
 using RT.Util;
 using RT.Util.ExtensionMethods;

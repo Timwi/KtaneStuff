@@ -1,9 +1,5 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
+﻿using System.Drawing.Imaging;
+using RT.Modeling;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 

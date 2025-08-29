@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
-using KtaneStuff.Modeling;
+using RT.Modeling;
 using RT.KitchenSink;
 using RT.Util;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
+using RT.Geometry;
 
 namespace KtaneStuff
 {
@@ -209,7 +209,7 @@ namespace KtaneStuff
             var xml = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\101Dalmatians\Data\Design.svg"));
             PointD[] getPoints(string id)
             {
-                var points = DecodeSvgPath.Do(xml.Root.ElementI("g").ElementsI("path").Where(e => e.AttributeI("id").Value == id).Single().AttributeI("d").Value, smoothness).Single().Select(p => (p + new PointD(0, -217.625)) / 79.38 * 300 - new PointD(150, 254)).ToArray();
+                var points = SvgPath.Decode(xml.Root.ElementI("g").ElementsI("path").Where(e => e.AttributeI("id").Value == id).Single().AttributeI("d").Value).Smooth(smoothness).Single().Select(p => (p + new PointD(0, -217.625)) / 79.38 * 300 - new PointD(150, 254)).ToArray();
                 var index = points.IndexOf(p => p.X > -.1 && p.X < .1 && p.Y < 0);
                 return points.Subarray(index).Concat(points.Subarray(0, index)).ToArray();
             }

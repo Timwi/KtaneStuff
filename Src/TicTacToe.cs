@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
+﻿using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
 
@@ -13,12 +11,14 @@ namespace KtaneStuff
         public static void DoModels()
         {
             // Tic-Tac-Toe Keycap
-            File.WriteAllText(@"D:\c\KTANE\TicTacToe\Assets\Assets\Keycap.obj", Keycap("Keycap", slope: -3, keyWidth: 1, keyHeight: .7, bumpWidth: .2, bumpHeight: .05, keyDepth: .3));
+            File.WriteAllText(@"D:\c\KTANE\TicTacToe\Assets\Assets\Keycap.obj", keycap("Keycap", slope: -3, keyWidth: 1, keyHeight: .7, bumpWidth: .2, bumpHeight: .05, keyDepth: .3));
             // Tic-Tac-Toe PASS button
-            File.WriteAllText(@"D:\c\KTANE\TicTacToe\Assets\Assets\Passcap.obj", Keycap("PASS keycap", slope: -2, keyWidth: 2.5, keyHeight: .5, bumpWidth: .2, bumpHeight: .05, keyDepth: .3));
+            File.WriteAllText(@"D:\c\KTANE\TicTacToe\Assets\Assets\Passcap.obj", keycap("PASS keycap", slope: -2, keyWidth: 2.5, keyHeight: .5, bumpWidth: .2, bumpHeight: .05, keyDepth: .3));
         }
 
-        static string Keycap(string objectName, double slope, double keyWidth, double keyHeight, double bumpWidth, double bumpHeight, double keyDepth)
+        static double pow(double x, double y) => Math.Pow(x, y);
+
+        static string keycap(string objectName, double slope, double keyWidth, double keyHeight, double bumpWidth, double bumpHeight, double keyDepth)
         {
             var bottom = -bumpHeight - keyDepth;
             var cbp0 = pt(0, 0, 0);

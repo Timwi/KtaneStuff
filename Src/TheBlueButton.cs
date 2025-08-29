@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+﻿using System.Xml.Linq;
+using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
@@ -22,7 +18,7 @@ namespace KtaneStuff
             var paths = XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\BunchOfButtons\DataFiles\BlueButtonSuits.svg")).Root.ElementsI("path").Select(e => e.AttributeI("d").Value).ToArray();
             for (var i = 0; i < paths.Length; i++)
                 File.WriteAllText($@"D:\c\KTANE\BunchOfButtons\Assets\Modules\Blue\Assets\Suit{i}.obj",
-                    GenerateObjFile(DecodeSvgPath.DecodePieces(paths[i]).Select(piece => piece.Select(pt => -pt + 100 * p(i % 4, i / 4) + p(50, 50)))
+                    GenerateObjFile(SvgPath.Decode(paths[i]).Select(piece => piece.Select(pt => -pt + 100 * p(i % 4, i / 4) + p(50, 50)))
                         .Extrude(depth: 10, smoothness: .2, includeBackFace: true).Select(vi => vi.Select(v => v.Move(y: -5)).ToArray()), $"Suit{i}", uniqueVertices: false));
         }
 

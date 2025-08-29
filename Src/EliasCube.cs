@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
+﻿using RT.Modeling;
 
 namespace KtaneStuff
 {

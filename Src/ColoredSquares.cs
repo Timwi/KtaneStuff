@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using KtaneStuff.Modeling;
+﻿using RT.Modeling;
 using RT.Util;
 using RT.Util.Drawing;
 

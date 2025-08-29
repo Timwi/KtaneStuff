@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using KtaneStuff.Modeling;
+using RT.Modeling;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
+using RT.Geometry;
 
 namespace KtaneStuff
 {

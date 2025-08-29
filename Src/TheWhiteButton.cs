@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
+﻿using RT.Modeling;
 using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff

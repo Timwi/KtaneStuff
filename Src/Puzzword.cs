@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Xml.Linq;
-using KtaneStuff.Modeling;
+﻿using System.Xml.Linq;
+using RT.Geometry;
 using RT.Json;
-using RT.KitchenSink;
+using RT.Modeling;
 using RT.Serialization;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -54,6 +48,7 @@ namespace KtaneStuff
                 thread.Join();
         }
 
+        /*
         public static void DoFrontPlateTriangulation()
         {
             var polygons3d = ClassifyJson.Deserialize<List<List<Pt>>>(JsonList.Parse(@"[[
@@ -79,14 +74,14 @@ namespace KtaneStuff
             var polygons = polygons3d.Select(poly => poly.Select(pt => p(pt.X, pt.Z)).ToList()).ToList();
 
             foreach (var path in XDocument.Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\Puzzword\Design.svg")).Root.Descendants().Where(e => e.Name.LocalName == "path"))
-                foreach (var polygon in DecodeSvgPath.Do(path.AttributeI("d").Value, .1))
+                foreach (var polygon in SvgPath.Decode(path.AttributeI("d").Value).Smooth(.1))
                     polygons.Add(polygon.Select(pt => pt / 100 - new PointD(0, 1)).ToList());
 
             //var result = polygons.Triangulate();
 
-            var result = Triangulate.DelaunayConstrained(
-                polygons.SelectMany(poly => poly),
-                polygons.SelectMany(poly => poly.SelectConsecutivePairs(closed: true, selector: (p1, p2) => new EdgeD(p1, p2))));
+            var result = Triangulate.DelaunayEdgesConstrained(
+                polygons.SelectMany(poly => poly).ToList(),
+                polygons.SelectMany(poly => poly.SelectConsecutivePairs(closed: true, selector: (p1, p2) => new EdgeD(p1, p2))).ToHashSet());
 
             var json = JsonDict.Parse(File.ReadAllText(@"D:\c\KTANE\KtaneStuff\DataFiles\Puzzword\MeshEdit.Settings.bak.json"));
             foreach (var polygon in result)
@@ -105,5 +100,6 @@ namespace KtaneStuff
             }
             File.WriteAllText(@"C:\Users\Timwi\AppData\Roaming\MeshEdit\MeshEdit.Settings.json", json.ToString());
         }
+        */
     }
 }

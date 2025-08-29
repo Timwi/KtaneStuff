@@ -2,14 +2,14 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using CsQuery;
-using KtaneStuff.Modeling;
+using RT.Modeling;
 using RT.Json;
 using RT.Serialization;
 using RT.Servers;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
+using RT.Geometry;
 using RT.Util.Text;
 
 namespace KtaneStuff
@@ -861,7 +861,7 @@ namespace PolyhedralMaze
 
                                     case Adjacency.Curved:
                                         sendPath($"curve-{fromFaceIx}-{fromEdgeIx}", classes, edgeData,
-                                            (p2m - p1m).Distance() < .5 ? $"M {p1m.X},{p1m.Y} L {p2m.X},{p2m.Y}" :
+                                            (p2m - p1m).Length < .5 ? $"M {p1m.X},{p1m.Y} L {p2m.X},{p2m.Y}" :
                                             l1 >= 0 && l1 <= 1 && l2 >= 0 && l2 <= 1 ? $"M {p1m.X},{p1m.Y} C {intersect.X},{intersect.Y} {intersect.X},{intersect.Y} {p2m.X},{p2m.Y}" :
                                             $"M {p1m.X},{p1m.Y} C {p1c.X},{p1c.Y} {p2c.X},{p2c.Y} {p2m.X},{p2m.Y}",
                                             strokeWidth: .025);

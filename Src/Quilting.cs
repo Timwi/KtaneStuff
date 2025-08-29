@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+﻿using System.Xml.Linq;
+using RT.Geometry;
+using RT.Modeling;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 
@@ -30,8 +26,8 @@ namespace KtaneStuff
                     ConsoleUtil.WriteLine($"{svgFile.FullName.Color(ConsoleColor.Cyan)} — {path.AttributeI("id").Value.Color(ConsoleColor.Yellow)}", null);
 
                     //Utils.ReplaceInFile(@"D:\temp\temp.svg", "<!--#-->", "<!--##-->", $@"<path fill='none' stroke='black' stroke-width='2' d='{data}'/>");
-                    //Utils.ReplaceInFile(@"D:\temp\temp.svg", "<!--%-->", "<!--%%-->", $@"<path fill='none' stroke='red' stroke-width='1' d='{DecodeSvgPath.Do(data, .1).Select(pol => $"M{pol.Select(p => $"{p.X} {p.Y}").JoinString(" ")}").JoinString()}z'/>");
-                    File.WriteAllText($@"D:\c\KTANE\Quilting\Assets\Models\Patches\{Path.GetFileNameWithoutExtension(svgFile.Name)}-{pathIx}.obj", GenerateObjFile(center(DecodeSvgPath.DecodePieces(data).Extrude(1, .1, true))));
+                    //Utils.ReplaceInFile(@"D:\temp\temp.svg", "<!--%-->", "<!--%%-->", $@"<path fill='none' stroke='red' stroke-width='1' d='{SvgPath.Decode(data, .1).Select(pol => $"M{pol.Select(p => $"{p.X} {p.Y}").JoinString(" ")}").JoinString()}z'/>");
+                    File.WriteAllText($@"D:\c\KTANE\Quilting\Assets\Models\Patches\{Path.GetFileNameWithoutExtension(svgFile.Name)}-{pathIx}.obj", GenerateObjFile(center(SvgPath.Decode(data).Extrude(1, .1, true))));
                 }
             }
         }

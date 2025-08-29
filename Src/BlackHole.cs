@@ -1,10 +1,9 @@
 ﻿using System.Drawing.Imaging;
-using RT.KitchenSink;
+using RT.Geometry;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -55,7 +54,7 @@ namespace KtaneStuff
                     using (var sb = new SolidBrush(color))
                     {
                         var svgData = @"M 240,612.36218 270,612.36218 C 250,587.36218 225,577.36218 200,587.36218 230,582.36218 240,597.36218 240,612.36218 z";
-                        var polygons = DecodeSvgPath.Do(svgData, 1);
+                        var polygons = SvgPath.Decode(svgData).Smooth(1);
                         foreach (var polygon in polygons)
                             g.FillPolygon(sb, polygon.Select(p => (p + new PointD(0, -552.36218) - new PointD(201, 31)).ToPointF()).ToArray());
                     }

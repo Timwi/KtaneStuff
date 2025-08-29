@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using KtaneStuff.Modeling;
+﻿using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -67,7 +63,7 @@ namespace KtaneStuff
                         .SelectConsecutivePairs(!open, (i1, i2) => Enumerable.Range(0, nPts[0].Length)
                             .SelectConsecutivePairs(false, (j1, j2) => new[] { nPts[i1][j1], nPts[i2][j1], nPts[i2][j2], nPts[i1][j2] }
                                 .Select(inf => new VertexInfo(
-                                    loc: inf.Rotated,
+                                    location: inf.Rotated,
                                     normal: pts[i2].Rotate(pts[i1].Add(y: -radius), pts[i2].Add(y: -radius), inf.Angle) - pts[i2].Add(y: -radius),
                                     texture: tx(inf.Rotated.X, inf.Rotated.Z))).ToArray()))
                         .SelectMany(x => x);

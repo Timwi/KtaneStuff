@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using KtaneStuff.Modeling;
+﻿using System.Text;
+using RT.Modeling;
 using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+﻿using System.Text;
+using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -142,7 +137,7 @@ namespace KtaneStuff
         public static void CreateModels()
         {
             // BUTTON
-            static PointD[] getPath(string svg) => DecodeSvgPath.Do(svg, 1).SelectMany(ps => ps.Select(pt => p((pt.X - 50) / 1000, (100 - pt.Y) / 1000))).ToArray();
+            static PointD[] getPath(string svg) => SvgPath.Decode(svg).Smooth(1).SelectMany(ps => ps.Select(pt => p((pt.X - 50) / 1000, (100 - pt.Y) / 1000))).ToArray();
             var ys = new[] { 0, .004, .009, .01 };
             var outlines = Ut.NewArray(
                 getPath(@"M 50,-10 90,60 65,85 50,70 35,85 10,60 Z"),
@@ -177,7 +172,7 @@ namespace KtaneStuff
                 p(0.854439, 0.256271)).ToArray();
 
             var fragment = new[] { p(50, -10), p(90, 60) }.Select(pt => p((pt.X - 50) / 1000, (100 - pt.Y) / 1000)).Select(pt => p(pt.X * 7.5, pt.Y * 7.5)).ToArray();
-            var buttonOutline = Enumerable.Range(0, 4).SelectMany(rot => fragment.Select(p => p.Rotated(Math.PI / 2 * rot))).Reverse().ToArray();
+            var buttonOutline = Enumerable.Range(0, 4).SelectMany(rot => fragment.Select(p => p.Rotate(-Math.PI / 2 * rot))).Reverse().ToArray();
 
             var triangles = Md.Triangulate(new[] { frame, buttonOutline });
             File.WriteAllText(@"D:\c\KTANE\SimonShouts\Assets\Models\ModuleFrontPlate.obj", GenerateObjFile(triangles.Select(tri => tri.Select(p => pt(p.X, plateY, p.Y).WithTexture(.4771284794 * p.X + .46155, -.4771284794 * p.Y + .5337373145)).Reverse().ToArray()), "ModuleFrontPlate"));

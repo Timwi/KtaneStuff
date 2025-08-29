@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+﻿using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -61,7 +56,7 @@ namespace KtaneStuff
                 "M5.104 65.25L2.855 67.5l2.249 2.25h29.792l2.249-2.25-2.249-2.25H5.104z");
             for (int i = 0; i < segments.Length; i++)
                 File.WriteAllText($@"D:\c\KTANE\Variety\Assets\Items\LetterDisplay\LetterSegment{i}.obj",
-                    GenerateObjFile(DecodeSvgPath.Do(DecodeSvgPath.DecodePieces(segments[i]).Select(piece => piece.Select(p => -new PointD(p.X - 20, p.Y - 35) / 260)), 1).Triangulate().Select(arr => arr.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray()), $"LetterSegment{i}"));
+                    GenerateObjFile(SvgPath.Decode(segments[i]).Select(piece => piece.Select(p => -new PointD(p.X - 20, p.Y - 35) / 260)).Smooth(1).Triangulate().Select(arr => arr.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray()), $"LetterSegment{i}"));
 
             // Buttons
             for (var vertices = 3; vertices <= 6; vertices++)

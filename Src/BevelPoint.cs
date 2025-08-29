@@ -1,4 +1,6 @@
-﻿namespace KtaneStuff.Modeling
+﻿using RT.Modeling;
+
+namespace KtaneStuff
 {
     sealed class BevelPoint
     {

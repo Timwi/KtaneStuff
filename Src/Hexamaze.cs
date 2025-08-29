@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using KtaneStuff.Modeling;
 using RT.Coordinates;
+using RT.Geometry;
 using RT.KitchenSink;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-
-using PointD = RT.Coordinates.PointD;
 
 namespace KtaneStuff
 {
@@ -27,7 +21,7 @@ namespace KtaneStuff
             File.WriteAllText(@"D:\c\KTANE\Hexamaze\Assets\Models\Screen.obj", GenerateObjFile(Screen(), "Screen"));
             File.WriteAllText(@"D:\c\KTANE\Hexamaze\Assets\Models\ScreenFrame.obj", GenerateObjFile(ScreenFrame(), "ScreenFrame"));
             File.WriteAllText(@"D:\c\KTANE\Hexamaze\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
-            File.WriteAllText(@"D:\c\KTANE\Hexamaze\Assets\Models\Pawn.obj", GenerateObjFile(Pawn(), "Pawn"));
+            File.WriteAllText(@"D:\c\KTANE\Hexamaze\Assets\Models\Pawn.obj", GenerateObjFile(pawn(), "Pawn"));
         }
 
         private static IEnumerable<Pt[]> Screen()
@@ -76,9 +70,9 @@ namespace KtaneStuff
                 ).ToArray());
         }
 
-        private static IEnumerable<VertexInfo[]> Pawn()
+        private static IEnumerable<VertexInfo[]> pawn()
         {
-            return CreateMesh(false, true, DecodeSvgPath.Do(@"M 13,0 C 19,0 22,3 22,9 22,15 19,14 19,20 19,28 26,30 26,48 26,58 20,57 13,57", .1)
+            return CreateMesh(false, true, SvgPath.Decode(@"M 13,0 C 19,0 22,3 22,9 22,15 19,14 19,20 19,28 26,30 26,48 26,58 20,57 13,57").Smooth(.1)
                 .FirstOrDefault()
                 .SelectConsecutivePairs(true, (p1, p2) => p1 == p2 ? null : p1.Nullable())
                 .Where(p => p != null)

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
+﻿using System.Text;
 using System.Xml.Linq;
-using KtaneStuff.Modeling;
+using RT.Modeling;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -20,12 +13,12 @@ namespace KtaneStuff
         {
             foreach (var objFile in new DirectoryInfo(@"D:\Daten\Upload\KTANE\TasThing\Polygons\objs").EnumerateFiles("*.obj"))
             {
-                var (name, polygons) = Md.ParseObjFile(objFile.FullName);
+                var (name, polygons) = ParseObjFile(objFile.FullName);
                 Console.WriteLine(name);
 
                 File.WriteAllText(Path.Combine(@"D:\Daten\Upload\KTANE\TasThing\Polygons\svgs", Path.GetFileNameWithoutExtension(objFile.FullName) + ".svg"), $@"
                     <svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""-1.1 -1.1 2.2 2.2"">
-                        {polygons.Select(polygon => $@"<path d=""M {polygon.Select(p => $"{p.X} {-p.Z}").JoinString(" L ")}"" />").JoinString()}
+                        {polygons.Select(polygon => $@"<path d=""M {polygon.Select(p => $"{p.Location.X} {-p.Location.Z}").JoinString(" L ")}"" />").JoinString()}
                     </svg>
                 ");
             }

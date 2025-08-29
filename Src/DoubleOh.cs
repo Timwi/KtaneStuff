@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+﻿using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -33,7 +28,7 @@ namespace KtaneStuff
                 @"M10.1875, 60.5 3.1875, 67.5 5.21875, 69.5 34.78125, 69.5 36.8125, 67.5 29.8125, 60.5 z"
             );
             for (int i = 0; i < segments.Length; i++)
-                File.WriteAllText($@"D:\c\KTANE\DoubleOh\Assets\Models\Segment{i}.obj", GenerateObjFile(DecodeSvgPath.Do(segments[i], 1).Triangulate().Select(arr => arr.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray()), $"Segment{i}"));
+                File.WriteAllText($@"D:\c\KTANE\DoubleOh\Assets\Models\Segment{i}.obj", GenerateObjFile(SvgPath.Decode(segments[i]).Smooth(1).Triangulate().Select(arr => arr.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray()), $"Segment{i}"));
         }
 
         private static MeshVertexInfo[] bpa(double x, double y, double z, Normal befX, Normal afX, Normal befY, Normal afY) { return new[] { pt(x, y, z, befX, afX, befY, afY).WithTexture((x + 1) / 2, (z + 1) / 2) }; }
@@ -144,7 +139,7 @@ namespace KtaneStuff
                     .Select(arr => arr.Select(p => new VertexInfo(p, null)).ToArray());
             }
 
-            var svgPolygons = DecodeSvgPath.Do(svg, bézierSmoothness).Select(poly => poly.Select(pt => (pt - p(5, 5)) * .11).ToArray()).ToArray();
+            var svgPolygons = SvgPath.Decode(svg).Smooth(bézierSmoothness).Select(poly => poly.Select(pt => (pt - p(5, 5)) * .11).ToArray()).ToArray();
             var outline = outlineRaw.Select(inf => inf.Point).ToArray().Concat(svgPolygons).Triangulate()
                 .Select(f => f.Select(p => pt(p.X, patch2[0][0].Vertex.Y, p.Y).WithNormal(0, 1, 0).WithTexture(texturize(p))).Reverse().ToArray());
 

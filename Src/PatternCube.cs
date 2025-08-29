@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
+﻿using System.Diagnostics;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -207,7 +201,7 @@ namespace KtaneStuff
             {
                 var ix = -1;
                 var d = pathRaw.AttributeI("d").Value;
-                var pieces = DecodeSvgPath.DecodePieces(d).ToArray();
+                var pieces = SvgPath.Decode(d).ToArray();
                 foreach (var piece in pieces)
                     if (piece.Points != null)
                         foreach (var coord in piece.Points)

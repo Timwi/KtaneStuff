@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
+﻿using RT.Geometry;
+using RT.Modeling;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 using RT.Util.Text;
 
 namespace KtaneStuff
@@ -18,7 +14,7 @@ namespace KtaneStuff
         public static void DoModels()
         {
             File.WriteAllText(@"D:\c\KTANE\Bitmaps\Assets\Models\Screen.obj", GenerateObjFile(Screen(), "Screen"));
-            File.WriteAllText(@"D:\c\KTANE\Bitmaps\Assets\Models\ScreenFrame.obj", GenerateObjFile(ScreenFrame(), "ScreenFrame"));
+            File.WriteAllText(@"D:\c\KTANE\Bitmaps\Assets\Models\ScreenFrame.obj", GenerateObjFile(screenFrame(), "ScreenFrame"));
             File.WriteAllText(@"D:\c\KTANE\Bitmaps\Assets\Models\Button.obj", GenerateObjFile(Button(), "Button"));
             File.WriteAllText(@"D:\c\KTANE\Bitmaps\Assets\Models\ButtonHighlight.obj", GenerateObjFile(ButtonHighlight(), "ButtonHighlight"));
         }
@@ -28,7 +24,7 @@ namespace KtaneStuff
             yield return new[] { pt(-1, 0, -1), pt(-1, 0, 1), pt(1, 0, 1), pt(1, 0, -1) };
         }
 
-        private static IEnumerable<VertexInfo[]> ScreenFrame()
+        private static IEnumerable<VertexInfo[]> screenFrame()
         {
             var h = .04;
             var f = h * .4;

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using KtaneStuff.Modeling;
+﻿using System.Text.RegularExpressions;
 using RT.Json;
+using RT.Modeling;
 using RT.Util.ExtensionMethods;
 
 namespace KtaneStuff

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using KtaneStuff.Modeling;
+using RT.Modeling;
 using RT.Dijkstra;
 using RT.Util;
 using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
+using RT.Geometry;
 
 namespace KtaneStuff
 {
@@ -92,7 +92,7 @@ namespace KtaneStuff
                 foreach (var n in notches)
                 {
                     var ns = getNotchSize == null ? .1 : getNotchSize(n);
-                    yield return (new[] { p(-ns, m), p(0, m + 2 * ns), p(ns, m), p(0, m - 2 * ns) }.Select(p => p.Rotated((-n * .2 + .5) * Math.PI)).Select(p => (p, p)).ToArray(), p(0, m).Rotated((-n * .2 + .5) * Math.PI));
+                    yield return (new[] { p(-ns, m), p(0, m + 2 * ns), p(ns, m), p(0, m - 2 * ns) }.Select(p => p.Rotate((n * .2 - .5) * Math.PI)).Select(p => (p, p)).ToArray(), p(0, m).Rotate((n * .2 - .5) * Math.PI));
                 }
             }
         }
@@ -186,11 +186,11 @@ namespace KtaneStuff
         {
             var path = @"D:\c\KTANE\Public\HTML\img\Component\Marble Tumble.svg";
             Utils.ReplaceInFile(path, @"<!--%%-->", @"<!--%%%-->", Enumerable.Range(0, 5).Select(ix => $@"<path d='M {(Rnd.Next(0, 10) * Math.PI / 5).Apply(angle =>
-                                                                                                                          CylinderPolygon(ix + .5, ix + 1.5, _marbleSize, _marbleSize, (360 / _numNotches) * Rnd.Next(_gapTrapMins[ix], _gapTrapMaxs[ix] + 1), 0)
-                                                                                                                              .Select(tup => tup.p.Rotated(angle))
-                                                                                                                              .Select(p => p * 300 / 11 + new PointD(166, 348 - 166))
-                                                                                                                              .Select(tup => $"{tup.X},{tup.Y}")
-                                                                                                                              .JoinString(" "))} z' stroke-width='1' stroke='#000' fill='{Rnd.Next(64, 255).Apply(shade => $"#{shade.ToString("X2")}{shade.ToString("X2")}{shade.ToString("X2")}")}' />").JoinString());
+                CylinderPolygon(ix + .5, ix + 1.5, _marbleSize, _marbleSize, (360 / _numNotches) * Rnd.Next(_gapTrapMins[ix], _gapTrapMaxs[ix] + 1), 0)
+                    .Select(tup => tup.p.Rotate(-angle))
+                    .Select(p => p * 300 / 11 + new PointD(166, 348 - 166))
+                    .Select(tup => $"{tup.X},{tup.Y}")
+                    .JoinString(" "))} z' stroke-width='1' stroke='#000' fill='{Rnd.Next(64, 255).Apply(shade => $"#{shade.ToString("X2")}{shade.ToString("X2")}{shade.ToString("X2")}")}' />").JoinString());
         }
 
         public static void GenerateLogfileAnalyzerSvgs()

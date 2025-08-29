@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using KtaneStuff.Modeling;
+using RT.Modeling;
 using RT.Json;
 using RT.Util;
 using RT.Util.Consoles;
@@ -109,7 +109,7 @@ namespace KtaneStuff
         public static void UpdateJs()
         {
             var file = File.ReadAllLines(@"D:\c\KTANE\Public\HTML\js\Modules\Souvenir.js");
-            var modules = Ktane.GetLiveJson().ToDictionary(md => md["Name"].GetString(), md => (id: md["ModuleID"].GetString(), filename: md.Safe["FileName"]?.GetString() ?? md["Name"].GetString()));
+            var modules = Ktane.GetLiveJson().Where(md => md["Type"].GetString() != "Appendix").ToDictionary(md => md["Name"].GetString(), md => (id: md["ModuleID"].GetString(), filename: md.Safe["FileName"]?.GetString() ?? md["Name"].GetString()));
             for (var i = 0; i < file.Length; i++)
                 if (file[i].RegexMatch(@"name: ""([^""]*)"",\tid: ""\?""", out var m) && modules.Get(m.Groups[1].Value.Replace("’", "'"), null) is { } tup)
                 {

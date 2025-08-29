@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
 using RT.KitchenSink;
-using RT.Util.Geometry;
+using RT.Geometry;
 
 namespace KtaneStuff
 {
@@ -25,7 +25,7 @@ namespace KtaneStuff
             {
                 if (border.Name.LocalName != "path" || border.AttributeI("id") == null || !Regex.IsMatch(border.AttributeI("id").Value, @"^(..)-(..)$"))
                     continue;
-                var (pointSum, numPts) = DecodeSvgPath.Do(border.AttributeI("d").Value, .1).SelectMany(x => x).Aggregate((p: new PointD(0, 0), n: 0), (p, n) => (p.p + n, p.n + 1));
+                var (pointSum, numPts) = SvgPath.Decode(border.AttributeI("d").Value).Smooth(.1).SelectMany(x => x).Aggregate((p: new PointD(0, 0), n: 0), (p, n) => (p.p + n, p.n + 1));
                 var midPoint = pointSum / numPts;
                 var ix = parents.IndexOf(border.Parent.AttributeI("id").Value);
                 if (ix == 1)

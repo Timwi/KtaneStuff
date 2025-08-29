@@ -1,13 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using KtaneStuff.Modeling;
+﻿using RT.Geometry;
 using RT.KitchenSink;
+using RT.Modeling;
 using RT.Util;
-using RT.Util.Drawing;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -24,7 +19,7 @@ namespace KtaneStuff
 
         private static void DoGallows()
         {
-            IEnumerable<PointD> decode(string str) => DecodeSvgPath.DecodePieces(str).SelectMany(ps => (ps.Points ?? new PointD[0]));
+            IEnumerable<PointD> decode(string str) => SvgPath.Decode(str).SelectMany(ps => (ps.Points ?? new PointD[0]));
             var data = decode(@"M 40,822.375 40,872.375 70,872.375 70,852.375 87.5,852.375 140,922.375 140,1002.375 100,1002.375 100,1032.375 210,1032.375 210,1002.375 170,1002.375 170,822.375 z M 125,852.375 140,852.375 140,872.375 z")
                 .Concat(decode(@"M 45,827.375 45,867.375 65,867.375 65,847.375 90,847.375 145,920.71875 145,1007.375 105,1007.375 105,1027.375 205,1027.375 205,1007.375 165,1007.375 165,827.375 z M 115,847.375 145,847.375 145,887.375 z"))
                 .Select(p => new PointD(p.X, p.Y - 802.36218))
@@ -55,8 +50,8 @@ namespace KtaneStuff
                     code.Split(',').Select(str => str
                         .Select(ch => ch <= '9' ? ch - '0' : ch - 'A' + 10)
                         .Select(ix => pt(data[ix].X, ix >= 16 ? 5 : 0, data[ix].Y).WithTexture((data[ix].X - minX) / (maxX - minX), (data[ix].Y - minY) / (maxY - minY)))
-                        .Reverse().ToArray()), 
-                    objName, 
+                        .Reverse().ToArray()),
+                    objName,
                     AutoNormal.FlatIfAbsent));
             }
 

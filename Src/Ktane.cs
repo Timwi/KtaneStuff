@@ -4,11 +4,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using CsQuery;
+using CsQuery.Engine.PseudoClassSelectors;
 using RT.Json;
 using RT.Util;
+using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using RT.Util.Text;
 
@@ -247,29 +251,146 @@ namespace KtaneStuff
 
             return bucketNames.Select((bck, ix) => $"{bck}\t{numRegular[ix]}\t{numModules[ix]}").JoinString("\n");
         }
+
+        public static void FindApostrophes()
+        {
+            foreach (var f in new DirectoryInfo(@"D:\c\KTANE\Public\HTML").EnumerateFiles("*.html"))
+            {
+                var raw = File.ReadAllText(f.FullName);
+                var q = CQ.CreateDocument(raw);
+                foreach (var elem in q["script"])
+                    elem.Remove();
+                var text = q["body"].Text();
+                if (text.IndexOf('\"') is int p && p >= 0)
+                    ConsoleUtil.WriteLine($"{text.SubstringSafe(p - 20, 40).CLiteralEscape().Color(ConsoleColor.Yellow)} — {f.FullName.Color(ConsoleColor.Cyan)}", null);
+            }
+        }
+
+        public static void FindQuotes()
+        {
+            foreach (var f in new DirectoryInfo(@"D:\c\KTANE\Public\HTML").EnumerateFiles("*.html"))
+            {
+                Console.WriteLine(f.FullName);
+                var html = File.ReadAllText(f.FullName);
+                var sb = new StringBuilder();
+                var inScript = false;
+                var inStyle = false;
+                foreach (Match m in html.RegexMatches(@"<(?<end>/)?(?<tag>[-a-zA-Z0-9_:]+)[^>]*>|""(?<q1>[^""”<>]*)""|“(?<q2>[^""”<>]*)""|""(?<q3>[^""”<>]*)”|\r?\n|."))
+                {
+                    if (m.Groups["tag"].Success)
+                    {
+                        if (m.Groups["tag"].Value == "script")
+                            inScript = !m.Groups["end"].Success;
+                        else if (m.Groups["tag"].Value == "style")
+                            inStyle = !m.Groups["end"].Success;
+                        sb.Append(m.Value);
+                    }
+                    else if (m.Groups["q1"].Success)
+                        sb.Append(inScript || inStyle ? m.Value : $"“{m.Groups["q1"].Value}”");
+                    else if (m.Groups["q2"].Success)
+                        sb.Append(inScript || inStyle ? m.Value : $"“{m.Groups["q2"].Value}”");
+                    else if (m.Groups["q3"].Success)
+                        sb.Append(inScript || inStyle ? m.Value : $"“{m.Groups["q3"].Value}”");
+                    else
+                        sb.Append(m.Value);
+                }
+                var newHtml = sb.ToString();
+                if (newHtml != html)
+                    File.WriteAllText(f.FullName, sb.ToString());
+            }
+        }
+
+        public static void FindCsDeQuotes()
+        {
+            foreach (var lang in "Deutsch,Čeština".Split(','))
+                foreach (var f in new DirectoryInfo(@"D:\c\KTANE\Public\HTML").EnumerateFiles($"*{lang}*.html"))
+                {
+                    Console.WriteLine(f.FullName);
+                    var html = File.ReadAllText(f.FullName);
+                    if (html.Contains('„'))
+                        continue;
+                    if (!html.Contains('“'))
+                        continue;
+                    html = html.Replace('“', '„').Replace('”', '“');
+                    File.WriteAllText(f.FullName, html);
+                }
+        }
+
+        public static void FixLangAttributes()
+        {
+            var langCodes = new Dictionary<string, string>
+            {
+                ["Čeština"] = "cs",
+                ["Deutsch"] = "de",
+                ["English"] = "en",
+                ["Français"] = "fr",
+                ["日本語"] = "ja",
+                ["Español"] = "es",
+                ["Български"] = "bg",
+                ["Magyar"] = "hu",
+                ["العربية"] = "ar",
+                ["ภาษาไทย"] = "th",
+                ["Nederlands"] = "nl",
+                ["Italiano"] = "it",
+                ["Polski"] = "pl",
+                ["简体中文"] = "zh-CN",
+                ["Português"] = "pt",
+                ["繁體中文"] = "zh-TW",
+                ["Frysk"] = "fy",
+                ["Svenska"] = "sv",
+                ["Valencià"] = "ca",
+                ["Norsk"] = "no",
+                ["עברית"] = "he",
+                ["Türkçe"] = "tr",
+                ["Русский"] = "ru",
+            };
+            foreach (var f in new DirectoryInfo(@"D:\c\KTANE\Public\HTML").EnumerateFiles($"*.html"))
+            {
+                Console.Write($"{f.Name}   \r");
+                var html = File.ReadAllText(f.FullName);
+                if (html.Contains("<html lang="))
+                    continue;
+
+                var m = Regex.Match(f.Name, @"translated \((.*) —");
+                var langName = m.Success ? m.Groups[1].Value : "English";
+                if (!langCodes.ContainsKey(langName))
+                {
+                    Clipboard.SetText(langName);
+                    Debugger.Break();
+                }
+                var langCode = langCodes[langName];
+                var tag = Regex.Match(html, @"<html>");
+                if (!tag.Success)
+                {
+                    Clipboard.SetText(f.FullName);
+                    Debugger.Break();
+                }
+                html = $@"{html.Substring(0, tag.Index)}<html lang=""{langCode}"">{html.Substring(tag.Index + tag.Length)}";
+                File.WriteAllText(f.FullName, html);
+            }
+        }
     }
 
     static class ExtensionMethods
     {
         public static void AddSafe<K1, K2, K3, K4, V>(this IDictionary<K1, Dictionary<K2, Dictionary<K3, Dictionary<K4, V>>>> dic, K1 key1, K2 key2, K3 key3, K4 key4, V value)
         {
-            if (dic == null)
-                throw new ArgumentNullException("dic");
+            ArgumentNullException.ThrowIfNull(dic);
             if (key1 == null)
-                throw new ArgumentNullException("key1", "Null values cannot be used for keys in dictionaries.");
+                throw new ArgumentNullException(nameof(key1), "Null values cannot be used for keys in dictionaries.");
             if (key2 == null)
-                throw new ArgumentNullException("key2", "Null values cannot be used for keys in dictionaries.");
+                throw new ArgumentNullException(nameof(key2), "Null values cannot be used for keys in dictionaries.");
             if (key3 == null)
-                throw new ArgumentNullException("key3", "Null values cannot be used for keys in dictionaries.");
+                throw new ArgumentNullException(nameof(key3), "Null values cannot be used for keys in dictionaries.");
             if (key4 == null)
-                throw new ArgumentNullException("key4", "Null values cannot be used for keys in dictionaries.");
+                throw new ArgumentNullException(nameof(key4), "Null values cannot be used for keys in dictionaries.");
 
             if (!dic.ContainsKey(key1))
-                dic[key1] = new Dictionary<K2, Dictionary<K3, Dictionary<K4, V>>>();
+                dic[key1] = [];
             if (!dic[key1].ContainsKey(key2))
-                dic[key1][key2] = new Dictionary<K3, Dictionary<K4, V>>();
+                dic[key1][key2] = [];
             if (!dic[key1][key2].ContainsKey(key3))
-                dic[key1][key2][key3] = new Dictionary<K4, V>();
+                dic[key1][key2][key3] = [];
 
             dic[key1][key2][key3][key4] = value;
         }

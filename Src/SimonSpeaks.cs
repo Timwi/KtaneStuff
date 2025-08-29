@@ -1,12 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+using RT.Geometry;
+using RT.Modeling;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -27,7 +23,7 @@ namespace KtaneStuff
                 var ix = int.Parse(m.Groups[1].Value);
                 var x = (ix - 1) % 3;
                 var y = (ix - 1) / 3;
-                var path = DecodeSvgPath.Do(d, .03)
+                var path = SvgPath.Decode(d).Smooth(.03)
                     .Select(poly => poly.Reverse().Select(p => p + new PointD(-10 * x - 5, -10 * y - 5)).Select(p => new PointD(-p.X, -p.Y)))
                     .Extrude(name.StartsWith("Outline") ? .2 : .1, includeBackFace: false, flatSideNormals: true);
                 File.WriteAllText($@"D:\c\KTANE\SimonSpeaks\Assets\Models\{name}.obj", GenerateObjFile(path, name));

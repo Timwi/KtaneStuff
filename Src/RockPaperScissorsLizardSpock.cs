@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using KtaneStuff.Modeling;
-using RT.KitchenSink;
+using RT.Geometry;
+using RT.Modeling;
 using RT.Util.ExtensionMethods;
-using RT.Util.Geometry;
 
 namespace KtaneStuff
 {
@@ -66,7 +61,7 @@ namespace KtaneStuff
             foreach (var path in svg.Elements().Where(p => p.Name.LocalName == "path").Where(p => (p.Attribute("class")?.Value == "half") == half))
             {
                 var y = half ? 5 : 10;
-                foreach (var points in DecodeSvgPath.Do(path.Attribute("d").Value, smoothness))
+                foreach (var points in SvgPath.Decode(path.Attribute("d").Value).Smooth(smoothness))
                 {
                     var pointsArr = points.ToArray();
 

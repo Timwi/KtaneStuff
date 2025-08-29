@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using KtaneStuff.Modeling;
+using RT.Modeling;
 using RT.Util.Drawing;
 
 namespace KtaneStuff
