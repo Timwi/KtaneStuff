@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using RT.Serialization;
+using RT.TagSoup;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 
@@ -10,13 +11,16 @@ internal static class Tennis
     public static void GetPlayers()
     {
         var h = new HttpClient();
+        h.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0");
         var allData = new Dictionary<string, Dictionary<string, Dictionary<string, Dictionary<string, int>>>>();
         foreach (var tournament in new[] { "Wimbledon Championships", "US Open", "French Open" })
         {
             foreach (var isMale in new[] { true, false })
             {
-                foreach (var year in Enumerable.Range(1968, 2018 - 1968 + 1))
+                foreach (var year in Enumerable.Range(1968, 2024 - 1968 + 1))
                 {
+                    if (tournament == "Wimbledon Championships" && year == 2020)
+                        continue;   // Wimbledon 2020 was canceled
                     var path = $@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\{tournament} {year}{(isMale ? "" : " (W)")}.txt";
                     var write = false;
                     string data;
@@ -27,7 +31,9 @@ internal static class Tennis
                         try
                         {
                             Console.WriteLine($"Downloading: {tournament} {year} ({(isMale ? "M" : "W")})");
-                            data = h.GetStringAsync($@"https://en.wikipedia.org/w/index.php?title={year}_{tournament.Replace(' ', '_')}_%E2%80%93_{(isMale ? "Men" : "Women")}%27s_Singles&action=raw").Result;
+                            var url = $@"https://en.wikipedia.org/w/index.php?title={year}_{tournament.Replace(' ', '_')}_%E2%80%93_{(isMale ? "Men" : "Women")}%27s_singles&action=raw";
+                            ConsoleUtil.WriteLineFmt($"{url:r}");
+                            data = h.GetStringAsync(url).Result;
                             write = true;
                         }
                         catch (Exception e)
@@ -53,14 +59,13 @@ internal static class Tennis
                         .Select(line => new
                         {
                             Line = line,
-                            Match = line.RegexMatch(@"^\|\s*RD(\d+)-team(\d+)\s*=\s*(?:\{\{flagicon\|[ \w]+(?:\|\d+)?\}\}\s*|'''|\{\{nowrap\|)*(?:\[\[)?(.*?)((?:\]\]\s*|'''\s*|\}\}\s*)*)( \(''\[\[|$)", RegexOptions.IgnoreCase, out var m) ? m : null
+                            Match = line.RegexMatch(@"^\|\s*RD(\d+)-team(\d+)\s*=\s*(?:\{\{flagicon\|[ \w]*(?:\|\d+)?\}\}\s*|'''|\{\{nowrap\|)*(?:\[\[)?(.*?)((?:\]\]\s*|'''\s*|\}\}\s*)*)( \(''\[\[|$)", RegexOptions.IgnoreCase, out var m) ? m : null
                         })
                         .Where(line => line.Match != null)
                         .Select(line => new { line.Line, Round = int.Parse(line.Match.Groups[1].Value), Place = int.Parse(line.Match.Groups[2].Value) - 1, Name = line.Match.Groups[3].Value, Suffix = line.Match.Groups[4].Value, IsWinner = line.Match.Groups[4].Value.Contains("'''") })
                         .Select(line => new { line.Line, line.Round, line.Place, Name = (line.Name.Contains('|') ? line.Name.Remove(line.Name.IndexOf('|')) : line.Name).Replace(" (tennis)", "").Replace(" (tennis player)", ""), line.Suffix, line.IsWinner })
                         .GroupBy(line => line.Round * 100 + (line.Place >> 1)))
                     {
-                        Clipboard.SetText($@"https://en.wikipedia.org/w/index.php?title={year}_{tournament.Replace(' ', '_')}_%E2%80%93_{(isMale ? "Men" : "Women")}%27s_Singles&action=edit&section=4");
                         var winner = modify(encounter.First(g => g.IsWinner).Name);
                         var loser = modify(encounter.First(g => !g.IsWinner).Name);
                         if (winner == null || loser == null)
@@ -73,24 +78,33 @@ internal static class Tennis
             }
         }
 
-        Utils.ReplaceInFile(@"D:\c\KTANE\Tennis\Assets\Data.cs", "// Start auto-generated", "// End auto-generated",
-            new[] { ("Wimbledon Championships", "wimbledon"), ("US Open", "usOpen"), ("French Open", "frenchOpen") }.SelectMany(tournament =>
-                new[] { ("Men", "Mens"), ("Women", "Womens") }.Select(gender => $@"
-static Dictionary<string, Dictionary<string, int>> {tournament.Item2}{gender.Item2}()
-{{
-    return new Dictionary<string, Dictionary<string, int>>
-    {{
-        {allData[tournament.Item1][gender.Item1].Select(kvp => $@"{{ ""{kvp.Key}"", new Dictionary<string, int> {{ {kvp.Value.Select(kvp2 => $@"{{ ""{kvp2.Key}"", {kvp2.Value} }}").JoinString(", ")} }} }}").JoinString(",\r\n        ")}
-    }};
-}}
-")).JoinString());
-
         ClassifyJson.SerializeToFile(allData, $@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All encouters.json");
         var allPlayers = allData.SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value.Keys)
             .Concat(allData.SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value).SelectMany(kvp => kvp.Value.Keys))
             .Distinct().Order().ToArray();
-        File.WriteAllText($@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All names.txt",
-            allPlayers.Select(p => $"{p}={(p.RegexMatch(@" (\p{Lu}[-\p{L}]+)$", out var m) ? m.Groups[1].Value : p)}").JoinString(Environment.NewLine));
+        var shortNames = File.ReadLines(@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All names.txt").Select(line => line.Split('=')).ToDictionary(arr => arr[0], arr => arr[1]);
+        foreach (var newPlayer in allPlayers)
+            if (!shortNames.ContainsKey(newPlayer))
+                shortNames.Add(newPlayer, newPlayer.RegexMatch(@" (\p{Lu}[-’\p{L}]+)$", out var m) ? m.Groups[1].Value : newPlayer);
+        var allNamesStr = shortNames.OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key}={kvp.Value}").JoinString(Environment.NewLine);
+        File.WriteAllText($@"D:\c\KTANE\KtaneStuff\DataFiles\Tennis\All names.txt", allNamesStr);
+
+        Utils.ReplaceInFile(@"D:\c\KTANE\Tennis\Assets\Data.cs", "#region auto-generated", "#endregion // auto-generated", $"""
+            private const string ShortNamesRaw = @"{allNamesStr}";
+
+            """ +
+            new[] { ("Wimbledon Championships", "wimbledon"), ("US Open", "usOpen"), ("French Open", "frenchOpen") }.SelectMany(tournament =>
+                new[] { ("Men", "Mens"), ("Women", "Womens") }.Select(gender => $$"""
+                static Dictionary<string, Dictionary<string, int>> {{tournament.Item2}}{{gender.Item2}}()
+                {
+                    return new Dictionary<string, Dictionary<string, int>>
+                    {
+                        {{allData[tournament.Item1][gender.Item1].Select(kvp => $@"{{ ""{kvp.Key}"", new Dictionary<string, int> {{ {kvp.Value.Select(kvp2 => $@"{{ ""{kvp2.Key}"", {kvp2.Value} }}").JoinString(", ")} }} }}").JoinString(",\r\n        ")}}
+                    };
+                }
+
+                """)).JoinString());
+
     }
 
     private static string modify(string name) => name switch
@@ -119,6 +133,9 @@ static Dictionary<string, Dictionary<string, int>> {tournament.Item2}{gender.Ite
         "Odile De Roubin" => "Odile de Roubin",
         "Richard Pancho Gonzales" => "Pancho Gonzales",
         "Wojtek Fibak" => "Wojciech Fibak",
+        "Beatriz Haddad Maia" => "Beatriz Maia",
+        "Tomás Martín Etcheverry" => "Tomás Etcheverry",
+        "Alejandro Davidovich Fokina" => "Alejandro Fokina",
         _ => name.Replace("'", "’"),
     };
 
