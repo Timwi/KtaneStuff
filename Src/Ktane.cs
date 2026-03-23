@@ -360,6 +360,41 @@ internal static class Ktane
             File.WriteAllText(f.FullName, html);
         }
     }
+
+    internal static void FixLinksInManuals()
+    {
+        foreach (var file in new DirectoryInfo(@"D:\c\KTANE\Public\HTML").EnumerateFiles("*.html", SearchOption.AllDirectories))
+        {
+            tryAgain:
+            Console.WriteLine(file.Name);
+            var html = File.ReadAllText(file.FullName);
+            foreach (var match in html.RegexMatches(@"href='([^']*)'|href=""([^""]*)""", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+            {
+                var url = (match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Value).Replace("&#39;", "'").RegexReplace(@"^(\./|\.\./HTML/|/HTML/)", "");
+                if (!url.Contains('%'))
+                    continue;
+                static string valid(string xyz) => Directory.EnumerateFiles(@"D:\c\KTANE\Public\HTML", xyz).FirstOrDefault().NullOr(p => PathUtil.ToggleRelative(@"D:\c\KTANE\Public\HTML", p));
+
+                if (!url.EndsWith(".html") || url.StartsWith("http") || (url.StartsWith("../") && !url.StartsWith("../HTML/")))
+                    continue;
+
+                url = url.UrlUnescape();
+                foreach (var alternate in Ut.NewArray(
+                    url.Replace(" &amp; ", ", "),
+                    url.Replace(".html", "*.html"),
+                    url.RegexReplace(@"^(.*) \([^\)]*\)", m => $"{m.Groups[1].Value}*")
+                ))
+                    if (valid(alternate) is { } newFileName)
+                    {
+                        File.WriteAllText(file.FullName, html.Remove(match.Index, match.Length).Insert(match.Index, $@"href='{newFileName.HtmlEscape()}'"));
+                        goto tryAgain;
+                    }
+
+                ConsoleUtil.WriteLine(url.Color(ConsoleColor.Red));
+                Debugger.Break();
+            }
+        }
+    }
 }
 
 internal static class ExtensionMethods

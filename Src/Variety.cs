@@ -171,7 +171,7 @@ internal static class Variety
         for (var i = 0; i < rv; i++)
         {
             all.AddRange(patch.SkipLast(1).Select(c => c.Select(p => p.RotateY(-360d * (i + .5) / rv)).ToArray()));
-            all.AddRange(patch.Reverse().SkipLast(1).Select(c => c.Select(p => pt(-p.X, p.Y, p.Z).RotateY(-360d * (i + 1.5) / rv)).ToArray()));
+            all.AddRange(patch.Reversed().SkipLast(1).Select(c => c.Select(p => pt(-p.X, p.Y, p.Z).RotateY(-360d * (i + 1.5) / rv)).ToArray()));
         }
 
         return highlight

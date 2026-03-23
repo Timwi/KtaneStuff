@@ -48,7 +48,7 @@ internal static class SapphireButton
         var rnd = new Random(347);
         var word = _words.PickRandom(rnd);
         var (origBitmap, origClues) = getNonogramClues(word);
-        var origResult = origBitmap.Reverse().Aggregate(0UL, (p, n) => (p << 1) | (n ? 1UL : 0UL));
+        var origResult = origBitmap.Reversed().Aggregate(0UL, (p, n) => (p << 1) | (n ? 1UL : 0UL));
 
         //File.WriteAllText(@"D:\temp\temp.txt", "");
 

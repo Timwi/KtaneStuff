@@ -3,6 +3,7 @@ using RT.KitchenSink.Fonts;
 using RT.Modeling;
 using RT.Util;
 using RT.Util.Drawing;
+using RT.Util.ExtensionMethods;
 using static RT.Modeling.Md;
 
 namespace KtaneStuff;
@@ -153,6 +154,6 @@ internal static class Superlogic
             rPt(innerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, depth, displacement, displacement).WithMeshInfo(Normal.Average, Normal.Average, Normal.Mine, Normal.Mine),
             rPt(outerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, depth, displacement, displacement).WithMeshInfo(0, 1, 0)
         )).ToArray()))
-            yield return face.Reverse().Select(v => v.Move(x: -.1)).ToArray();
+            yield return face.Reversed().Select(v => v.Move(x: -.1)).ToArray();
     }
 }

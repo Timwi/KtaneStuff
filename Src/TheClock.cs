@@ -307,7 +307,7 @@ internal static class TheClock
         const double nodeRadius = .03;
 
         var outerCurve = Enumerable.Range(0, circleSteps).Select(i => i * 360 / circleSteps).Select(angle => new PointD(cos(angle), sin(angle)).Apply(p => new { Inner = circleInnerRadius * p, Outer = circleOuterRadius * p })).ToArray();
-        foreach (var b in BevelFromCurve(outerCurve.Reverse().Select(c => pt(c.Inner.X, depth, c.Inner.Y)), bevelRadius, revSteps))
+        foreach (var b in BevelFromCurve(outerCurve.Reversed().Select(c => pt(c.Inner.X, depth, c.Inner.Y)), bevelRadius, revSteps))
             yield return b;
         foreach (var b in BevelFromCurve(outerCurve.Select(c => pt(c.Outer.X, depth, c.Outer.Y)), bevelRadius, revSteps))
             yield return b;

@@ -291,7 +291,7 @@ internal static class MarbleTumble
 
         try
         {
-            var result = DijkstrasAlgorithm.Run(new dijNode(gaps.Reverse().ToArray(), gaps.Zip(traps, (g, t) => t - g).Reverse().ToArray(), colorIxs, 5, -1), 0, (a, b) => a + b, out var totalWeight);
+            var result = DijkstrasAlgorithm.Run(new dijNode(gaps.Reversed().ToArray(), gaps.Zip(traps, (g, t) => t - g).Reverse().ToArray(), colorIxs, 5, -1), 0, (a, b) => a + b, out var totalWeight);
             Console.WriteLine(result.Select(step => step.Label).JoinString("\n"));
             Console.WriteLine($"Total weight: {totalWeight}");
         }

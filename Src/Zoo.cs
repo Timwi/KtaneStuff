@@ -26,7 +26,7 @@ internal sealed class Zoo
         IEnumerable<VertexInfo[]> Slat(double x, double y, double z, double angle, double length, double width, double bevelRadius, double textureOffset) =>
             new[] { pt(-length, 0, -width), pt(length, 0, -width), pt(length, 0, width), pt(-length, 0, width) }.Apply(poly =>
             BevelFromCurve(poly, bevelRadius, revSteps)
-                .Concat(new[] { poly.Reverse().Select(pt => pt.WithNormal(0, 1, 0)).ToArray() })
+                .Concat(new[] { poly.Reversed().Select(pt => pt.WithNormal(0, 1, 0)).ToArray() })
                 .Select(arr => arr.Select(v => new VertexInfo(v.Location.RotateY(angle).Add(x: x, y: y, z: z), v.Normal, p((v.Location.X + 1.1) / 2.2, (v.Location.Z + 1.1) / 2.2 + textureOffset))).ToArray()));
 
         return Ut.NewArray(

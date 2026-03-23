@@ -111,6 +111,6 @@ internal static class LooseModels
             [pt(1, -1, -1), pt(1, 1, 1), pt(1, -1, 1), pt(1, 1, -1)],
             [pt(-1, -1, -1), pt(-1, -1, 1), pt(-1, 1, 1), pt(-1, 1, -1)]
         );
-        return reverse ? arrs.Select(arr => arr.Reverse().ToArray()).ToArray() : arrs;
+        return reverse ? arrs.Select(arr => arr.Reversed().ToArray()).ToArray() : arrs;
     }
 }

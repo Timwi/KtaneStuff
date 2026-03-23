@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RT.Json;
 using RT.Modeling;
+using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -214,6 +215,35 @@ internal static class Souvenir
 
     private static readonly object _lockObject = new();
 
+    public static void ConvertHandler(string filename)
+    {
+        var text = File.ReadAllText(filename);
+        var cs = CSharpSyntaxTree.ParseText(text);
+        var enumType = cs.GetRoot().ChildNodes().OfType<EnumDeclarationSyntax>().Single();
+        var partialClass = cs.GetRoot().ChildNodes().OfType<ClassDeclarationSyntax>().Single();
+        var method = partialClass.ChildNodes().OfType<MethodDeclarationSyntax>().Single();
+        var enumTypeName = (string) enumType.Identifier.Value;
+
+        var newMethod = method;
+        if (method.ExpressionBody is { } exprBody)
+            newMethod = method.WithExpressionBody((ArrowExpressionClauseSyntax) new enumValueVisitor(enumTypeName).Visit(exprBody));
+        else if (method.Body is { } body)
+        {
+            body = (BlockSyntax) new addWithSelectVisitor().Visit(body);
+            body = processQuestionCreations(body);
+            body = (BlockSyntax) new addQuestionVisitor().Visit(body);
+            newMethod = method.WithBody(body);
+        }
+
+        if (newMethod != method)
+        {
+            var newRoot = cs.GetRoot().ReplaceNode(method, newMethod);
+            File.WriteAllText(filename, newRoot.ToString());
+            lock (_lockObject)
+                ConsoleUtil.WriteLineFmt($"{filename:G}");
+        }
+    }
+
     public static void ConvertHandlers()
     {
         var files = new DirectoryInfo(@"D:\c\KTANE\Souvenir\Lib\Handlers").EnumerateFiles("*.cs", SearchOption.TopDirectoryOnly);
@@ -221,32 +251,14 @@ internal static class Souvenir
         {
             if (file.Name == "General.cs")
                 continue;
-            var text = File.ReadAllText(file.FullName);
-            var cs = CSharpSyntaxTree.ParseText(text);
-            var enumType = cs.GetRoot().ChildNodes().OfType<EnumDeclarationSyntax>().Single();
-            var partialClass = cs.GetRoot().ChildNodes().OfType<ClassDeclarationSyntax>().Single();
-            var method = partialClass.ChildNodes().OfType<MethodDeclarationSyntax>().Single();
-            var enumTypeName = (string) enumType.Identifier.Value;
 
-            var newMethod = method;
-            if (method.ExpressionBody is { } exprBody)
-                newMethod = method.WithExpressionBody((ArrowExpressionClauseSyntax) new enumValueVisitor(enumTypeName).Visit(exprBody));
-            else if (method.Body is { } body)
-            {
-                body = processWaitForSeconds(body);
-                body = processQuestionCreations(body);
-                body = (BlockSyntax) new addQuestionVisitor().Visit(body);
-                newMethod = method.WithBody(body);
-            }
+            lock (_lockObject)
+                ConsoleUtil.WriteFmt($"{file.FullName:R}{new string(' ', ConsoleUtil.WrapToWidth() - file.FullName.Length)}\r");
 
-            if (newMethod != method)
-            {
-                var newRoot = cs.GetRoot().ReplaceNode(method, newMethod);
-                File.WriteAllText(file.FullName, newRoot.ToString());
-                lock (_lockObject)
-                    ConsoleUtil.WriteLineFmt($"{file.FullName:G}");
-            }
+            ConvertHandler(file.FullName);
         }
+        lock (_lockObject)
+            Console.WriteLine(new string(' ', ConsoleUtil.WrapToWidth()));
     }
 
     public static void ConvertGeneralHandlers()
@@ -260,7 +272,6 @@ internal static class Souvenir
             var newMethod = method;
             if (method.Body is { } body)
             {
-                body = processWaitForSeconds(body);
                 body = processQuestionCreations(body);
                 newMethod = method.WithBody(body);
             }
@@ -271,49 +282,11 @@ internal static class Souvenir
         File.WriteAllText(generalHandlersCs, cs.ToString());
     }
 
-    private static BlockSyntax processWaitForSeconds(BlockSyntax body)
+    private static BlockSyntax processQuestionCreations(BlockSyntax oldBody)
     {
-        var newBody = body;
-        for (var i = 0; i < newBody.Statements.Count; i++)
-        {
-            if (newBody.Statements[i] is WhileStatementSyntax
-                {
-                    Condition: PrefixUnaryExpressionSyntax
-                    {
-                        OperatorToken.Value: "!",
-                        Operand: IdentifierNameSyntax { Identifier.Value: string condition }
-                    },
-                    Statement: YieldStatementSyntax
-                    {
-                        ReturnOrBreakKeyword.Value: "return",
-                        Expression: ObjectCreationExpressionSyntax
-                        {
-                            Type: IdentifierNameSyntax { Identifier.Value: "WaitForSeconds" },
-                            ArgumentList.Arguments.Count: 1
-                        }
-                    }
-                })
-            {
-                if (condition == "finished" && body.Parent is MethodDeclarationSyntax { Identifier.Value: "ProcessMonsplodeFight" })
-                    continue;
-                newBody = newBody.ReplaceNode(newBody.Statements[i],
-                    YieldStatement(SyntaxKind.YieldReturnStatement,
-                        Token(SyntaxKind.YieldKeyword).WithTrailingTrivia(Whitespace(" ")),
-                        Token(SyntaxKind.ReturnKeyword).WithTrailingTrivia(Whitespace(" ")),
-                        IdentifierName(condition switch
-                        {
-                            "_noUnignoredModulesLeft" => "WaitForUnignoredModules",
-                            "_isActivated" => "WaitForActivate",
-                            _ => throw new NotImplementedException()
-                        }),
-                        Token(SyntaxKind.SemicolonToken)).WithTriviaFrom(newBody.Statements[i]));
-            }
-        }
-        return newBody;
-    }
+        var body = oldBody;
 
-    private static BlockSyntax processQuestionCreations(BlockSyntax body)
-    {
+        goAgain:
         // Detect ‘addQuestions()’ using the params form
         for (var i = 0; i < body.Statements.Count; i++)
             if (body.Statements[i] is ExpressionStatementSyntax
@@ -333,113 +306,8 @@ internal static class Souvenir
                         Debugger.Break();
                     newStatements = newStatements.Insert(i + j - 1, conv.WithLeadingTrivia(body.Statements[i].GetLeadingTrivia()).WithTrailingTrivia(EndOfLine(Environment.NewLine)));
                 }
-                return body.WithStatements(newStatements);
-            }
-
-        // Detect ‘addQuestions()’ with a .Select() iterator with two parameters (variable and index)
-        for (var i = 0; i < body.Statements.Count; i++)
-            if (body.Statements[i] is ExpressionStatementSyntax
-                {
-                    Expression: InvocationExpressionSyntax
-                    {
-                        Expression: IdentifierNameSyntax { Identifier.Value: "addQuestions" },
-                        ArgumentList.Arguments: [{ Expression: IdentifierNameSyntax { Identifier.Value: "module" } },
-                        {
-                            Expression: InvocationExpressionSyntax
-                            {
-                                Expression: MemberAccessExpressionSyntax { Expression: var source, Name: IdentifierNameSyntax { Identifier.Value: "Select" } },
-                                ArgumentList.Arguments: [
-                                    {
-                                        Expression: ParenthesizedLambdaExpressionSyntax
-                                        {
-                                            ParameterList.Parameters: [{ Identifier.Value: string elemVar }, { Identifier.Value: string ixVar }],
-                                            ExpressionBody: var lambda
-                                        }
-                                    }]
-                            }
-                        }]
-                    }
-                } expr)
-            {
-                ExpressionSyntax condition = null;
-                if (lambda is ConditionalExpressionSyntax { Condition: var cond, WhenTrue: LiteralExpressionSyntax { Token.Value: null }, WhenFalse: var c })
-                {
-                    condition = (ExpressionSyntax) new varSubstVisitor(elemVar, source, ixVar).Visit(PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, ParenthesizedExpression(cond)));
-                    lambda = c;
-                }
-                else if (lambda is ConditionalExpressionSyntax { Condition: var cond2, WhenFalse: LiteralExpressionSyntax { Token.Value: null }, WhenTrue: var c2 })
-                {
-                    condition = (ExpressionSyntax) new varSubstVisitor(elemVar, source, ixVar).Visit(cond2);
-                    lambda = c2;
-                }
-
-                LocalDeclarationStatementSyntax sourceDecl = null;
-                if (source is not IdentifierNameSyntax)
-                {
-                    sourceDecl = LocalDeclarationStatement(VariableDeclaration(IdentifierName("var").WithTrailingTrivia(Whitespace(" ")), [VariableDeclarator(Identifier("source"), null, EqualsValueClause(source.WithoutTrivia()))]));
-                    source = IdentifierName("source");
-                }
-
-                var converted = convertMakeOrAddQuestionExpr(lambda);
-                if (converted == null)
-                    Debugger.Break();
-                var statement = ((StatementSyntax) new varSubstVisitor(elemVar, source, ixVar).Visit(converted)).WithLeadingTrivia(EndOfLine(Environment.NewLine));
-                if (condition != null)
-                    statement = IfStatement(condition, statement).WithLeadingTrivia(EndOfLine(Environment.NewLine));
-                var newBody = body.ReplaceNode(expr, ForStatement(
-                    VariableDeclaration(IdentifierName("var").WithTrailingTrivia(Whitespace(" ")), [VariableDeclarator(Identifier(ixVar), null, EqualsValueClause(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))))]),
-                    [],
-                    BinaryExpression(SyntaxKind.LessThanExpression, IdentifierName(ixVar), MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, source, IdentifierName("Length"))),
-                    [PostfixUnaryExpression(SyntaxKind.PostIncrementExpression, IdentifierName(ixVar))],
-                    statement).WithTriviaFrom(expr));
-                if (sourceDecl != null)
-                    newBody = newBody.WithStatements(newBody.Statements.Insert(i, sourceDecl.WithTrailingTrivia(EndOfLine(Environment.NewLine))));
-                return newBody;
-            }
-
-        // Detect ‘addQuestions()’ with a Enumerable.Range(x, y).Select() iterator with one parameter
-        for (var i = 0; i < body.Statements.Count; i++)
-            if (body.Statements[i] is ExpressionStatementSyntax
-                {
-                    Expression: InvocationExpressionSyntax
-                    {
-                        Expression: IdentifierNameSyntax { Identifier.Value: "addQuestions" },
-                        ArgumentList.Arguments: [{ Expression: IdentifierNameSyntax { Identifier.Value: "module" } },
-                        {
-                            Expression: InvocationExpressionSyntax
-                            {
-                                Expression: MemberAccessExpressionSyntax
-                                {
-                                    Expression: InvocationExpressionSyntax
-                                    {
-                                        Expression: MemberAccessExpressionSyntax
-                                        {
-                                            Expression: IdentifierNameSyntax { Identifier.Value: "Enumerable" },
-                                            Name: IdentifierNameSyntax { Identifier.Value: "Range" }
-                                        },
-                                        ArgumentList.Arguments: [{ Expression: LiteralExpressionSyntax { Token.Value: int startValue } }, { Expression: LiteralExpressionSyntax { Token.Value: int count } }]
-                                    },
-                                    Name: IdentifierNameSyntax { Identifier.Value: "Select" }
-                                },
-                                ArgumentList.Arguments: [
-                                {
-                                    Expression: SimpleLambdaExpressionSyntax
-                                    {
-                                        Parameter.Identifier.Value: string ixVar,
-                                        ExpressionBody: var lambda
-                                    }
-                                }]
-                            }
-                        }]
-                    }
-                } expr && convertMakeOrAddQuestionExpr(lambda) is { } converted)
-            {
-                return body.ReplaceNode(expr, ForStatement(
-                    VariableDeclaration(IdentifierName("var").WithTrailingTrivia(Whitespace(" ")), [VariableDeclarator(Identifier(ixVar), null, EqualsValueClause(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(startValue))))]),
-                    [],
-                    BinaryExpression(SyntaxKind.LessThanExpression, IdentifierName(ixVar), LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(startValue + count))),
-                    [PostfixUnaryExpression(SyntaxKind.PostIncrementExpression, IdentifierName(ixVar))],
-                    converted.WithLeadingTrivia(EndOfLine(Environment.NewLine))).WithTriviaFrom(expr));
+                body = body.WithStatements(newStatements);
+                goto goAgain;
             }
 
         // Detect ‘new List<QandA>()’, followed by statements that add to the list, followed by ‘addQuestions()’
@@ -507,7 +375,8 @@ internal static class Souvenir
                             }
                         }
 
-                        return newBody;
+                        body = newBody;
+                        goto goAgain;
                     }
 
         return body;
@@ -536,56 +405,71 @@ internal static class Souvenir
 
     private static YieldStatementSyntax convertMakeOrAddQuestionExpr(ExpressionSyntax expression)
     {
-        if (expression is InvocationExpressionSyntax { Expression: IdentifierNameSyntax { Identifier.Value: string mth and ("makeQuestion" or "addQuestion") }, ArgumentList.Arguments: { } argList }
-            && argList[mth == "makeQuestion" ? 0 : 1].Expression is { } q
-            && argList[mth == "makeQuestion" ? 1 : 0].Expression is IdentifierNameSyntax { Identifier.Value: "module" })
-        {
-            if (argList[0].NameColon != null && !argList[0].NameColon.Name.Identifier.Value.Equals("question"))
-                Debugger.Break();
-            if (argList[1].NameColon != null && !argList[1].NameColon.Name.Identifier.Value.Equals("data"))
-                Debugger.Break();
-
-            var maker = new questionMaker { Question = q };
-            var skip = 2;
-            if (argList[2].NameColon == null)
+        foreach (var whichWay in new[] { true, false })
+            if (expression is InvocationExpressionSyntax { Expression: IdentifierNameSyntax { Identifier.Value: "makeQuestion" or "addQuestion" }, ArgumentList.Arguments: { } argList }
+                && argList[whichWay ? 0 : 1].Expression is { } q
+                && argList[whichWay ? 1 : 0].Expression is IdentifierNameSyntax { Identifier.Value: "module" })
             {
-                if (argList[2].Expression.ToString().Contains("font"))
-                    return null;
-                maker.QuestionSprite = argList[2].Expression;
-                skip = 3;
-                lock (_lockObject)
-                    ConsoleUtil.WriteLineFmt($"{"Sprite?":Y} {argList[2].Expression.ToString():Y}");
-            }
-            foreach (var arg in argList.Skip(skip))
-            {
-                switch (arg.NameColon)
+                if (argList[0].NameColon != null && !argList[0].NameColon.Name.Identifier.Value.Equals("question"))
                 {
-                    case { Name.Identifier.Value: "formatArgs" or "formatArguments" }: maker.Args = arg.Expression; break;
-                    case { Name.Identifier.Value: "correctAnswers" }: maker.Correct = arg.Expression; break;
-                    case { Name.Identifier.Value: "preferredWrongAnswers" }: maker.PrefWrong = arg.Expression; break;
-                    case { Name.Identifier.Value: "allAnswers" }: maker.All = arg.Expression; break;
-                    case { Name.Identifier.Value: "questionSprite" } when maker.QuestionSprite == null: maker.QuestionSprite = arg.Expression; break;
-                    case { Name.Identifier.Value: "formattedModuleName" }: break;
-                    case { Name.Identifier.Value: "font" }: return null;
-                    case { Name.Identifier.Value: "fontTexture" }: return null;
-                    case null when arg.ToString().Contains("font"): return null;
-                    default: throw new NotImplementedException();
+                    Clipboard.SetText($"First argument’s name is {argList[0].NameColon.Name.Identifier.Value}, expected ‘question’");
+                    return null;
                 }
+                if (argList[1].NameColon != null && !argList[1].NameColon.Name.Identifier.Value.Equals("data"))
+                {
+                    Clipboard.SetText($"Second argument’s name is {argList[1].NameColon.Name.Identifier.Value}, expected ‘data’");
+                    return null;
+                }
+
+                var maker = new questionMaker { Question = q };
+                var skip = 2;
+                if (argList[2].NameColon == null)
+                {
+                    if (argList[2].Expression.ToString().Contains("font"))
+                    {
+                        Clipboard.SetText("font");
+                        return null;
+                    }
+                    maker.QuestionSprite = argList[2].Expression;
+                    skip = 3;
+                }
+                foreach (var arg in argList.Skip(skip))
+                {
+                    switch (arg.NameColon)
+                    {
+                        case { Name.Identifier.Value: "formatArgs" or "formatArguments" }: maker.Args = arg.Expression; break;
+                        case { Name.Identifier.Value: "correctAnswers" }: maker.Correct = arg.Expression; break;
+                        case { Name.Identifier.Value: "preferredWrongAnswers" }: maker.PrefWrong = arg.Expression; break;
+                        case { Name.Identifier.Value: "allAnswers" }: maker.All = arg.Expression; break;
+                        case { Name.Identifier.Value: "questionSprite" } when maker.QuestionSprite == null: maker.QuestionSprite = arg.Expression; break;
+                        case { Name.Identifier.Value: "questionSpriteRotation" } when maker.QuestionSpriteRotation == null: maker.QuestionSpriteRotation = arg.Expression; break;
+                        case { Name.Identifier.Value: "formattedModuleName" }: continue;
+
+                        case { Name.Identifier.Value: "font" }:
+                        case { Name.Identifier.Value: "fontTexture" }:
+                        case null when arg.ToString().Contains("font"):
+                            Clipboard.SetText("font");
+                            return null;
+
+                        default:
+                            Clipboard.SetText($"Unknown parameter name: {arg.NameColon}");
+                            return null;
+                    }
+                }
+                static ArgumentSyntax[] mkIf(ExpressionSyntax expr, string name = null) => expr == null ? [] : [name == null ? Argument(convertArray(expr)) : Argument(NameColon(name), default, convertArray(expr))];
+                static ArgumentSyntax[] mkIfSingle(ExpressionSyntax expr, string name = null) => expr == null ? [] : [name == null ? Argument(convertArray(expr, true)) : Argument(NameColon(name), default, convertArray(expr, true))];
+                return YieldStatement(SyntaxKind.YieldReturnStatement,
+                    Token(SyntaxKind.YieldKeyword).WithTrailingTrivia(Whitespace(" ")),
+                    Token(SyntaxKind.ReturnKeyword).WithTrailingTrivia(Whitespace(" ")),
+                    InvocationExpression(
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                            InvocationExpression(
+                                IdentifierName("question"),
+                                ArgumentList([.. mkIf(maker.Question), .. mkIf(maker.Args, "args"), .. mkIf(maker.QuestionSprite, "questionSprite"), .. mkIf(maker.QuestionSpriteRotation, "questionSpriteRotation")])),
+                            IdentifierName("Answers")),
+                        ArgumentList([.. mkIfSingle(maker.Correct), .. mkIf(maker.All, "all"), .. mkIf(maker.PrefWrong, "preferredWrong")])),
+                    Token(SyntaxKind.SemicolonToken));
             }
-            static ArgumentSyntax[] mkIf(ExpressionSyntax expr, string name = null) => expr == null ? [] : [name == null ? Argument(convertArray(expr)) : Argument(NameColon(name), default, convertArray(expr))];
-            static ArgumentSyntax[] mkIfSingle(ExpressionSyntax expr, string name = null) => expr == null ? [] : [name == null ? Argument(convertArray(expr, true)) : Argument(NameColon(name), default, convertArray(expr, true))];
-            return YieldStatement(SyntaxKind.YieldReturnStatement,
-                Token(SyntaxKind.YieldKeyword).WithTrailingTrivia(Whitespace(" ")),
-                Token(SyntaxKind.ReturnKeyword).WithTrailingTrivia(Whitespace(" ")),
-                InvocationExpression(
-                    MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                        InvocationExpression(
-                            IdentifierName("question"),
-                            ArgumentList([.. mkIf(maker.Question), .. mkIf(maker.Args, "args"), .. mkIf(maker.QuestionSprite, "questionSprite")])),
-                        IdentifierName("Answers")),
-                    ArgumentList([.. mkIfSingle(maker.Correct), .. mkIf(maker.All, "all"), .. mkIf(maker.PrefWrong, "preferredWrong")])),
-                Token(SyntaxKind.SemicolonToken));
-        }
         return null;
     }
 
@@ -599,9 +483,37 @@ internal static class Souvenir
         return expr;
     }
 
+    internal static void DiffAnalysis()
+    {
+        var lines = File.ReadAllLines(@"D:\temp\temp.diff");
+        var lastFile = "";
+        var lastLine = -1;
+        for (var i = 0; i < lines.Length; i++)
+        {
+            if (lines[i].RegexMatch(@"^\+\+\+ b/(.*)$", out var m))
+                lastFile = m.Groups[1].Value;
+            else if (lines[i].RegexMatch(@"^@@ -(\d+),", out var ln))
+                lastLine = int.Parse(ln.Groups[1].Value);
+
+            if (lines[i].RegexMatch(@"^\+(\s*)yield return new WaitForSeconds", out _)
+                && lines[i - 1].RegexMatch(@"^-(\s*yield return null;.*)$", out var m2))
+            {
+                var filePath = Path.Combine(@"D:\c\KTANE\Souvenir", lastFile);
+                var mLines = File.ReadAllLines(filePath);
+                mLines[lastLine + 1] = m2.Groups[1].Value;
+                File.WriteAllLines(filePath, mLines);
+                ConsoleUtil.WriteLineFmt($"{filePath:G}");
+                i++;
+                lastLine++;
+            }
+            else if ((lines[i].StartsWith('-') && !lines[i].StartsWith("---")) || lines[i].StartsWith(' '))
+                lastLine++;
+        }
+    }
+
     private class questionMaker
     {
-        public ExpressionSyntax Question, Args, QuestionSprite, Correct, PrefWrong, All;
+        public ExpressionSyntax Question, Args, QuestionSprite, QuestionSpriteRotation, Correct, PrefWrong, All;
     }
 
     private class varSubstVisitor(string elemVar, ExpressionSyntax source, string ixVar) : CSharpSyntaxRewriter
@@ -638,7 +550,7 @@ internal static class Souvenir
     {
         public override SyntaxNode VisitExpressionStatement(ExpressionStatementSyntax node)
         {
-            if (node is { Expression: InvocationExpressionSyntax { Expression: IdentifierNameSyntax { Identifier.Value: "addQuestion" } } expr } statement)
+            if (node is { Expression: InvocationExpressionSyntax { Expression: IdentifierNameSyntax { Identifier.Value: "addQuestion" or "makeQuestion" } } expr } statement)
             {
                 var converted = convertMakeOrAddQuestionExpr(expr);
                 if (converted == null)
@@ -647,5 +559,153 @@ internal static class Souvenir
             }
             return base.VisitExpressionStatement(node);
         }
+    }
+
+    private class addWithSelectVisitor : CSharpSyntaxRewriter
+    {
+        public override SyntaxNode VisitExpressionStatement(ExpressionStatementSyntax node)
+        {
+            // Detect ‘addQuestions()’ with a Enumerable.Range(x, y).Select() iterator with one parameter
+            {
+                if (node is ExpressionStatementSyntax
+                    {
+                        Expression: InvocationExpressionSyntax
+                        {
+                            Expression: IdentifierNameSyntax { Identifier.Value: "addQuestions" },
+                            ArgumentList.Arguments: [{ Expression: IdentifierNameSyntax { Identifier.Value: "module" } },
+                            {
+                                Expression: InvocationExpressionSyntax
+                                {
+                                    Expression: MemberAccessExpressionSyntax
+                                    {
+                                        Expression: InvocationExpressionSyntax
+                                        {
+                                            Expression: MemberAccessExpressionSyntax
+                                            {
+                                                Expression: IdentifierNameSyntax { Identifier.Value: "Enumerable" },
+                                                Name: IdentifierNameSyntax { Identifier.Value: "Range" }
+                                            },
+                                            ArgumentList.Arguments: [{ Expression: var startValue }, { Expression: var count }]
+                                        },
+                                        Name: IdentifierNameSyntax { Identifier.Value: "Select" }
+                                    },
+                                    ArgumentList.Arguments: [
+                                    {
+                                        Expression: SimpleLambdaExpressionSyntax
+                                        {
+                                            Parameter.Identifier.Value: string ixVar,
+                                            ExpressionBody: var lambda
+                                        }
+                                    }]
+                                }
+                            }]
+                        }
+                    } expr && convertMakeOrAddQuestionExpr(lambda) is { } converted)
+                {
+                    var endValue = startValue is LiteralExpressionSyntax { Token.Value: 0 } ? count : BinaryExpression(SyntaxKind.AddExpression, count, startValue);
+                    return ForStatement(
+                        VariableDeclaration(IdentifierName("var").WithTrailingTrivia(Whitespace(" ")), [VariableDeclarator(Identifier(ixVar), null, EqualsValueClause(startValue))]),
+                        [],
+                        BinaryExpression(SyntaxKind.LessThanExpression, IdentifierName(ixVar), endValue),
+                        [PostfixUnaryExpression(SyntaxKind.PostIncrementExpression, IdentifierName(ixVar))],
+                        converted.WithLeadingTrivia(EndOfLine(Environment.NewLine))).WithTriviaFrom(expr);
+                }
+            }
+
+            // Detect ‘addQuestions()’ with a .Select() iterator with two parameters (variable and index)
+            {
+                if (node is ExpressionStatementSyntax
+                    {
+                        Expression: InvocationExpressionSyntax
+                        {
+                            Expression: IdentifierNameSyntax { Identifier.Value: "addQuestions" },
+                            ArgumentList.Arguments: [{ Expression: IdentifierNameSyntax { Identifier.Value: "module" } },
+                            {
+                                Expression: InvocationExpressionSyntax
+                                {
+                                    Expression: MemberAccessExpressionSyntax { Expression: var source, Name: IdentifierNameSyntax { Identifier.Value: "Select" } },
+                                    ArgumentList.Arguments: [
+                                        {
+                                            Expression: ParenthesizedLambdaExpressionSyntax
+                                            {
+                                                ParameterList.Parameters: [{ Identifier.Value: string elemVar }, { Identifier.Value: string ixVar }],
+                                                ExpressionBody: var lambda
+                                            }
+                                        }]
+                                }
+                            }]
+                        }
+                    })
+                {
+                    ExpressionSyntax condition = null;
+                    if (lambda is ConditionalExpressionSyntax { Condition: var cond, WhenTrue: LiteralExpressionSyntax { Token.Value: null }, WhenFalse: var c })
+                    {
+                        condition = (ExpressionSyntax) new varSubstVisitor(elemVar, source, ixVar).Visit(PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, ParenthesizedExpression(cond)));
+                        lambda = c;
+                    }
+                    else if (lambda is ConditionalExpressionSyntax { Condition: var cond2, WhenFalse: LiteralExpressionSyntax { Token.Value: null }, WhenTrue: var c2 })
+                    {
+                        condition = (ExpressionSyntax) new varSubstVisitor(elemVar, source, ixVar).Visit(cond2);
+                        lambda = c2;
+                    }
+
+                    LocalDeclarationStatementSyntax sourceDecl = null;
+                    if (source is not IdentifierNameSyntax)
+                    {
+                        sourceDecl = LocalDeclarationStatement(VariableDeclaration(IdentifierName("var").WithTrailingTrivia(Whitespace(" ")), [VariableDeclarator(Identifier("source"), null, EqualsValueClause(source.WithoutTrivia()))]));
+                        source = IdentifierName("source");
+                    }
+
+                    var converted = convertMakeOrAddQuestionExpr(lambda);
+                    if (converted == null)
+                        Debugger.Break();
+                    var statement = ((StatementSyntax) new varSubstVisitor(elemVar, source, ixVar).Visit(converted)).WithLeadingTrivia(EndOfLine(Environment.NewLine));
+                    if (condition != null)
+                        statement = IfStatement(condition, statement).WithLeadingTrivia(EndOfLine(Environment.NewLine));
+                    var newStatement = (StatementSyntax) ForStatement(
+                        VariableDeclaration(IdentifierName("var").WithTrailingTrivia(Whitespace(" ")), [VariableDeclarator(Identifier(ixVar), null, EqualsValueClause(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))))]),
+                        [],
+                        BinaryExpression(SyntaxKind.LessThanExpression, IdentifierName(ixVar), MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, source, IdentifierName("Length"))),
+                        [PostfixUnaryExpression(SyntaxKind.PostIncrementExpression, IdentifierName(ixVar))],
+                        statement).WithTriviaFrom(node);
+                    return sourceDecl != null
+                        ? Block(sourceDecl.WithTrailingTrivia(EndOfLine(Environment.NewLine)), newStatement)
+                        : newStatement;
+                }
+            }
+
+            return base.VisitExpressionStatement(node);
+        }
+    }
+
+    public static void MakeXYRaySpritesheet()
+    {
+        var file = @"D:\c\KTANE\Souvenir\Assets\Sprites\XY-Ray\XYRaySprites.svg";
+        var svg = RT.Xml.Xml.ParseFile(file);
+        const double fw = 111;
+        const double fh = 333;
+        const int nx = 3;
+        const int ny = 9;
+        const double gw = fw / (2 * nx);
+        const double gh = fh / (2 * ny);
+        var o = new object();
+        svg.Root["g"].ParallelForEach(Environment.ProcessorCount, g =>
+        {
+            lock (o)
+                Console.WriteLine(g["@id"]);
+            var cmd = $@"D:\Inkscape\bin\inkscape.com ""{file}"" --query-id={g["@id"].Value} -X -Y -W -H";
+            var values = CommandRunner.RunRaw(cmd).OutputNothing().GoGetOutputText().Trim().Split('\n').Select(double.Parse).ToArray();
+            var (x, y, w, h) = (values[0], values[1], values[2], values[3]);
+            var cx = x + w / 2;
+            var cy = y + h / 2;
+            var rx = Math.Round(cx / gw) * gw;
+            var ry = Math.Round(cy / gh) * gh;
+            lock (o)
+            {
+                g.Set("transform", $"translate({rx - cx} {ry - cy})");
+                Console.WriteLine($"translate({rx - cx} {ry - cy})");
+            }
+        });
+        File.WriteAllText(file, svg.ToString());
     }
 }

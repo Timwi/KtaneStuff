@@ -144,6 +144,6 @@ internal static class DoubleOh
 
         return CreateMesh(false, true, patch3)
             .Concat(outline)
-            .Concat(svgPolygons.SelectMany(poly => BevelFromCurve(poly.Reverse().Select(p => pt(p.X, h, p.Y)), bevelRadius, roundSteps, Normal.Mine)).Select(face => face.Select(vi => vi.WithTexture(texturize(p(vi.Location.X, vi.Location.Z)))).ToArray()));
+            .Concat(svgPolygons.SelectMany(poly => BevelFromCurve(poly.Reversed().Select(p => pt(p.X, h, p.Y)), bevelRadius, roundSteps, Normal.Mine)).Select(face => face.Select(vi => vi.WithTexture(texturize(p(vi.Location.X, vi.Location.Z)))).ToArray()));
     }
 }

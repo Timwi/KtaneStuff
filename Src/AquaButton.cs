@@ -133,8 +133,8 @@ internal static class AquaButton
             var num = new int[12];
             for (var shift = 0; shift < 12; shift++)
             {
-                var newColClues = shift < 6 ? (int?[][]) [.. colClues.Skip(shift), .. rowClues.Reverse().Take(shift)] : [.. rowClues.Reverse().Skip(shift - 6), .. colClues.Take(shift - 6)];
-                var newRowClues = shift < 6 ? (int?[][]) [.. colClues.Take(shift).Reverse(), .. rowClues.Take(6 - shift)] : [.. rowClues.Skip(12 - shift), .. colClues.Reverse().Take(12 - shift)];
+                var newColClues = shift < 6 ? (int?[][]) [.. colClues.Skip(shift), .. rowClues.Reversed().Take(shift)] : [.. rowClues.Reversed().Skip(shift - 6), .. colClues.Take(shift - 6)];
+                var newRowClues = shift < 6 ? (int?[][]) [.. colClues.Take(shift).Reverse(), .. rowClues.Take(6 - shift)] : [.. rowClues.Skip(12 - shift), .. colClues.Reversed().Take(12 - shift)];
 
                 foreach (var cl in newColClues.Concat(newRowClues))
                     clues.IncSafe(cl.JoinString(" "));
@@ -142,7 +142,7 @@ internal static class AquaButton
                 var solutions = Nonogram.Solve(newColClues, newRowClues).Take(2).ToArray();
                 num[shift] = solutions.Length;
             }
-            if (num.SequenceEqual(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+            if (num.SequenceEqual([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
                 unique.Add(word);
             //ConsoleUtil.WriteLine($"{word} = {num.Select(n => n.ToString().Color(n == 0 ? ConsoleColor.Red : n == 1 ? ConsoleColor.Green : ConsoleColor.Yellow)).JoinColoredString()}", null);
         }

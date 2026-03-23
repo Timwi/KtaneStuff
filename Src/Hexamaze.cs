@@ -32,7 +32,7 @@ internal static class Hexamaze
             new { Outline = Hex.LargeHexagonOutline(sideLength: SubmazeSize, hexWidth: 1, expand: .05).insertKinks(.05).ToArray(), Y = .1 },
             new { Outline = Hex.LargeHexagonOutline(sideLength: SubmazeSize, hexWidth: 1, expand: .2).insertKinks(.35).ToArray(), Y = .1 },
             new { Outline = Hex.LargeHexagonOutline(sideLength: SubmazeSize, hexWidth: 1, expand: .25).insertKinks(.4).ToArray(), Y = 0d }
-        ).Reverse().ToArray();
+        ).Reversed().ToArray();
         return CreateMesh(false, true, Ut.NewArray(arr.Length, arr[0].Outline.Length, (x, y) => pt(arr[x].Outline[y].X, arr[x].Y, arr[x].Outline[y].Y, Normal.Mine, Normal.Mine, Normal.Mine, Normal.Mine)));
     }
 

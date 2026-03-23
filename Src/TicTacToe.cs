@@ -47,7 +47,7 @@ internal static class TicTacToe
             // Main key face
             new[] { new[] { pt(0, 0, 0), pt(-keyWidth, 0, 0), pt(-keyWidth, -keyHeight, 0), pt(0, -keyHeight, 0) } },
             // Bottom face
-            new[] { new[] { pt(0, 0, bottom), pt(-keyWidth, 0, bottom), pt(-keyWidth, -keyHeight, bottom), pt(0, -keyHeight, bottom) }.Reverse().ToArray() }
+            new[] { new[] { pt(0, 0, bottom), pt(-keyWidth, 0, bottom), pt(-keyWidth, -keyHeight, bottom), pt(0, -keyHeight, bottom) }.Reversed().ToArray() }
         ).SelectMany(x => x);
 
         return GenerateObjFile(everything.ToArray(), objectName);

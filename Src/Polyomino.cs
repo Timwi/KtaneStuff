@@ -45,5 +45,6 @@ public class Polyomino : IEquatable<Polyomino>
     public static bool operator ==(Polyomino one, Polyomino two) => one.Equals(two);
     public static bool operator !=(Polyomino one, Polyomino two) => !one.Equals(two);
 
-    public override string ToString() => Enumerable.Range(0, _h).Select(row => Enumerable.Range(0, _w).Select(col => _arr[col + _w * row] ? "██" : "░░").JoinString()).JoinString("\n");
+    public override string ToString() => ToString("\n");
+    public string ToString(string separator) => Enumerable.Range(0, _h).Select(row => Enumerable.Range(0, _w).Select(col => _arr[col + _w * row] ? "██" : "░░").JoinString()).JoinString(separator);
 }

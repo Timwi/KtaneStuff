@@ -102,14 +102,14 @@ internal static class MaritimeFlags
                 // back face of the between-wall
                 [r(aN, rO, 0), r(aN, rO, hW), r(aR, rO, hW), r(aR, rO, 0)]
             )
-                .Select(f => addTexture(f.Reverse().ToArray().FlatNormals()))
+                .Select(f => addTexture(f.Reversed().ToArray().FlatNormals()))
                 .ToArray();
 
             var dialPieces = Ut.NewArray<Pt[]>(
                 [r(0, 0, 0), r(aL, rI, 0), r(aR, rI, 0)],
                 [r(0, 0, 0), r(aR, rI, 0), r(aN, rI, 0)]
             )
-                .Select(f => f.Reverse().ToArray().FlatNormals().Select(p => p.WithTexture((p.Location.X + 1) / 2 * 45 / 85, (p.Location.Z + 1) / 2)).ToArray())
+                .Select(f => f.Reversed().ToArray().FlatNormals().Select(p => p.WithTexture((p.Location.X + 1) / 2 * 45 / 85, (p.Location.Z + 1) / 2)).ToArray())
                 .ToArray();
 
             return (framePieces, dialPieces);

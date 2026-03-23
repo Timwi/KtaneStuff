@@ -85,7 +85,7 @@ internal static class TheBlueButton
         shortcut:
         var cell = bestCell.Value;
 
-        foreach (var placementIx in bestPlacementIxs.Reverse())
+        foreach (var placementIx in bestPlacementIxs.Reversed())
         {
             var placement = possiblePlacements[placementIx];
             var (poly, place) = placement;

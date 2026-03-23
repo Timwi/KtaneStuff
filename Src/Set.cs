@@ -1,6 +1,8 @@
-﻿using RT.Modeling;
+﻿using System.Diagnostics;
+using RT.Json;
+using RT.Modeling;
 using RT.Util;
-using RT.Util.Drawing;
+using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
 using static RT.Modeling.Md;
 
@@ -10,36 +12,37 @@ internal static class Set
 {
     public static void MakeGraphics()
     {
-        var pngCrushers = new List<Action>();
-        foreach (var selected in new[] { true, false })
-            using (var srcBmp = new Bitmap($@"D:\c\KTANE\Set\Data\Symbols{(selected ? " selected" : "")}.png"))
+        var datas = new List<(double x, double w, double h, string d)>();
+        var c = 0;
+        RT.Xml.Xml.ParseFile(@"D:\c\KTANE\Set\Data\Symbols (new).svg").Root["path"].ToArray().ParallelForEach(Environment.ProcessorCount, (tag, proc) =>
+        {
+            if (proc == 0)
+                lock (datas)
+                    ConsoleUtil.WriteLineFmt($"{c:Y}/{18:M} = {(double) 100 * c / 18:G/0}{"%":G}");
+            var id = tag["@id"].Value;
+
+            var cmd = $@"D:\Inkscape\bin\inkscape.com ""D:\c\KTANE\Set\Data\Symbols (new).svg"" --query-id={id} -X -Y -W -H";
+            var values = CommandRunner.RunRaw(cmd).OutputNothing().GoGetOutputText().Trim().Split('\n').Select(double.Parse).ToArray();
+            var (x, y, w, h) = (values[0], values[1], values[2], values[3]);
+            if (y > 50)
+                return;
+
+            var cmd2 = $@"D:\Inkscape\bin\inkscape.com ""D:\c\KTANE\Set\Data\Symbols (new).svg"" --export-id={id} --export-area={x}:{y}:{x + w}:{y + h} --export-dpi=96 --export-filename=D:\temp\temp{proc}.svg --export-type=svg --export-plain-svg --export-id-only";
+            CommandRunner.RunRaw(cmd2).OutputNothing().Go();
+
+            var pathData = RT.Xml.Xml.ParseFile($@"D:\temp\temp{proc}.svg").Root["path"]["@d"].Value;
+            lock (datas)
             {
-                var w = srcBmp.Width / 9;
-                var h = srcBmp.Height / 9;
-                for (var x = 0; x < 3; x++)
-                    for (var y = 0; y < 3; y++)
-                        for (var s = 0; s < 3; s++)
-                            for (var r = 0; r < 3; r++)
-                            {
-                                var tempPath = Path.GetTempFileName();
-                                var destPath = $@"D:\c\KTANE\Set\Assets\Textures\Icon{(selected ? "Sel" : "")}{(char) ('A' + x)}{(char) ('1' + y)}{(char) ('a' + s)}{(char) ('1' + r)}.png";
-                                GraphicsUtil.DrawBitmap(w, h, g =>
-                                {
-                                    g.Clear(Color.Transparent);
-                                    g.DrawImage(srcBmp, -w * (3 * s + x), -h * (3 * r + y));
-                                }).Save(tempPath);
-                                pngCrushers.Add(() =>
-                                {
-                                    lock (pngCrushers)
-                                        Console.WriteLine("Crushing: " + destPath);
-                                    CommandRunner.Run("pngcr", tempPath, destPath).Go();
-                                    File.Delete(tempPath);
-                                    lock (pngCrushers)
-                                        Console.WriteLine("Done: " + destPath);
-                                });
-                            }
+                datas.Add((x, w, h, pathData));
+                c++;
             }
-        Ut.ParallelForEach(pngCrushers, 4, a => a());
+
+            File.Delete($@"D:\temp\temp{proc}.svg");
+        });
+        datas.SortBy(tup => tup.x);
+        if (datas.Count != 18)
+            Debugger.Break();
+        Clipboard.SetText(datas.Select(tup => new JsonDict { ["d"] = tup.d, ["w"] = tup.w, ["h"] = tup.h }).ToJsonList().ToStringIndented());
     }
 
     public static void DoModels()

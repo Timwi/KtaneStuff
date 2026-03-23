@@ -360,4 +360,21 @@ internal static class Utils
         }
         return list;
     }
+
+    public static string ConvertToBase(int input, int targetBase)
+    {
+        var str = "";
+        if (input < 0)
+        {
+            str = "-";
+            input *= -1;
+        }
+        while (input > 0)
+        {
+            var digit = input % targetBase;
+            str = (char) (digit < 10 ? '0' + digit : 'A' + (digit - 10)) + str;
+            input /= targetBase;
+        }
+        return str.Length == 0 ? "0" : str;
+    }
 }

@@ -1,7 +1,10 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using RT.PostBuild;
+using RT.Util.ExtensionMethods;
 
 [assembly: AssemblyCopyright("Copyright © Timwi 2016–2022")]
 [assembly: AssemblyTrademark("")]
@@ -23,7 +26,7 @@ internal partial class Program
             return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-        Souvenir.UpdateJs();
+        Ktane.FixLinksInManuals();
 
 
         Console.WriteLine("Done.");

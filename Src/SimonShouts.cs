@@ -183,7 +183,7 @@ internal static class SimonShouts
 
 
         // BUTTON COLLIDER
-        var colliderOutline = new[] { p(50, -10), p(90, 60), p(65, 85), p(35, 85), p(10, 60) }.Reverse().Select(pt => p((pt.X - 50) / 1000, (100 - pt.Y) / 1000)).ToArray();
+        var colliderOutline = new[] { p(50, -10), p(90, 60), p(65, 85), p(35, 85), p(10, 60) }.Reversed().Select(pt => p((pt.X - 50) / 1000, (100 - pt.Y) / 1000)).ToArray();
         File.WriteAllText(@"D:\c\KTANE\SimonShouts\Assets\Models\ButtonCollider.obj", GenerateObjFile(colliderOutline.Extrude(.01, true, true), "ButtonCollider"));
 
         // BUTTON HIGHLIGHT

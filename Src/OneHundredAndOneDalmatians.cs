@@ -169,7 +169,7 @@ internal static class OneHundredAndOneDalmatians
         return Enumerable.Range(0, steps).Select(i => i * 360 / steps).ConsecutivePairs(closed: true).Select(pair => new[] { ptp(ir, pair.Item1, 0), ptp(or, pair.Item1, 0), ptp(or, pair.Item2, 0), ptp(ir, pair.Item2, 0) }.Select(p => p.WithNormal(0, 1, 0)).ToArray());
     }
 
-    private static VertexInfo[][] arrowHighlight() => new[] { p(-5, 0), p(-1, -4), p(-1, -2), p(4, -2), p(4, 2), p(-1, 2), p(-1, 4) }.Reverse().Triangulate().Select(tr => tr.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray()).ToArray();
+    private static VertexInfo[][] arrowHighlight() => new[] { p(-5, 0), p(-1, -4), p(-1, -2), p(4, -2), p(4, 2), p(-1, 2), p(-1, 4) }.Reversed().Triangulate().Select(tr => tr.Select(p => pt(p.X, 0, p.Y).WithNormal(0, 1, 0)).Reverse().ToArray()).ToArray();
 
     public static IEnumerable<VertexInfo[]> Frame1()
     {
@@ -204,7 +204,7 @@ internal static class OneHundredAndOneDalmatians
         // Make them all counter-clockwise
         var inner = getPoints("inner");
         var middle = getPoints("middle");
-        var outer = getPoints("outside").Reverse().ToArray();
+        var outer = getPoints("outside").Reversed().ToArray();
 
         IEnumerable<T[]> make<T>(PointD[] inr, PointD[] outr, Func<(PointD p, bool ou)[], T[]> prcPoint)
         {

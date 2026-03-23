@@ -40,4 +40,17 @@ public struct PolyominoPlacement(Polyomino poly, Coord place) : IEquatable<Polyo
                 return true;
         return false;
     }
+
+    public readonly bool IsInRange
+    {
+        get
+        {
+            foreach (var c in Polyomino.Cells)
+                if (!Place.CanMoveBy(c.X, c.Y))
+                    return false;
+            return true;
+        }
+    }
+
+    public override readonly string ToString() => $"{Place.X},{Place.Y}: {Polyomino.ToString("│")}";
 }

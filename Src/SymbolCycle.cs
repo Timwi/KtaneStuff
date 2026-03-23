@@ -43,7 +43,7 @@ public static class SymbolCycle
         }
 
         // Rest of the front plate
-        yield return new[] { pt(0, 0, -depth).WithNormal(0, 0, -1), pt(r * cos(switchAngle + extraAngle), r * sin(switchAngle + extraAngle), -depth).WithNormal(0, 0, -1), pt(r * cos(180 - extraAngle), r * sin(180 - extraAngle), -depth).WithNormal(0, 0, -1) }.Reverse().ToArray();
+        yield return new[] { pt(0, 0, -depth).WithNormal(0, 0, -1), pt(r * cos(switchAngle + extraAngle), r * sin(switchAngle + extraAngle), -depth).WithNormal(0, 0, -1), pt(r * cos(180 - extraAngle), r * sin(180 - extraAngle), -depth).WithNormal(0, 0, -1) }.Reversed().ToArray();
         // Rest of the back plate
         yield return new[] { pt(0, 0, depth).WithNormal(0, 0, 1), pt(r * cos(switchAngle + extraAngle), r * sin(switchAngle + extraAngle), depth).WithNormal(0, 0, 1), pt(r * cos(180 - extraAngle), r * sin(180 - extraAngle), depth).WithNormal(0, 0, 1) };
 
@@ -208,7 +208,7 @@ public static class SymbolCycle
         platePoly.Add(infs.Reverse().Select(inf => rPt(outerRadius, inf.Angle + 90 * inf.Quadrant, inf.Quadrant, outerDepth, displacementX, displacementY).Apply(pt => p(pt.X + wx, pt.Z + wy))).ToArray());
 
         foreach (var face in platePoly.Triangulate())
-            yield return face.Reverse().Select(p => pt(p.X, .15, p.Y).WithNormal(0, 1, 0)).ToArray();
+            yield return face.Reversed().Select(p => pt(p.X, .15, p.Y).WithNormal(0, 1, 0)).ToArray();
     }
 
     public static void CreateIcons()

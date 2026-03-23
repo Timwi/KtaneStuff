@@ -36,7 +36,7 @@ internal static class UltimateTicTacToe
                 var sqy = -w + (y / 3) * (3 * sq + 2 * sm + lm) + (y % 3) * (sq + sm);
                 //var coords = new List<PointD> { p(sqx, sqy), p(sqx + sq, sqy), p(sqx + sq, sqy + sq), p(sqx, sqy + sq) };
                 var coords = new List<PointD> { p(sqx, sqy), p(sqx, sqy + sq), p(sqx + sq, sqy + sq), p(sqx + sq, sqy) };
-                allSquares.Add(coords.ToArray().Reverse().ToArray());
+                allSquares.Add(coords.ToArray().Reversed().ToArray());
 
                 var pts = coords.Select(p => pt(p.X, 0.15, p.Y)).ToList();
 
@@ -87,6 +87,6 @@ internal static class UltimateTicTacToe
 
         var triangles = allSquares.Concat(outline).Triangulate();
         foreach (var triangle in triangles)
-            yield return triangle.Reverse().Select(v => pt(v.X, .15, v.Y).WithNormal(0, 1, 0).WithTexture(tx(v.X, v.Y))).ToArray();
+            yield return triangle.Reversed().Select(v => pt(v.X, .15, v.Y).WithNormal(0, 1, 0).WithTexture(tx(v.X, v.Y))).ToArray();
     }
 }

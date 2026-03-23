@@ -40,9 +40,9 @@ internal static class GridMatching
 
                     foreach (var key in Ut.NewArray(
                         colCounts.JoinString() + "/" + rowCounts.JoinString(),
-                        rowCounts.Reverse().JoinString() + "/" + colCounts.JoinString(),
-                        colCounts.Reverse().JoinString() + "/" + rowCounts.Reverse().JoinString(),
-                        rowCounts.JoinString() + "/" + colCounts.Reverse().JoinString()
+                        rowCounts.Reversed().JoinString() + "/" + colCounts.JoinString(),
+                        colCounts.Reversed().JoinString() + "/" + rowCounts.Reversed().JoinString(),
+                        rowCounts.JoinString() + "/" + colCounts.Reversed().JoinString()
                     ))
                     {
                         if (dic.ContainsKey(key))

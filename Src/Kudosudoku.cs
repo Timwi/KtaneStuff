@@ -15,7 +15,7 @@ internal static class Kudosudoku
     }
 
     private static VertexInfo[][] cleanup(IEnumerable<Pt[]> x) => x
-        .Select(face => face.Reverse().ToArray().FlatNormals().Select(v => v.WithTexture(new PointD(.4771284794 * v.Location.X + .46155, -.4771284794 * v.Location.Z + .5337373145))).ToArray())
+        .Select(face => face.Reversed().ToArray().FlatNormals().Select(v => v.WithTexture(new PointD(.4771284794 * v.Location.X + .46155, -.4771284794 * v.Location.Z + .5337373145))).ToArray())
         .ToArray();
 
     private static IEnumerable<Pt[]> background()
