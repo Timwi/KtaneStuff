@@ -395,6 +395,124 @@ internal static class Ktane
             }
         }
     }
+
+    public static void FindStaleLogfiles()
+    {
+        var logDir = @"F:\KtaneLogfiles";
+        var canDel = new List<string>();
+        foreach (var logFile in new DirectoryInfo(logDir).GetFiles("*.txt"))
+        {
+            var any = false;
+            int? inEvent = null;
+            var eventSb = new StringBuilder();
+            var anySuccessfulBombs = false;
+            foreach (var line in File.ReadLines(logFile.FullName))
+            {
+                if (inEvent == null && line.RegexMatch(@"^\[Tweaks\] LFAEvent (\d+)$", out var mEv) && int.TryParse(mEv.Groups[1].Value, out var evLines))
+                {
+                    inEvent = evLines;
+                    eventSb.Clear();
+                }
+                else if (inEvent != null)
+                {
+                    eventSb.Append(line);
+                    inEvent = inEvent.Value - 1;
+                    if (inEvent == 0)
+                    {
+                        inEvent = null;
+                        var json = JsonValue.Parse(eventSb.ToString());
+                        if (!json.TryGetValue("type", out var typeVal) || typeVal.GetStringSafe() is not { } type)
+                            continue;
+                        if (type is "ROUND_START")
+                            any = true;
+                        else if (type is "BOMB_SOLVE")
+                            anySuccessfulBombs = true;
+                    }
+                }
+            }
+            if (any && !anySuccessfulBombs)
+            {
+                ConsoleUtil.WriteLineFmt($"I think we can delete {logFile.Name:G}");
+                canDel.Add(logFile.Name);
+                //File.Delete(logFile.FullName);
+            }
+            else
+                ConsoleUtil.WriteLineFmt($"I think we shall keep {logFile.Name:M}");
+        }
+        Console.WriteLine();
+        //File.WriteAllLines(@"E:\KtaneLogfiles\New\Ktane Logfiles we can delete.txt", canDel);
+    }
+
+    public static void DeleteOldUselessLogfiles()
+    {
+        const string logDir = @"E:\KtaneLogfiles";
+
+        var canDelete = File.ReadAllLines(@"E:\KtaneLogfiles\Ktane Logfiles we can delete.txt").ToHashSet();
+        var today = DateTime.UtcNow.Date;
+        //var rawOutput = CommandRunner.Run("7z", "l", Path.Combine(logDir, $"Ktane Logfiles {prefix}.7z")).GoGetOutputText();
+        //File.WriteAllLines($@"E:\KtaneLogfiles\Temp\Deleted logfiles {prefix}.txt",
+        foreach (var file in new DirectoryInfo(logDir).EnumerateFiles("*.txt"))
+            if (today - file.LastWriteTimeUtc > TimeSpan.FromDays(365) && canDelete.Contains(file.Name))
+            {
+                Console.WriteLine(file.Name);
+                File.AppendAllLines($@"E:\KtaneLogfiles\Temp\Deleted logfiles {file.Name[0..2]}.txt", [file.Name]);
+                File.Delete(file.FullName);
+            }
+    }
+
+    public static void LogfilesTemp()
+    {
+        var lockObj = new object();
+        void process7z(HashSet<string> h, string output)
+        {
+            var idsGleaned = output.Split('\n')
+                .Select(line => line.RegexMatch(@"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} .....\s*(?:\d+\s*){1,2}([0-9a-f]{40})\.txt\s*$", RegexOptions.IgnoreCase, out var m) ? m.Groups[1].Value.ToLowerInvariant() : null)
+                .Where(id => id != null)
+                .ToArray();
+            lock (lockObj)
+                h.AddRange(idsGleaned);
+        }
+        void processDir(HashSet<string> h, string output)
+        {
+            var idsGleaned = output.Split('\n')
+                .Select(line => line.RegexMatch(@"^\d\d/\d\d/\d\d\d\d  \d\d:\d\d\s*[\d,]*\s*([0-9a-f]{40})\.txt\s*$", RegexOptions.IgnoreCase, out var m) ? m.Groups[1].Value.ToLowerInvariant() : null)
+                .Where(id => id != null)
+                .ToArray();
+            lock (lockObj)
+            {
+                Console.WriteLine($"dir: {idsGleaned.Length}");
+                h.AddRange(idsGleaned);
+            }
+        }
+
+        // Topaz
+        var topazIds = new HashSet<string>();
+        process7z(topazIds, CommandRunner.Run(["7z", "l", @"F:\KtaneLogfiles\KtaneLogfiles_new.7z"]).OutputNothing().GoGetOutputText());
+        Enumerable.Range(0, 256).ParallelForEach(Environment.ProcessorCount, i =>
+        {
+            var prefix = i.ToString("x2");
+            lock (lockObj)
+                Console.WriteLine($"{prefix} — {topazIds.Count}");
+            process7z(topazIds, CommandRunner.Run(["7z", "l", Path.Combine(@"F:\KtaneLogfilesBackup\2026-04-06", $"Ktane Logfiles {prefix}.7z")]).OutputNothing().GoGetOutputText());
+        });
+        processDir(topazIds, File.ReadAllText(@"F:\KtaneLogfiles\KtaneLogfiles_TOPAZ.txt"));
+        Console.WriteLine(topazIds.Count);
+
+        //// Sapphire
+        //var sapphireIds = new HashSet<string>();
+        //foreach (var file in new DirectoryInfo(@"F:\KtaneLogfiles\KtaneLogfiles_SAPPHIRE_7zl").EnumerateFiles("*.txt"))
+        //    process7z(sapphireIds, File.ReadAllText(file.FullName));
+        //Console.WriteLine(sapphireIds.Count);
+        //processDir(topazIds, File.ReadAllText(@"F:\KtaneLogfiles\KtaneLogfiles_SAPPHIRE.txt"));
+        //Console.WriteLine(sapphireIds.Count);
+
+        // Missing?
+        Console.WriteLine("MISSING in clipboard");
+
+        var sam = File.ReadLines(@"E:\KtaneLogfiles\Sam_verify.txt").Select(l => l.PadLeft(40, '0')).ToHashSet();
+        var recovered = File.ReadLines(@"F:\KtaneLogfiles\KtaneLogfiles_SAPPHIRE_7zl\recover.txt").Select(l => l.Replace(".txt", "")).ToHashSet();
+        Clipboard.SetText(sam.Except(topazIds).Except(recovered).JoinString("\n"));
+    }
 }
 
 internal static class ExtensionMethods

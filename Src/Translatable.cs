@@ -58,7 +58,7 @@ internal static class Translatable
         public CQ Doc { get; private set; } = doc;
         public string Path { get; private set; } = path;
 
-        protected override void onTextMessageReceived(string msg)
+        protected override void OnTextMessageReceived(string msg)
         {
             lock (_lock)
             {

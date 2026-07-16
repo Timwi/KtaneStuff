@@ -56,10 +56,10 @@ Global
 		{C85A026A-3115-0899-F922-BA89B4E24E12}.Debug-Nuget|Any CPU.Build.0 = Debug-Nuget|Any CPU
 		{C85A026A-3115-0899-F922-BA89B4E24E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C85A026A-3115-0899-F922-BA89B4E24E12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Debug-locallibs|Any CPU.ActiveCfg = Debug|Any CPU
-		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Debug-locallibs|Any CPU.Build.0 = Debug|Any CPU
-		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Debug-Nuget|Any CPU.ActiveCfg = Debug|Any CPU
-		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Debug-Nuget|Any CPU.Build.0 = Debug|Any CPU
+		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Debug-locallibs|Any CPU.ActiveCfg = Debug-locallibs|Any CPU
+		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Debug-locallibs|Any CPU.Build.0 = Debug-locallibs|Any CPU
+		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Debug-Nuget|Any CPU.ActiveCfg = Debug-Nuget|Any CPU
+		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Debug-Nuget|Any CPU.Build.0 = Debug-Nuget|Any CPU
 		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A17208F7-EE8F-DB5B-5B59-B5B80C16F98D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE8E1CED-DFD2-2D11-F6A9-CB7D6BC46BD1}.Debug-locallibs|Any CPU.ActiveCfg = Debug-locallibs|Any CPU

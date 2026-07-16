@@ -472,7 +472,7 @@ namespace PolyhedralMaze
         private List<PolyhedronInfo> _polyhedra = polyhedra;
         private BoundingBoxD[] _boundingBoxes;
 
-        protected override void onBeginConnection()
+        protected override void OnBeginConnection()
         {
             _boundingBoxes = new BoundingBoxD[_polyhedra.Count];
             for (var i = 0; i < _polyhedra.Count; i++)
@@ -509,7 +509,7 @@ namespace PolyhedralMaze
 
         private void sendPolyhedronSelect(PolyhedronInfo polyhedron) => SendMessage(new JsonDict { { "polyhedron", polyhedron.FileCompatibleName }, { "select", $"[{polyhedron.SvgId ?? "absent"}] {polyhedron.ReadableName}" } });
 
-        protected override void onTextMessageReceived(string msg)
+        protected override void OnTextMessageReceived(string msg)
         {
             var json = JsonValue.Parse(msg);
             var edgeData = json.ContainsKey("EdgeData") && JsonValue.TryParse(json["EdgeData"].GetString(), out var result) ? result : null;
