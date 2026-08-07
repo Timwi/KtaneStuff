@@ -26,7 +26,7 @@ internal partial class Program
             return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-        Ktane.FixLinksInManuals();
+        PolyhedralMaze.RunServer();
 
 
         Console.WriteLine("Done.");

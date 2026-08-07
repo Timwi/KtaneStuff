@@ -1,384 +1,388 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <title>Polyhedral Maze — Keep Talking and Nobody Explodes Module</title>
-    <meta content="initial-scale=1" name="viewport">
-    <link rel='stylesheet' type='text/css' href='css/font.css'>
-    <link href="css/normalize.css" rel="stylesheet" type="text/css">
-    <link href="css/main.css" rel="stylesheet" type="text/css">
-    <script src='js/ktane-utils.js'></script>
-    <script src="js/jquery.3.1.1.min.js"></script>
-    <script id="main-js">
-        $(function ()
-        {
-            function addLog(msg)
-            {
-                $('#log').val(function (i, text)
-                {
-                    return msg + "\n" + text;
-                });
-            }
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<title>Polyhedral Maze — Keep Talking and Nobody Explodes Module</title>
+	<meta content="initial-scale=1" name="viewport">
+	<link rel='stylesheet' type='text/css' href='css/font.css'>
+	<link href="css/normalize.css" rel="stylesheet" type="text/css">
+	<link href="css/main.css" rel="stylesheet" type="text/css">
+	<script src='js/ktane-utils.js'></script>
+	<script src="js/jquery.3.1.1.min.js"></script>
+	<script id="main-js">
+		$(function ()
+		{
+			function addLog(msg)
+			{
+				$('#log').val(function (i, text)
+				{
+					return msg + "\n" + text;
+				});
+			}
 
-            var socket;
-            var selectedEdge = null;
-            var selectedEdgeIx = null;
+			var socket;
+			var selectedEdge = null;
+			var selectedEdgeIx = null;
 
-            function setEdgeAppearance(obj, stroke, strokeWidth)
-            {
-                obj.setAttribute('stroke', stroke);
-                obj.setAttribute('stroke-width', strokeWidth);
-            }
+			function setEdgeAppearance(obj, stroke, strokeWidth)
+			{
+				obj.setAttribute('stroke', stroke);
+				obj.setAttribute('stroke-width', strokeWidth);
+			}
 
-            function processElementClick()
-            {
-                if (this.getAttribute('data-edge') !== null)
-                {
-                    // User clicked on something that represents an edge.
-                    // Deselect previous edge first
-                    if (selectedEdge != null)
-                        selectedEdge.returnToNormal();
+			function processElementClick()
+			{
+				if (this.getAttribute('data-edge') !== null)
+				{
+					// User clicked on something that represents an edge.
+					// Deselect previous edge first
+					if (selectedEdge != null)
+						selectedEdge.returnToNormal();
 
-                    var edgeData = JSON.parse(this.getAttribute('data-edge'));
-                    $('#edge-options').show();
-                    $('#eo-data').text(JSON.stringify(edgeData, null, 1));
-                    this.returnToNormal = function (obj, str, sw) { return function () { setEdgeAppearance(obj, str, sw); } }(this, this.getAttribute('stroke'), this.getAttribute('stroke-width'));
-                    setEdgeAppearance(this, '#6495ed', '.1');
-                    selectedEdge = this;
-                    selectedEdgeIx = +edgeData.edge;
-                }
-                else if (/^(poly-.*)-label-(\d+)$/.exec(this.getAttribute('id')))
-                {
-                    var poly = RegExp.$1;
-                    var face = RegExp.$2;
-                    var edges = Array.from($(`.${poly}-face-${face}`))
-                        .map(obj => Array.from(obj.classList).map(cls => ({ obj: obj, m: new RegExp(`^${poly}-edge-${face}-(\\d+)\$`).exec(cls) })).filter(inf => inf.m !== null))
-                        .filter(infs => infs.length > 0)
-                        .map(infs => ({ edge: infs[0].obj, ix: +infs[0].m[1] }));
-                    var newEdgeIx = selectedEdgeIx + 1;
-                    var findEdge = edges.findIndex(inf => inf.ix === newEdgeIx);
-                    if (findEdge === -1)
-                    {
-                        newEdgeIx = 0;
-                        findEdge = edges.findIndex(inf => inf.ix === 0);
-                    }
-                    if (findEdge !== -1)
-                    {
-                        processElementClick.apply(edges[findEdge].edge);
-                        selectedEdgeIx = newEdgeIx;
-                    }
-                }
-            }
+					var edgeData = JSON.parse(this.getAttribute('data-edge'));
+					$('#edge-options').show();
+					$('#eo-data').text(JSON.stringify(edgeData, null, 1));
+					this.returnToNormal = function (obj, str, sw) { return function () { setEdgeAppearance(obj, str, sw); } }(this, this.getAttribute('stroke'), this.getAttribute('stroke-width'));
+					setEdgeAppearance(this, '#6495ed', '.1');
+					selectedEdge = this;
+					selectedEdgeIx = +edgeData.edge;
+				}
+				else if (/^(poly-.*)-label-(\d+)$/.exec(this.getAttribute('id')))
+				{
+					var poly = RegExp.$1;
+					var face = RegExp.$2;
+					var edges = Array.from($(`.${poly}-face-${face}`))
+						.map(obj => Array.from(obj.classList).map(cls => ({ obj: obj, m: new RegExp(`^${poly}-edge-${face}-(\\d+)\$`).exec(cls) })).filter(inf => inf.m !== null))
+						.filter(infs => infs.length > 0)
+						.map(infs => ({ edge: infs[0].obj, ix: +infs[0].m[1] }));
+					var newEdgeIx = selectedEdgeIx + 1;
+					var findEdge = edges.findIndex(inf => inf.ix === newEdgeIx);
+					if (findEdge === -1)
+					{
+						newEdgeIx = 0;
+						findEdge = edges.findIndex(inf => inf.ix === 0);
+					}
+					if (findEdge !== -1)
+					{
+						processElementClick.apply(edges[findEdge].edge);
+						selectedEdgeIx = newEdgeIx;
+					}
+				}
+			}
 
-            function newSocket()
-            {
-                socket = new WebSocket("ws://localhost:8991/websocket");
-                socket.onopen = function ()
-                {
-                    addLog('Socket opened.');
-                };
-                socket.onclose = function ()
-                {
-                    addLog('Socket closed.');
-                };
-                socket.onerror = function (err)
-                {
-                    addLog('Socket error: ' + err);
-                    console.log(err);
-                };
-                socket.onmessage = function (msg)
-                {
-                    if (msg.data.startsWith("Log: "))
-                    {
-                        addLog(msg.data.substr("Log: ".length));
-                        return;
-                    }
+			function newSocket()
+			{
+				socket = new WebSocket("ws://localhost:8991/websocket");
+				socket.onopen = function ()
+				{
+					addLog('Socket opened.');
+				};
+				socket.onclose = function ()
+				{
+					addLog('Socket closed.');
+				};
+				socket.onerror = function (err)
+				{
+					addLog('Socket error: ' + err);
+					console.log(err);
+				};
+				socket.onmessage = function (msg)
+				{
+					if (msg.data.startsWith("Log: "))
+					{
+						addLog(msg.data.substr("Log: ".length));
+						return;
+					}
 
-                    var json;
-                    try { json = JSON.parse(msg.data); }
-                    catch (e) { json = null; }
-                    if (!(json instanceof Object))
-                        addLog('Received non-object: ' + msg.data);
-                    else if ('svg' in json)
-                    {
-                        var svg = document.getElementById(json.svg);
-                        if (!svg)
-                            addLog('SVG not found: ' + json.svg);
-                        else if (json.viewBox)
-                        {
-                            svg.setAttribute('viewBox', json.viewBox);
-                            var result = /^\S* \S* (\S*) \S*$/.exec(json.viewBox);
-                            $('#view-width-' + json.svg).text(result[1]);
-                        }
-                        else
-                        {
-                            var obj = document.getElementById(json.id);
-                            if (obj && obj.tagName !== json.tag)
-                            {
-                                obj.parentNode.removeChild(obj);
-                                obj = null;
-                            }
-                            if (json.tag === 'delete')
-                            {
-                                for (var j = 0; j < json.classes.length; j++)
-                                {
-                                    var list = document.getElementsByClassName(json.classes[j]);
-                                    for (var i = list.length - 1; i >= 0; i--)
-                                        list[i].parentNode.removeChild(list[i]);
-                                }
-                            }
-                            else
-                            {
-                                if (!obj)
-                                {
-                                    obj = document.createElementNS('http://www.w3.org/2000/svg', json.tag);
-                                    svg.appendChild(obj);
-                                    obj.id = json.id;
-                                    $(obj).click(processElementClick);
-                                }
-                                if ('classes' in json && json.classes instanceof Array)
-                                    obj.setAttribute('class', json.classes.join(' '));
-                                if ('attr' in json)
-                                {
-                                    for (var k in json.attr)
-                                        if (json.attr.hasOwnProperty(k) && json.attr[k] !== null)
-                                            obj.setAttribute(k, json.attr[k]);
-                                }
-                                if ('content' in json)
-                                {
-                                    if (json.content.indexOf('\n') === -1)
-                                        obj.textContent = json.content;
-                                    else
-                                    {
-                                        while (obj.firstChild)
-                                            obj.removeChild(obj.firstChild);
-                                        var list = json.content.split('\n');
-                                        for (var i = 0; i < list.length; i++)
-                                        {
-                                            var subObj = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-                                            subObj.setAttribute('x', json.attr.x);
-                                            subObj.setAttribute('y', +json.attr.y + .7 * i);
-                                            subObj.textContent = list[i];
-                                            obj.appendChild(subObj);
-                                        }
-                                    }
-                                }
-                                if ('edgeData' in json)
-                                    obj.setAttribute('data-edge', json.edgeData);
-                            }
-                        }
-                    }
-                    else if ('polyhedron' in json)
-                    {
-                        var poly = json.polyhedron;
-                        var id = 'poly-' + poly;
-                        var option = document.getElementById(id);
-                        if (!option)
-                        {
-                            option = document.createElement('option');
-                            option.id = id;
-                            document.getElementById('polyhedra').appendChild(option);
-                            option.setAttribute('data-name', poly);
-                        }
-                        option.innerText = json.select.replace(/\n/g, ' ');
-                    }
-                    else if ('make-ready' in json)
-                    {
-                        $('#log-wrap,#main-js,#extra-css').remove();
-                        $('.svg-container').each((_, x) => $(x).attr('id', null).attr('class', null));
-                        $('svg *[class]').each((_, x) => x.removeAttribute('class'));
-                        $('svg *[id]').each((_, x) => {
-                            let id = x.getAttribute('id');
-                            if (id.indexOf('outline') !== -1)
-                                x.setAttribute('class', 'highlightable');
-                            if (!/^poly-.*-(?:edge|portal-letter|portal-marker|curve)-\d+-\d+$/.test(id))
-                                x.removeAttribute('id');
-                        });
-                        $('*[data-edge]').each((_, x) => x.removeAttribute('data-edge'));
-                    }
-                    else
-                        addLog('Unrecognized message: ' + msg.data);
-                };
-            }
+					var json;
+					try { json = JSON.parse(msg.data); }
+					catch (e) { json = null; }
+					if (!(json instanceof Object))
+						addLog('Received non-object: ' + msg.data);
+					else if ('svg' in json)
+					{
+						var svg = document.getElementById(json.svg);
+						if (!svg)
+							addLog('SVG not found: ' + json.svg);
+						else if (json.viewBox)
+						{
+							svg.setAttribute('viewBox', json.viewBox);
+							var result = /^\S* \S* (\S*) \S*$/.exec(json.viewBox);
+							$('#view-width-' + json.svg).text(result[1]);
+						}
+						else
+						{
+							var obj = document.getElementById(json.id);
+							if (obj && obj.tagName !== json.tag)
+							{
+								obj.parentNode.removeChild(obj);
+								obj = null;
+							}
+							if (json.tag === 'delete')
+							{
+								for (var j = 0; j < json.classes.length; j++)
+								{
+									var list = document.getElementsByClassName(json.classes[j]);
+									for (var i = list.length - 1; i >= 0; i--)
+										list[i].parentNode.removeChild(list[i]);
+								}
+							}
+							else
+							{
+								if (!obj)
+								{
+									obj = document.createElementNS('http://www.w3.org/2000/svg', json.tag);
+									svg.appendChild(obj);
+									obj.id = json.id;
+									$(obj).click(processElementClick);
+								}
+								if ('classes' in json && json.classes instanceof Array)
+									obj.setAttribute('class', json.classes.join(' '));
+								if ('attr' in json)
+								{
+									for (var k in json.attr)
+										if (json.attr.hasOwnProperty(k) && json.attr[k] !== null)
+											obj.setAttribute(k, json.attr[k]);
+								}
+								if ('content' in json)
+								{
+									if (json.content.indexOf('\n') === -1)
+										obj.textContent = json.content;
+									else
+									{
+										while (obj.firstChild)
+											obj.removeChild(obj.firstChild);
+										var list = json.content.split('\n');
+										for (var i = 0; i < list.length; i++)
+										{
+											var subObj = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+											subObj.setAttribute('x', json.attr.x);
+											subObj.setAttribute('y', +json.attr.y + .7 * i);
+											subObj.textContent = list[i];
+											obj.appendChild(subObj);
+										}
+									}
+								}
+								if ('edgeData' in json)
+									obj.setAttribute('data-edge', json.edgeData);
+							}
+						}
+					}
+					else if ('polyhedron' in json)
+					{
+						var poly = json.polyhedron;
+						var id = 'poly-' + poly;
+						var option = document.getElementById(id);
+						if (!option)
+						{
+							option = document.createElement('option');
+							option.id = id;
+							document.getElementById('polyhedra').appendChild(option);
+							option.setAttribute('data-name', poly);
+						}
+						option.innerText = json.select.replace(/\n/g, ' ');
+					}
+					else if ('make-ready' in json)
+					{
+						$('#log-wrap,#main-js,#extra-css').remove();
+						$('.svg-container').each((_, x) => $(x).attr('id', null).attr('class', null));
+						$('svg *[class]').each((_, x) => {
+							let wanted = ['edge', 'portal-marker', 'portal-letter'];
+							for (let unwanted of Array.from(x.classList).filter(cl => !wanted.includes(cl)))
+								x.classList.remove(unwanted);
+						});
+						$('svg *[id]').each((_, x) => {
+							let id = x.getAttribute('id');
+							if (id.indexOf('outline') !== -1)
+								x.setAttribute('class', 'highlightable');
+							if (!/^poly-.*-(?:edge|portal-letter|portal-marker|curve)-\d+-\d+$/.test(id))
+								x.removeAttribute('id');
+						});
+						$('*[data-edge]').each((_, x) => x.removeAttribute('data-edge'));
+					}
+					else
+						addLog('Unrecognized message: ' + msg.data);
+				};
+			}
 
-            var svgContainers = $('.svg-container');
-            var svgSelector = $('#svg-selector');
-            for (var i = 0; i < svgContainers.length; i++)
-            {
-                var div = $('<div>');
-                div.append($('<input type="radio" name="radio-svg" class="radio-svg">').attr('value', svgContainers[i].id).attr('id', 'opt-' + svgContainers[i].id).prop('checked', i === 0));
-                div.append(" ");
-                div.append($('<label>').attr('for', 'opt-' + svgContainers[i].id).text(svgContainers[i].id));
-                div.append(" (");
-                div.append($('<span>').attr('id', 'view-width-' + svgContainers[i].id));
-                div.append(")");
-                svgSelector.append(div);
-            }
+			var svgContainers = $('.svg-container');
+			var svgSelector = $('#svg-selector');
+			for (var i = 0; i < svgContainers.length; i++)
+			{
+				var div = $('<div>');
+				div.append($('<input type="radio" name="radio-svg" class="radio-svg">').attr('value', svgContainers[i].id).attr('id', 'opt-' + svgContainers[i].id).prop('checked', i === 0));
+				div.append(" ");
+				div.append($('<label>').attr('for', 'opt-' + svgContainers[i].id).text(svgContainers[i].id));
+				div.append(" (");
+				div.append($('<span>').attr('id', 'view-width-' + svgContainers[i].id));
+				div.append(")");
+				svgSelector.append(div);
+			}
 
-            $('#add-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'add', Polyhedron: $('#polyhedra').find(":selected").attr('data-name'), SvgId: $('.radio-svg:checked').val() })); });
-            $('#remove-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'remove', Polyhedron: $('#polyhedra').find(":selected").attr('data-name') })); });
-            $('#convert-to-portal').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-portal', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('#convert-to-curve').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-curve', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('#make-connected').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'make-connected', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('#toggle-wall').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'toggle-wall', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('#deselect').click(function () { if (selectedEdge != null) selectedEdge.returnToNormal(); selectedEdge = null; $('#edge-options').hide(); });
-            $('.rotate-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'rotate', Amount: this.getAttribute('data-amount'), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('.move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move', XAmount: this.getAttribute('data-x-amount') * $('#move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('.caption-move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move-caption', XAmount: this.getAttribute('data-x-amount') * $('#caption-move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#caption-move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('.scale-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'scale', Amount: this.getAttribute('data-amount') * $('#scale-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('#generate-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'generate-maze', EdgeData: selectedEdge.getAttribute('data-edge'), WallProb: $('#wall-probability').val(), Seed: $('#seed').val() })); $('#seed').val((+$('#seed').val()) + 1); });
-            $('#clear-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'clear-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-            $('#make-ready').click(function () { socket.send(JSON.stringify({ Command: 'make-ready' })); });
+			$('#add-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'add', Polyhedron: $('#polyhedra').find(":selected").attr('data-name'), SvgId: $('.radio-svg:checked').val() })); });
+			$('#remove-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'remove', Polyhedron: $('#polyhedra').find(":selected").attr('data-name') })); });
+			$('#convert-to-portal').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-portal', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('#convert-to-curve').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-curve', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('#make-connected').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'make-connected', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('#toggle-wall').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'toggle-wall', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('#deselect').click(function () { if (selectedEdge != null) selectedEdge.returnToNormal(); selectedEdge = null; $('#edge-options').hide(); });
+			$('.rotate-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'rotate', Amount: this.getAttribute('data-amount'), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('.move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move', XAmount: this.getAttribute('data-x-amount') * $('#move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('.caption-move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move-caption', XAmount: this.getAttribute('data-x-amount') * $('#caption-move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#caption-move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('.scale-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'scale', Amount: this.getAttribute('data-amount') * $('#scale-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('#generate-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'generate-maze', EdgeData: selectedEdge.getAttribute('data-edge'), WallProb: $('#wall-probability').val(), Seed: $('#seed').val() })); $('#seed').val((+$('#seed').val()) + 1); });
+			$('#clear-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'clear-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			$('#make-ready').click(function () { socket.send(JSON.stringify({ Command: 'make-ready' })); });
 
-            $('#edge-options').hide();
+			$('#edge-options').hide();
 
-            newSocket();
+			newSocket();
 
-            var accessKeys = $('*[accesskey]').map(function (_, e) { return e.getAttribute('accesskey').toUpperCase(); }).get().filter(x => x.length > 0).sort();
-            addLog("Used access keys: " + accessKeys.join(''));
-            addLog("Available access keys: " + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').filter(x => accessKeys.indexOf(x) === -1).join(''));
-        });
+			var accessKeys = $('*[accesskey]').map(function (_, e) { return e.getAttribute('accesskey').toUpperCase(); }).get().filter(x => x.length > 0).sort();
+			addLog("Used access keys: " + accessKeys.join(''));
+			addLog("Available access keys: " + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').filter(x => accessKeys.indexOf(x) === -1).join(''));
+		});
 
-    </script>
-    <style>
-        div.footnotes {
-            font-size: smaller;
-            margin-top: 1em;
-            padding-top: .5em;
-            position: relative;
-        }
+	</script>
+	<style>
+		div.footnotes {
+			font-size: smaller;
+			margin-top: 1em;
+			padding-top: .5em;
+			position: relative;
+		}
 
-            div.footnotes::before {
-                content: '';
-                border-top: 1px solid #ccc;
-                width: 10em;
-                position: absolute;
-                left: 0;
-                top: 0;
-            }
+			div.footnotes::before {
+				content: '';
+				border-top: 1px solid #ccc;
+				width: 10em;
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
 
-            div.footnotes p {
-                margin: .3em;
-            }
-    </style>
-    <style id="extra-css">
-        .page {
-            margin: 1em auto 1em 1.5em;
-        }
+			div.footnotes p {
+				margin: .3em;
+			}
+	</style>
+	<style id="extra-css">
+		.page {
+			margin: 1em auto 1em 1.5em;
+		}
 
-        #log-wrap {
-            position: fixed;
-            top: 1em;
-            right: 1em;
-            width: 35em;
-        }
+		#log-wrap {
+			position: fixed;
+			top: 1em;
+			right: 1em;
+			width: 35em;
+		}
 
-        #log {
-            width: 100%;
-            height: 30em;
-        }
-    </style>
+		#log {
+			width: 100%;
+			height: 30em;
+		}
+	</style>
 </head>
 <body>
-    <div class="section">
-        <div id='log-wrap'>
-            <div><textarea id='log' style="white-space:pre"></textarea></div>
-            <div><select accesskey="," id="polyhedra"></select></div>
-            <div id="svg-selector"></div>
-            <div><button id="add-polyhedron" accesskey="a"><u>A</u>dd polyhedron</button> <button id="remove-polyhedron" accesskey="m">Re<u>m</u>ove polyhedron</button> • <button id="make-ready" accesskey="f">Make ready <u>f</u>or save</button></div>
-            <div id="edge-options">
-                <div>Selected edge: <span id="eo-data"></span></div>
-                <div>
-                    <button id="convert-to-portal" accesskey="p"><u>P</u>ortal</button>
-                    <button id="convert-to-curve" accesskey="v">Cur<u>v</u>e</button>
-                    <button id="make-connected" accesskey="c">Make <u>c</u>onnected</button>
-                    <button id="toggle-wall" accesskey="w">Toggle <u>w</u>all</button>
-                    <button id="deselect" accesskey="d"><u>D</u>eselect</button>
-                </div>
-                <div>
-                    <button accesskey="z" id="generate-maze">Generate ma<u>z</u>e</button>
-                    <label for="wall-probability">Wall pr<u>o</u>b:</label> <input type="number" step=".1" accesskey="o" id="wall-probability" value=".3" style="width: 4em" />
-                    <label for="seed"><u>S</u>eed:</label> <input type="number" step="1" accesskey="s" id="seed" value="1" style="width: 4em" /> •
-                    <button accesskey="y" id="clear-maze">Empt<u>y</u> maze</button>
-                </div>
-                <div>
-                    <button accesskey="l" class="rotate-button" data-amount="-10">Rotate <u>L</u>eft 10°</button>
-                    <button accesskey="e" class="rotate-button" data-amount="-1">Rotate L<u>e</u>ft 1°</button>
-                    <button accesskey="r" class="rotate-button" data-amount="1">Rotate <u>R</u>ight 1°</button>
-                    <button accesskey="g" class="rotate-button" data-amount="10">Rotate Ri<u>g</u>ht 10°</button>
-                </div>
-                <div>
-                    Move:
-                    <button class="move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
-                    <button class="move-button" data-x-amount="0" data-y-amount=".1">Down</button>
-                    <button class="move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
-                    <button class="move-button" data-x-amount=".1" data-y-amount="0">Right</button>
-                    by <input type="number" step="1" value="1" id="move-amount" size="3" />
-                </div>
-                <div>
-                    Caption move:
-                    <button class="caption-move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
-                    <button class="caption-move-button" data-x-amount="0" data-y-amount=".1">Down</button>
-                    <button class="caption-move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
-                    <button class="caption-move-button" data-x-amount=".1" data-y-amount="0">Right</button>
-                    by <input type="number" step="1" value="1" id="caption-move-amount" size="3" />
-                </div>
-                <div>
-                    Scale:
-                    <button class="scale-button" data-amount="1">Up</button>
-                    <button class="scale-button" data-amount="-1">Down</button>
-                    by <input type="number" step=".1" value=".1" id="scale-amount" size="3" />
-                </div>
-            </div>
-        </div>
-        <div class="page page-bg-07">
-            <div class="page-header">
-                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
-                <span class="page-header-section-title">Polyhedral Maze</span>
-            </div>
-            <div class="page-content">
-                <img class="diagram" src="img/Component/Polyhedral Maze.svg">
-                <h2>On the Subject of Polyhedral Mazes</h2>
+	<div class="section">
+		<div id='log-wrap'>
+			<div><textarea id='log' style="white-space:pre"></textarea></div>
+			<div><select accesskey="," id="polyhedra"></select></div>
+			<div id="svg-selector"></div>
+			<div><button id="add-polyhedron" accesskey="a"><u>A</u>dd polyhedron</button> <button id="remove-polyhedron" accesskey="m">Re<u>m</u>ove polyhedron</button> • <button id="make-ready" accesskey="f">Make ready <u>f</u>or save</button></div>
+			<div id="edge-options">
+				<div>Selected edge: <span id="eo-data"></span></div>
+				<div>
+					<button id="convert-to-portal" accesskey="p"><u>P</u>ortal</button>
+					<button id="convert-to-curve" accesskey="v">Cur<u>v</u>e</button>
+					<button id="make-connected" accesskey="c">Make <u>c</u>onnected</button>
+					<button id="toggle-wall" accesskey="w">Toggle <u>w</u>all</button>
+					<button id="deselect" accesskey="d"><u>D</u>eselect</button>
+				</div>
+				<div>
+					<button accesskey="z" id="generate-maze">Generate ma<u>z</u>e</button>
+					<label for="wall-probability">Wall pr<u>o</u>b:</label> <input type="number" step=".1" accesskey="o" id="wall-probability" value=".3" style="width: 4em" />
+					<label for="seed"><u>S</u>eed:</label> <input type="number" step="1" accesskey="s" id="seed" value="1" style="width: 4em" /> •
+					<button accesskey="y" id="clear-maze">Empt<u>y</u> maze</button>
+				</div>
+				<div>
+					<button accesskey="l" class="rotate-button" data-amount="-10">Rotate <u>L</u>eft 10°</button>
+					<button accesskey="e" class="rotate-button" data-amount="-1">Rotate L<u>e</u>ft 1°</button>
+					<button accesskey="r" class="rotate-button" data-amount="1">Rotate <u>R</u>ight 1°</button>
+					<button accesskey="g" class="rotate-button" data-amount="10">Rotate Ri<u>g</u>ht 10°</button>
+				</div>
+				<div>
+					Move:
+					<button class="move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
+					<button class="move-button" data-x-amount="0" data-y-amount=".1">Down</button>
+					<button class="move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
+					<button class="move-button" data-x-amount=".1" data-y-amount="0">Right</button>
+					by <input type="number" step="1" value="1" id="move-amount" size="3" />
+				</div>
+				<div>
+					Caption move:
+					<button class="caption-move-button" data-x-amount="0" data-y-amount="-.1">Up</button>
+					<button class="caption-move-button" data-x-amount="0" data-y-amount=".1">Down</button>
+					<button class="caption-move-button" data-x-amount="-.1" data-y-amount="0">Left</button>
+					<button class="caption-move-button" data-x-amount=".1" data-y-amount="0">Right</button>
+					by <input type="number" step="1" value="1" id="caption-move-amount" size="3" />
+				</div>
+				<div>
+					Scale:
+					<button class="scale-button" data-amount="1">Up</button>
+					<button class="scale-button" data-amount="-1">Down</button>
+					by <input type="number" step=".1" value=".1" id="scale-amount" size="3" />
+				</div>
+			</div>
+		</div>
+		<div class="page page-bg-07">
+			<div class="page-header">
+				<span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+				<span class="page-header-section-title">Polyhedral Maze</span>
+			</div>
+			<div class="page-content">
+				<img class="diagram" src="img/Component/Polyhedral Maze.svg">
+				<h2>On the Subject of Polyhedral Mazes</h2>
 
-                <p class="flavour-text">What’s a pentecostal hexadecimal contradiction?</p>
+				<p class="flavour-text">What’s a pentecostal hexadecimal contradiction?</p>
 
-                <p>Identify the polyhedron<sup>[1]</sup> on the module and find its corresponding net<sup>[2]</sup> below.</p>
-                <p>The number in the bottom-left of the module shows the current face on the polyhedron. The number in the bottom-right shows the destination face that must be reached to defuse the module.</p>
-                <p>Navigate to the destination face without crossing any of the thick lines. These are not visible on the module. The letters and the curved lines indicate faces that are connected even though they are not adjacent in the net.</p>
+				<p>Identify the polyhedron<sup>[1]</sup> on the module and find its corresponding net<sup>[2]</sup> below.</p>
+				<p>The number in the bottom-left of the module shows the current face on the polyhedron. The number in the bottom-right shows the destination face that must be reached to defuse the module.</p>
+				<p>Navigate to the destination face without crossing any of the thick lines. These are not visible on the module. The letters and the curved lines indicate faces that are connected even though they are not adjacent in the net.</p>
 
-                <svg id='svg-1' class="svg-container">
-                </svg>
+				<svg id='svg-1' class="svg-container">
+				</svg>
 
-                <div class='footnotes'>
-                    <p>[1] <a href='https://en.wikipedia.org/wiki/Polyhedron'>https://en.wikipedia.org/wiki/Polyhedron</a></p>
-                    <p>[2] <a href='https://en.wikipedia.org/wiki/Net_(polyhedron)'>https://en.wikipedia.org/wiki/Net_(polyhedron)</a></p>
-                </div>
-            </div>
-            <div class="page-footer relative-footer">Page 1 of 3</div>
-        </div>
-    </div>
-    <div class="page page-bg-06">
-        <div class="page-header">
-            <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
-            <span class="page-header-section-title">Polyhedral Maze</span>
-        </div>
-        <div class="page-content">
-            <svg id='svg-2' class="svg-container">
-            </svg>
-        </div>
-        <div class="page-footer relative-footer">Page 2 of 3</div>
-    </div>
-    <div class="page page-bg-02">
-        <div class="page-header">
-            <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
-            <span class="page-header-section-title">Polyhedral Maze</span>
-        </div>
-        <div class="page-content">
-            <svg id='svg-3' class="svg-container">
-            </svg>
-        </div>
-        <div class="page-footer relative-footer">Page 3 of 3</div>
-    </div>
+				<div class='footnotes'>
+					<p>[1] <a href='https://en.wikipedia.org/wiki/Polyhedron'>https://en.wikipedia.org/wiki/Polyhedron</a></p>
+					<p>[2] <a href='https://en.wikipedia.org/wiki/Net_(polyhedron)'>https://en.wikipedia.org/wiki/Net_(polyhedron)</a></p>
+				</div>
+			</div>
+			<div class="page-footer relative-footer">Page 1 of 3</div>
+		</div>
+		<div class="page page-bg-06">
+			<div class="page-header">
+				<span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+				<span class="page-header-section-title">Polyhedral Maze</span>
+			</div>
+			<div class="page-content">
+				<svg id='svg-2' class="svg-container">
+				</svg>
+			</div>
+			<div class="page-footer relative-footer">Page 2 of 3</div>
+		</div>
+		<div class="page page-bg-02">
+			<div class="page-header">
+				<span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+				<span class="page-header-section-title">Polyhedral Maze</span>
+			</div>
+			<div class="page-content">
+				<svg id='svg-3' class="svg-container">
+				</svg>
+			</div>
+			<div class="page-footer relative-footer">Page 3 of 3</div>
+		</div>
+	</div>
 </body>
 </html>
