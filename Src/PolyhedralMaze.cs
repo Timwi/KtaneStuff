@@ -670,14 +670,14 @@ namespace PolyhedralMaze
                 SendMessage(dict);
             }
 
-            void sendPath(string id, IEnumerable<string> classes, string edgeData, string data, string stroke = null, double? strokeWidth = null, string strokeDasharray = null, string fill = null) =>
-                send(id, classes, "path", new JsonDict { { "d", data }, { "stroke", stroke ?? (strokeWidth == null ? "none" : "black") }, { "stroke-linejoin", "round" }, { "stroke-width", strokeWidth }, { "stroke-dasharray", strokeDasharray }, { "fill", fill ?? "none" } }, null, edgeData);
+            void sendPath(string id, IEnumerable<string> classes, string edgeData, string data) =>
+                send(id, classes, "path", new JsonDict { { "d", data } }, null, edgeData);
 
-            void sendText(string id, IEnumerable<string> classes, double fontSize, double x, double y, string content, string fill, string edgeData = null) =>
-                send(id, classes, "text", new JsonDict { { "x", $"{x:0.####}" }, { "y", $"{y + fontSize * .35:0.####}" }, { "text-anchor", "middle" }, { "fill", fill }, { "font-size", fontSize } }, content, edgeData);
+            void sendText(string id, IEnumerable<string> classes, double fontSize, double x, double y, string content, string fill = null, string edgeData = null) =>
+                send(id, classes, "text", new JsonDict { { "x", $"{x:0.####}" }, { "y", $"{y + fontSize * .35:0.####}" } }, content, edgeData);
 
             if (!sendPolygons)
-                sendText("caption", null, .6, polyhedron.LabelX + polyhedron.XOffset, polyhedron.LabelY + polyhedron.YOffset, polyhedron.ReadableName, "#000");
+                sendText("caption", ["caption"], .6, polyhedron.LabelX + polyhedron.XOffset, polyhedron.LabelY + polyhedron.YOffset, polyhedron.ReadableName);
 
             var anyChanges = false;
 
@@ -762,9 +762,9 @@ namespace PolyhedralMaze
                 polygons[fromFaceIx] = rotatedPolyhedron[fromFaceIx].Select(pt => p(pt.X, pt.Y)).ToArray();
 
                 if (!sendPolygons)
-                    sendText($"label-{fromFaceIx}", new[] { $"face-{fromFaceIx}", "poly-id" }, .5, polygons[fromFaceIx].Sum(p => p.X) / polygons[fromFaceIx].Length, polygons[fromFaceIx].Sum(p => p.Y) / polygons[fromFaceIx].Length, fromFaceIx.ToString(), "#000");
+                    sendText($"label-{fromFaceIx}", new[] { $"face-{fromFaceIx}", "poly-id" }, .5, polygons[fromFaceIx].Sum(p => p.X) / polygons[fromFaceIx].Length, polygons[fromFaceIx].Sum(p => p.Y) / polygons[fromFaceIx].Length, fromFaceIx.ToString());
                 else
-                    sendPath($"outline-{fromFaceIx}", null, null, $"M{polygons[fromFaceIx].Select(p => $"{p.X:0.####},{p.Y:0.####}").JoinString(" ")}z", fill: "transparent");
+                    sendPath($"outline-{fromFaceIx}", ["highlightable"], null, $"M{polygons[fromFaceIx].Select(p => $"{p.X:0.####},{p.Y:0.####}").JoinString(" ")}z");
 
                 for (var fromEdgeIx = 0; fromEdgeIx < rotatedPolyhedron[fromFaceIx].Length; fromEdgeIx++)
                 {
@@ -809,9 +809,7 @@ namespace PolyhedralMaze
                         var p1 = polygons[fromFaceIx][fromEdgeIx];
                         var p2 = polygons[fromFaceIx][(fromEdgeIx + 1) % polygons[fromFaceIx].Length];
                         IEnumerable<string> classes = new[] { $"face-{fromFaceIx}", $"face-{toFaceIx}", $"edge-{fromFaceIx}-{fromEdgeIx}", $"edge-{toFaceIx}-{toEdgeIx}" };
-                        sendPath($"edge-{fromFaceIx}-{fromEdgeIx}", classes.Concat("edge"), edgeData, $"M {p1.X:0.####},{p1.Y:0.####} L {p2.X:0.####},{p2.Y:0.####}",
-                            strokeWidth: adj.HasFlag(Adjacency.Traversible) ? .025 : .1,
-                            stroke: adj.HasFlag(Adjacency.Traversible) ? "black" : null);
+                        sendPath($"edge-{fromFaceIx}-{fromEdgeIx}", classes.Concat("edge").Apply(c => adj.HasFlag(Adjacency.Traversible) ? c : c.Concat("wall")), edgeData, $"M {p1.X:0.####},{p1.Y:0.####} L {p2.X:0.####},{p2.Y:0.####}");
                         if (polygons[toFaceIx] != null)
                         {
                             var controlPointFactor = (adj & Adjacency.ConnectionMask) == Adjacency.Curved ? 1 : .6;
@@ -837,16 +835,15 @@ namespace PolyhedralMaze
                                     var ch = polyhedron.GetPortalLetter(fromFaceIx, fromEdgeIx);
                                     sendText($"portal-letter-{fromFaceIx}-{fromEdgeIx}", classes.Concat("portal-letter"), .5, p1c.X, p1c.Y, ch.ToString(), "#000", edgeData);
                                     sendText($"portal-letter-{toFaceIx}-{toEdgeIx}", classes.Concat("portal-letter"), .5, p2c.X, p2c.Y, ch.ToString(), "#000", edgeData);
-                                    sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", classes.Concat("portal-marker"), edgeData, $"M {(p11.X + p1m.X) / 2:0.####},{(p11.Y + p1m.Y) / 2:0.####} {(p1c.X + p1m.X) / 2:0.####},{(p1c.Y + p1m.Y) / 2:0.####} {(p12.X + p1m.X) / 2:0.####},{(p12.Y + p1m.Y) / 2:0.####} z", fill: "#888");
-                                    sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", classes.Concat("portal-marker"), edgeData, $"M {(p21.X + p2m.X) / 2:0.####},{(p21.Y + p2m.Y) / 2:0.####} {(p2c.X + p2m.X) / 2:0.####},{(p2c.Y + p2m.Y) / 2:0.####} {(p22.X + p2m.X) / 2:0.####},{(p22.Y + p2m.Y) / 2:0.####} z", fill: "#888");
+                                    sendPath($"portal-marker-{fromFaceIx}-{fromEdgeIx}", classes.Concat("portal-marker"), edgeData, $"M {(p11.X + p1m.X) / 2:0.####},{(p11.Y + p1m.Y) / 2:0.####} {(p1c.X + p1m.X) / 2:0.####},{(p1c.Y + p1m.Y) / 2:0.####} {(p12.X + p1m.X) / 2:0.####},{(p12.Y + p1m.Y) / 2:0.####} z");
+                                    sendPath($"portal-marker-{toFaceIx}-{toEdgeIx}", classes.Concat("portal-marker"), edgeData, $"M {(p21.X + p2m.X) / 2:0.####},{(p21.Y + p2m.Y) / 2:0.####} {(p2c.X + p2m.X) / 2:0.####},{(p2c.Y + p2m.Y) / 2:0.####} {(p22.X + p2m.X) / 2:0.####},{(p22.Y + p2m.Y) / 2:0.####} z");
                                     break;
 
                                 case Adjacency.Curved:
                                     sendPath($"curve-{fromFaceIx}-{fromEdgeIx}", classes.Concat("edge"), edgeData,
                                         (p2m - p1m).Length < .5 ? $"M {p1m.X:0.####},{p1m.Y:0.####} L {p2m.X:0.####},{p2m.Y:0.####}" :
                                         l1 >= 0 && l1 <= 1 && l2 >= 0 && l2 <= 1 ? $"M {p1m.X:0.####},{p1m.Y:0.####} C {intersect.X:0.####},{intersect.Y:0.####} {intersect.X:0.####},{intersect.Y:0.####} {p2m.X:0.####},{p2m.Y:0.####}" :
-                                        $"M {p1m.X:0.####},{p1m.Y:0.####} C {p1c.X:0.####},{p1c.Y:0.####} {p2c.X:0.####},{p2c.Y:0.####} {p2m.X:0.####},{p2m.Y:0.####}",
-                                        strokeWidth: .025);
+                                        $"M {p1m.X:0.####},{p1m.Y:0.####} C {p1c.X:0.####},{p1c.Y:0.####} {p2c.X:0.####},{p2c.Y:0.####} {p2m.X:0.####},{p2m.Y:0.####}");
                                     break;
                             }
                         }

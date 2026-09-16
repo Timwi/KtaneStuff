@@ -9,16 +9,13 @@
 	<link href="css/normalize.css" rel="stylesheet" type="text/css">
 	<link href="css/main.css" rel="stylesheet" type="text/css">
 	<script src='js/ktane-utils.js'></script>
-	<script src="js/jquery.3.1.1.min.js"></script>
 	<script id="main-js">
-		$(function ()
+		document.addEventListener('DOMContentLoaded', function()
 		{
 			function addLog(msg)
 			{
-				$('#log').val(function (i, text)
-				{
-					return msg + "\n" + text;
-				});
+				let log = document.getElementById('log');
+				log.value = msg + "\n" + log.value;
 			}
 
 			var socket;
@@ -41,8 +38,8 @@
 						selectedEdge.returnToNormal();
 
 					var edgeData = JSON.parse(this.getAttribute('data-edge'));
-					$('#edge-options').show();
-					$('#eo-data').text(JSON.stringify(edgeData, null, 1));
+					document.getElementById('edge-options').style.display = 'block';
+					document.getElementById('eo-data').innerText = JSON.stringify(edgeData, null, 1);
 					this.returnToNormal = function (obj, str, sw) { return function () { setEdgeAppearance(obj, str, sw); } }(this, this.getAttribute('stroke'), this.getAttribute('stroke-width'));
 					setEdgeAppearance(this, '#6495ed', '.1');
 					selectedEdge = this;
@@ -52,7 +49,7 @@
 				{
 					var poly = RegExp.$1;
 					var face = RegExp.$2;
-					var edges = Array.from($(`.${poly}-face-${face}`))
+					var edges = Array.from(document.querySelectorAll(`.${poly}-face-${face}`))
 						.map(obj => Array.from(obj.classList).map(cls => ({ obj: obj, m: new RegExp(`^${poly}-edge-${face}-(\\d+)\$`).exec(cls) })).filter(inf => inf.m !== null))
 						.filter(infs => infs.length > 0)
 						.map(infs => ({ edge: infs[0].obj, ix: +infs[0].m[1] }));
@@ -109,7 +106,7 @@
 						{
 							svg.setAttribute('viewBox', json.viewBox);
 							var result = /^\S* \S* (\S*) \S*$/.exec(json.viewBox);
-							$('#view-width-' + json.svg).text(result[1]);
+							document.getElementById('view-width-' + json.svg).innerText = result[1];
 						}
 						else
 						{
@@ -135,9 +132,9 @@
 									obj = document.createElementNS('http://www.w3.org/2000/svg', json.tag);
 									svg.appendChild(obj);
 									obj.id = json.id;
-									$(obj).click(processElementClick);
+									obj.onclick = processElementClick;
 								}
-								if ('classes' in json && json.classes instanceof Array)
+								if ('classes' in json && json.classes instanceof Array && json.classes.length)
 									obj.setAttribute('class', json.classes.join(' '));
 								if ('attr' in json)
 								{
@@ -185,61 +182,63 @@
 					}
 					else if ('make-ready' in json)
 					{
-						$('#log-wrap,#main-js,#extra-css').remove();
-						$('.svg-container').each((_, x) => $(x).attr('id', null).attr('class', null));
-						$('svg *[class]').each((_, x) => {
-							let wanted = ['edge', 'portal-marker', 'portal-letter'];
+						document.getElementById('log-wrap').remove();
+						document.getElementById('main-js').remove();
+						document.getElementById('extra-css').remove();
+						Array.from(document.querySelectorAll('.svg-container')).forEach(x => { x.removeAttribute('class', null); });
+						Array.from(document.querySelectorAll('svg *[class]')).forEach(x => {
+							let wanted = ['edge', 'portal-marker', 'portal-letter', 'caption', 'poly-id', 'highlightable'];
 							for (let unwanted of Array.from(x.classList).filter(cl => !wanted.includes(cl)))
 								x.classList.remove(unwanted);
+							if (x.classList.length === 0)
+								x.removeAttribute('class');
 						});
-						$('svg *[id]').each((_, x) => {
+						Array.from(document.querySelectorAll('svg *[id]')).forEach(x => {
 							let id = x.getAttribute('id');
-							if (id.indexOf('outline') !== -1)
-								x.setAttribute('class', 'highlightable');
-							if (!/^poly-.*-(?:edge|portal-letter|portal-marker|curve)-\d+-\d+$/.test(id))
+							if (!/^poly-.*-(?:edge|portal-letter|portal-marker|curve|label|outline|caption)(?:-|$)/.test(id))
 								x.removeAttribute('id');
 						});
-						$('*[data-edge]').each((_, x) => x.removeAttribute('data-edge'));
+						Array.from(document.querySelectorAll('*[data-edge]')).forEach(x => { x.removeAttribute('data-edge'); });
 					}
 					else
 						addLog('Unrecognized message: ' + msg.data);
 				};
 			}
 
-			var svgContainers = $('.svg-container');
-			var svgSelector = $('#svg-selector');
+			var svgContainers = Array.from(document.querySelectorAll('.svg-container'));
+			var svgSelector = document.getElementById('svg-selector');
 			for (var i = 0; i < svgContainers.length; i++)
 			{
-				var div = $('<div>');
-				div.append($('<input type="radio" name="radio-svg" class="radio-svg">').attr('value', svgContainers[i].id).attr('id', 'opt-' + svgContainers[i].id).prop('checked', i === 0));
-				div.append(" ");
-				div.append($('<label>').attr('for', 'opt-' + svgContainers[i].id).text(svgContainers[i].id));
-				div.append(" (");
-				div.append($('<span>').attr('id', 'view-width-' + svgContainers[i].id));
-				div.append(")");
+				var div = document.createElement('div');
+				div.innerHTML = `
+					<input type="radio" name="radio-svg" class="radio-svg" value="${svgContainers[i].id}" id="opt-${svgContainers[i].id}"${i === 0 ? ' checked' : ''}>
+					<label for="opt-${svgContainers[i].id}">${svgContainers[i].id}</label>
+					(<span id="view-width-${svgContainers[i].id}"></span>)
+				`;
 				svgSelector.append(div);
 			}
 
-			$('#add-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'add', Polyhedron: $('#polyhedra').find(":selected").attr('data-name'), SvgId: $('.radio-svg:checked').val() })); });
-			$('#remove-polyhedron').click(function () { socket.send(JSON.stringify({ Command: 'remove', Polyhedron: $('#polyhedra').find(":selected").attr('data-name') })); });
-			$('#convert-to-portal').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-portal', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('#convert-to-curve').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-curve', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('#make-connected').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'make-connected', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('#toggle-wall').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'toggle-wall', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('#deselect').click(function () { if (selectedEdge != null) selectedEdge.returnToNormal(); selectedEdge = null; $('#edge-options').hide(); });
-			$('.rotate-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'rotate', Amount: this.getAttribute('data-amount'), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('.move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move', XAmount: this.getAttribute('data-x-amount') * $('#move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('.caption-move-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move-caption', XAmount: this.getAttribute('data-x-amount') * $('#caption-move-amount').val(), YAmount: this.getAttribute('data-y-amount') * $('#caption-move-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('.scale-button').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'scale', Amount: this.getAttribute('data-amount') * $('#scale-amount').val(), EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('#generate-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'generate-maze', EdgeData: selectedEdge.getAttribute('data-edge'), WallProb: $('#wall-probability').val(), Seed: $('#seed').val() })); $('#seed').val((+$('#seed').val()) + 1); });
-			$('#clear-maze').click(function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'clear-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); });
-			$('#make-ready').click(function () { socket.send(JSON.stringify({ Command: 'make-ready' })); });
+			document.getElementById('add-polyhedron').onclick = function () { socket.send(JSON.stringify({ Command: 'add', Polyhedron: document.querySelector('#polyhedra :selected').getAttribute('data-name'), SvgId: document.querySelector('.radio-svg:checked').value })); };
+			document.getElementById('remove-polyhedron').onclick = function () { socket.send(JSON.stringify({ Command: 'remove', Polyhedron: document.querySelector('#polyhedra :selected').getAttribute('data-name') })); };
+			document.getElementById('convert-to-portal').onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-portal', EdgeData: selectedEdge.getAttribute('data-edge') })); };
+			document.getElementById('convert-to-curve').onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'convert-to-curve', EdgeData: selectedEdge.getAttribute('data-edge') })); };
+			document.getElementById('make-connected').onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'make-connected', EdgeData: selectedEdge.getAttribute('data-edge') })); };
+			document.getElementById('toggle-wall').onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'toggle-wall', EdgeData: selectedEdge.getAttribute('data-edge') })); };
+			document.getElementById('deselect').onclick = function () { if (selectedEdge != null) selectedEdge.returnToNormal(); selectedEdge = null; document.getElementById('edge-options').style.display = 'none'; };
+			document.getElementById('generate-maze').onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'generate-maze', EdgeData: selectedEdge.getAttribute('data-edge'), WallProb: document.getElementById('wall-probability').value, Seed: document.getElementById('seed').value })); document.getElementById('seed').value = (+document.getElementById('seed').value) + 1; };
+			document.getElementById('clear-maze').onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'clear-maze', EdgeData: selectedEdge.getAttribute('data-edge') })); };
+			document.getElementById('make-ready').onclick = function () { socket.send(JSON.stringify({ Command: 'make-ready' })); };
+			document.getElementById('edge-options').style.display = 'none';
 
-			$('#edge-options').hide();
+			Array.from(document.querySelectorAll('.rotate-button')).forEach(btn => btn.onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'rotate', Amount: btn.getAttribute('data-amount'), EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			Array.from(document.querySelectorAll('.move-button')).forEach(btn => btn.onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move', XAmount: btn.getAttribute('data-x-amount') * document.getElementById('move-amount').value, YAmount: btn.getAttribute('data-y-amount') * document.getElementById('move-amount').value, EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			Array.from(document.querySelectorAll('.caption-move-button')).forEach(btn => btn.onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'move-caption', XAmount: btn.getAttribute('data-x-amount') * document.getElementById('caption-move-amount').value, YAmount: btn.getAttribute('data-y-amount') * document.getElementById('caption-move-amount').value, EdgeData: selectedEdge.getAttribute('data-edge') })); });
+			Array.from(document.querySelectorAll('.scale-button')).forEach(btn => btn.onclick = function () { if (selectedEdge != null) socket.send(JSON.stringify({ Command: 'scale', Amount: btn.getAttribute('data-amount') * document.getElementById('scale-amount').value, EdgeData: selectedEdge.getAttribute('data-edge') })); });
+
 
 			newSocket();
 
-			var accessKeys = $('*[accesskey]').map(function (_, e) { return e.getAttribute('accesskey').toUpperCase(); }).get().filter(x => x.length > 0).sort();
+			let accessKeys = Array.from(document.querySelectorAll('*[accesskey]')).map(e => e.getAttribute('accesskey').toUpperCase()).filter(x => x.length > 0).sort();
 			addLog("Used access keys: " + accessKeys.join(''));
 			addLog("Available access keys: " + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').filter(x => accessKeys.indexOf(x) === -1).join(''));
 		});
@@ -265,6 +264,40 @@
 			div.footnotes p {
 				margin: .3em;
 			}
+
+		svg path.highlightable {
+			stroke: none;
+			fill: transparent;
+		}
+		svg path.edge {
+			fill: none;
+			stroke: black;
+			stroke-width: .025;
+			stroke-linejoin: round;
+		}
+		svg path.edge.wall {
+			stroke-width: .1;
+		}
+		svg path.portal-marker {
+			stroke: none;
+			stroke-linejoin: round;
+			fill: #888;
+		}
+		svg text.portal-letter, svg text.poly-id {
+			text-anchor: middle;
+			font-size: 0.5px;
+		}
+		svg text.caption {
+			text-anchor: middle;
+			font-size: 0.6px;
+		}
+
+		.dark svg path.edge {
+			stroke: #DDD;
+		}
+		.dark svg text {
+			fill: #DDD;
+		}
 	</style>
 	<style id="extra-css">
 		.page {
