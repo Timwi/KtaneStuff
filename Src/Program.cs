@@ -23,7 +23,7 @@ internal partial class Program
             return PostBuildChecker.RunPostBuildChecks(args[1], Assembly.GetExecutingAssembly());
 
 
-        PolyhedralMaze.RunServer();
+        Ktane.FindBrokenFontUsage();
 
 
         Console.WriteLine("Done.");

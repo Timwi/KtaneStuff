@@ -2,8 +2,12 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using AngleSharp.Css.Dom;
+using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using CsQuery;
 using RT.Json;
+using RT.TagSoup;
 using RT.Util;
 using RT.Util.Consoles;
 using RT.Util.ExtensionMethods;
@@ -512,6 +516,109 @@ internal static class Ktane
         var sam = File.ReadLines(@"E:\KtaneLogfiles\Sam_verify.txt").Select(l => l.PadLeft(40, '0')).ToHashSet();
         var recovered = File.ReadLines(@"F:\KtaneLogfiles\KtaneLogfiles_SAPPHIRE_7zl\recover.txt").Select(l => l.Replace(".txt", "")).ToHashSet();
         Clipboard.SetText(sam.Except(topazIds).Except(recovered).JoinString("\n"));
+    }
+
+    internal struct CssFontResults
+    {
+        public (string family, string url)[] GoodFontFamilies;
+        public (string family, string url)[] BrokenFontFamilies;
+        public (string selector, string family)[] ReferencedFonts;
+        public ICssStyleSheet StyleSheet;
+    }
+    private static readonly HashSet<string> _builtinFontFamilies = @"serif,sans-serif,monospace,cursive,fantasy,system-ui,ui-serif,ui-sans-serif,ui-monospace,ui-rounded,math,fangsong,inherit,initial,revert,revert-layer,unset".Split(',').ToHashSet();
+
+    public static void FindBrokenFontUsage()
+    {
+        var alreadyCss = new Dictionary<string, CssFontResults>();
+
+        IEnumerable<string> parseFontFamilies(string rawPropertyValue) =>
+            from match in rawPropertyValue.RegexMatches(@"\s*(?:""(?<dq>[^""]+)""|'(?<sq>[^']+)'|(?<raw>[^,]+))\s*")
+            select (match.Groups["dq"].Success ? match.Groups["dq"].Value : match.Groups["sq"].Success ? match.Groups["sq"].Value : match.Groups["raw"].Value).Trim();
+
+        CssFontResults dealWithStyleSheet(string css, bool isFilePath, string relativePath)
+        {
+            if (isFilePath && alreadyCss.TryGetValue(css, out var result))
+                return result;
+            ICssStyleSheet styleSheet;
+            if (isFilePath)
+            {
+                using var cssFile = File.OpenRead(css);
+                styleSheet = new AngleSharp.Css.Parser.CssParser().ParseStyleSheet(cssFile);
+            }
+            else
+                styleSheet = new AngleSharp.Css.Parser.CssParser().ParseStyleSheet(css);
+
+            var brokenFontFamilies = new List<(string fontFamily, string url)>();
+            var goodFontFamilies = new List<(string fontFamily, string url)>();
+
+            string sanitize(string fontName) =>
+                fontName.RegexMatch(@"^""([^""]+)""$", out var dq) ? dq.Groups[1].Value.Trim() :
+                fontName.RegexMatch(@"^'([^']+)'$", out var sq) ? sq.Groups[1].Value.Trim() : fontName.Trim();
+
+            foreach (var (fontFamily, url, exists) in
+                from fontFaceDeclaration in styleSheet.Rules.OfType<ICssFontFaceRule>()
+                from match in fontFaceDeclaration.Source.RegexMatches(@"\burl\(\s*(?:'(?<m1>[^']+)'|""(?<m2>[^""]+)""|(?<m0>[^\)]+))\s*\)")
+                let url = match.Groups["m0"].Success ? match.Groups["m0"].Value : match.Groups["m1"].Success ? match.Groups["m1"].Value : match.Groups["m2"].Value
+                let absolutePath = Path.Combine(relativePath, url)
+                select (sanitize(fontFaceDeclaration.Family), url, File.Exists(absolutePath)))
+            {
+                (exists ? goodFontFamilies : brokenFontFamilies).Add((fontFamily, url));
+            }
+
+            var referencedFonts = (
+                from rule in styleSheet.Rules.OfType<ICssStyleRule>()
+                from declaration in rule.Style
+                where declaration.Name == "font-family"
+                from fontFamily in parseFontFamilies(declaration.Value)
+                where !_builtinFontFamilies.Contains(fontFamily)
+                select (rule.SelectorText, fontFamily)).ToArray();
+
+            result = new CssFontResults
+            {
+                GoodFontFamilies = goodFontFamilies.ToArray(),
+                BrokenFontFamilies = brokenFontFamilies.ToArray(),
+                ReferencedFonts = referencedFonts,
+                StyleSheet = styleSheet
+            };
+
+            if (isFilePath)
+                alreadyCss[css] = result;
+            return result;
+        }
+
+        var output = new StringBuilder();
+
+        foreach (var htmlFileInfo in new DirectoryInfo(@"D:\c\KTANE\Public\HTML").EnumerateFiles("*.html", SearchOption.AllDirectories))
+        {
+            ConsoleUtil.WriteLineFmt($"{PathUtil.ToggleRelative(@"D:\c\KTANE\Public\HTML", htmlFileInfo.FullName):Y}");
+            using var htmlFile = htmlFileInfo.OpenRead();
+            var htmlParsed = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(htmlFile);
+            var styleSheets = new List<CssFontResults>();
+            foreach (var linkTag in htmlParsed.QuerySelectorAll("link[rel=stylesheet]"))
+            {
+                var cssLink = linkTag.GetAttribute("href");
+                var cssFullPath = Path.Combine(htmlFileInfo.DirectoryName, cssLink.UrlUnescape());
+                styleSheets.Add(dealWithStyleSheet(cssFullPath, isFilePath: true, relativePath: Path.GetDirectoryName(cssFullPath)));
+            }
+            foreach (var styleTag in htmlParsed.QuerySelectorAll("style"))
+                styleSheets.Add(dealWithStyleSheet(styleTag.TextContent, isFilePath: false, relativePath: htmlFileInfo.DirectoryName));
+
+            var brokenFontFamilies = (from styleSheet in styleSheets from tup in styleSheet.BrokenFontFamilies select tup.family).ToHashSet();
+            var selectorsThatReferenceBrokenFontFamilies = (from styleSheet in styleSheets from tup in styleSheet.ReferencedFonts where brokenFontFamilies.Contains(tup.family) select tup).ToArray();
+            foreach (var (selector, fontFamily) in selectorsThatReferenceBrokenFontFamilies)
+                if (htmlParsed.QuerySelector(selector) is { } matchingTag)
+                    output.Append($"{htmlFileInfo.Name}\t{fontFamily}\t{matchingTag.TagName}\t{matchingTag.ClassName}\t{selector}\n");
+
+            foreach (var elem in htmlParsed.Descendants<IHtmlElement>())
+                if (elem.GetAttribute("style") is { } styleAttr)
+                    foreach (var declaration in new AngleSharp.Css.Parser.CssParser().ParseDeclaration(styleAttr))
+                        if (declaration.Name == "font-family")
+                            foreach (var fontFamily in parseFontFamilies(declaration.Value))
+                                if (brokenFontFamilies.Contains(fontFamily))
+                                    output.Append($"{htmlFileInfo.Name}\t{fontFamily}\t{elem.TagName}\t{elem.ClassName}\t(style attribute)\n");
+        }
+
+        File.WriteAllText(@"D:\temp\temp.txt", output.ToString());
     }
 }
 
